@@ -164,7 +164,7 @@
 
                         <div class="tab-pane" id="images">
 
-                            <div class="file-box-content mb-3 d-flex">
+                            <div class="file-box-content mb-3 d-flex flex-wrap">
 
                                 @foreach ($images as $k => $image)
                                     <div class="file-box d-flex align-items-center justify-content-center position-relative" id="admin_image_{{ $k }}">

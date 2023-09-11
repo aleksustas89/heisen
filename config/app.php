@@ -170,6 +170,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Barryvdh\Elfinder\ElfinderServiceProvider::class,
     ])->toArray(),
 
     /*

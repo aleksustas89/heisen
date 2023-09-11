@@ -76,3 +76,5 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
         Route::post('/logout', 'Client\ClientLoginController@logout')->name('client.logout');
     });
 });
+
+

@@ -131,7 +131,7 @@
                                             <div class="d-flex">
                                                 <div class="form-check field-check-center">
                                                     <div>
-                                                        <input class="form-check-input" name="property_for_group[]" type="checkbox" id="property_for_group_{{ $group->id }}" >
+                                                        <input class="form-check-input" value="{{ $group->id }}" name="property_for_group[]" type="checkbox" id="property_for_group_{{ $group->id }}" >
                                                         <label for="property_for_group_{{ $group->id }}">
                                                             [{{ $group->id }}] {{ $group->name }}
                                                         </label>

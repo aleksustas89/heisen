@@ -106,14 +106,14 @@
                                                             </p>";
                                             }
 
-                                            if ($order->shop_delivery_id > 0) {
+                                            if ($order->shop_delivery_id > 0 && $order->ShopDelivery) {
                                                 $popover .= "<p class='text-muted mb-0'>
                                                                 <b>Способ доставки:</b>  ". $order->ShopDelivery->name ."
                                                             </p>";
                                             }
 
                                             
-                                            if ($order->shop_payment_system_id > 0) {
+                                            if ($order->shop_payment_system_id > 0 && $order->ShopPaymentSystem) {
                                                 $popover .= "<p class='text-muted mb-0'>
                                                                 <b>Способ оплаты:</b>  ". $order->ShopPaymentSystem->name ."
                                                             </p>";

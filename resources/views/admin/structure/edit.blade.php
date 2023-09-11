@@ -81,7 +81,7 @@
                                     <label class="mb-1">Путь</label>
                                     <div>
 
-                                        <input type="text" name="path" value="{{ $structure->path }}" class="form-control" placeholder="Путь" data-required="1" data-min="2" data-max="255">
+                                        <input type="text" name="path" value="{{ $structure->path }}" class="form-control" placeholder="Путь" data-required="1" data-min="1" data-max="255">
                                         
                                         <a href="{{ $url }}" target="_blank" class="input-group-addon bg-blue bordered-blue" id="pathLink">
                                             <i class="fa fa-external-link"></i>
@@ -127,7 +127,8 @@
 
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <textarea style="visibility:hidden" class="editor" aria-hidden="true" name="text"></textarea>
+                     
+                                    <textarea type="text" name="text" class="form-control editor" placeholder="Описание группы">{{ $structure->text }}</textarea>
                                 </div>
                             </div>
 

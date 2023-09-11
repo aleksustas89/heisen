@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Shop;
 use App\Models\ShopGroup;
 use App\Models\ShopItem;
+use App\Models\ShopCurrency;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -26,8 +27,8 @@ class ShopController extends Controller
 
             return view('admin.shop.index', [
                 'shop_path' => $oShop->path,
-                'shopGroups' => ShopGroup::where('parent_id', $parent)->orderBy('sorting', 'desc')->get(),
-                'shopItems' => ShopItem::where('shop_group_id', $parent)->where("modification_id", "=", 0)->orderBy('active', 'asc')->orderBy('sorting', 'desc')->paginate(self::$items_on_page),
+                'shopGroups' => ShopGroup::where('parent_id', $parent)->orderBy('sorting', 'desc')->orderBy("id")->get(),
+                'shopItems' => ShopItem::where('shop_group_id', $parent)->where("modification_id", "=", 0)->orderBy("sorting", "asc")->orderBy("id")->paginate(self::$items_on_page),
                 'parent' => $parent,
                 'breadcrumbs' => ShopGroupController::breadcrumbs($parent > 0 ? ShopGroup::find($parent) : false),
             ]);
@@ -45,7 +46,7 @@ class ShopController extends Controller
         return view('admin.shop.edit', [
             'shop' => $shop,
             'breadcrumbs' => self::breadcrumbs(),
-            'currencies' => $shop->ShopCurrencies
+            'currencies' => ShopCurrency::get(),
         ]);
     }
 

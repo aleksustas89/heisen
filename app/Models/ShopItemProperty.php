@@ -34,8 +34,11 @@ class ShopItemProperty extends Model
     {
 
         foreach ($this->shopItemPropertyForGroup as $shopItemPropertyForGroup) {
-            $shopItemPropertyForGroup->truncate();
+            $shopItemPropertyForGroup->delete();
         }
+
+        $object = self::getObjectByType($this->type);
+        $object::where("property_id", $this->id)->delete();
 
         return parent::delete();
     }

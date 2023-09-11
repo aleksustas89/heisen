@@ -80,7 +80,7 @@
                                 <div class="col-lg-4">
                                     <label class="mb-1">Путь</label>
                                     <div>
-                                        <input type="text" name="path" id="path" class="form-control" placeholder="Путь" data-required="1" data-min="2" data-max="255">
+                                        <input type="text" name="path" id="path" class="form-control" placeholder="Путь" data-required="1" data-min="1" data-max="255">
                                         <!--<a href="" target="_blank" class="input-group-addon bg-blue bordered-blue" id="pathLink">
                                             <i class="fa fa-external-link"></i>
                                         </a>-->

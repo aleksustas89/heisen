@@ -174,7 +174,7 @@
                                             
                                         </td>
                                         <td width="100px" class="td_editable"><span id="apply_check_shopItem_price_{{ $shopItem->id }}" class="editable">{{ $shopItem->price }}</span></td>
-                                        <td width="40px" class="text-center">{{ $shopItem->shop_currency_id > 0 ? $shopItem->ShopCurrency->name : ''}}</td>
+                                        <td width="40px" class="text-center">{{ $shopItem->shop_currency_id > 0 && $shopItem->ShopCurrency ? $shopItem->ShopCurrency->name : ''}}</td>
                                         <td>
 
                                             <span onclick="toggle.init($(this))" @class([
