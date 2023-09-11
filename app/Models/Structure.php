@@ -29,7 +29,7 @@ class Structure extends Model
             return false;
             
         } else {
-            return $this->path != '/' ? '/' . implode("/", $aResult) . '/' : $this->path;
+            return $this->path != '/' ?  implode("/", $aResult) : $this->path;
         }
     }
 

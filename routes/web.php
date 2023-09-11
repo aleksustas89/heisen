@@ -2,6 +2,12 @@
 
 use App\Models\ShopDiscount;
 use Illuminate\Support\Facades\Route;
+use App\Models\Shop;
+use App\Models\ShopGroup;
+use App\Models\ShopItem;
+use Illuminate\Support\Facades\Schema;
+use App\Models\Structure;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -78,3 +84,52 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
 });
 
 
+$sCurrentPath = request()->path();
+
+if (Schema::hasTable('structures')) {
+    $oStructureController = App\Http\Controllers\StructureController::class;
+
+    foreach (Structure::where('active', '1')->get() as $structure) {
+        
+        if ($sPath = $structure->path([], $activeAll = false)) {
+
+            if ($sPath == $sCurrentPath) {
+                App\Http\Controllers\StructureController::show($sCurrentPath, $structure);
+            }
+        }
+    }
+}
+
+// if (Schema::hasTable('shops')) {
+//     $oShop = Shop::find(Shop::$shop_id);
+//     if (!is_null($oShop->id) && $oShop->active == 1) {
+//         Route::view($oShop->path, 'shop/home', ['shop' => $oShop]);
+
+//         foreach (shopGroup::where('active', '1')->get() as $oShopGroup) {
+
+//             if ($oShopGroup->getFullPath() == $path) {
+//                 App\Http\Controllers\ShopGroupController::show($sCurrentPath, $oShopGroup);
+//             }
+//         }
+
+//         foreach (shopItem::where('active', '1')->get() as $oShopItem) {
+
+//             if ($oShopItem->url() . "/" == $path) {
+//                 App\Http\Controllers\ShopItemController::show($path, $oShopItem);
+//             }
+//         }
+//     }
+// }
+
+// Route::group(['namespace' => 'App\Http\Controllers'], function() {
+
+//     Route::view('user/login', 'user.login');
+//     Route::post('user/login', 'Auth\LoginController@login');
+
+//     Route::get('user/account', 'Auth\ChangeController@show');
+//     Route::post('user/account', 'Auth\ChangeController@execute')->name('changeUser');
+
+// });
+
+//главная страница
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);

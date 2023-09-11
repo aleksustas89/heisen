@@ -125,7 +125,7 @@
                                             
                                             <div class="text-center">
                                                 <div class="file-box-image">
-                                                    <img src="{{ $path }}{{ $ShopItemImage->image_small }}">
+                                                    <img src="{{ $path }}{{ $ShopItemImage->image_small ?? $ShopItemImage->image_large }}">
                                                 </div>
                                             </div>
                                             
