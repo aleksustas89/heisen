@@ -7,96 +7,355 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/uikit@3.16.6/dist/css/uikit.min.css" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-		<script src="//cdn.jsdelivr.net/npm/uikit@3.16.6/dist/js/uikit.min.js"></script>
-		<script src="//cdn.jsdelivr.net/npm/uikit@3.16.6/dist/js/uikit-icons.min.js"></script>
-		<link rel="preconnect" href="//fonts.googleapis.com">
-		<link rel="preconnect" href="//fonts.gstatic.com" crossorigin>
-		<link href="//fonts.googleapis.com/css2?family=Heebo:wght@400;700&family=Nunito+Sans&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-        <link href="/app/css/style.css" rel="stylesheet">
+		
+		<!-- UIkit CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.6/dist/css/uikit.min.css" />
+
+		<!-- UIkit JS -->
+		<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.6/dist/js/uikit.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.6/dist/js/uikit-icons.min.js"></script>
+		
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
+		
+		<link href="/css/style.css" rel="stylesheet">
+
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        @livewireStyles
-
     </head>
     <body>
+    
         <div uk-sticky="start: 200; animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky;">
-            <nav class="uk-navbar-container">
-                <div class="uk-container">
-                    <div uk-navbar>
-                        <div class="uk-navbar-left">
-                            <a class="uk-navbar-toggle uk-hidden@m" uk-toggle="" href="#offcanvas-nav">
-                                <span uk-navbar-toggle-icon></span>
-                            </a>
-                            <a class="uk-navbar-item uk-logo" href="/" aria-label="Back to Home"><img src="/img/logo.png"/></a>
-                        </div>
-                        <div class="uk-navbar-right">
-                        
-                            <!--
-                            <div class="uk-navbar-item uk-visible@s">
-                                <form class="uk-search uk-search-default">
-                                    <a href="" class="uk-search-icon-flip" uk-search-icon></a>
-                                    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search">
-                                </form>
-                            </div>-->
 
-                            <div class="uk-inline tm-user">
-                            @php
-                                $user = Auth::user();
-                            @endphp
+            <nav class="uk-navbar-container tm-head-container uk-visible@m">
+                <div class="tm-head-small">
+                    <div class="uk-container uk-container-xlarge">
+                        <div uk-navbar>
+                            <div class="uk-navbar-left">
+                            
+                                <div class="uk-navbar-item"><a class="uk-text-small" href="#"><span uk-icon="icon: phone"></span> +38(073) 004-72-95</a></div>
 
-                            @if ($user)
-                                <button class="uk-button uk-button-link uk-visible@s" type="button">Личный кабинет <span uk-drop-parent-icon></span></button>
-                                <div class="uk-card uk-card-body uk-card-default uk-card-small uk-width-expand" uk-drop="">
-                                    <div class="uk-flex uk-flex-center">
-                                        <ul class="uk-nav uk-dropdown-nav uk-text-small">
-                                            <li><a href="/user/add-adv">Подать обьявление</a></li>
-                                            <li><a href="/user/my-adv">Мои обьявления</a></li>
-                                            <li><a href="/user/account/">Мои данные</a></li>
-                                            <li>
-                                                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                    Выход
-                                                </a>
-                                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                                    @csrf
-                                                </form>
-                                            </li>
-
-                                        </ul>
+                                @if (isset($TopMenuStructures) && count($TopMenuStructures) > 0)
+                                    <ul class="uk-navbar-nav uk-visible@s">
+                                        @foreach ($TopMenuStructures as $Structure) 
+                                            <li><a href="/{{ $Structure->path() }}">{{ $Structure->name }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                                
+                            </div>
+                            <div class="uk-navbar-right">
+                            
+                                <div class=" uk-navbar-item">
+                                    <div class="uk-inline tm-user">
+                                        <!--<a href="#"><span uk-icon="icon: user"></span> </a>-->
+                                        <button class="uk-button uk-button-link uk-padding-remove-left uk-padding-remove-right" type="button">Личный кабинет <span uk-drop-parent-icon></span></button>
+                                        <div class="uk-card uk-card-body uk-card-default uk-card-small uk-width-small" uk-drop="">
+                                            <div class="uk-flex uk-flex-center">
+                                                <ul class="uk-nav uk-dropdown-nav uk-text-small">
+                                                    <li><a href="/account/order">История покупок</a></li>
+                                                    <li><a href="/account/details">Мои данные</a></li>
+                                                    <li><a href="/account/address">Адрес для доставки</a></li>
+                                                    <li><a href="/account/favorites">Избранное</a></li>
+                                                    <li><a href="/account/club-card">Клубная программа</a></li>
+                                                    <li><a href="/account/subscription">Рассылки</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            @else 
-                                <a class="uk-button uk-button-link uk-visible@s" href="/user/login">Вход / Регистрация</a>
+                                
+                                <div class="uk-navbar-item">
+                                    <a href="#"><span uk-icon="icon: heart"></span> (2)</a>
+                                </div>
+                                
+                                <div class="uk-navbar-item">
+                                    <a href="#"><span uk-icon="icon: bag"></span> (2)</a>
+                                    <div class="uk-card uk-card-default uk-card-small uk-card-body" uk-drop="">
+                                        <!--small card-->
+                                        <div class="uk-text-center uk-margin-small-bottom uk-flex uk-flex-top uk-flex-center uk-flex-middle uk-position-relative">
+                                            Корзина
+                                            <span class="uk-margin-small-right uk-position-center-right">1 товар</span>
+                                        </div>
+                                        <div class="tm-tovar-card-small uk-inline">
+                                            <a class="uk-margin-small-right uk-icon uk-position-top-right" uk-icon="icon:close; ratio:0.7"></a>
+                                            <div class="uk-grid-small uk-flex-middle" uk-grid>
+                                                <div class="uk-width-auto">
+                                                    <img class="uk-tovar-avatar" src="images/uig1.jpeg" width="80" height="80" alt="">
+                                                </div>
+                                                <div class="uk-width-expand">
+                                                    <h4 class="uk-margin-remove tm-name-card-small"><a class="uk-link-reset" href="#">Apple iPhone 11 Pro 256GB Space Gray</a></h4>
+                                                    <ul class="uk-subnav uk-subnav-divider uk-margin-remove-top">
+                                                        <li><a href="#">Size: 61"</a></li>
+                                                        <li><a href="#">Color: Red</a></li>
+                                                    </ul>
+                                    
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="uk-grid-small" uk-grid>
+                                                <div class="uk-width-auto">Сумма заказа:</div><div class="uk-width-expand uk-text-right">350,20€</div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="uk-text-center">
+                                            <button class="uk-button uk-button-primary">Оформить заказ</button>
+                                            <button class="uk-button uk-width-1-1 uk-button-link">Перейти в корзину</button>
+                                        </div>
+                                        <!--Small card-->
+                                    </div>            	
+                                </div>
+                            </div>
+                        </div>  
+                    </div>        
+                </div>	
+                <div class="uk-container uk-container-xlarge">
+                    <div uk-navbar>
+                        <div class="uk-navbar-left">
+                            <a class="uk-navbar-item uk-logo" href="/" aria-label="Back to Home"><img data-src="/images/logo.png" uk-img="" /></a>
+                        </div>
+                        <div class="uk-navbar-center">
+                            
+                            @if (isset($ShopGroups) && count($ShopGroups) > 0)
+                                <ul class="uk-navbar-nav">
+                                    @foreach ($ShopGroups as $ShopGroup) 
+                                        <li>
+
+                                            @php
+                                            $ChildCount = $ShopGroup->getChildCount();
+                                            @endphp
+
+                                            <a href="/{{ $ShopGroup->getFullPath() }}">{{ $ShopGroup->name }}@if($ChildCount["groupsCount"] > 0)<span uk-navbar-parent-icon></span>@endif</a>
+
+                                            @if ($ChildCount["groupsCount"] > 0)
+                                                <div class="uk-navbar-dropdown">
+                                                    <ul class="uk-nav uk-navbar-dropdown-nav">
+                                                        @foreach (\App\Models\ShopGroup::where("active", 1)->where("parent_id", $ShopGroup->id)->get() as $ShopGroupLevel2)
+                                                            <li><a href="/{{ $ShopGroupLevel2->getFullPath() }}">{{ $ShopGroupLevel2->name }}</a></li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </li>
                             @endif
+                            
+                        </div>
+                        <div class="uk-navbar-right">
+                            <div class="uk-margin-small-right uk-navbar-item uk-visible@s">
+                                <form class="uk-search uk-search-default">
+                                    <a href="" class="uk-search-icon-flip" uk-search-icon></a>
+                                    <input class="uk-search-input uk-border-rounded" type="search" placeholder="Search" aria-label="Search">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+            <nav class="uk-navbar-container tm-head-container-mob uk-hidden@m">
+                <div class="uk-container uk-container-expand">
+                    <div uk-navbar>
+                        <div class="uk-navbar-left"> 
+                            <a class="uk-navbar-item uk-logo" href="/" aria-label="Back to Home"><img data-src="/images/logo.png" style="height:50px;" uk-img="" /></a>
+                        </div>
+                        <div class="uk-navbar-right">
+
+                            <div id="offcanvas-nav" uk-offcanvas="overlay: true">
+                                <div class="uk-offcanvas-bar uk-padding-remove-bottom"> 
+                                    <div uk-height-viewport="offset-top: true; offset-bottom: true">
+                                        <button class="uk-offcanvas-close" type="button" uk-close></button>
+                                        <ul class="uk-nav uk-nav-default">
+                                            <li class="uk-nav-header">Каталог</li>
+                                            <li class="uk-parent">
+                                                <a href="#">Сумки</a>
+                                                <ul class="uk-nav-sub">
+                                                    <li><a href="#">Сумки женские</a></li>
+                                                    <li><a href="#">Сумки мужские</a></li>
+                                                    <li><a href="#">Сумки на пояс</a></li>
+                                                    <li><a href="#">Дорожные сумки</a></li>
+                                                </ul>
+                                            </li>
+                                            <li class="uk-parent">
+                                                <a href="#">Портмоне и кошельки</a>
+                                                <ul class="uk-nav-sub">
+                                                    <li><a href="#">Мужские кошельки</a></li>
+                                                    <li><a href="#">Женские кошельки</a></li>
+                                                    <li><a href="#">Картхолдеры, визитницы</a></li>
+                                                </ul>
+                                            </li>            
+                                        </ul>
+                                        <hr />
+                                        <ul class="uk-nav uk-nav-default"> 
+                                            <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: user"></span> Войти / Зарегистрироваться</a></li>
+                                        </ul>
+                                    </div>  
+
+                                    <div class=" uk-overlay uk-overlay-default uk-text-center off-footer-tm">
+                              
+                                        <ul class="uk-nav uk-nav-default"> 
+                                            <li>
+                                                <a href="/ru/o-nas/pay/" title="Условия оплаты и доставки">Условия оплаты и доставки</a>
+                                            </li>
+                                            <li>
+                                                <a href="/ru/o-nas/rules/" title="Условия возврата и обмена">Условия возврата и обмена</a>
+                                            </li>
+                                            <li>
+                                                <a href="/ru/o-nas/garantii/" title="Гарантии">Гарантии</a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/ru/o-nas/contacts/" title="Контакты">Контакты</a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/ru/o-nas/politika/" title="Политика конфиденциальности">Политика конфиденциальности</a>
+                                            </li>
+                            
+                                            <li class="uk-nav-divider"></li>     
+                                            <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: phone"></span> +38(073) 004-72-95</a></li>
+                                        
+                                            <li class="uk-nav-divider"></li>
+                                            <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: clock"></span> время работы <br /> пн-пт 9-20, сб 10-16<br /> вс- выходной</a></li>
+                                        </ul>
+                            
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <a class="uk-navbar-toggle" href="#" uk-search-icon></a>
+                                <div class="uk-navbar-dropdown" uk-drop="mode: click; cls-drop: uk-navbar-dropdown; boundary: !.uk-navbar; flip: false">
+                                    <div class="uk-grid-small uk-flex-middle" uk-grid>
+                                        <div class="uk-width-expand">
+                                            <form class="uk-search uk-search-navbar uk-width-1-1">
+                                                <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" autofocus>
+                                            </form>
+                                        </div>
+                                        <div class="uk-width-auto">
+                                            <a class="uk-drop-close" href="#" uk-close></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="uk-navbar-item"><a href="#"><span uk-icon="icon: heart"></span> (2)</a></div>
+                                
+                            <div class="uk-navbar-item">
+                                <a href="#"><span uk-icon="icon: bag"></span> (2)</a>
+                                
+                                <div class="uk-card uk-card-default uk-card-small uk-card-body" uk-drop="">
+                                    <!--small card-->
+                                    <div class="uk-text-center uk-margin-small-bottom uk-flex uk-flex-top uk-flex-center uk-flex-middle uk-position-relative">
+                                        Корзина
+                                        <span class="uk-margin-small-right uk-position-center-right">1 товар</span>
+                                    </div>
+                                    <div class="tm-tovar-card-small uk-inline">
+                                        <a class="uk-margin-small-right uk-icon uk-position-top-right" uk-icon="icon:close; ratio:0.7"></a>
+                                    
+                                        <div class="uk-grid-small uk-flex-middle" uk-grid>
+                                            <div class="uk-width-auto">
+                                                <img class="uk-tovar-avatar" src="/images/uig1.jpeg" width="80" height="80" alt="">
+                                            </div>
+                                            <div class="uk-width-expand">
+                                                <h4 class="uk-margin-remove tm-name-card-small"><a class="uk-link-reset" href="#">Apple iPhone 11 Pro 256GB Space Gray</a></h4>
+                                                <ul class="uk-subnav uk-subnav-divider uk-margin-remove-top">
+                                                    <li><a href="#">Size: 61"</a></li>
+                                                    <li><a href="#">Color: Red</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="uk-grid-small" uk-grid>
+                                            <div class="uk-width-auto">Сумма заказа:</div>
+                                            <div class="uk-width-expand uk-text-right">350,20€</div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="uk-text-center">
+                                        <button class="uk-button uk-button-primary">Оформить заказ</button>
+                                        <button class="uk-button uk-width-1-1 uk-button-link">Перейти в корзину</button>
+                                    </div>
+                                    <!--Small card-->
+                                </div>        
+                            </div>
+                            <div class="uk-navbar-item">
+                                <a class="uk-navbar-toggle" uk-navbar-toggle-icon href="#offcanvas-nav" uk-toggle></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </nav>
         </div>
-        
+    
         <div id="offcanvas-nav" uk-offcanvas="overlay: true">
             <div class="uk-offcanvas-bar">
+                <button class="uk-offcanvas-close" type="button" uk-close></button>
                 <ul class="uk-nav uk-nav-default">
-                    @if (isset($shop_groups) && count($shop_groups) > 0)
-                        <li class="uk-parent">
-                            <a>Каталог</a>
-                            <ul class="uk-nav-sub">
-                                @foreach ($shop_groups as $shop_group) 
-                                    <li><a href="{{ $shop_group->getFullPath() }}">{{ $shop_group->name }}</a></li>
-                                @endforeach
-                            </ul>
-                        </li>
-                    @endif
+                    <li class="uk-nav-header">Каталог</li>
+                    <li class="uk-parent">
+                        <a href="#">Сумки</a>
+                        <ul class="uk-nav-sub">
+                            <li><a href="#">Сумки женские</a></li>
+                            <li><a href="#">Сумки мужские</a></li>
+                            <li><a href="#">Сумки на пояс</a></li>
+                            <li><a href="#">Дорожные сумки</a></li>
+                        </ul>
+                    </li>
+                    <li class="uk-parent">
+                        <a href="#">Портмоне и кошельки</a>
+                        <ul class="uk-nav-sub">
+                            <li><a href="#">Мужские кошельки</a></li>
+                            <li><a href="#">Женские кошельки</a></li>
+                            <li><a href="#">Картхолдеры, визитницы</a></li>
+                        </ul>
+                    </li>            
+                    
                 </ul>
+                <hr />
+                <ul class="uk-nav uk-nav-default"> 
+                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: user"></span> Войти / Зарегистрироваться</a></li>
+                </ul>
+                
+                <div class="uk-position-bottom uk-overlay uk-overlay-default uk-text-center off-footer-tm">
+                
+                <ul class="uk-nav uk-nav-default">
+                
+                <li>
+                <a href="/ru/o-nas/pay/" title="Условия оплаты и доставки">Условия оплаты и доставки</a>
+                </li>
+        
+                <li>
+                <a href="/ru/o-nas/rules/" title="Условия возврата и обмена">Условия возврата и обмена</a>
+                </li>
+                <li>
+                <a href="/ru/o-nas/garantii/" title="Гарантии">Гарантии</a>
+                </li>
+
+                <li>
+                <a href="/ru/o-nas/contacts/" title="Контакты">Контакты</a>
+                </li>
+
+                <li>
+                <a href="/ru/o-nas/politika/" title="Политика конфиденциальности">Политика конфиденциальности</a>
+                </li>
+
+                <li class="uk-nav-divider"></li>     
+                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: phone"></span> +38(073) 004-72-95</a></li>
+                    
+                <li class="uk-nav-divider"></li>
+                <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: clock"></span> время работы <br /> пн-пт 9-20, сб 10-16<br /> вс- выходной</a></li>
+                </ul>
+                
+                </div>
+
             </div>
-        </div>
-        
-        <div class="tm-content">
-        
-            <div class="uk-container">
-            
+        </div>	
+	
+        <div class="tm-content" uk-height-viewport="offset-top: true;offset-bottom: true">
+            <div class="uk-container uk-container-xlarge">
+                
                 @if (isset($breadcrumbs) && count($breadcrumbs) > 0)
                     <div class="uk-section-small uk-padding-remove-bottom">
                         <nav aria-label="Breadcrumb">
@@ -115,60 +374,82 @@
 
                 @yield('content')
 
-                <div class="uk-section-default uk-section uk-section-small">
-                    <div class="uk-container">                
-                        <hr />
-                        <div class="tm-grid-expand uk-grid-row-large uk-grid-margin-large uk-grid" uk-grid="">
-                            <div class="uk-width-1-2@s uk-width-1-4@m uk-first-column">         
-                                <h3 class="uk-h4 uk-margin">Адрес</h3>
-                                <div class="uk-panel uk-margin">
-                                    Украина, Одесса<br>
-                                    Дерибасовская 21, офис 23<br> 
-                                </div>
-                            </div>
+            </div>            
+        </div>
 
-                            @if (isset($shop_groups) && count($shop_groups) > 0)
-                                <div class="uk-width-1-2@s uk-width-1-4@m">
-                                    <h3 class="uk-h4 uk-margin">Категории</h3>
-                                    <ul class="uk-list">
-                                        @foreach ($shop_groups as $shop_group) 
-                                            <li><a href="{{ $shop_group->getFullPath() }}" class="el-link uk-link-text uk-margin-remove-last-child">{{ $shop_group->name }}</a></li>
-                                        @endforeach
-                                    </ul>  
-                                </div>
-                            @endif
+        <div>
+            <!--Футер1-->
+            <div class="uk-section-default uk-section uk-section-small">
+                <div class="uk-container uk-container-xlarge">                
+                    <hr />       
+                    <div class="tm-grid-expand uk-grid-row-large uk-grid-margin-large uk-grid" uk-grid="">
+                        <div class="uk-width-1-2@s uk-width-1-4@m uk-first-column">  
+                            <h3 class="uk-h4 uk-margin">Время работы</h3>
+                            <div class="uk-panel uk-margin"><b>пн-пт:</b> 9-20,<br><b>сб:</b> 10-16,<br><b>вс:</b> выходной</div>
+                  
+                        </div>
 
-                            @if (isset($bottom_menu_structures) && count($bottom_menu_structures) > 0)
-                                <div class="uk-width-1-2@s uk-width-1-4@m">
-                                    <h3 class="uk-h4 uk-margin">О компании</h3>
-                                    <ul class="uk-list">
-                                        @foreach ($bottom_menu_structures as $structure) 
-                                            <li><a href="{{ $structure->path() }}" class="uk-link-text">{{ $structure->name }}</a></li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                        <div class="uk-width-1-2@s uk-width-1-4@m">
+
+                            @if (isset($ShopGroups) && count($ShopGroups) > 0)
+                                <h3 class="uk-h4 uk-margin">Каталог</h3>
+                                <ul class="uk-list">
+                                    @foreach ($ShopGroups as $ShopGroup) 
+                                        <li><a class="el-link uk-link-text uk-margin-remove-last-child" href="{{ $ShopGroup->getFullPath() }}">{{ $ShopGroup->name }}</a></li>
+                                    @endforeach
+                                </ul>
                             @endif
 
                         </div>
+
+                        <div class="uk-width-1-2@s uk-width-1-4@m">
+                            <h3 class="uk-h4 uk-margin">Документы</h3>
+ 
+                            <ul class="uk-list">
+                                @php
+                                    $Structure = \App\Models\Structure::find(28);
+                                @endphp
+                                @if (!is_null($Structure) && $Structure->active == 1)
+                                    <li><a href="/{{ $Structure->path() }}" class="uk-link-text">{{ $Structure->name }}</a></li>
+                                @endif
+
+                                @php
+                                $Structure = \App\Models\Structure::find(29);
+                                @endphp
+                                @if (!is_null($Structure) && $Structure->active == 1)
+                                    <li><a href="/{{ $Structure->path() }}" class="uk-link-text">{{ $Structure->name }}</a></li>
+                                @endif
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
-
-                <div class="uk-section-default uk-section uk-section-small uk-padding-remove-top">
-                    <div class="uk-container">                
-                        <hr />
-                        <div uk-grid>
-                            <div class="uk-text-small">
-                                © @php echo date("Y") @endphp
-                                Dog Portal. 
-                                All rights reserved. Powered by <a target="_blank" href="https://www.astra-site.com/">AstraSite</a>.
-                            </div>
+            </div>
+            <!--Футер1-->
+        
+            <!--Футер-->
+            <div class="uk-section-default uk-section-xsmall uk-padding-remove-top">
+                <div class="uk-container uk-container-xlarge">                
+                    <hr />
+                    <div uk-grid>
+                        <div class="uk-text-small">© {{ date("Y") }} Tech Space. All rights reserved. Powered by <a target="_blank" href="https://www.astra-site.com/">AstraSite</a>.</div>
+                        <div class="uk-flex uk-flex-right uk-width-expand@s">
+                            <span class="footer-insta">
+                                <a target="_blank" href="https://www.instagram.com/bartbag_kyiv/" uk-icon="icon: instagram">
+                                    Follow us
+                                </a>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
+            <!--Футер-->
         </div>
 
-        @livewireScripts
-	    
+        @yield('css')
+        @yield('js')
+
 	</body>
-</html>   
+</html>    
+
+

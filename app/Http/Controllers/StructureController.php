@@ -18,10 +18,6 @@ class StructureController extends Controller
             ]
         ];
 
-        //echo $structure;
-
-        //dd(self::breadcrumbs($structure));
-
         Route::view($path, 'structure', [
             'structure' => $structure,
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($structure)) 
@@ -58,6 +54,35 @@ class StructureController extends Controller
             array_unshift($aResult, $Result);
 
             return $aResult;
+        }
+    }
+
+    public static function getStructure()
+    {
+        $aUrls = explode("/", request()->path());
+        $count = count($aUrls);
+
+        if ($count > 0) {
+            return self::getChildStructure($aUrls); 
+        }
+
+        return false;
+         
+    }
+
+    public static function getChildStructure($aUrls, $parent = 0, $level = 0)
+    {    
+
+        if (isset($aUrls[$level])) {
+            $Structure = Structure::where("active", 1)->where("path", $aUrls[$level])->where("parent_id", $parent)->first();
+            if (!is_null($Structure) && $level < count($aUrls) - 1) {
+                $level++;
+                return self::getChildStructure($aUrls, $Structure->id, $level);
+            } else if (!is_null($Structure) && $level == count($aUrls) - 1) {
+                return $Structure;
+            } else {
+                return false;
+            }
         }
     }
 }

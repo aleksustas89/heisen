@@ -80,15 +80,15 @@ class ShopGroupController extends Controller
             'group' => $shopGroup,
             'menuGroups' => self::getChildGroups(0),
             'items' => $oShopItems,
-            'plural' => Str::plural(count($oShopItems), 'обьявление', 'обьявления', 'обьявлений'),
             'properties' => ShopItemController::getProperties($shopGroup->id),
-            'path' => $path,
+            'path' => "/" . $path,
             'filterProperties' => $aProperties,
             'sorting' => $sorting,
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopGroup, [], false))
         ]);
         
     }
+
 
     public static function getGroupsTree($parent_id = 0, $aResult = [], $levels = 0)
     {
@@ -111,7 +111,7 @@ class ShopGroupController extends Controller
                 $result[$count]["id"] = $oShopGroup->id;
                 $result[$count]["name"] = $oShopGroup->name;
                 $result[$count]["parent_id"] = $oShopGroup->parent_id;
-                $result[$count]["path"] = $oShopGroup->getFullPath();
+                $result[$count]["path"] = "/" . $oShopGroup->getFullPath();
                 $result[$count]["sub"] = self::getChildGroups($oShopGroup->id);
             }
             return $result;

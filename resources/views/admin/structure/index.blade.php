@@ -73,7 +73,8 @@
                                     </td>
                                     <td>
                                         @php
-                                            $url = "/" . $structure->path();
+                                            $path = $structure->path();
+                                            $url = $path != '/' ? "/" . $path : $path;
                                         @endphp
                                         <a class="line-through-if-off" target="_blank" href="{{ $url }}">{{ $url }}</a>
                                     </td>

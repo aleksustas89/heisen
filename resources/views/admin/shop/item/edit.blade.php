@@ -175,9 +175,8 @@
 
                                         <div class="text-center">
                                             <div class="file-box-image">
-                                                @if (!empty($image['image_small']))
-                                                    <img src="{{ $image['image_small'] }}">
-                                                @elseif (!empty($image['image_large']))
+                              
+                                                @if (!empty($image['image_large']))
                                                     <img src="{{ $image['image_large'] }}">
                                                 @endif
                                             </div>

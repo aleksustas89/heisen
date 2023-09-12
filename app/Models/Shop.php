@@ -20,7 +20,7 @@ class Shop extends Model
     {
         $oShop = self::getShop();
 
-        return '/' . $oShop->path . '/';
+        return $oShop->path . '/';
     }
 
     public static function getShop()

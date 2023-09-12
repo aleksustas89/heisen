@@ -81,7 +81,7 @@ class ShopItem extends Model
     public function url()
     {
 
-        return Shop::path() . ($this->shop_group_id > 0 ? $this->ShopGroup->path() : '') . $this->path;
+        return Shop::path() . ($this->shop_group_id > 0 ? $this->ShopGroup->path() . "/" : '') . $this->path;
     }
 
     public function delete()
@@ -98,25 +98,33 @@ class ShopItem extends Model
         $aReturn = [];
 
         foreach ($this->ShopGroup->Shop_Item_Property_For_Groups as $k => $Shop_Item_Property_For_Groups) {
-            $aReturn[$k]["property_id"] = $Shop_Item_Property_For_Groups->ShopItemProperty->id;
-            $aReturn[$k]["property_name"] = $Shop_Item_Property_For_Groups->ShopItemProperty->name;
-            
-            $object = ShopItemProperty::getObjectByType($Shop_Item_Property_For_Groups->ShopItemProperty->type);
 
-            $values = [];
-            
-            foreach ($object::where("entity_id", $this->id)->where("property_id", $Shop_Item_Property_For_Groups->ShopItemProperty->id)->get() as $value) {
+            if (!is_null($Shop_Item_Property_For_Groups->ShopItemProperty)) {
+                $aReturn[$k]["property_id"] = $Shop_Item_Property_For_Groups->ShopItemProperty->id;
+                $aReturn[$k]["property_name"] = $Shop_Item_Property_For_Groups->ShopItemProperty->name;
+                $aReturn[$k]["show_in_item"] = $Shop_Item_Property_For_Groups->ShopItemProperty->show_in_item;
                 
-                switch ($Shop_Item_Property_For_Groups->ShopItemProperty->type) {
-                    case 4:
-                        $values[] = ShopItemListItem::find($value->value)->value;
-                    break;
-                    default:
-                        $values[] = $value->value;
+                $object = ShopItemProperty::getObjectByType($Shop_Item_Property_For_Groups->ShopItemProperty->type);
+    
+                $values = [];
+                
+                foreach ($object::where("entity_id", $this->id)->where("property_id", $Shop_Item_Property_For_Groups->ShopItemProperty->id)->get() as $value) {
+                    
+                    switch ($Shop_Item_Property_For_Groups->ShopItemProperty->type) {
+                        case 4:
+                            $ShopItemListItem = ShopItemListItem::find($value->value);
+                            if (!is_null($ShopItemListItem)) {
+                                $values[] = $ShopItemListItem->value;
+                            }
+                            
+                        break;
+                        default:
+                            $values[] = $value->value;
+                    }
                 }
+    
+                $aReturn[$k]["property_values"] = $values;
             }
-
-            $aReturn[$k]["property_values"] = $values;
 
         }
 

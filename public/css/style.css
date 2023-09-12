@@ -1,0 +1,236 @@
+@font-face{
+    font-family: 'Haymaker';
+    src: url('/fonts/aa_haymaker.ttf');
+}
+
+.uk-navbar-container{background-color:#fff!important;}
+
+html{
+    font-size: 14px;
+    line-height: 18px;
+    font-family: 'Open Sans', sans-serif;
+}
+a{color:#9D8660;}
+a:hover{color:#302e2e;text-decoration:none;}
+
+.tm-head-container{background: #fff;box-shadow: 0 10px 20px rgba(50,50,50,.1)}
+.tm-head-container-mob{box-shadow: 0 2px 20px rgba(50,50,50,.1);}  
+.tm-head-container-mob .uk-navbar-item, .tm-head-container-mob .uk-navbar-nav>li>a, .tm-head-container-mob .uk-navbar-toggle {min-height: 60px;}  
+
+h1,h2,h3,h4,h5,h6,.uk-h1,.uk-h2,.uk-h3,.uk-h4,.uk-h5,.uk-h6{font-family:"Haymaker"!important;}
+.uk-h4{font-size:1.1rem;}
+
+.tm-price{color:#8b6a1b;font-size:14px;font-weight:bold;}
+.uk-accordion-title{font-family:"Haymaker"!important;font-size: 1.05rem;line-height: 1.4;}
+
+.uk-logo img{height:70px;}
+
+.tm-user .uk-button{padding-left:20px;padding-right:20px;}
+.tm-user .uk-button-link{font-size:11px;}
+.tm-user a{font-size:11px;}
+            
+            
+.tm-tovar-card-small .uk-subnav a, .tm-tovar-card-small span{font-size:10px;}
+.tm-name-card-small, .uk-button{font-size:11px;}
+        
+.tm-tovar .uk-card-title{font-size:1.1rem;line-height:1.1;font-weight:600;}
+
+.tm-nav-small .uk-navbar-item{min-height: 40px;}
+.tm-nav-small .uk-border-rounded {border-radius: 50px;}
+.tm-head-cintainer{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background: #fff;
+}
+
+.uk-search-default .uk-search-input:focus {
+    background-color: rgba(0,0,0,0);
+    border-color: #8b6a1c;
+}
+
+.uk-search-default  .uk-search-input{
+    border-radius:500px;
+    border-color: #8b6a1c;
+}
+.uk-search-default{width:200px;}
+
+.uk-search .uk-search-icon {
+    color: #9d8661;
+}
+
+.off-footer-tm{background-color:#302e2e;}
+
+.tm-color-switcher a{
+    background-size:cover;
+    background-position:center center;
+    border: 2px solid #fff;
+    display: inline-flex;
+    border-radius: 50%;
+    width:38px;height:38px;
+    position:relative;
+}
+
+.tm-color-switcher  a:before {
+    content: "";
+    display: block;
+    position: absolute;
+    right:-3px;
+    top:-3px;
+    width:42px;height:42px;
+    border: 1px solid #8b6a1b;
+    border-radius: 50%
+}
+
+.tm-color-switcher  a.tm-active1{
+    border: 0px solid #8b6a1b;
+}
+
+.bg1{width:30px;height:30px;margin:0px;}
+
+.tm-color-switcher2  a, .tm-color-switcher2 span{background-size:cover;background-position:center center;padding: 0px;border: 1px solid #8b6a1b;display: inline-flex;border-radius: 10%;width:50px;height:50px}
+
+.bg1-1{width:50px;height:50px;margin:0px;border:0px!important;}	
+
+input.uk-form-width-xsmall {
+    width: 60px;
+    border-radius: 500px!important;
+}
+
+.uk-button-primary {
+    background-color: #9d8661;
+    color: #fff;
+    border: 1px solid transparent;
+}
+.uk-button-primary:hover {
+    background-color: #302e2e;
+}
+.uk-button {
+    border-radius: 500px!important;
+}
+.uk-icon-button {
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    border-radius: 500px;
+    background: #9d8661;
+    color: #fff;
+}
+
+.tm-other-switcher a{
+    border: 0px solid #666;
+    padding: 7px;
+    border-radius: 5px;
+    display:inline-block;
+    background:#dddddd8a;
+}
+.tm-other-switcher a.tm-active{
+    border: 1px solid #8b6a1b;
+}
+
+.uk-grid-column-small, .uk-grid-xsmall {
+    margin-left: -5px;
+}
+.uk-grid-column-small>*, .uk-grid-xsmall>* {
+    padding-left: 5px;
+}
+
+.tm-head-small{
+    background:#9d86610f;
+}
+.tm-head-small .uk-navbar-item{
+    min-height: 40px;
+    font-size: .675rem;
+}
+.tm-head-small .uk-navbar-nav>li>a{
+    min-height: 40px;
+    font-size: .675rem;
+}
+.tm-head-small .uk-button-link{
+    font-size: .675rem;
+}
+
+
+.uk-light .uk-nav-default>li>a, .uk-offcanvas-bar .uk-nav-default>li>a, .uk-overlay-primary .uk-nav-default>li>a, .uk-section-primary:not(.uk-preserve-color) .uk-nav-default>li>a, .uk-section-secondary:not(.uk-preserve-color) .uk-nav-default>li>a, .uk-tile-primary:not(.uk-preserve-color) .uk-nav-default>li>a, .uk-tile-secondary:not(.uk-preserve-color) .uk-nav-default>li>a {
+    color: rgb(255 255 255 / 80%);
+}
+.uk-offcanvas-bar .uk-nav-default .uk-nav-sub a{
+    color: rgb(255 255 255 / 80%);
+}
+
+.tm-filtr-mob .uk-card-default{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    position: absolute!important;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    background-color: #302e2e;
+    color: #fff;
+}
+
+.color01{background-color:red!important;}
+.color02{background-color:#00008b!important;}
+.color03{background-color:green!important;}
+
+.uk-offcanvas-bar .tm-color .uk-checkbox:checked{
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2211%22%20viewBox%3D%220%200%2014%2011%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23fff%22%20points%3D%2212%201%205%207.5%202%205%201%205.5%205%2010%2013%201.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A")
+}
+
+.uk-offcanvas-bar .uk-text-small{font-family: 'Open Sans', sans-serif;font-size:11px;}
+
+.tm-tovar .uk-overlay{padding:5px;color:red;}
+.tm-price span{
+    margin-left:10px;color: #898686;
+    -webkit-text-decoration-line: line-through;
+    text-decoration-line: line-through;
+}
+.tm-tovar-grid .tm-icon{
+    height:auto!important;
+    padding: 10px;
+    height: 25px;
+    width: 25;
+}
+.tm-tovar-grid .tm-tovar .uk-position-xsmall {
+    margin: 5px!important;
+    --uk-position-margin-offset: 5px!important;
+}
+
+.uk-pagination>.uk-active>* {
+    color: #9D8660;
+}
+
+.static-page {
+    font-size: 18px;
+    line-height: 24px;
+}
+
+@keyframes blinker {
+    from { color: #f70074; }
+    to { color: gray;  }
+}
+   
+@-webkit-keyframes blinker {
+    from { color: #f70074; }
+    to { color: gray; }
+}
+
+.footer-insta {
+    position: fixed;
+    bottom: 22px;
+    right: 30px;
+
+    animation-name: blinker;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    animation-duration: 4s;
+    -webkit-animation-name: blinker;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -webkit-animation-duration: 4s;
+}
+
+.off-footer-tm{
+    margin-left: -20px;
+    margin-right: -20px;
+}

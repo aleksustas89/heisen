@@ -87,39 +87,24 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
 $sCurrentPath = request()->path();
 
 if (Schema::hasTable('structures')) {
-    $oStructureController = App\Http\Controllers\StructureController::class;
 
-    foreach (Structure::where('active', '1')->get() as $structure) {
-        
-        if ($sPath = $structure->path([], $activeAll = false)) {
-
-            if ($sPath == $sCurrentPath) {
-                App\Http\Controllers\StructureController::show($sCurrentPath, $structure);
-            }
-        }
+    if ($Structure = App\Http\Controllers\StructureController::getStructure()) {
+        App\Http\Controllers\StructureController::show($sCurrentPath, $Structure);
     }
 }
 
-// if (Schema::hasTable('shops')) {
-//     $oShop = Shop::find(Shop::$shop_id);
-//     if (!is_null($oShop->id) && $oShop->active == 1) {
-//         Route::view($oShop->path, 'shop/home', ['shop' => $oShop]);
+if (Schema::hasTable('shops')) {
+ 
+    if ($shopObject = App\Http\Controllers\ShopController::getObjectByPath()) {
+        $object_name = get_class($shopObject);
 
-//         foreach (shopGroup::where('active', '1')->get() as $oShopGroup) {
-
-//             if ($oShopGroup->getFullPath() == $path) {
-//                 App\Http\Controllers\ShopGroupController::show($sCurrentPath, $oShopGroup);
-//             }
-//         }
-
-//         foreach (shopItem::where('active', '1')->get() as $oShopItem) {
-
-//             if ($oShopItem->url() . "/" == $path) {
-//                 App\Http\Controllers\ShopItemController::show($path, $oShopItem);
-//             }
-//         }
-//     }
-// }
+        if ($object_name == 'App\Models\ShopGroup') {
+            App\Http\Controllers\ShopGroupController::show($sCurrentPath, $shopObject);
+        } else if ($object_name == 'App\Models\ShopItem') {
+            App\Http\Controllers\ShopItemController::show($sCurrentPath, $shopObject);
+        }
+    }
+}
 
 // Route::group(['namespace' => 'App\Http\Controllers'], function() {
 
