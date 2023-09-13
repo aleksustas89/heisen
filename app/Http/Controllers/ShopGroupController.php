@@ -111,7 +111,7 @@ class ShopGroupController extends Controller
                 $result[$count]["id"] = $oShopGroup->id;
                 $result[$count]["name"] = $oShopGroup->name;
                 $result[$count]["parent_id"] = $oShopGroup->parent_id;
-                $result[$count]["path"] = "/" . $oShopGroup->getFullPath();
+                $result[$count]["path"] = $oShopGroup->url();
                 $result[$count]["sub"] = self::getChildGroups($oShopGroup->id);
             }
             return $result;
@@ -144,7 +144,7 @@ class ShopGroupController extends Controller
         $Result["name"] = $shopGroup->name;
 
         if ($firstElemIsActive || count($aResult) > 0) {
-            $Result["url"] = $shopGroup->getFullPath();
+            $Result["url"] = $shopGroup->url();
         }
         
         array_unshift($aResult, $Result);

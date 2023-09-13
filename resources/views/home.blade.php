@@ -86,7 +86,7 @@
             <div class="uk-child-width-1-2@s uk-text-center uk-grid-small home-group-small" uk-grid>
                 @if ($first)
                     <div class="home-group-item">
-                        <a href="/{{ $first->getFullPath() }}" class="uk-inline-block">
+                        <a href="{{ $first->url() }}" class="uk-inline-block">
                             <img src="{{ $first->dir() }}{{ $first->image_large }}" />
                             <div class="uk-position-bottom-center uk-padding">
                                 <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $first->name }}</h3>
@@ -96,7 +96,7 @@
                 @endif
                 @if ($second)
                     <div class="home-group-item">
-                        <a href="/{{ $second->getFullPath() }}" class="uk-inline-block">
+                        <a href="{{ $second->url() }}" class="uk-inline-block">
                             <img src="{{ $second->dir() }}{{ $second->image_large }}">
                             <div class="uk-position-bottom-center uk-padding">
                                 <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $second->name }}</h3>
@@ -108,7 +108,7 @@
             
             @if ($third)
                 <div class="uk-child-width-1-1 uk-text-center uk-grid-small home-group-large home-group-item" uk-grid>
-                    <a href="/{{ $third->getFullPath() }}" class="uk-inline-block">
+                    <a href="{{ $third->url() }}" class="uk-inline-block">
                         <img src="{{ $third->dir() }}{{ $third->image_large }}">
                         <div class="uk-position-bottom-center uk-padding">
                             <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $third->name }}</h3>
@@ -120,7 +120,7 @@
         <div>
             @if ($fourth)
                 <div class="uk-child-width-1-1 uk-text-center uk-grid-small home-group-large home-group-item" uk-grid>
-                    <a href="/{{ $fourth->getFullPath() }}" class="uk-inline-block">
+                    <a href="{{ $fourth->url() }}" class="uk-inline-block">
                         <img src="{{ $fourth->dir() }}{{ $fourth->image_large }}">
                         <div class="uk-position-bottom-center uk-padding">
                             <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $fourth->name }}</h3>
@@ -131,7 +131,7 @@
             <div class="uk-child-width-1-2@s uk-text-center uk-grid-small" uk-grid>
                 @if ($fifth)
                     <div class="home-group-small home-group-item">
-                        <a href="/{{ $fifth->getFullPath() }}" class="uk-inline-block">
+                        <a href="{{ $fifth->url() }}" class="uk-inline-block">
                             <img src="{{ $fifth->dir() }}{{ $fifth->image_large }}">
                             <div class="uk-position-bottom-center uk-padding">
                                 <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $fifth->name }}</h3>
@@ -141,7 +141,7 @@
                 @endif   
                 @if ($sixth) 
                     <div class="home-group-small home-group-item">
-                        <a href="/{{ $sixth->getFullPath() }}" class="uk-inline-block">
+                        <a href="{{ $sixth->url() }}" class="uk-inline-block">
                             <img src="{{ $sixth->dir() }}{{ $sixth->image_large }}">
                             <div class="uk-position-bottom-center uk-padding">
                                 <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $sixth->name }}</h3>

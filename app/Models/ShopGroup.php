@@ -20,17 +20,10 @@ class ShopGroup extends Model
         return $this->hasMany(ShopItemPropertyForGroup::class);
     }
 
-    public function getFullPath()
-    {
-        return Shop::path() . $this->path();
-    }
-
     public function path($aResult = array(), $activeAll = true)
     {
         
-        // if ($this->path != '/') {
-             array_unshift($aResult, $this->path);
-        // }
+        array_unshift($aResult, $this->path);
 
         if ($this->parent_id > 0) {
             $oShopGroup = ShopGroup::where("id", $this->parent_id)->whereIn('active', $activeAll ? [0,1] : [1])->first();
@@ -42,6 +35,14 @@ class ShopGroup extends Model
         } else {
             return $this->path != '/' ? implode("/", $aResult) : $this->path;
         }
+    }
+
+    /**
+     * @return url in format: /shop/group
+    */
+    public function url()
+    {
+        return "/" . Shop::path() . $this->path();
     }
 
     public function dir()

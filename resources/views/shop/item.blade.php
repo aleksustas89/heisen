@@ -53,7 +53,7 @@
 
             <div class="uk-width-expand@m">
                 <div class="uk-margin">
-                    <a class="el-content uk-link-text" href="/{{ $item->ShopGroup->getFullPath() }}">{{ $item->ShopGroup->name }}</a>   
+                    <a class="el-content uk-link-text" href="{{ $item->ShopGroup->url() }}">{{ $item->ShopGroup->name }}</a>   
                 </div>
                 <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical uk-width-xlarge">{{ $item->name }}</h1>
                 <div class="uk-h3 uk-margin uk-margin-top"> 

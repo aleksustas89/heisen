@@ -125,13 +125,13 @@
                                             $ChildCount = $ShopGroup->getChildCount();
                                             @endphp
 
-                                            <a href="/{{ $ShopGroup->getFullPath() }}">{{ $ShopGroup->name }}@if($ChildCount["groupsCount"] > 0)<span uk-navbar-parent-icon></span>@endif</a>
+                                            <a href="{{ $ShopGroup->url() }}">{{ $ShopGroup->name }}@if($ChildCount["groupsCount"] > 0)<span uk-navbar-parent-icon></span>@endif</a>
 
                                             @if ($ChildCount["groupsCount"] > 0)
                                                 <div class="uk-navbar-dropdown">
                                                     <ul class="uk-nav uk-navbar-dropdown-nav">
                                                         @foreach (\App\Models\ShopGroup::where("active", 1)->where("parent_id", $ShopGroup->id)->get() as $ShopGroupLevel2)
-                                                            <li><a href="/{{ $ShopGroupLevel2->getFullPath() }}">{{ $ShopGroupLevel2->name }}</a></li>
+                                                            <li><a href="{{ $ShopGroupLevel2->url() }}">{{ $ShopGroupLevel2->name }}</a></li>
                                                         @endforeach
                                                     </ul>
                                                 </div>
@@ -395,7 +395,7 @@
                                 <h3 class="uk-h4 uk-margin">Каталог</h3>
                                 <ul class="uk-list">
                                     @foreach ($ShopGroups as $ShopGroup) 
-                                        <li><a class="el-link uk-link-text uk-margin-remove-last-child" href="{{ $ShopGroup->getFullPath() }}">{{ $ShopGroup->name }}</a></li>
+                                        <li><a class="el-link uk-link-text uk-margin-remove-last-child" href="{{ $ShopGroup->url() }}">{{ $ShopGroup->name }}</a></li>
                                     @endforeach
                                 </ul>
                             @endif
