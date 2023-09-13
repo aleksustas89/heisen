@@ -94,6 +94,7 @@ class ShopItemPropertyController extends Controller
 
         $shopItemProperty->name = $request->name;
         $shopItemProperty->type = $request->type;
+        $shopItemProperty->destination = $request->destination;
         $shopItemProperty->multiple = $request->multiple == 'on' ? 1 : 0;
         $shopItemProperty->show_in_item = $request->show_in_item == 'on' ? 1 : 0;
         $shopItemProperty->show_in_filter = $request->show_in_filter == 'on' ? 1 : 0;

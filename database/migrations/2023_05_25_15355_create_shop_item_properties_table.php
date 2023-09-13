@@ -16,6 +16,7 @@ return new class extends Migration
                 $table->id();
                 $table->string('name');
                 $table->integer('type');
+                $table->integer('destination')->default(0);
                 $table->tinyInteger('multiple')->default(0);
                 $table->integer('shop_item_list_id')->default(0)->index();
                 $table->integer('sorting')->default(0);

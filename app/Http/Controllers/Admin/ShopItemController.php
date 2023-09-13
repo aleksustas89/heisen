@@ -246,14 +246,14 @@ class ShopItemController extends Controller
                 if (is_array($request->$property_id)) {
                     foreach ($request->$property_id as $Value) {
 
-                        if (!empty(trim($Value))) {
+                        //if (!empty(trim($Value))) {
 
                             $oProperty_Value = ShopItemProperty::getObjectByType($property->type);        
                             $oProperty_Value->property_id = $property->id;
                             $oProperty_Value->entity_id = $shopItem->id;
-                            $oProperty_Value->value = $Value;
+                            $oProperty_Value->value = !empty($Value) ? $Value : ShopItemProperty::getDafaultValueByObject($oProperty_Value);
                             $oProperty_Value->save();
-                        }
+                        //}
                     }
                 } else {
                     
@@ -281,6 +281,9 @@ class ShopItemController extends Controller
                 } else {
                     if (isset($request->$property_id)) {
                         $Value->value = $request->$property_id;
+                        $Value->save();
+                    } else {
+                        $Value->value = ShopItemProperty::getDafaultValueByObject($oCreatedProperty_Value);
                         $Value->save();
                     }
                 }

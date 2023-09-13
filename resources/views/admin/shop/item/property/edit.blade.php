@@ -85,6 +85,14 @@
                                             <script>new Selectr('[name="type"]');</script>
                                         </div>
                                         <div class="col-4">
+                                            <label class="mb-1">Предназначение</label>
+                                            <select id="shop_item_property_destination" name="destination">
+                                                <option {{ $property->destination == 0 ? 'selected' : '' }} value="0">По умолчанию</option>
+                                                <option {{ $property->destination == 1 ? 'selected' : '' }} value="1">Цвет</option>
+                                            </select> 
+                                            <script>new Selectr('[name="destination"]');</script>
+                                        </div>
+                                        <div class="col-4">
 
                                             @php
                                                 $listVisible = $property->type != 4 ? true : false

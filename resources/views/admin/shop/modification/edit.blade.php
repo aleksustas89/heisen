@@ -114,14 +114,25 @@
                                         
                                     </label>
 
+                                    @php
+
+                                    $shop_item_image_id = 0;
+
+                                    @endphp
+
                                     @foreach ($shopItem->ShopItemImages as $ShopItemImage)
 
                                         @php
-                                        $active = !is_null($ShopModificationImage) && $ShopModificationImage->shop_item_image_id == $ShopItemImage->id
-                                                        ? true : false;
+                                        $activeClass = false;
+                                        
+                                        if (!is_null($ShopModificationImage) && $ShopModificationImage->shop_item_image_id == $ShopItemImage->id) {
+                                            $activeClass = true;
+                                            $shop_item_image_id = $ShopModificationImage->shop_item_image_id;
+                                        }
+                     
                                         @endphp
 
-                                        <label onclick="adminModification.select($(this))" data-id="{{ $ShopItemImage->id }}" @class(['file-box', 'd-flex', 'align-items-center', 'justify-content-center', 'position-relative', 'pointer', 'active' => $active])>
+                                        <label onclick="adminModification.select($(this))" data-id="{{ $ShopItemImage->id }}" @class(['file-box', 'd-flex', 'align-items-center', 'justify-content-center', 'position-relative', 'pointer', 'active' => $activeClass])>
                                             
                                             <div class="text-center">
                                                 <div class="file-box-image">
@@ -133,7 +144,7 @@
 
                                     @endforeach
 
-                                    <input type="hidden" name="shop_item_image_id" value="{{ $active ? $ShopModificationImage->shop_item_image_id : 0 }}" />
+                                    <input type="hidden" name="shop_item_image_id" value="{{ $shop_item_image_id }}" />
 
                                 </div>
                          

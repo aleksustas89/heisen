@@ -446,6 +446,8 @@
             <!--Футер-->
         </div>
 
+        <script src="/js/main.js"></script>
+
         @yield('css')
         @yield('js')
 

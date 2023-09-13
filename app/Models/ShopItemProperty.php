@@ -65,4 +65,21 @@ class ShopItemProperty extends Model
 
         return $object;
     }
+
+    public static function getDafaultValueByObject($object)
+    {
+        switch (get_class($object)) {
+            case "App\Models\PropertyValueInt":
+                $result = 0;
+            break;
+            case "App\Models\PropertyValueString":
+                $result = '';
+            break;
+            case "App\Models\PropertyValueFloat":
+                $result = 0;
+            break;
+        }
+        
+        return $result;
+    }
 }

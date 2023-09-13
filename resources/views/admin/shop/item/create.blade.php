@@ -132,7 +132,7 @@
                                                         <select name="shop_currency_id" class="form-select">
                                                             @foreach ($currencies as $currency)
                                                                 @if ($currency->default == 1)
-                                                                    <option checked="checked" value="{{ $currency->id }}">{{ $currency->name }}</option>
+                                                                    <option selected="selected" value="{{ $currency->id }}">{{ $currency->name }}</option>
                                                                 @else
                                                                     <option value="{{ $currency->id }}">{{ $currency->name }}</option> 
                                                                 @endif

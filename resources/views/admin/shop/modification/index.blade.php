@@ -90,7 +90,10 @@
                                         <td class=" text-center">{{ $shopItem->shop_currency_id > 0 ? $shopItem->ShopCurrency->name : ''}}</td>
                                         <td>
                                             @foreach ($shopItem->PropertyValueInts as $propertyValueInt)
-                                                <div>{{$propertyValueInt->ShopItemProperty->name}}: {{$propertyValueInt->ShopItemListItem->value}}</div>
+                                                @if ($propertyValueInt->ShopItemListItem)
+                                                    <div>{{$propertyValueInt->ShopItemProperty->name}}: {{ $propertyValueInt->ShopItemListItem->value}}</div>
+                                                @endif
+                                                
                                             @endforeach
                                         </td>
                                         <td>
