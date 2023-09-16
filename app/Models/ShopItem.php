@@ -75,13 +75,17 @@ class ShopItem extends Model
     public function path()
     {
 
-        return Shop::$store_path . 'group_' . $this->shop_group_id . '/item_' . $this->id . '/';
+        $object = $this->parentItemIfModification();
+
+        return Shop::$store_path . 'group_' . $object->shop_group_id . '/item_' . $object->id . '/';
     }
 
     public function url()
     {
 
-        return Shop::path() . ($this->shop_group_id > 0 ? $this->ShopGroup->path() . "/" : '') . $this->path;
+        $object = $this->parentItemIfModification();
+
+        return "/" . Shop::path() . ($object->shop_group_id > 0 ? $object->ShopGroup->path() . "/" : '') . $object->path;
     }
 
     public function delete()
@@ -145,5 +149,25 @@ class ShopItem extends Model
     {
 
         return $this->modification_id > 0 ? ShopItem::find($this->modification_id) : $this;
+    }
+
+    /**
+     * 
+     * @return modification image if modification or first image of item
+    */
+    public function getShopItemImage(): ShopItemImage
+    {
+        if ($this->modification_id > 0) {
+            if (!is_null($this->ShopModificationImage)) {
+                return $this->ShopModificationImage->ShopItemImage;
+            } else {
+                //изображение основного товара
+                return $this->parentItemIfModification()->ShopItemImage;
+            }
+        } else {
+            foreach ($this->ShopItemImages as $ShopItemImage) {
+                return $ShopItemImage;
+            }
+        }
     }
 }

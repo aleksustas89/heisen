@@ -1,6 +1,6 @@
 @extends('main')
 
-@section('seo_title', $group->seo_title)
+@section('seo_title', !empty($group->seo_title) ? $group->seo_title : $group->name)
 @section('seo_description', $group->seo_description)
 @section('seo_keywords', $group->seo_keywords)
 

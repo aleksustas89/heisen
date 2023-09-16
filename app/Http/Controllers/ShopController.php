@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\ShopGroup;
 use App\Models\ShopItem;
+use App\Models\ShopCurrency;
 
 class ShopController extends Controller
 {
@@ -41,5 +42,10 @@ class ShopController extends Controller
                 return false;
             }
         }
+    }
+
+    public static function CurrentCurrency()
+    {
+        return ShopCurrency::where("default", 1)->first();
     }
 }

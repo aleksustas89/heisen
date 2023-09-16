@@ -27,15 +27,7 @@ return new class extends Migration
             $table->string('phone')->default('');
 
             $table->string('city')->default('');
-            $table->string('postcode', 50)->default('');
-
-            $table->string('address')->default('');
-            $table->string('house', 15)->default('');
-            $table->string('flat', 15)->default('');
-
-            $table->string('office')->default('');
-            $table->tinyInteger('courier')->nullable()->default(0);
-
+            $table->tinyInteger('not_call')->default(0);
             $table->text('description')->nullable();
             $table->text('delivery_information')->nullable();
 

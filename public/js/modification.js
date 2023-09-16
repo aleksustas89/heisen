@@ -28,7 +28,7 @@ var Modification = {
                         item.parent("li").addClass("active");
                         item.parent("li").siblings("li").removeClass("active");
                         $(".buy-btn").removeAttr("disabled").removeAttr("uk-tooltip");
-                        $("#cart_add").attr("onclick", "Cart.add("+ data.item.id +")");
+                        $("#cart_add").attr("onclick", "Cart.add('"+ $("#cart_add").data("route") +"', "+ data.item.id +", " + $("[name='quantity']").val()  + ")");
                         $("#item-name").text(data.item.name);
                         $("#item-price").text(data.item.price);
 

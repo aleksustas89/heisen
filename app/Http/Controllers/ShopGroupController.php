@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 use App\Models\ShopGroup;
 use App\Models\ShopItem;
 use App\Models\Shop;
-use App\Models\Str;
 use App\Http\Controllers\Admin\ShopItemController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
@@ -18,7 +17,7 @@ class ShopGroupController extends Controller
     static public function show($path, $shopGroup)
     {
 
-        $oShop = Shop::getShop();
+        $oShop = Shop::get();
 
         if($groups = self::getChildGroups($shopGroup->id)) {
             $groups = self::ArrayMerge($groups);

@@ -72,7 +72,7 @@ class ShopGroupController extends Controller
             $shopGroup = new ShopGroup();
         }
 
-        $oShop = Shop::getShop();
+        $oShop = Shop::get();
 
         //$request->validate([
             // 'name' => ['required', 'string', 'max:255'],

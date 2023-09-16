@@ -16,7 +16,7 @@ class ShopItemProperty extends Model
 
     public function shopItemList()
     {
-        return $this->belongsTo(shopItemList::class);
+        return $this->belongsTo(ShopItemList::class);
     }
 
     public static function types()

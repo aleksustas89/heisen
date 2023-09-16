@@ -113,18 +113,56 @@
                                         <i class="las la-truck bg-soft-primary"></i>
                                     </div>
                                     <div class="activity-info-text">
-                                        <div class="row mb-3">
 
-                                            <div class="col-6"> 
-                                                <label class="mb-1 my-2">Способ доставки</label>
-                                                <select class="form-control" name="shop_delivery_id">
-                                                    <option value="0">...</option>
-                                                    @foreach (App\Models\ShopDelivery::get() as $ShopShopDelivery) 
-                                                    <option value="{{ $ShopShopDelivery->id }}">{{ $ShopShopDelivery->name }}</option>
+                                        <div class="row mb-3">
+                                    
+                                            <div class="col-12"> 
+                                                <label class="mb-1 my-2">Доставка</label>
+
+                                                <div class="form-group my-2">
+                                                    <label class="label my-2">Город</label>
+                                                    <input type="text" class="form-control" value="" name="city">
+                                                </div>
+                                              
+
+                                                <div>
+
+                                                    @foreach ($shopDeliveries as $k => $ShopDelivery) 
+                                                       
+                                                        <input  id="delivery-{{ $ShopDelivery->id }}" onclick="radioTab.click($(this))" value="{{ $ShopDelivery->id }}" type="radio" class="btn-check" name="shop_delivery_id" autocomplete="off">
+                                                        <label class="btn btn-outline-{{ $ShopDelivery->color }} btn-sm" for="delivery-{{ $ShopDelivery->id }}">{{ $ShopDelivery->name }}</label>
                                                     @endforeach
-                                                </select>
+
+                                                    <div class="tab-content">
+                                                        @foreach ($shopDeliveries as $k => $ShopDelivery) 
+
+                                                            <div class="tab-pane p-3 " id="tab-delivery-{{ $ShopDelivery->id }}" role="tabpanel">
+                                                                <div class="row">
+
+                                                                    @foreach ($ShopDelivery->ShopDeliveryFields as $ShopDeliveryField)
+                                    
+                                                                        @if ($ShopDeliveryField->type == 1)
+                                                                            <div class="form-group">
+                                                                                <label class="label my-2">{{$ShopDeliveryField->caption  }}</label>
+                                                                                <input type="text" class="form-control" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
+                                                                            </div>
+                                                                        @elseif($ShopDeliveryField->type == 2)
+                                                                            <input type="hidden" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
+                                                                        @endif
+                                                                    @endforeach
+
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                
+                                                    </div>
+
+                                                </div>
                                             </div>
+    
+                                     
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="activity-info mt-3">
@@ -220,7 +258,8 @@
 @endsection
 
 @section('js')
-    <script src="/assets/plugins/select/selectr.min.js"></script>                                   
+    <script src="/assets/plugins/select/selectr.min.js"></script>          
+    <script src="/assets/js/radioTab.js"></script>                              
     <script>new Selectr('.select');</script>
 @endsection
 

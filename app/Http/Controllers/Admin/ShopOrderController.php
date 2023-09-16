@@ -32,6 +32,7 @@ class ShopOrderController extends Controller
     {
         return view('admin.shop.order.create', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
+            'shopDeliveries' => ShopDelivery::get(),
         ]);
     }
 
@@ -57,6 +58,7 @@ class ShopOrderController extends Controller
         return view('admin.shop.order.edit', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'order' => $shopOrder,
+            'shopDeliveries' => ShopDelivery::get(),
             'aDeliveryValues' => $aDeliveryValues,
         ]);
     }

@@ -1,30 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>@yield('seo_title')</title>
-        <meta name="keywords" content="@yield('seo_keywords')">
-        <meta name="description" content="@yield('seo_description')">
+@extends('skeleton')
 
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-		
-		<!-- UIkit CSS -->
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.6/dist/css/uikit.min.css" />
-
-		<!-- UIkit JS -->
-		<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.6/dist/js/uikit.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.6/dist/js/uikit-icons.min.js"></script>
-		
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
-		
-		<link href="/css/style.css" rel="stylesheet">
-
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-    </head>
-    <body>
-    
+@section('skeleton_content')
         <div uk-sticky="start: 200; animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky;">
 
             <nav class="uk-navbar-container tm-head-container uk-visible@m">
@@ -69,41 +45,10 @@
                                     <a href="#"><span uk-icon="icon: heart"></span> (2)</a>
                                 </div>
                                 
-                                <div class="uk-navbar-item">
-                                    <a href="#"><span uk-icon="icon: bag"></span> (2)</a>
-                                    <div class="uk-card uk-card-default uk-card-small uk-card-body" uk-drop="">
-                                        <!--small card-->
-                                        <div class="uk-text-center uk-margin-small-bottom uk-flex uk-flex-top uk-flex-center uk-flex-middle uk-position-relative">
-                                            Корзина
-                                            <span class="uk-margin-small-right uk-position-center-right">1 товар</span>
-                                        </div>
-                                        <div class="tm-tovar-card-small uk-inline">
-                                            <a class="uk-margin-small-right uk-icon uk-position-top-right" uk-icon="icon:close; ratio:0.7"></a>
-                                            <div class="uk-grid-small uk-flex-middle" uk-grid>
-                                                <div class="uk-width-auto">
-                                                    <img class="uk-tovar-avatar" src="images/uig1.jpeg" width="80" height="80" alt="">
-                                                </div>
-                                                <div class="uk-width-expand">
-                                                    <h4 class="uk-margin-remove tm-name-card-small"><a class="uk-link-reset" href="#">Apple iPhone 11 Pro 256GB Space Gray</a></h4>
-                                                    <ul class="uk-subnav uk-subnav-divider uk-margin-remove-top">
-                                                        <li><a href="#">Size: 61"</a></li>
-                                                        <li><a href="#">Color: Red</a></li>
-                                                    </ul>
-                                    
-                                                </div>
-                                            </div>
-                                            <hr />
-                                            <div class="uk-grid-small" uk-grid>
-                                                <div class="uk-width-auto">Сумма заказа:</div><div class="uk-width-expand uk-text-right">350,20€</div>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <div class="uk-text-center">
-                                            <button class="uk-button uk-button-primary">Оформить заказ</button>
-                                            <button class="uk-button uk-width-1-1 uk-button-link">Перейти в корзину</button>
-                                        </div>
-                                        <!--Small card-->
-                                    </div>            	
+                                <div class="uk-navbar-item" id="cart">
+
+                                    @include('shop.cart-items', ["littleCart" => 1])
+         	
                                 </div>
                             </div>
                         </div>  
@@ -445,13 +390,7 @@
             </div>
             <!--Футер-->
         </div>
+@endsection
 
-        <script src="/js/main.js"></script>
-
-        @yield('css')
-        @yield('js')
-
-	</body>
-</html>    
 
 

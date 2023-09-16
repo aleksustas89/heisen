@@ -1,13 +1,10 @@
 <?php
 
-use App\Models\ShopDiscount;
 use Illuminate\Support\Facades\Route;
-use App\Models\Shop;
-use App\Models\ShopGroup;
-use App\Models\ShopItem;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Structure;
 
+use Illuminate\Support\Facades\Mail;
+use App\Models\Mail\SendOrder;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,8 +102,13 @@ if (Schema::hasTable('shops')) {
         }
     }
 
-    //ajax
+    Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name("cartIndex");
+    Route::post('/cart', [App\Http\Controllers\CartController::class, 'saveOrder'])->name("saveIndex");
+    Route::post('/add-to-cart', [App\Http\Controllers\CartController::class, 'addToCart'])->name("cartAdd");
+    Route::post('/get-cart', [App\Http\Controllers\CartController::class, 'getLittleCart'])->name("getCart");
+    Route::post('/delete-from-cart', [App\Http\Controllers\CartController::class, 'deleteFromCart'])->name("deleteFromCart");
     Route::post('/get-modification', [App\Http\Controllers\ShopItemController::class, 'getModification']);
+    Route::get('/get-cities', [App\Http\Controllers\CartController::class, 'getCities']);
 }
 
 // Route::group(['namespace' => 'App\Http\Controllers'], function() {
@@ -120,30 +122,4 @@ if (Schema::hasTable('shops')) {
 // });
 
 //главная страница
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
-
-
-
-
-
-
-
-
-
-//Route::get('/migrate/groups', [App\Http\Controllers\MigrateController::class, 'groups'])->name('migrate-groups');
-//Route::get('/migrate/items', [App\Http\Controllers\MigrateController::class, 'items'])->name('migrate-items');
-//Route::get('/migrate/groups/images', [App\Http\Controllers\MigrateController::class, 'groupImages'])->name('migrate-images');
-//Route::get('/migrate/items/images', [App\Http\Controllers\MigrateController::class, 'itemImages'])->name('migrate-item-images');
-//Route::get('/migrate/mod/images', [App\Http\Controllers\MigrateController::class, 'modImages'])->name('migrate-mod-images');
-//Route::get('/migrate/mod/additional-images', [App\Http\Controllers\MigrateController::class, 'additionalImages'])->name('migrate-add-images');
-//Route::get('/migrate/list-items', [App\Http\Controllers\MigrateController::class, 'listItems'])->name('migrate-list-items');
-//Route::get('/migrate/properties', [App\Http\Controllers\MigrateController::class, 'properties'])->name('migrate-properties');
-//Route::get('/migrate/properties-for-groups', [App\Http\Controllers\MigrateController::class, 'propertiesForGroups'])->name('migrate-properties-for-groups');
-//Route::get('/migrate/property_value_ints', [App\Http\Controllers\MigrateController::class, 'propertyValueInts'])->name('migrate-property_value_ints');
-//Route::get('/migrate/property_value_strings', [App\Http\Controllers\MigrateController::class, 'propertyValueStrings'])->name('migrate-property_value_strings');
-//Route::get('/migrate/property_value_floats', [App\Http\Controllers\MigrateController::class, 'propertyValueFloat'])->name('migrate-property_value_float');
-//Route::get('/migrate/mod-names', [App\Http\Controllers\MigrateController::class, 'modNames'])->name('migrate-mod-names');
-//Route::get('/migrate/item-names', [App\Http\Controllers\MigrateController::class, 'itemNames'])->name('migrate-item-names');
-//Route::get('/migrate/group-names', [App\Http\Controllers\MigrateController::class, 'groupNames'])->name('migrate-group-names');
-//Route::get('/migrate/normalize-values', [App\Http\Controllers\MigrateController::class, 'normalizeValues'])->name('migratenormalizeValues');
-//Route::get('/migrate/currensies', [App\Http\Controllers\MigrateController::class, 'currensies'])->name('migratecurrensies');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name("home");

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Route;
 use App\Models\ShopItemProperty;
+use App\Models\PropertyValueInt;
 use Illuminate\Http\Request;
 use App\Models\ShopItem;
 
@@ -21,8 +22,19 @@ class ShopItemController extends Controller
                                     ->whereNot("property_value_ints.value", 0)
                                     ->get();
 
+                                    
+        $aModValues = PropertyValueInt::select("property_value_ints.value")->whereIn("property_value_ints.entity_id", function ($query) use ($shopItem) {
+            $query->select('id')->from('shop_items')->where("modification_id", $shopItem->id);
+        })->whereNot("value", 0)->get()->toArray();
+
+        $modListValues = [];
+        foreach ($aModValues as $aModValue) {
+            $modListValues[] = $aModValue["value"];
+        }
+
         Route::view($path, 'shop/item', [
             'aModProperties' => $ShopItemProperties,
+            'aModValues' => $modListValues,
             'item' => $shopItem,
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
         ]);
@@ -73,6 +85,7 @@ class ShopItemController extends Controller
             $response["item"]["image"] = $aShopItem->ShopModificationImage;
 
         }
+        
 
         return response()->json($response);
     }

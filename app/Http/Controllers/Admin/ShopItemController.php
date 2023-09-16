@@ -141,7 +141,7 @@ class ShopItemController extends Controller
     public function saveShopItem (Request $request, $shopItem = false) 
     {
 
-        $oShop = Shop::getShop();
+        $oShop = Shop::get();
 
         if (!$shopItem) {
             $shopItem = new ShopItem();

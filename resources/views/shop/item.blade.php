@@ -55,7 +55,7 @@
                 <div class="uk-margin">
                     <a class="el-content uk-link-text" href="{{ $item->ShopGroup->url() }}">{{ $item->ShopGroup->name }}</a>   
                 </div>
-                <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical uk-width-xlarge">{{ $item->name }}</h1>
+                <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical">{{ $item->name }}</h1>
                 <div class="uk-h3 uk-margin uk-margin-top"> 
                     <span id="item-price">{{ App\Services\Helpers\Str::price($item->price) }}</span> {{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}
                 </div>
@@ -65,6 +65,7 @@
 
                     @php
                         $choose_properties_tooltip = [];
+                        
                     @endphp
 
                     @foreach ($aModProperties as $property)
@@ -76,17 +77,23 @@
                         <label class="uk-form-label" data-property-id="{{ $property->id }}" data-name="{{ $property->name }}">{{ $property->name }}</label>
                         <div class="uk-margin-small">
 
+
+                            @php
+                                $Shop_Item_List_Items = $property->shopItemList->listItems->whereIn("id", $aModValues);
+                            @endphp
+
                             @if ($property->destination == 1 && $property->type == 4 && !is_null($property->shopItemList))
                                 <ul class="uk-grid uk-grid-xsmall tm-color-switcher" uk-grid="">
 
-                                    @foreach ($property->shopItemList->listItems as $Shop_Item_List_Item)
+
+                                    @foreach ($Shop_Item_List_Items as $Shop_Item_List_Item)
                                         <li><a onclick="Modification.choose($(this))" data-id="{{ $Shop_Item_List_Item->id }}" uk-tooltip="{{ $Shop_Item_List_Item->value }}" class="uk-border-circle" data-src="{{ $Shop_Item_List_Item->description }}" uk-img=""></a></li>
                                     @endforeach
 
                                 </ul>
                             @elseif($property->destination == 0 && $property->type == 4 && !is_null($property->shopItemList))
                                 <ul class="uk-grid uk-grid-xsmall tm-other-switcher" uk-grid="">
-                                    @foreach ($property->shopItemList->listItems as $Shop_Item_List_Item)
+                                    @foreach ($Shop_Item_List_Items as $Shop_Item_List_Item)
                                         <li><a onclick="Modification.choose($(this))" data-id="{{ $Shop_Item_List_Item->id }}" uk-tooltip="{{ $Shop_Item_List_Item->value }}">{{ $Shop_Item_List_Item->value }}</a></li>
                                     @endforeach
                                 </ul>
@@ -100,9 +107,9 @@
                     
                     <div class="uk-margin-medium" uk-margin>
                         <div uk-form-custom="target: true" class="uk-visible@s">
-                            <input type="number" id="" class="uk-input uk-form-width-xsmall" name="quantity" value="1" title="Qty" size="4" min="1" max="" step="1" placeholder="" inputmode="numeric" autocomplete="off">
+                            <input type="number" class="uk-input uk-form-width-xsmall" name="quantity" value="1" title="Qty" size="4" min="1" max="" step="1" placeholder="" inputmode="numeric" autocomplete="off">
                         </div>
-                        <button type="button" id="cart_add" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ <span uk-icon="icon: cart"></span></button>
+                        <button type="button" id="cart_add" data-route="{{ route('cartAdd') }}" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ <span uk-icon="icon: cart"></span></button>
                         <button type="button" id="fast_order" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ В ОДИН КЛИК</button>
                         <a href="javascript:void(0)" class="uk-icon-button uk-margin-small-right" uk-icon="heart"></a>
                     </div>
@@ -177,5 +184,5 @@
 @section("js")
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="/js/modification.js"></script>
-    <script src="/js/add-cart.js"></script>
+    <script src="/js/cart.js"></script>
 @endsection

@@ -11,6 +11,6 @@
             <h3 class="uk-card-title uk-margin-small-bottom">{{ $item->name }}</h3>
             <p class="uk-margin-remove-top tm-price">{{ number_format($item->price, 0, ',', ' ') }} {{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}</p>
         </div>
-        <a class="uk-position-cover" href="/{{ $item->url() }}"></a>
+        <a class="uk-position-cover" href="{{ $item->url() }}"></a>
     </div>
 </div>

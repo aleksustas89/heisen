@@ -35,6 +35,12 @@
 
             <div class="card" id="id_content">
                 <form action="{{ route('shopOrder.update', $order->id) }}" method="POST" id="formEdit" enctype="multipart/form-data">
+
+                    @if ($order->not_call == 1)
+                        <div class="alert alert-success border-0" role="alert">
+                            <strong>Не звонить!</strong> Пользователь указал опцию отказа от подтвеждения заказа
+                        </div>
+                    @endif
              
                     @csrf
                     @method('PUT')
@@ -131,9 +137,6 @@
                                               
 
                                                 <div>
-                                                    @php
-                                                        $shopDeliveries = App\Models\ShopDelivery::get();
-                                                    @endphp
 
                                                     @foreach ($shopDeliveries as $k => $ShopDelivery) 
                                                         @php

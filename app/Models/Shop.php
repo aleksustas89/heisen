@@ -18,12 +18,12 @@ class Shop extends Model
 
     public static function path()
     {
-        $oShop = self::getShop();
+        $oShop = self::get();
 
         return $oShop->path . '/';
     }
 
-    public static function getShop()
+    public static function get()
     {
         return self::find(self::$shop_id);
     }
