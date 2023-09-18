@@ -74,10 +74,12 @@ class ShopItem extends Model
 
     public function path()
     {
-
         $object = $this->parentItemIfModification();
+        if ($object->shop_group_id > 0) {
+            return Shop::$store_path . 'group_' . $object->shop_group_id . '/item_' . $object->id . '/';
+        }
 
-        return Shop::$store_path . 'group_' . $object->shop_group_id . '/item_' . $object->id . '/';
+        return false;
     }
 
     public function url()
@@ -148,7 +150,8 @@ class ShopItem extends Model
     public function parentItemIfModification()
     {
 
-        return $this->modification_id > 0 ? ShopItem::find($this->modification_id) : $this;
+        return $this->modification_id > 0
+                    && !is_null($ShopItem = ShopItem::find($this->modification_id)) ? $ShopItem : $this;
     }
 
     /**

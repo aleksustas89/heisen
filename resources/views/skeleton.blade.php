@@ -26,9 +26,7 @@
     <body>
     
         <div class="tm-content" uk-height-viewport="offset-top: true;offset-bottom: true">
-            <div class="uk-container uk-container-xlarge">
-                @yield('skeleton_content')
-            </div>
+            @yield('skeleton_content')
         </div>
 
         <script src="/js/main.js"></script>
