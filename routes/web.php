@@ -111,15 +111,36 @@ if (Schema::hasTable('shops')) {
     Route::get('/get-cities', [App\Http\Controllers\CartController::class, 'getCities']);
 }
 
-// Route::group(['namespace' => 'App\Http\Controllers'], function() {
+Route::group(['namespace' => 'App\Http\Controllers'], function() {
 
-//     Route::view('user/login', 'user.login');
-//     Route::post('user/login', 'Auth\LoginController@login');
+    Route::prefix("client")->group(function() {
 
-//     Route::get('user/account', 'Auth\ChangeController@show');
-//     Route::post('user/account', 'Auth\ChangeController@execute')->name('changeUser');
+        Route::group(['middleware' => ['client-auth']], function() {
+            Route::get('login', 'Auth\LoginController@showLoginForm')->name("loginForm");
+            Route::post('login', 'Auth\LoginController@login')->name("login");
+            Route::get('register', 'Auth\RegisterController@registerForm')->name("registerForm");
+            Route::post('register', 'Auth\RegisterController@register')->name("register");
+        });
 
-// });
+        Route::group(['middleware' => ['client']], function() {
+            Route::get('account', 'Auth\ClientController@show')->name("clientAccount");
+            Route::post('account', 'Auth\ClientController@execute')->name('clientUpdate');
+            Route::post('logout', 'Auth\ClientController@logout')->name('clientLogout');
+
+            Route::get('orders', 'Auth\ClientController@orders')->name("clientOrders");
+
+            Route::prefix("favorites")->group(function() {
+                Route::get('/', 'Auth\ClientController@favorites')->name("clientFavorites");
+                Route::post('add', 'Auth\ClientController@addFavorite')->name("addFavorite");
+            });
+
+        });
+
+    });
+
+
+
+});
 
 //главная страница
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name("home");

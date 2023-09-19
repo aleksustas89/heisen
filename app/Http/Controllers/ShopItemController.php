@@ -7,6 +7,7 @@ use App\Models\ShopItemProperty;
 use App\Models\PropertyValueInt;
 use Illuminate\Http\Request;
 use App\Models\ShopItem;
+use Illuminate\Support\Facades\Auth;
 
 class ShopItemController extends Controller
 {

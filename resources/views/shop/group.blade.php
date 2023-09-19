@@ -135,8 +135,16 @@
                 
                 <div class="uk-child-width-1-4@s uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
 
+                    @php
+                        $client = Auth::guard('client')->user();
+
+                    @endphp
                     @foreach ($items as $item)
-                        @include('shop.list-item', ['item' => $item])
+                        @include('shop.list-item', [
+                            'item' => $item,
+                            'client' => $client,
+                            'clientFavorites' => !is_null($client) ? $client->getClientFavorites() : [],
+                        ])
                     @endforeach   
 
                 </div>
@@ -160,6 +168,5 @@
 @endsection
 
 @section("js")
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="/js/shop-group.js"></script>
 @endsection

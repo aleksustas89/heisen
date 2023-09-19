@@ -26,4 +26,19 @@ class Client extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function ClientFavorites()
+    {
+        return $this->hasMany(ClientFavorite::class);
+    }
+
+    public function getClientFavorites()
+    {
+        $clientFavorites = [];
+        foreach ($this->ClientFavorites as $favorite) {
+            $clientFavorites[] = $favorite->shop_item_id;
+        }
+        
+        return $clientFavorites;
+    }
 }

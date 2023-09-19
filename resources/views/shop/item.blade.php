@@ -8,7 +8,11 @@
 
     @php
         $images = $item->getImages();
+        $client = Auth::guard('client')->user();
+        $clientFavorites = !is_null($client) ? $client->getClientFavorites() : [];
     @endphp
+
+
 
 	<div class="uk-section-xsmall uk-padding-remove-top">
         <div uk-grid>
@@ -63,6 +67,8 @@
                 <form id="add_to_cart">   
                     @csrf
 
+                    <input type="hidden" name="shop_item_id" value="{{ $item->id }}" />
+
                     @php
                         $choose_properties_tooltip = [];
                         
@@ -104,20 +110,26 @@
                         </div>
 
                     @endforeach
-                    
-                    <div class="uk-margin-medium" uk-margin>
-                        <div uk-form-custom="target: true" class="uk-visible@s">
-                            <input type="number" class="uk-input uk-form-width-xsmall" name="quantity" value="1" title="Qty" size="4" min="1" max="" step="1" placeholder="" inputmode="numeric" autocomplete="off">
-                        </div>
-                        <button type="button" id="cart_add" data-route="{{ route('cartAdd') }}" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ <span uk-icon="icon: cart"></span></button>
-                        <button type="button" id="fast_order" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ В ОДИН КЛИК</button>
-                        <a href="javascript:void(0)" class="uk-icon-button uk-margin-small-right" uk-icon="heart"></a>
-                    </div>
 
-                    <input type="hidden" name="shop_item_id" value="{{ $item->id }}" />
-                
                 </form>
+                    
+                <div class="uk-margin-medium" uk-margin>
+                    <div uk-form-custom="target: true" class="uk-visible@s">
+                        <input type="number" class="uk-input uk-form-width-xsmall" name="quantity" value="1" title="Qty" size="4" min="1" max="" step="1" placeholder="" inputmode="numeric" autocomplete="off">
+                    </div>
+                    <button type="button" id="cart_add" data-route="{{ route('cartAdd') }}" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ <span uk-icon="icon: cart"></span></button>
+                    <button type="button" id="fast_order" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ В ОДИН КЛИК</button>
         
+                    @if (is_null($client))
+                        @include('shop.window-login')
+                    @else
+                        @php
+                        $active = in_array($item->id, $clientFavorites) ? true : false;
+                        @endphp
+                        <a onclick="Favorite.add($(this), {{ $item->id }}, '{{ route('addFavorite') }}')" @class(["add-to-favorite-link", "uk-icon", "uk-icon-button", "tm-icon", "active" => $active]) uk-icon="heart"></a>
+                    @endif
+                </div>
+
                 <hr />
                 <ul uk-accordion="collapsible: false" class="uk-list uk-list-divider">
                     <li>
@@ -182,7 +194,6 @@
 @endsection
 
 @section("js")
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="/js/modification.js"></script>
     <script src="/js/cart.js"></script>
 @endsection

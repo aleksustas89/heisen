@@ -23,29 +23,41 @@
                         </div>
                         <div class="uk-navbar-right">
                         
-                            <div class=" uk-navbar-item">
-                                <div class="uk-inline tm-user">
-                                    <!--<a href="#"><span uk-icon="icon: user"></span> </a>-->
-                                    <button class="uk-button uk-button-link uk-padding-remove-left uk-padding-remove-right" type="button">Личный кабинет <span uk-drop-parent-icon></span></button>
-                                    <div class="uk-card uk-card-body uk-card-default uk-card-small uk-width-small" uk-drop="">
-                                        <div class="uk-flex uk-flex-center">
-                                            <ul class="uk-nav uk-dropdown-nav uk-text-small">
-                                                <li><a href="/account/order">История покупок</a></li>
-                                                <li><a href="/account/details">Мои данные</a></li>
-                                                <li><a href="/account/address">Адрес для доставки</a></li>
-                                                <li><a href="/account/favorites">Избранное</a></li>
-                                                <li><a href="/account/club-card">Клубная программа</a></li>
-                                                <li><a href="/account/subscription">Рассылки</a></li>
-                                            </ul>
+                            @php
+                                $client = Auth::guard('client')->user();
+                            @endphp
+
+                            @if (is_null($client))
+
+                                <div class="uk-text-small">
+                                    <a href="{{ route("loginForm") }}">Кабинет</a> / <a href="{{ route("registerForm") }}">Регистрация</a>
+                                </div>
+
+                            @else
+                                <div class=" uk-navbar-item">
+                                    <div class="uk-inline tm-user">
+                                        <button class="uk-button uk-button-link uk-padding-remove-left uk-padding-remove-right" type="button">Личный кабинет <span uk-drop-parent-icon></span></button>
+                                        <div class="uk-card uk-card-body uk-card-default uk-card-small uk-width-small" uk-drop="">
+                                            <div class="uk-flex uk-flex-center">
+                                                <ul class="uk-nav uk-dropdown-nav uk-text-small">
+                                                    <li><a href="{{ route('clientOrders') }}">История покупок</a></li>
+                                                    <li><a href="{{ route('clientAccount') }}">Мои данные</a></li>
+                                                    <li><a href="{{ route('clientFavorites') }}">Избранное</a></li>
+                                                    <li><a href="javascript:void(0)" onclick="$('#logout-form').submit()">Выйти</a></li>
+                                                </ul>
+                                                <form id="logout-form" action="{{ route('clientLogout') }}" method="POST" class="d-none">
+                                                    @csrf                      
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <div class="uk-navbar-item">
-                                <a href="#"><span uk-icon="icon: heart"></span> (2)</a>
-                            </div>
-                            
+                                <div class="uk-navbar-item">
+                                    <a href="{{ route('clientFavorites') }}"><span uk-icon="icon: heart"></span> (<span id="favorites-count">{{ count($client->getClientFavorites()) }}</span>)</a>
+                                </div>
+
+                            @endif
+
                             <div class="uk-navbar-item" id="cart">
 
                                 @include('shop.cart-items', ["littleCart" => 1])

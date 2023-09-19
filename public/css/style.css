@@ -266,9 +266,10 @@ input.uk-form-width-xsmall {
  }
 
  .add-favorite-window {
-    margin-left: -125px;
+    margin-left: -122px;
     position: absolute;
     width: 300px;
+    left: 0 !important;
  }
 
  .little_cart_summ {
@@ -283,4 +284,15 @@ input.uk-form-width-xsmall {
 
 .uk-checkbox:checked, .uk-checkbox:indeterminate, .uk-radio:checked{
     background-color: #9d8661;
+}
+
+.add-to-favorite {
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+}
+
+a.add-to-favorite-link.active, a.add-to-favorite-link:active {
+    background-color: #ebebeb;
+    color: #666;
 }
