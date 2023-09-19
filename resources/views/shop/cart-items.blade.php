@@ -45,10 +45,11 @@
         </div>
 
         <hr />
-
-        <div class="uk-text-center">
-            <a href="{{ route("cartIndex") }}" class="uk-button uk-button-primary">Оформить заказ</a>
-        </div>
+        @if ($showLittleCart)
+            <div class="uk-text-center">
+                <a href="{{ route("cartIndex") }}" class="uk-button uk-button-primary">Оформить заказ</a>
+            </div>
+        @endif
         <!--Small card-->
     </div>   
 @endif
