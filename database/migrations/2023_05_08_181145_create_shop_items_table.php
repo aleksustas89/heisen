@@ -24,6 +24,7 @@ return new class extends Migration
                 $table->mediumText('seo_description')->nullable();
                 $table->mediumText('seo_keywords')->nullable();
                 $table->decimal('price', 12, 2)->default(0.00);
+                $table->tinyInteger('discounts')->default(0);
                 $table->integer('shop_currency_id')->default(0);
                 $table->integer('sorting')->default(0);
                 $table->string('marking', 50)->nullable();

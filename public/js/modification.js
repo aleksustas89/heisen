@@ -31,6 +31,7 @@ var Modification = {
                         $("#cart_add").attr("onclick", "Cart.add('"+ $("#cart_add").data("route") +"', "+ data.item.id +", " + $("[name='quantity']").val()  + ")");
                         $("#item-name").text(data.item.name);
                         $("#item-price").text(data.item.price);
+                        $("#item-old-price").text(data.item.oldPrice);
 
                         if ($("#uk-slide-" + data.item.image.shop_item_image_id).length) {
                             var slideshow = UIkit.slideshow("#uk-slideshow-items");

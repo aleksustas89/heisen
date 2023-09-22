@@ -23,4 +23,13 @@ class ShopDiscount extends Model
 
         return $types;
     }
+
+    public function check()
+    {
+        if (strtotime(date("Y-m-d H:i:s")) >= strtotime($this->start_datetime) && strtotime(date("Y-m-d H:i:s")) <= strtotime($this->end_datetime)) {
+            return true;
+        }
+
+        return false;
+    }
 }

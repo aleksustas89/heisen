@@ -1,6 +1,26 @@
+@php
+$discountPercent = 0;
+if ($item->discounts == 1) {
+    
+    $prices = App\Http\Controllers\ShopDiscountController::getModificationsPricesWithDiscounts($item);
+    $Discount = App\Http\Controllers\ShopDiscountController::getMaxDiscount($item);
+}
+@endphp
+
 <div>
     <div class="uk-card tm-tovar" data-id="{{ $item->id }}">
-        <!--<div class="uk-position-top-left uk-overlay uk-overlay-default uk-text-small">- 15%</div>-->
+        @if ($item->discounts == 1 && $Discount) 
+            <div class="uk-position-top-left uk-overlay uk-overlay-default uk-text-small">
+                
+                @if ($Discount->type == 0)
+                    до -{{ $Discount->value }}% 
+                @elseif($Discount->type == 1)
+                    до -{{ App\Http\Controllers\ShopDiscountController::getDiscountPercent($item, $Discount->value) }}%
+                @endif
+                
+            </div>
+        @endif
+       
         <div class="uk-position-top-right add-to-favorite uk-position-xsmall uk-text-xsmall">
             
             @if (!isset($client) || is_null($client))
@@ -19,7 +39,27 @@
         </div>
         <div class="uk-card-body uk-padding-remove-left uk-padding-remove-right">
             <h3 class="uk-card-title uk-margin-small-bottom">{{ $item->name }}</h3>
-            <p class="uk-margin-remove-top tm-price">{{ number_format($item->price, 0, ',', ' ') }} {{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}</p>
+            <p class="uk-margin-remove-top tm-price">
+                @if ($item->discounts == 1)
+                    @if (count($prices) > 1)
+                        {{ App\Services\Helpers\Str::price(min($prices)) }} - {{ App\Services\Helpers\Str::price(max($prices)) }}
+                        <span class="item-old-price" id="item-old-price">
+                            @if (!in_array($item->price, $prices))
+                                {{ App\Services\Helpers\Str::price($item->price) }}
+                            @endif
+                        </span>
+                        {{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}
+                    @else
+                         {{ App\Services\Helpers\Str::price($item->price()) }} 
+                         <span>{{ !empty($item->oldPrice()) ? App\Services\Helpers\Str::price($item->oldPrice()) : '' }}</span>
+                         {{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}
+                    @endif
+                @else 
+                    {{ App\Services\Helpers\Str::price($item->price) }}
+                    {{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}
+                @endif
+                
+            </p>
         </div>
         <a class="uk-position-cover" href="{{ $item->url() }}"></a>
     </div>

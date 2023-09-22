@@ -186,7 +186,7 @@ input.uk-form-width-xsmall {
 
 .tm-tovar .uk-overlay{padding:5px;color:red;}
 .tm-price span{
-    margin-left:10px;color: #898686;
+    color: #898686;
     -webkit-text-decoration-line: line-through;
     text-decoration-line: line-through;
 }
@@ -295,4 +295,13 @@ input.uk-form-width-xsmall {
 a.add-to-favorite-link.active, a.add-to-favorite-link:active {
     background-color: #ebebeb;
     color: #666;
+}
+
+.item-old-price{
+    text-decoration: line-through;
+    color: #a5a5a5;
+}
+
+.cart-item-old-price {
+    font-size: 14px !important;
 }

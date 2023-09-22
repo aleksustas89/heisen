@@ -32,7 +32,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="{{ route("shopItemDiscount.create") }}?shop_item_id={{ $shop_item_id }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                    <a href="{{ route("shopItemDiscount.create") }}?shop_item_id={{ $shop_item_id }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Действия</a>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-bordered">

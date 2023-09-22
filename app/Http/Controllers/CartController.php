@@ -48,17 +48,30 @@ class CartController extends Controller
             \Cart::session($cart_id)->add(array(
                 'id' => $ShopItem->id,
                 'name' => $ShopItem->name,
-                'price' => $ShopItem->price,
+                'price' => $ShopItem->price(),
                 'quantity' => $request->quantity ?? 1,
                 'attributes' => [
                     "img" => $ShopItem->path() . $ShopItem->getShopItemImage()->image_small,
                     "url" => $ShopItem->url(),
+                    "oldPrice" => $ShopItem->oldPrice(),
                 ],
             ));
 
             return response()->view("shop.add-cart-window", ["ShopItem" => $ShopItem]);
     
         }
+    }
+
+    public static function getTotalDiscount()
+    {
+        $discount = 0;
+        if ($Cart = self::getCart()) {
+            foreach ($Cart as $item) {
+                $discount += $item["attributes"]["oldPrice"] > 0 ? $item["attributes"]["oldPrice"] - $item["price"] : 0;
+            }
+        }
+        
+        return $discount;
     }
 
     public static function deleteFromCart(Request $request)
@@ -83,11 +96,31 @@ class CartController extends Controller
     public static function getCart()
     {
         if ($cart_id = self::isSetCart()) {
+            $aCart = \Cart::session($cart_id)->getContent()->toArray();
+
+
+            foreach ($aCart as $aCartItem) {
+
+                $ShopItem = ShopItem::find($aCartItem["id"]);
+                $current_price = $ShopItem->price();
+                if ($current_price != $aCartItem["price"]) {
+
+                    $attributes = $aCartItem["attributes"];
+                    $attributes["priceChanged"] = 1;
+                    
+                    \Cart::session($cart_id)->update($aCartItem["id"], [
+                        'price' => $current_price,
+                        'attributes' => $attributes,
+                    ]);
+                }
+            }
+
             return \Cart::session($cart_id)->getContent();
         } else {
             return false;
         }
     }
+
 
     public static function getTotal()
     {

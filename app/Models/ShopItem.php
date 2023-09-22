@@ -8,6 +8,7 @@ use App\Models\ShopItemImage;
 use App\Models\ShopItemProperty;
 use App\Models\ShopItemListItem;
 use App\Models\Shop;
+use App\Http\Controllers\ShopDiscountController;
 
 class ShopItem extends Model
 {
@@ -144,12 +145,26 @@ class ShopItem extends Model
 
     public function price()
     {
-        return $this->price;
+
+        $aPrices[] = ShopDiscountController::getShopItemPriceWithDiscount($this);
+
+        if ($this->midification_id == 0) {
+            foreach (ShopDiscountController::getModificationsPricesWithDiscounts($this) as $price) {
+                $aPrices[] = $price;
+            }
+        }
+
+        return min($aPrices);
+    }
+
+    public function oldPrice()
+    {
+        return $this->price != $this->price() ? $this->price : false;
     }
 
     public function parentItemIfModification()
     {
-
+        
         return $this->modification_id > 0
                     && !is_null($ShopItem = ShopItem::find($this->modification_id)) ? $ShopItem : $this;
     }

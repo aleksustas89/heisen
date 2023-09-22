@@ -1,5 +1,6 @@
 @php
     $cartCollection = \App\Http\Controllers\CartController::getCart();
+    $totalDiscount = \App\Http\Controllers\CartController::getTotalDiscount();
     $count = $cartCollection ? $cartCollection->count() : 0;
     $CurrentCurrency = \App\Http\Controllers\ShopController::CurrentCurrency();
     $currency_code =  $CurrentCurrency ? $CurrentCurrency->code : '';
@@ -27,8 +28,20 @@
                         
                         <ul class="uk-subnav uk-subnav-divider uk-margin-remove-top">
                             <li>Кол-во: {{ $row->quantity }}</li>
-                            <li>Цена: {{ App\Services\Helpers\Str::price($row->price) }} {{$currency_code}}</li>
+                            <li>Цена: 
+                                {{ App\Services\Helpers\Str::price($row->price) }} 
+                                @if ($row->attributes["oldPrice"] && $row->attributes["oldPrice"] > $row->price)  
+                                    <span class="cart-item-old-price item-old-price uk-margin-small-left uk-margin-small-right">{{ App\Services\Helpers\Str::price($row->attributes["oldPrice"]) }}</span>
+                                @endif
+                                
+                                {{$currency_code}}
+                            </li>
                         </ul>
+                        @if (isset($row->attributes["priceChanged"]))
+                            <div class="uk-alert-danger uk-alert" uk-alert="">
+                                <p>С момента добавления в корзину, цена или скидка были изменены!</p>
+                            </div>
+                        @endif
 
                     </div>
                 </div>
@@ -43,6 +56,13 @@
             @endphp
             <div class="uk-width-auto">Сумма заказа:</div><div class="uk-width-expand uk-text-right">{{ $total }} {{$currency_code}}</div>
         </div>
+
+        @if ($totalDiscount > 0)
+            <div class="uk-grid-small" uk-grid>
+                <div class="uk-width-auto">Скидка:</div>
+                <div class="uk-width-expand uk-text-right">-{{ App\Services\Helpers\Str::price($totalDiscount) }} {{$currency_code}}</div>
+            </div>
+        @endif
 
         <hr />
         @if ($showLittleCart)

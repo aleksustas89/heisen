@@ -8,6 +8,7 @@ use App\Models\PropertyValueInt;
 use Illuminate\Http\Request;
 use App\Models\ShopItem;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ShopDiscountController;
 
 class ShopItemController extends Controller
 {
@@ -33,10 +34,16 @@ class ShopItemController extends Controller
             $modListValues[] = $aModValue["value"];
         }
 
+        $client = Auth::guard('client')->user();
+
         Route::view($path, 'shop/item', [
             'aModProperties' => $ShopItemProperties,
             'aModValues' => $modListValues,
             'item' => $shopItem,
+            'images' => $shopItem->getImages(),
+            'client' => $client,
+            'prices' => $shopItem->discounts == 1 ? ShopDiscountController::getModificationsPricesWithDiscounts($shopItem) : [],
+            'clientFavorites' => !is_null($client) ? $client->getClientFavorites() : [],
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
         ]);
     }
@@ -83,6 +90,7 @@ class ShopItemController extends Controller
             $response["item"]["id"] = $aShopItem->id;
             $response["item"]["name"] = $aShopItem->name;
             $response["item"]["price"] = \App\Services\Helpers\Str::price($aShopItem->price());
+            $response["item"]["oldPrice"] = \App\Services\Helpers\Str::price($aShopItem->oldPrice());
             $response["item"]["image"] = $aShopItem->ShopModificationImage;
 
         }

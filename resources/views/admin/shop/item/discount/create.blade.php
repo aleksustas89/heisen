@@ -62,16 +62,26 @@
                                 <input value="1" type="radio" class="btn-check" name="action" autocomplete="off" checked>
                                 <span class="btn btn-success">Применить к товару</span>
                             </label>
-                            <label class="checkbox-inline">
-                                <input value="2" type="radio" class="btn-check" name="action" autocomplete="off">
-                                <span class="btn btn-warning">Применить к модификациям</span>
-                            </label>
+                            
+                            @if ($shopItem->modification_id == 0)
+                                
+                                <label class="checkbox-inline">
+                                    <input value="2" type="radio" class="btn-check" name="action" autocomplete="off">
+                                    <span class="btn btn-warning">Применить к модификациям</span>
+                                </label>
+
+                                <label class="checkbox-inline">
+                                    <input value="4" type="radio" class="btn-check" name="action" autocomplete="off">
+                                    <span class="btn btn-danger">Отменить у модификаций</span>
+                                </label>
+
+                            @endif
                           
                         </div>
 
                     </div>
                     <div class="card-footer">
-                        <input type="hidden" name="shop_item_id" value="{{ $shop_item_id }}" />
+                        <input type="hidden" name="shop_item_id" value="{{ $shopItem->id }}" />
                         <button type="submit" name="save" value="0" class="btn btn-primary">Сохранить</button>
                         <button type="submit" name="apply" value="1" class="btn btn-success">Применить</button>
                     </div>

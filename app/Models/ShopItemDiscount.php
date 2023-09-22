@@ -13,4 +13,9 @@ class ShopItemDiscount extends Model
     {
         return $this->belongsTo(ShopDiscount::class);
     }
+
+    public function ShopItem()
+    {
+        return $this->belongsTo(ShopItem::class);
+    }
 }

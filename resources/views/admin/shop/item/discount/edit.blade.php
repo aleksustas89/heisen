@@ -56,27 +56,39 @@
                             </div>
                         </div>
 
+                        
+
                         <div class="radio-group" role="group">
                             
                             <label class="checkbox-inline">
                                 <input value="1" type="radio" class="btn-check" name="action" autocomplete="off" checked>
-                                <span class="btn btn-success">Применить к товару</span>
-                            </label>
-                            
-                            <label class="checkbox-inline">
-                                <input value="2" type="radio" class="btn-check" name="action" autocomplete="off">
-                                <span class="btn btn-warning">Применить к модификациям</span>
+                                @php
+                                    $title = $ItemDiscount->ShopItem->modification_id == 0 ? 'товару' : 'модификации';
+                                @endphp
+                                <span class="btn btn-success">Применить к {{ $title }}</span>
                             </label>
 
+                            
                             <label class="checkbox-inline">
                                 <input value="3" type="radio" class="btn-check" name="action" autocomplete="off">
                                 <span class="btn btn-dark">Отменить скидку</span>
                             </label>
+
+                            @if ($ItemDiscount->ShopItem->modification_id == 0)
+                            
+                                <label class="checkbox-inline">
+                                    <input value="2" type="radio" class="btn-check" name="action" autocomplete="off">
+                                    <span class="btn btn-warning">Применить к модификациям</span>
+                                </label>
+
+                                <label class="checkbox-inline">
+                                    <input value="4" type="radio" class="btn-check" name="action" autocomplete="off">
+                                    <span class="btn btn-danger">Отменить у модификаций</span>
+                                </label>
+
+                            @endif
                           
-                            <label class="checkbox-inline">
-                                <input value="4" type="radio" class="btn-check" name="action" autocomplete="off">
-                                <span class="btn btn-danger">Отменить у модификаций</span>
-                            </label>
+
                         </div>
 
                     </div>
