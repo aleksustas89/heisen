@@ -260,7 +260,17 @@
 @section('js')
     <script src="/assets/plugins/select/selectr.min.js"></script>          
     <script src="/assets/js/radioTab.js"></script>                              
-    <script>new Selectr('.select');</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>                   
+    <script>
+        
+        new Selectr('.select');
+
+        $(function(){
+            $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
+        });
+        
+    </script>
 @endsection
 
 

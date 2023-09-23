@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::resource('shopItemListItem', ShopItemListItemController::class);
         Route::resource('structureMenu', StructureMenuController::class);
         Route::resource('shopOrder', ShopOrderController::class);
+        Route::resource('shopQuickOrder', shopQuickOrderController::class);
         Route::resource('shopOrderItem', ShopOrderItemController::class);
         Route::resource('shopDelivery', ShopDeliveryController::class);
         Route::resource('shopDeliveryField', ShopDeliveryFieldController::class);
@@ -109,6 +110,7 @@ if (Schema::hasTable('shops')) {
     Route::post('/delete-from-cart', [App\Http\Controllers\CartController::class, 'deleteFromCart'])->name("deleteFromCart");
     Route::post('/get-modification', [App\Http\Controllers\ShopItemController::class, 'getModification']);
     Route::get('/get-cities', [App\Http\Controllers\CartController::class, 'getCities']);
+    Route::post('/shop-quich-order', [App\Http\Controllers\ShopQuickOrderController::class, 'save']);
 }
 
 Route::group(['namespace' => 'App\Http\Controllers'], function() {

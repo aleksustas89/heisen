@@ -39,6 +39,7 @@
                     <a href="{{ route('shopCurrency.index') }}" class="btn btn-info"><i class="fas fa-dollar-sign icon-separator"></i>Валюты</a>
                     
                     <a href="{{ route('shopOrder.index') }}" class="btn btn-danger"><i class="fas fa-shopping-cart icon-separator"></i>Заказы</a>
+                    <a href="{{ route('shopQuickOrder.index') }}" class="btn btn-burgundy"><i class="fas fa-shopping-cart icon-separator"></i>Быстрые заказы</a>
 
                     <a href="{{ route('shopDiscount.index') }}" class="btn btn-warning"><i class="fas fa-tags icon-separator"></i>Скидки</a>
 

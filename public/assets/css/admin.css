@@ -314,9 +314,18 @@
 	border-color: #aeb1e7;
 }
 
-
-
 .radio-group .inactive{
 	cursor: default;
 	opacity: 0.3;
+}
+
+.btn-burgundy {
+    color: #fff;
+    background-color: #7e2126;
+    border-color: #7e2126;
+}
+.btn-burgundy:hover {
+    color: #fff;
+    background-color: #59161a;
+    border-color: #59161a;
 }

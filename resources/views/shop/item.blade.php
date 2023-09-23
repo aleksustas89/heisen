@@ -129,7 +129,39 @@
                         <input type="number" class="uk-input uk-form-width-xsmall" name="quantity" value="1" title="Qty" size="4" min="1" max="" step="1" placeholder="" inputmode="numeric" autocomplete="off">
                     </div>
                     <button type="button" id="cart_add" data-route="{{ route('cartAdd') }}" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ <span uk-icon="icon: cart"></span></button>
-                    <button type="button" id="fast_order" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ В ОДИН КЛИК</button>
+                    <button uk-toggle="target: #quick-order" type="button" id="fast_order" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" disabled class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ В ОДИН КЛИК</button>
+                    <div id="quick-order" uk-modal>
+                        <div class="uk-modal-dialog uk-modal-body">
+                            <h2 class="uk-modal-title">Быстрый заказ</h2>
+                            
+                            <form id="shop-quich-order" type="POST">
+                                @csrf
+
+                                <p>Заполните форму и наши менеджеры свяжутся с Вами для завершения заказа</p>
+
+                                <div class="uk-margin">
+                                    <label class="uk-form-label" for="form-stacked-text">Фио</label>
+                                    <div class="uk-form-controls">
+                                        <input required class="uk-input" name="name" type="text" placeholder="Ваше Фио">
+                                    </div>
+                                </div>
+
+                                <div class="uk-margin">
+                                    <label class="uk-form-label" for="form-stacked-text">Телефон</label>
+                                    <div class="uk-form-controls">
+                                        <input required class="uk-input" name="phone" type="text" placeholder="Телефон">
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="shop_item_id" value="" />
+                                <p class="uk-text-right">
+                                    <button class="uk-button uk-button-default uk-modal-close" type="button">Отменить</button>
+                                    <button class="uk-button uk-button-primary" type="submit">Заказать</button>
+                                </p>
+                            </form>
+
+                        </div>
+                    </div>
         
                     @if (is_null($client))
                         @include('shop.window-login')
@@ -207,4 +239,32 @@
 @section("js")
     <script src="/js/modification.js"></script>
     <script src="/js/cart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>                   
+    <script>
+
+        $(function(){
+            $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
+
+            $("#shop-quich-order").on("submit", function() {
+
+                $.ajax({
+                    url: "/shop-quich-order",
+                    type: "POST",
+                    data: $("#shop-quich-order").serialize(),
+                    dataType: "json",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        $("#shop-quich-order").replaceWith(data);
+                    },
+                });
+
+                return false;
+            });
+
+        });
+        
+    </script>
 @endsection
