@@ -102,9 +102,9 @@
                     </div>
                     <div class="uk-navbar-right">
                         <div class="uk-margin-small-right uk-navbar-item uk-visible@s">
-                            <form class="uk-search uk-search-default">
-                                <a href="" class="uk-search-icon-flip" uk-search-icon></a>
-                                <input class="uk-search-input uk-border-rounded" type="search" placeholder="Search" aria-label="Search">
+                            <form class="uk-search uk-search-default" action="{{ route("search") }}">
+                                <button class="uk-search-icon-flip" uk-search-icon></button>
+                                <input name="q" class="uk-search-input uk-border-rounded search-autocomplete" type="search" placeholder="Search" aria-label="Search">
                             </form>
                         </div>
                     </div>
@@ -187,8 +187,8 @@
                             <div class="uk-navbar-dropdown" uk-drop="mode: click; cls-drop: uk-navbar-dropdown; boundary: !.uk-navbar; flip: false">
                                 <div class="uk-grid-small uk-flex-middle" uk-grid>
                                     <div class="uk-width-expand">
-                                        <form class="uk-search uk-search-navbar uk-width-1-1">
-                                            <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" autofocus>
+                                        <form class="uk-search uk-search-navbar uk-width-1-1" action="{{ route("search") }}">
+                                            <input name="q" class="uk-search-input" type="search" placeholder="Search" aria-label="Search" autofocus>
                                         </form>
                                     </div>
                                     <div class="uk-width-auto">

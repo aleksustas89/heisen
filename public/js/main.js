@@ -37,3 +37,15 @@ var Favorite = {
         });
     }
 }
+
+$(function(){
+
+    $(".search-autocomplete").autocomplete({
+        serviceUrl: '/search/autocomplete',
+        onSelect: function (suggestion) {
+            $(".search-autocomplete").parents("form").submit();
+        }
+    });
+
+    
+});

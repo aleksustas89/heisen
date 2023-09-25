@@ -94,6 +94,12 @@
                                     <span>Интернет-магазин</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('adminSearch') }}" class="nav-link">
+                                    <i class="ti ti-search menu-icon"></i>
+                                    <span>Поиск</span>
+                                </a>
+                            </li>
                             
                         </ul>
                     </div>

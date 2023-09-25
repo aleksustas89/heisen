@@ -305,3 +305,10 @@ a.add-to-favorite-link.active, a.add-to-favorite-link:active {
 .cart-item-old-price {
     font-size: 14px !important;
 }
+
+.autocomplete-suggestions { background: #fff4e3; overflow: auto; }
+.autocomplete-suggestion { padding: 7px 10px; white-space: nowrap; overflow: hidden; cursor: pointer }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }

@@ -172,6 +172,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Barryvdh\Elfinder\ElfinderServiceProvider::class,
         Darryldecode\Cart\CartServiceProvider::class,
+        cijic\phpMorphy\MorphyServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -188,6 +189,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
         'Cart' => Darryldecode\Cart\Facades\CartFacade::class,
+        'Morphy' => cijic\phpMorphy\Facade\Morphy::class,
     ])->toArray(),
 
 ];

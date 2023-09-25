@@ -1,10 +1,10 @@
 <?php
 
+use App\Models\ShopItem;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Support\Facades\Mail;
-use App\Models\Mail\SendOrder;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +52,12 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::resource('modification', ModificationController::class);
         Route::resource('shopDiscount', ShopDiscountController::class);
         Route::resource('shopItemDiscount', ShopItemDiscountController::class);
+
+        Route::prefix("search")->group(function() {
+            Route::get('/', [App\Http\Controllers\Admin\SearchController::class, 'index'])->name("adminSearch");
+            Route::get('/indexing', [App\Http\Controllers\Admin\SearchController::class, 'indexing'])->name("adminSearchIndexing");
+        });
+        
    
         //editable-fields
         Route::get('/editable/', [App\Http\Controllers\Admin\EditableController::class, 'query']);
@@ -141,6 +147,11 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
     });
 
 
+    Route::prefix("search")->group(function() {
+        Route::get('/', [App\Http\Controllers\SearchController::class, 'show'])->name("search");
+        Route::get('/autocomplete', [App\Http\Controllers\SearchController::class, 'Autocomplete'])->name("search-autocomplete");
+    });
+    
 
 });
 

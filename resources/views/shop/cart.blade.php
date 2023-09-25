@@ -203,7 +203,6 @@
 @endsection
 
 @section("js")
-    <script src="/js/jquery.autocomplete.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
     <script src="/js/cart.js"></script>
@@ -247,12 +246,6 @@
         .empty-cart {
             height: 300px;
         }
-        .autocomplete-suggestions { background: #fff4e3; overflow: auto; }
-        .autocomplete-suggestion { padding: 7px 10px; white-space: nowrap; overflow: hidden; cursor: pointer }
-        .autocomplete-selected { background: #F0F0F0; }
-        .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
-        .autocomplete-group { padding: 2px 5px; }
-        .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
         .cancel-chosen-city {margin: 0 5px; font-weight: bold;border-bottom: 1px dashed;}
 
         @media (max-width: 640px) { 
