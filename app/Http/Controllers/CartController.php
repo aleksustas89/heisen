@@ -15,6 +15,7 @@ use App\Models\ShopCurrency;
 use App\Models\ShopDeliveryFieldValue;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Mail\SendOrder;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -184,6 +185,10 @@ class CartController extends Controller
         $ShopOrder->shop_currency_id = $ShopCurrency->id ?? 0;
         $ShopOrder->shop_delivery_id = $request->shop_delivery_id ?? 0;
 
+        if (!is_null($client = Auth::guard('client')->user())) {
+            $ShopOrder->client_id = $client->id;;
+        }
+
         $ShopOrder->name = $request->name;
         $ShopOrder->surname = $request->surname;
         $ShopOrder->email = $request->email;
@@ -202,6 +207,7 @@ class CartController extends Controller
             $ShopOrderItem->name = $CartItem->name;
             $ShopOrderItem->quantity = $CartItem->quantity;
             $ShopOrderItem->price = $CartItem->price;
+            $ShopOrderItem->old_price = $CartItem->attributes["oldPrice"] > 0 ? $CartItem->attributes["oldPrice"] : 0;
             $ShopOrderItem->save();
         }
 

@@ -13,4 +13,9 @@ class ShopOrderItem extends Model
     {
         return $this->belongsTo(ShopCurrency::class);
     }
+
+    public function ShopItem()
+    {
+        return $this->belongsTo(ShopItem::class);
+    }
 }

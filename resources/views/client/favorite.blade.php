@@ -10,7 +10,9 @@
 
     <div class="uk-child-width-1-1@s uk-child-width-1-1@m uk-grid" uk-grid="">
        
-        <div>
+        @include('client.menu', ["page" => "favorite"])
+
+        <div class="uk-width-expand@s">
         
             <h2>Ваши избранные товары</h2>
 

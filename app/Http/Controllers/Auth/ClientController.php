@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Client;
 use App\Models\ClientFavorite;
 use App\Models\ShopItem;
+use App\Models\ShopOrder;
 
 class ClientController extends Controller
 {
@@ -62,8 +63,12 @@ class ClientController extends Controller
 
     public function orders()
     {
+
+        $client = Auth::guard('client')->user();
+
         return view('client.order', [
-            "client" => Auth::guard('client')->user()
+            "client" => $client,
+            "ShopOrders" => ShopOrder::where("client_id", $client->id)->orderBy("created_at", "Desc")->paginate(),
         ]);
     }
 

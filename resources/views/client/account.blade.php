@@ -10,7 +10,9 @@
 
     <div class="uk-child-width-1-1@s uk-child-width-1-2@m uk-grid" uk-grid="">
        
-        <div>
+        @include('client.menu', ["page" => "account"])
+
+        <div class="uk-width-expand@s">
 
             <h2>Добро пожаловать {{ $client->name }}!</h2>
 
