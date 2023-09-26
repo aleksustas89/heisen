@@ -1,6 +1,6 @@
 @if ($paginator->hasPages())
 
-        <div class="uk-flex uk-flex-middle uk-flex-between uk-section-xsmall">
+        <div class="uk-flex uk-flex-middle uk-flex-between uk-section-xsmall pagination">
             <div>
                 <p class="small text-muted">
                     Показано с

@@ -9,52 +9,26 @@
     <div class="uk-section-xsmall tm-tovar">
         <div uk-grid="" class="uk-grid">
         
-            @if (isset($menuGroups) && count($menuGroups) > 0)
+            @if (isset($ShopGroups) && count($ShopGroups) > 0)
                 <!--рубрики-->
-                <div class="uk-width-1-4@m uk-first-column">
+                <div class="uk-width-1-4@m uk-first-column uk-visible@s">
                 
                     <ul class="uk-nav-default uk-nav-divider" uk-nav>
-                        @php
-                            function buildMenu($menuGroups, $group)
-                            {
-
-                                $result = '';
-
-                                foreach ($menuGroups as $menuGroup) {
-
-                                    $class = [];
 
 
-                                    if ($menuGroup["id"] == $group->id) {
-                                        $class[] = 'uk-active';
-                                    }
+                        @foreach ($ShopGroups as $ShopGroup) 
+                            <li class="uk-parent" class="{{ $ShopGroup["id"] == $group->id ? 'uk-active' : '' }}">
+                                <a href="{{ $ShopGroup["url"] }}">{{ $ShopGroup["name"] }}@if(count($ShopGroup["sub"]) > 0)<span uk-navbar-parent-icon></span>@endif</a>
+                                @if (count($ShopGroup["sub"]) > 0)
+                                    <ul class="uk-nav-sub">
+                                        @foreach ($ShopGroup["sub"] as $sShopGroup)
+                                            <li class="{{ $sShopGroup["id"] == $group->id ? 'uk-active' : '' }}"><a href="{{ $sShopGroup['url'] }}">{{ $sShopGroup['name'] }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </li>
+                        @endforeach 
 
-                                    if ($menuGroup["sub"] && count($menuGroup["sub"]) > 0) {
-                                        $class[] =  'uk-parent';
-                                    }
-
-                                    $arrov = $menuGroup["sub"] && count($menuGroup["sub"]) > 0 ? '<span uk-nav-parent-icon></span>' : '';
-
-                                    $result .= '<li class="'. implode(' ', $class) .'"><a href="'. $menuGroup["path"] .'">'. $menuGroup["name"] . $arrov .'</a>';
-
-                                    if ($menuGroup["sub"] && count($menuGroup["sub"]) > 0) {
-
-                                        $result .= '<ul class="uk-nav-sub">';
-                                        
-                                        $result .= buildMenu($menuGroup["sub"], $group);
-                                
-                                        $result .= '</ul>';
-                                    
-                                    }
-                                          
-                                    $result .= '</li>';
-                                }
-
-                                return $result;
-                            }
-
-                            echo buildMenu($menuGroups, $group);
-                        @endphp
                     </ul>
                 
                 </div>

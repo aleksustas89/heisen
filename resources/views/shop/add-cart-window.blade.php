@@ -7,16 +7,27 @@
             $ShopItemImage = $ShopItem->getShopItemImage();
             @endphp
             @if ($ShopItemImage)
-                <div class="uk-background-cover" style="background-image: url('{{ $ShopItemImage->ShopItem->path() . $ShopItemImage->image_large }}');" uk-height-viewport></div>
+                <div class="uk-background-cover add-to-cart-image" style="background-image: url('{{ $ShopItemImage->ShopItem->path() . $ShopItemImage->image_large }}');" uk-height-viewport></div>
             @endif
-            <div class="uk-padding-large">
+            <div class="uk-padding-large add-to-cart-text">
                 <h1>Поздравляем!</h1>
                 <p>{{ $ShopItem->name }} почти у Вас!</p>
-                <p>
-                    <a href="{{ route('cartIndex') }}" class="uk-button uk-buttom-small uk-button-primary active">Оформить заказ</a>
-                    <a class="uk-button uk-buttom-small uk-button-primary uk-modal-close">Продолжить покупки</a>
-                </p>
+                <div class="uk-flex add-to-cart-btns">
+                    <div><a href="{{ route('cartIndex') }}" class="uk-button uk-buttom-small uk-button-primary active">Оформить заказ</a></div>
+                    <div><a class="uk-button uk-buttom-small uk-button-primary uk-modal-close">Продолжить покупки</a></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<style>
+    .add-to-cart-btns > div{
+        margin: 0 10px 10px 0;
+    }
+    @media (max-width:1000px){
+
+        .add-to-cart-btns{
+            flex-direction: column;
+        }
+    }
+</style>

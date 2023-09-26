@@ -51,7 +51,7 @@ var Cart = {
                 dataType: "html",
                 success: function (data) {
                     if (data.length) {
-                        $("#cart").html(data);
+                        $(".little-cart").html(data);
                         Spiner.hide();
                     } else {
                         location.reload();
@@ -74,7 +74,7 @@ var Cart = {
             },
             dataType: "html",
             success: function (data) {
-               $("#cart").html(data);
+               $(".little-cart").html(data);
             },
         });
     },

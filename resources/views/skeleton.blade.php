@@ -36,6 +36,7 @@
         @yield('css')
         @yield('js')
 
+        <link href="/css/media.css" rel="stylesheet">
 	</body>
 </html>    
 

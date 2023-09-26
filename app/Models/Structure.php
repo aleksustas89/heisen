@@ -14,7 +14,7 @@ class Structure extends Model
         return $this->belongsTo(StructureMenu::class);
     }
 
-    public function path($aResult = array(), $activeAll = true)
+    public function url($aResult = array(), $activeAll = true)
     {
         
         if ($this->path != '/') {
@@ -24,12 +24,12 @@ class Structure extends Model
         if ($this->parent_id > 0) {
             $oStructure = Structure::where("id", $this->parent_id)->whereIn('active', $activeAll ? [0,1] : [1])->first();
             if (!is_null($oStructure)) {
-                return $oStructure->path($aResult);
+                return "/" . $oStructure->url($aResult);
             }
             return false;
             
         } else {
-            return $this->path != '/' ?  implode("/", $aResult) : $this->path;
+            return $this->path != '/' ? "/" . implode("/", $aResult) : $this->path;
         }
     }
 

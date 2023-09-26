@@ -35,7 +35,7 @@ class StructureController extends Controller
                 
                 if (count($aResult) > 0) {
                     
-                    $Result["url"] = $structure->path();
+                    $Result["url"] = $structure->url();
                 }
 
                 array_unshift($aResult, $Result);
@@ -48,7 +48,7 @@ class StructureController extends Controller
             
             if (count($aResult) > 0) {
                     
-                $Result["url"] = $structure->path();
+                $Result["url"] = $structure->url();
             }
 
             array_unshift($aResult, $Result);

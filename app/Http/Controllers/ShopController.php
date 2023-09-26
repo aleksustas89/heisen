@@ -48,4 +48,24 @@ class ShopController extends Controller
     {
         return ShopCurrency::where("default", 1)->first();
     }
+
+    public static function buildGroupTree()
+    {
+        $aResult = [];
+        foreach (ShopGroup::where("parent_id", 0)->where("active", 1)->orderBy("sorting", "ASC")->get() as $ShopGroup) {
+            $aResult[$ShopGroup->id]["id"] = $ShopGroup->id;
+            $aResult[$ShopGroup->id]["name"] = $ShopGroup->name;
+            $aResult[$ShopGroup->id]["url"] = $ShopGroup->url();
+            $aResult[$ShopGroup->id]["sub"] = [];
+            foreach (ShopGroup::where("parent_id", $ShopGroup->id)->where("active", 1)->orderBy("sorting", "ASC")->get() as $sShopGroup) {
+
+                $aResult[$ShopGroup->id]["sub"][$sShopGroup->id]["id"] = $sShopGroup->id;
+                $aResult[$ShopGroup->id]["sub"][$sShopGroup->id]["name"] = $sShopGroup->name;
+                $aResult[$ShopGroup->id]["sub"][$sShopGroup->id]["url"] = $sShopGroup->url();
+            }
+            
+        }
+
+        return $aResult;
+    }
 }

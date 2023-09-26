@@ -65,7 +65,7 @@ class StructureController extends Controller
         return view('admin.structure.edit', [
             'structure' => $structure,
             'breadcrumbs' => self::breadcrumbs($structure, [], true),
-            'url' => $structure->path(),
+            'url' => $structure->url(),
             'menus' => StructureMenu::get(),
         ]);
     }

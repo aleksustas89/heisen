@@ -31,7 +31,7 @@ var Favorite = {
             },
             dataType: "json",
             success: function (data) {
-                $("#favorites-count").html(data.count);
+                $(".favorites-count").html(data.count);
                 Spiner.hide();
             },
         });
@@ -43,7 +43,7 @@ $(function(){
     $(".search-autocomplete").autocomplete({
         serviceUrl: '/search/autocomplete',
         onSelect: function (suggestion) {
-            $(".search-autocomplete").parents("form").submit();
+            $(this).parents("form").submit();
         }
     });
 

@@ -77,7 +77,6 @@ class ShopGroupController extends Controller
         
         Route::view($path, 'shop/group', [
             'group' => $shopGroup,
-            'menuGroups' => self::getChildGroups(0),
             'items' => $oShopItems,
             'properties' => ShopItemController::getProperties($shopGroup->id),
             'path' => "/" . $path,
@@ -86,17 +85,6 @@ class ShopGroupController extends Controller
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopGroup, [], false))
         ]);
         
-    }
-
-
-    public static function getGroupsTree($parent_id = 0, $aResult = [], $levels = 0)
-    {
-
-        foreach (ShopGroup::where("parent_id", $parent_id)->where('active', 1)->get() as $oShopGroup) {
-            $aResult[] = $oShopGroup;
-        }
-
-        return $aResult;
     }
 
     public static function getChildGroups($group_id)
@@ -108,9 +96,6 @@ class ShopGroupController extends Controller
             foreach ($select as $oShopGroup) {
                 $count = count($result);
                 $result[$count]["id"] = $oShopGroup->id;
-                $result[$count]["name"] = $oShopGroup->name;
-                $result[$count]["parent_id"] = $oShopGroup->parent_id;
-                $result[$count]["path"] = $oShopGroup->url();
                 $result[$count]["sub"] = self::getChildGroups($oShopGroup->id);
             }
             return $result;

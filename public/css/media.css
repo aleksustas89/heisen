@@ -1,0 +1,32 @@
+@media (max-width: 767px){
+
+    .uk-h1 {
+        font-size: 20px;
+        line-height: 30px;
+    }
+
+    .uk-padding-large {
+        padding: 20px;
+    }
+
+    .uk-margin-xlarge {
+        margin-top: 40px!important;
+    }
+
+    .pagination {
+        flex-direction: column;
+    }
+
+    .add-to-cart-text {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: #fff;
+    }
+
+    .add-to-cart-image {
+        width: 100%;
+    }
+
+}
+
