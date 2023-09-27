@@ -20,7 +20,33 @@
                             @if (isset($TopMenuStructures) && count($TopMenuStructures) > 0)
                                 <ul class="uk-navbar-nav uk-visible@s">
                                     @foreach ($TopMenuStructures as $Structure) 
-                                        <li><a href="{{ $Structure->url() }}">{{ $Structure->name }}</a></li>
+                                        <li class="uk-flex">
+                       
+                                            @php
+                                                $Children = \App\Models\Structure::where("parent_id", $Structure->id)->get();
+                                            @endphp
+
+                                            @if (count($Children) > 0)
+                                                <a href="{{ $Structure->url() }}" class="uk-button uk-button-link uk-padding-remove-left uk-padding-remove-right" type="button">
+                                                    {{ $Structure->name }} 
+                                                    <span uk-drop-parent-icon></span>
+                                                </a>
+                                                <div class="uk-card uk-card-body uk-card-default uk-card-small uk-width-small uk-drop" uk-drop="">
+                                                    <div class="uk-flex uk-flex-center">
+                                                        <ul class="uk-nav uk-dropdown-nav uk-text-small">
+                                                            @foreach ($Children as $cStructure)
+                                                                <li><a href="{{ $cStructure->url() }}">{{ $cStructure->name }}</a></li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                            @else
+
+                                                <a href="{{ $Structure->url() }}">{{ $Structure->name }}</a>
+
+                                            @endif
+                                        </li>
                                     @endforeach
                                 </ul>
                             @endif
