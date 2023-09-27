@@ -45,7 +45,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::resource('shopItemListItem', ShopItemListItemController::class);
         Route::resource('structureMenu', StructureMenuController::class);
         Route::resource('shopOrder', ShopOrderController::class);
-        Route::resource('shopQuickOrder', shopQuickOrderController::class);
+        Route::resource('shopQuickOrder', ShopQuickOrderController::class);
         Route::resource('shopOrderItem', ShopOrderItemController::class);
         Route::resource('shopDelivery', ShopDeliveryController::class);
         Route::resource('shopDeliveryField', ShopDeliveryFieldController::class);

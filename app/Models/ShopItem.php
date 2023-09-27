@@ -120,13 +120,15 @@ class ShopItem extends Model
                     switch ($Shop_Item_Property_For_Groups->ShopItemProperty->type) {
                         case 4:
                             $ShopItemListItem = ShopItemListItem::find($value->value);
-                            if (!is_null($ShopItemListItem)) {
+                            if (!is_null($ShopItemListItem) && !empty($ShopItemListItem->value)) {
                                 $values[] = $ShopItemListItem->value;
                             }
                             
                         break;
                         default:
-                            $values[] = $value->value;
+                            if (!empty($value->value)) {
+                                $values[] = $value->value;
+                            }
                     }
                 }
     

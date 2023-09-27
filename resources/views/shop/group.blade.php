@@ -17,7 +17,10 @@
 
 
                         @foreach ($ShopGroups as $ShopGroup) 
-                            <li class="uk-parent" class="{{ $ShopGroup["id"] == $group->id ? 'uk-active' : '' }}">
+                            <li @class([
+                                "uk-parent" => count($ShopGroup["sub"]) > 0 ? true : false,
+                                "uk-active" => $ShopGroup["id"] == $group->id ? true : false
+                            ])>
                                 <a href="{{ $ShopGroup["url"] }}">{{ $ShopGroup["name"] }}@if(count($ShopGroup["sub"]) > 0)<span uk-navbar-parent-icon></span>@endif</a>
                                 @if (count($ShopGroup["sub"]) > 0)
                                     <ul class="uk-nav-sub">

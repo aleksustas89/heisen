@@ -175,30 +175,45 @@
 
                 <hr />
                 <ul uk-accordion="collapsible: false" class="uk-list uk-list-divider">
-                    <li>
-                        <a class="uk-accordion-title">Описание</a>
-                        <div class="uk-accordion-content">
-                            {!! $item->description !!}
-                        </div>
-                    </li>
-                    <li>
-                        <a class="uk-accordion-title">ХАРАКТЕРИСТИКИ</a>
-                        <div class="uk-accordion-content">
-                       
-                                <ul class="uk-list">
-                                    @foreach ($item->getProperties() as $property)
-                                        @if ($property["show_in_item"] == 1 && count($property["property_values"]) > 0)
-                                            <li>
-                                                <b>{{ $property["property_name"] }}:</b>
-                                                @foreach ($property["property_values"] as $value)
-                                                    {{ $value }}
-                                                @endforeach
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-                        </div>
-                    </li>    
+                    @if (!empty($item->description))
+                        <li>
+                            <a class="uk-accordion-title">Описание</a>
+                            <div class="uk-accordion-content">
+                                {!! $item->description !!}
+                            </div>
+                        </li>
+                    @endif
+                    
+                    @php
+                    $properties = $item->getProperties();
+                    $Values = false;
+                    foreach ($properties as $key => $property) {
+                        if (count($property["property_values"]) > 0) {
+                            $Values = true;
+                        }
+                    }
+                    @endphp
+
+                    @if ($properties && count($properties) > 0 && $Values)
+                        <li>
+                            <a class="uk-accordion-title">ХАРАКТЕРИСТИКИ</a>
+                            <div class="uk-accordion-content">
+                        
+                                    <ul class="uk-list">
+                                        @foreach ($properties as $property)
+                                            @if ($property["show_in_item"] == 1 && count($property["property_values"]) > 0)
+                                                <li>
+                                                    <b>{{ $property["property_name"] }}:</b>
+                                                    @foreach ($property["property_values"] as $value)
+                                                        {{ $value }}
+                                                    @endforeach
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                            </div>
+                        </li>   
+                    @endif 
                     <li>
                         <a class="uk-accordion-title">ПРЕИМУЩЕСТВА</a>
                         <div class="uk-accordion-content">
