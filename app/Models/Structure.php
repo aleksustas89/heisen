@@ -24,7 +24,7 @@ class Structure extends Model
         if ($this->parent_id > 0) {
             $oStructure = Structure::where("id", $this->parent_id)->whereIn('active', $activeAll ? [0,1] : [1])->first();
             if (!is_null($oStructure)) {
-                return "/" . $oStructure->url($aResult);
+                return $oStructure->url($aResult);
             }
             return false;
             
