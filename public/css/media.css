@@ -1,4 +1,4 @@
-@media (max-width: 767px){
+@media (max-width: 767px) {
 
     .uk-h1 {
         font-size: 20px;
@@ -29,4 +29,16 @@
     }
 
 }
+
+@media (max-width: 480px) {
+    .add-favorite-window {
+        position: fixed;
+        width: 100%;
+        max-width: unset !important;
+        left: 0 !important;
+        margin-left: auto;
+     }
+}
+
+
 
