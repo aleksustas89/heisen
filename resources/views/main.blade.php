@@ -15,7 +15,7 @@
                     <div uk-navbar>
                         <div class="uk-navbar-left">
                         
-                            <div class="uk-navbar-item"><a class="uk-text-small" href="#"><span uk-icon="icon: phone"></span> +38(073) 004-72-95</a></div>
+                            <div class="uk-navbar-item"><a class="uk-text-small" href="#"><span uk-icon="icon: phone"></span> 8 996 784 05 75</a></div>
 
                             @if (isset($TopMenuStructures) && count($TopMenuStructures) > 0)
                                 <ul class="uk-navbar-nav uk-visible@s">
@@ -173,7 +173,7 @@
                                         @endforeach
                         
                                         <li class="uk-nav-divider"></li>     
-                                        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: phone"></span> +38(073) 004-72-95</a></li>
+                                        <li><a href="tel:89967840575"><span class="uk-margin-small-right" uk-icon="icon: phone"></span> 8 996 784 05 75</a></li>
                                     
                                         <li class="uk-nav-divider"></li>
                                         <li class="uk-flex uk-flex-middle">
