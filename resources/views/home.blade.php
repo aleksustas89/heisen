@@ -161,6 +161,10 @@
         </div>
     @endif
 
+    @if (!empty($bottom_text))
+        {!! $bottom_text !!}
+    @endif
+
 @endsection
 
 
