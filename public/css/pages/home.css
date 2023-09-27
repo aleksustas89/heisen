@@ -48,4 +48,8 @@
         height: 100%;
         object-fit: cover;
     }
+
+    .uk-slideshow-items {
+        min-height: 350px !important;
+    }
 }
