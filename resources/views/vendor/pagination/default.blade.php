@@ -48,7 +48,7 @@
                     {{-- Next Page Link --}}
                     @if ($paginator->hasMorePages())
                         <li class="page-item uk-flex uk-flex-center">
-                            <a href="{{ $paginator->nextPageUrl() }}" rel="next" aria-label="@lang('pagination.next')">
+                            <a class="js-pagination-more" data-n="{{ $paginator->currentPage() + 1 }}" href="{{ $paginator->nextPageUrl() }}" rel="next" aria-label="@lang('pagination.next')">
                                 <span uk-pagination-next></span>
                             </a>
                         </li>

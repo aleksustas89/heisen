@@ -9,28 +9,21 @@ use App\Models\Shop;
 use App\Http\Controllers\Admin\ShopItemController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 
 
 class ShopGroupController extends Controller
 {
 
-    static public function show($path, $shopGroup)
+    static public function prepareItems($shopGroup)
     {
-
-        $oShop = Shop::get();
 
         if($groups = self::getChildGroups($shopGroup->id)) {
             $groups = self::ArrayMerge($groups);
         }  else {
             $groups = [$shopGroup->id];
         }
-        $aProperties = [];
-        foreach ($_REQUEST as $k => $value) {
-            if (substr($k, 0, 8) == 'property') {
-                $e = explode("_", $k);
-                $aProperties[$e[1]][] = $e[2];
-            }
-        }
+        $aProperties = self::getProperties();
 
         $aShopItems = DB::table('shop_items')->select('shop_items.id')->whereIn("shop_items.shop_group_id", $groups)->where("active", 1);
 
@@ -72,12 +65,47 @@ class ShopGroupController extends Controller
                 $sorting = 'new';
             break;
         }
-        
-        $oShopItems = $oShopItems->paginate($oShop->items_on_page);
+
+        return $oShopItems;
+    }
+
+    public static function getAjaxGroup($shop_group_id) {
+
+        $oShop = Shop::get();
+
+        $ShopGroup = ShopGroup::find($shop_group_id);
+
+        $oShopItems = self::prepareItems($ShopGroup);
+
+        return view('shop.ajax-group', [
+            "items" => $oShopItems->paginate($oShop->items_on_page),
+        ]);
+
+    }
+
+    static public function show($path, $shopGroup)
+    {
+
+        $oShop = Shop::get();
+
+        $sorting = Arr::get($_REQUEST, 'sorting', 0);
+
+        switch ($sorting) {
+            case 'old':
+                $sorting = 'old';
+            break;
+            default:
+                $sorting = 'new';
+            break;
+        }
+
+        $aProperties = self::getProperties();
+
+        $oShopItems = self::prepareItems($shopGroup);
         
         Route::view($path, 'shop/group', [
             'group' => $shopGroup,
-            'items' => $oShopItems,
+            'items' => $oShopItems->paginate($oShop->items_on_page),
             'properties' => ShopItemController::getProperties($shopGroup->id),
             'path' => "/" . $path,
             'filterProperties' => $aProperties,
@@ -85,6 +113,20 @@ class ShopGroupController extends Controller
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopGroup, [], false))
         ]);
         
+        
+    }
+
+    public static function getProperties()
+    {
+        $aProperties = [];
+        foreach ($_REQUEST as $k => $value) {
+            if (substr($k, 0, 8) == 'property') {
+                $e = explode("_", $k);
+                $aProperties[$e[1]][] = $e[2];
+            }
+        }
+
+        return $aProperties;
     }
 
     public static function getChildGroups($group_id)

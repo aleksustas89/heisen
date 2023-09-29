@@ -117,6 +117,9 @@ if (Schema::hasTable('shops')) {
     Route::post('/get-modification', [App\Http\Controllers\ShopItemController::class, 'getModification']);
     Route::get('/get-cities', [App\Http\Controllers\CartController::class, 'getCities']);
     Route::post('/shop-quich-order', [App\Http\Controllers\ShopQuickOrderController::class, 'save']);
+    Route::get('/shop/ajax/group/{ShopGroupId}', function ($ShopGroupId) {
+        return App\Http\Controllers\ShopGroupController::getAjaxGroup($ShopGroupId);
+    });
 }
 
 Route::group(['namespace' => 'App\Http\Controllers'], function() {
@@ -150,6 +153,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
     Route::prefix("search")->group(function() {
         Route::get('/', [App\Http\Controllers\SearchController::class, 'show'])->name("search");
         Route::get('/autocomplete', [App\Http\Controllers\SearchController::class, 'Autocomplete'])->name("search-autocomplete");
+        Route::get('/ajax', [App\Http\Controllers\SearchController::class, 'ajaxSearch']);
     });
     
 

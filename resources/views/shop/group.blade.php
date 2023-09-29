@@ -110,7 +110,7 @@
                 </div>
                 <!--сортировка-->
                 
-                <div class="uk-child-width-1-4@s uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
+                <div class="uk-child-width-1-4@s uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
 
                     @php
                         $client = Auth::guard('client')->user();
@@ -127,7 +127,9 @@
                 </div>
                 
                 <!--пагенация-->
-                {{ $items->appends($links)->links(('vendor.pagination.default')) }}
+                <div class="pagination-auto uk-hidden" data-group="{{ $group->id }}">
+                    {{ $items->appends($links)->links(('vendor.pagination.default')) }}
+                </div>
                 <!--пагенация-->
 
                 <div>

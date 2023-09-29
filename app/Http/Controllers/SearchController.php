@@ -108,4 +108,20 @@ class SearchController extends Controller
         return $words;
     }
 
+    public function ajaxSearch(Request $request)
+    {
+        if (!empty($request->q)) {
+            $words = $this->prepareWords($request->q);
+
+            $SearchWords = $this->get($words);
+
+            $oShop = Shop::get();
+
+            return view('search.ajax', [
+                "q" => $request->q,
+                "SearchWords" => isset($SearchWords) ? $SearchWords->paginate($oShop->items_on_page) : [],
+            ]);
+        }
+    }
+
 }
