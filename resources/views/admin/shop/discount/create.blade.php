@@ -92,6 +92,33 @@
                                 </div>
                             </div>
 
+                            
+                            <div class="alert alert-danger border-0" role="alert">
+                                <strong>Применить ко всем товарам и модификациям по свойству типа - список!</strong>
+                            </div>
+
+                            <div class="row ">
+                                <div class="col-2">
+                                    <select class="form-control" name="apply_total_discount">
+                                        <option value="">...</option>
+                                        <option value="1">Применить</option>
+                                        <option value="2">Удалить</option>
+                                    </select>
+                                </div>
+                                <div class="col-2">
+                                    <select class="form-control" name="total_list_id">
+                                        <option>...</option>
+                                        @foreach ($propertys as $property)
+                                            <option value="{{ $property->shop_item_list_id }}">{{ $property->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-2 d-none">
+                                    <select class="form-control" name="total_list_value">
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     
@@ -107,4 +134,8 @@
     </div>
 
     
+@endsection
+
+@section("js")
+    <script src="/assets/js/pages/shopDiscount.js"></script>
 @endsection

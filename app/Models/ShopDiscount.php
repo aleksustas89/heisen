@@ -10,6 +10,11 @@ class ShopDiscount extends Model
 {
     use HasFactory;
 
+    public function ShopItemDiscount()
+    {
+        return $this->hasMany(ShopItemDiscount::class);
+    }
+
     public static function getTypes() : array
     {
 

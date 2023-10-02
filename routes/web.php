@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::resource('shopDeliveryField', ShopDeliveryFieldController::class);
         Route::resource('modification', ModificationController::class);
         Route::resource('shopDiscount', ShopDiscountController::class);
+        Route::get('/list/values', [App\Http\Controllers\Admin\ShopDiscountController::class, 'listValues']);
         Route::resource('shopItemDiscount', ShopItemDiscountController::class);
 
         Route::prefix("search")->group(function() {

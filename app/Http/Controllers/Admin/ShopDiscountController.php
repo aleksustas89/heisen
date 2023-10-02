@@ -4,12 +4,21 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ShopDiscount;
+use App\Models\ShopItemDiscount;
+use App\Models\PropertyValueInt;
+use App\Models\ShopItemProperty;
 use Illuminate\Http\Request;
+use App\Models\ShopItemListItem;
 
 class ShopDiscountController extends Controller
 {
 
     public static $items_on_page = 15;
+
+    public function getShopItemPropertyLists()
+    {
+        return ShopItemProperty::where("type", 4)->get();
+    }
 
     /**
      * Display a listing of the resource.
@@ -31,6 +40,7 @@ class ShopDiscountController extends Controller
         return view('admin.shop.discount.create', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'types' => ShopDiscount::getTypes(),
+            'propertys' => $this->getShopItemPropertyLists(),
         ]);
     }
 
@@ -52,6 +62,7 @@ class ShopDiscountController extends Controller
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'discount' => $shopDiscount,
             'types' => ShopDiscount::getTypes(),
+            'propertys' => $this->getShopItemPropertyLists(),
         ]);
     }
 
@@ -68,6 +79,11 @@ class ShopDiscountController extends Controller
      */
     public function destroy(ShopDiscount $shopDiscount)
     {
+
+        foreach ($shopDiscount->ShopItemDiscount as $ShopItemDiscount) {
+            $ShopItemDiscount->delete();
+        }
+
         $shopDiscount->delete();
 
         return redirect()->back()->withSuccess("Скидка была успешно удалена!");
@@ -89,6 +105,39 @@ class ShopDiscountController extends Controller
 
         $shopDiscount->save();
 
+        if ($request->apply_total_discount && $request->total_list_id && $request->total_list_value && !empty($request->total_list_value)) {
+
+            switch ($request->apply_total_discount) {
+                case 1:
+
+                    foreach (PropertyValueInt::where("value", $request->total_list_value)->get() as $Value) {
+                        if (is_null(ShopItemDiscount::where("shop_item_id", $Value->entity_id)->where("shop_discount_id", $shopDiscount->id)->first())) {
+                            $ShopItemDiscount = new ShopItemDiscount();
+                            $ShopItemDiscount->shop_item_id = $Value->entity_id;
+                            $ShopItemDiscount->shop_discount_id = $shopDiscount->id;
+                            $ShopItemDiscount->save();
+                        } 
+                    }
+                    
+                break;
+
+                case 2:
+
+                    $aEntities = [];
+                    foreach (PropertyValueInt::where("value", $request->total_list_value)->get() as $Value) {
+                        $aEntities[] = $Value->entity_id;
+                    }
+
+                    if (count($aEntities) > 0) {
+                        ShopItemDiscount::whereIn("shop_item_id", $aEntities)->where("shop_discount_id", $shopDiscount->id)->delete();
+                    }
+
+                break;
+            }
+
+
+        }
+
         $message = "Скидка была успешно сохранена!";
 
         if ($request->apply) {
@@ -106,5 +155,20 @@ class ShopDiscountController extends Controller
         }
         
         return $Result;
+    }
+
+    public function listValues(Request $request)
+    {
+
+        $Result = '';
+
+        if ($request->total_list_id) {
+            foreach(ShopItemListItem::where("shop_item_list_id", $request->total_list_id)->where("active", 1)->orderBy("sorting", "ASC")->get() as $ShopItemListItem) {
+                $Result .= "<option value=". $ShopItemListItem->id .">". $ShopItemListItem->value ."</option>";
+            }
+        }
+
+        return response()->json($Result);
+        
     }
 }
