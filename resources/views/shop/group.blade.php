@@ -9,35 +9,6 @@
     <div class="uk-section-xsmall tm-tovar">
         <div uk-grid="" class="uk-grid">
         
-            @if (isset($ShopGroups) && count($ShopGroups) > 0)
-                <!--рубрики-->
-                <div class="uk-width-1-4@m uk-first-column uk-visible@s">
-                
-                    <ul class="uk-nav-default uk-nav-divider" uk-nav>
-
-
-                        @foreach ($ShopGroups as $ShopGroup) 
-                            <li @class([
-                                "uk-parent" => count($ShopGroup["sub"]) > 0 ? true : false,
-                                "uk-active" => $ShopGroup["id"] == $group->id ? true : false
-                            ])>
-                                <a href="{{ $ShopGroup["url"] }}">{{ $ShopGroup["name"] }}@if(count($ShopGroup["sub"]) > 0)<span uk-navbar-parent-icon></span>@endif</a>
-                                @if (count($ShopGroup["sub"]) > 0)
-                                    <ul class="uk-nav-sub">
-                                        @foreach ($ShopGroup["sub"] as $sShopGroup)
-                                            <li class="{{ $sShopGroup["id"] == $group->id ? 'uk-active' : '' }}"><a href="{{ $sShopGroup['url'] }}">{{ $sShopGroup['name'] }}</a></li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </li>
-                        @endforeach 
-
-                    </ul>
-                
-                </div>
-                <!--рубрики-->
-            @endif
-
             @php
 
                 $links = [
@@ -110,7 +81,7 @@
                 </div>
                 <!--сортировка-->
                 
-                <div class="uk-child-width-1-4@s uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
+                <div class="uk-child-width-1-5@s uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
 
                     @php
                         $client = Auth::guard('client')->user();
