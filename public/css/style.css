@@ -316,3 +316,71 @@ a.add-to-favorite-link.active, a.add-to-favorite-link:active {
 .uk-navbar-nav>li>a{
     color: #9D8660;
 }
+
+@-webkit-keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0;
+    }
+
+    30% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0;
+    }
+
+    30% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
+.request-call-btn {
+    position: fixed;
+    right: 37px;
+    bottom: 90px;
+    text-align: center;
+    text-decoration: none;
+    line-height: normal;
+    font-size: 12px;
+    z-index: 1000;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    background-image: linear-gradient(#dac198, #9d8661);
+    -webkit-box-shadow: 0px 0px 7px 0 rgb(157 134 97);
+    box-shadow: 0px 0px 7px 0 rgb(157 134 97);
+    border: 6px solid #e5dfd6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff !important;
+}
+
+.request-call-btn:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    border: 1px solid #9D8660;
+    -webkit-animation: pulse 2s linear infinite;
+    -moz-animation: pulse 2s linear infinite;
+    animation: pulse 2s linear infinite;
+}

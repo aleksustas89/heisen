@@ -326,6 +326,41 @@
             <!--Футер-->
         </div>
     </div>
+
+    <a href="javascript:void(0)" uk-toggle="target: #request-call" class="request-call-btn">
+        <span>Сделать<br>заявку</span>
+    </a>
+
+    <div id="request-call" uk-modal="" class="uk-modal" tabindex="-1">
+        <div class="uk-modal-dialog uk-modal-body" role="dialog" aria-modal="true">
+            <h2 class="uk-modal-title">Заявка на обратный звонок</h2>
+            
+            <form id="request-call-form" type="POST">
+                @csrf
+                <p>Заполните форму и наши менеджеры свяжутся с Вами в ближайшее время</p>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-stacked-text">Фио</label>
+                    <div class="uk-form-controls">
+                        <input required="" class="uk-input" name="name" type="text" placeholder="Ваше Фио">
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-stacked-text">Телефон</label>
+                    <div class="uk-form-controls">
+                        <input required="" class="uk-input" name="phone" type="text" placeholder="Телефон">
+                    </div>
+                </div>
+
+                <p class="uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">Отменить</button>
+                    <button class="uk-button uk-button-primary" type="submit">Заказать</button>
+                </p>
+            </form>
+
+        </div>
+    </div>
 @endsection
 
 

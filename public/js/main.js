@@ -47,5 +47,27 @@ $(function(){
         }
     });
 
+    $(function(){
+        $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
+
+        $("#request-call-form").on("submit", function() {
+
+            $.ajax({
+                url: "/request-call",
+                type: "POST",
+                data: $("#request-call-form").serialize(),
+                dataType: "json",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (data) {
+                    $("#request-call-form").replaceWith(data);
+                },
+            });
+
+            return false;
+        });
+    });
+
     
 });

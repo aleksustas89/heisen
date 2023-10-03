@@ -253,13 +253,10 @@
 
 @section("js")
     <script src="/js/modification.js"></script>
-    <script src="/js/cart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>                   
+    <script src="/js/cart.js"></script>            
     <script>
 
         $(function(){
-            $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
 
             $("#shop-quich-order").on("submit", function() {
 

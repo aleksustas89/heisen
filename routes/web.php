@@ -157,6 +157,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
         Route::get('/ajax', [App\Http\Controllers\SearchController::class, 'ajaxSearch']);
     });
     
+    Route::post('/request-call', [App\Http\Controllers\RequestCallController::class, 'index']);
 
 });
 
