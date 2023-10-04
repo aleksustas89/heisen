@@ -23,12 +23,14 @@ class CartController extends Controller
     {
 
         $cartCollection = \App\Http\Controllers\CartController::getCart();
+        $client = Auth::guard('client')->user();
 
         return view('shop.cart', [
             "cartCount" => $cartCollection ? $cartCollection->count() : 0,
             "Cities" => ShopCountryLocationCity::get(),
             "Payments" => ShopPaymentSystem::get(),
             'shopDeliveries' => ShopDelivery::get(),
+            "client" => $client,
         ]);
     }
 

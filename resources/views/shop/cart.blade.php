@@ -142,26 +142,26 @@
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="form-stacked-text">Имя</label>
                                 <div class="uk-form-controls">
-                                    <input value="{{ old('name') }}" class="uk-input @error('name') is-invalid @enderror" name="name" required="" id="form-stacked-text" type="text" placeholder="Введите имя...">
+                                    <input value="{{ old('name') ?? $client->name ?? '' }}" class="uk-input @error('name') is-invalid @enderror" name="name" required="" id="form-stacked-text" type="text" placeholder="Введите имя...">
                                 </div>
                             </div>
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="form-stacked-text">Фамилия</label>
                                 <div class="uk-form-controls">
-                                    <input value="{{ old('surname') }}" class="uk-input" name="surname" id="form-stacked-text" type="text" placeholder="Введите фамилию...">
+                                    <input value="{{ old('surname') ?? $client->surname ?? '' }}" class="uk-input" name="surname" id="form-stacked-text" type="text" placeholder="Введите фамилию...">
                                 </div>
                             </div>
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="form-stacked-text">Телефон</label>
                                 <div class="uk-form-controls">
-                                    <input value="{{ old('phone') }}" class="uk-input @error('phone') is-invalid @enderror" name="phone" id="form-stacked-text" type="text" placeholder="Введите телефон...">
+                                    <input value="{{ old('phone') ?? $client->phone ?? '' }}" class="uk-input @error('phone') is-invalid @enderror" name="phone" id="form-stacked-text" type="text" placeholder="Введите телефон...">
                                 </div>
                             </div>
 
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="form-stacked-text">E-mail</label>
                                 <div class="uk-form-controls">
-                                    <input value="{{ old('email') }}" class="uk-input @error('email') is-invalid @enderror" name="email" required="" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
+                                    <input value="{{ old('email') ?? $client->email ?? '' }}" class="uk-input @error('email') is-invalid @enderror" name="email" required="" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
                                 </div>
                             </div>
                             <div class="uk-form-label">Комментарий к заказу (не обязательно)</div>    	    	
@@ -184,7 +184,7 @@
         @elseif (null !== session('success'))
             <div class="uk-flex uk-flex uk-align-center uk-flex-center uk-text-center uk-flex-middle uk-flex-column empty-cart">
                 <div>
-                    <img data-src="/images/logo.png" uk-img="" />
+                    <a class="uk-navbar-item uk-logo" href="/" aria-label="Back to Home" tabindex="0" role="menuitem">HEISEN</a>
                 </div>
                 <h1>Ваш заказ оформлен</h1>
                 <div>Мы уже работаем, чтобы отправить Ваш заказ как можно скорее.</div>
@@ -192,10 +192,10 @@
         @else
             <div class="uk-flex uk-flex uk-align-center uk-flex-center uk-text-center uk-flex-middle  uk-flex-column empty-cart">
                 <div>
-                    <img data-src="/images/logo.png" uk-img="" />
+                    <a class="uk-navbar-item uk-logo" href="/" aria-label="Back to Home" tabindex="0" role="menuitem">HEISEN</a>
                 </div>
                 <h1>В корзине нет <br>ни одного товара :(</h1>
-                <p>А на <a href="/">главной</a> странице есть много интересно:)</p>
+                <p>А на <a href="/">главной</a> странице есть много интересного:)</p>
             </div>
         @endif
     </div>

@@ -6,6 +6,13 @@
 
 @section('content')
 
+    @php
+
+    $client = Auth::guard('client')->user();
+    $clientFavorites = !is_null($client) ? $client->getClientFavorites() : [];
+
+    @endphp
+
 	<div class="uk-section-xsmall uk-padding-remove-top">
         <div uk-grid>
             @if (count($images) > 0)
@@ -264,7 +271,6 @@
 
                 </ul>
 
-
                 <form action="{{ route('saveComment') }}" method="POST" enctype="multipart/form-data">
 
                     @csrf
@@ -313,19 +319,19 @@
                         <div class="uk-margin">
                             <label class="uk-form-label" for="form-stacked-text">Имя, Фамилия</label>
                             <div class="uk-form-controls">
-                                <input required="" value="" class="uk-input" name="author" id="form-stacked-text" type="text" placeholder="Имя, Фамилия">
+                                <input required="" value="{{ !is_null($client) ? implode(" ", [$client->name, $client->surname]) : '' }}" class="uk-input" name="author" id="form-stacked-text" type="text" placeholder="Имя, Фамилия">
                             </div>
                         </div>
                         <div class="uk-margin">
                             <label class="uk-form-label" for="form-stacked-text">Телефон</label>
                             <div class="uk-form-controls">
-                                <input value="" class="uk-input " name="phone" id="form-stacked-text" type="text" placeholder="Введите телефон...">
+                                <input value="{{ $client->phone ?? '' }}" class="uk-input " name="phone" id="form-stacked-text" type="text" placeholder="Введите телефон...">
                             </div>
                         </div>
                         <div class="uk-margin">
                             <label class="uk-form-label" for="form-stacked-text">E-mail</label>
                             <div class="uk-form-controls">
-                                <input value="" class="uk-input " name="email" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
+                                <input value="{{ $client->email ?? '' }}" class="uk-input " name="email" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
                             </div>
                         </div>
                     

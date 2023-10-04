@@ -36,8 +36,6 @@ class ShopItemController extends Controller
             $modListValues[] = $aModValue["value"];
         }
 
-        $client = Auth::guard('client')->user();
-
         $Comments = Comment::select("comments.*")
             ->join("comment_shop_items", "comments.id", "=", "comment_shop_items.comment_id")
             ->where("comment_shop_items.shop_item_id", $shopItem->id)
@@ -49,9 +47,7 @@ class ShopItemController extends Controller
             'aModValues' => $modListValues,
             'item' => $shopItem,
             'images' => $shopItem->getImages(),
-            'client' => $client,
             'prices' => $shopItem->discounts == 1 ? ShopDiscountController::getModificationsPricesWithDiscounts($shopItem) : [],
-            'clientFavorites' => !is_null($client) ? $client->getClientFavorites() : [],
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
             'Comments' => $Comments,
         ]);
