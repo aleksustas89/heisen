@@ -116,11 +116,13 @@
         <div>
             @if ($fourth)
                 <div class="uk-child-width-1-1 uk-text-center uk-grid-small home-group-large home-group-item" uk-grid>
-                    <a href="{{ $fourth->url() }}" class="uk-inline-block" style="background-image: url({{ $fourth->dir() }}{{ $fourth->image_large }});">
-                        <div class="uk-position-bottom-center uk-padding">
-                            <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $fourth->name }}</h3>
-                        </div>
-                    </a>
+                    <div>
+                        <a href="{{ $fourth->url() }}" class="uk-inline-block" style="background-image: url({{ $fourth->dir() }}{{ $fourth->image_large }});">
+                            <div class="uk-position-bottom-center uk-padding">
+                                <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $fourth->name }}</h3>
+                            </div>
+                        </a>
+                    </div>
                 </div> 
             @endif    
             <div class="uk-child-width-1-2@s uk-text-center uk-grid-small" uk-grid>
