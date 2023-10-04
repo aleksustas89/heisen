@@ -314,13 +314,7 @@
                     <hr />
                     <div uk-grid>
                         <div class="uk-text-small">© {{ date("Y") }} Tech Space. All rights reserved. Powered by <a target="_blank" href="https://www.astra-site.com/">AstraSite</a>.</div>
-                        <div class="uk-flex uk-flex-right uk-width-expand@s">
-                            <span class="footer-insta">
-                                <a target="_blank" href="https://www.instagram.com/bartbag_kyiv/" uk-icon="icon: instagram">
-                                    Follow us
-                                </a>
-                            </ul>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
