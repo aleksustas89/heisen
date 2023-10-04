@@ -48,6 +48,7 @@
                                             @endif
                                         </li>
                                     @endforeach
+                                    <li><a href="{{ route("comments") }}">Отзывы</a></li>
                                 </ul>
                             @endif
                             

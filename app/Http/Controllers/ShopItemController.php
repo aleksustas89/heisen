@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\ShopItem;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ShopDiscountController;
+use App\Models\Comment;
+use App\Models\CommentShopItem;
 
 class ShopItemController extends Controller
 {
@@ -36,6 +38,12 @@ class ShopItemController extends Controller
 
         $client = Auth::guard('client')->user();
 
+        $Comments = Comment::select("comments.*")
+            ->join("comment_shop_items", "comments.id", "=", "comment_shop_items.comment_id")
+            ->where("comment_shop_items.shop_item_id", $shopItem->id)
+            ->where("comments.active", 1)
+            ->get();
+
         Route::view($path, 'shop/item', [
             'aModProperties' => $ShopItemProperties,
             'aModValues' => $modListValues,
@@ -45,6 +53,7 @@ class ShopItemController extends Controller
             'prices' => $shopItem->discounts == 1 ? ShopDiscountController::getModificationsPricesWithDiscounts($shopItem) : [],
             'clientFavorites' => !is_null($client) ? $client->getClientFavorites() : [],
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
+            'Comments' => $Comments,
         ]);
     }
 
@@ -97,5 +106,31 @@ class ShopItemController extends Controller
         
 
         return response()->json($response);
+    }
+
+    public function saveComment(Request $request)
+    {
+
+        $client = Auth::guard('client')->user();
+
+        $comment = new Comment();
+        $comment->subject = $request->subject;
+        $comment->text = $request->text;
+        $comment->author = $request->author;
+        $comment->email = $request->email;
+        $comment->phone = $request->phone;
+        $comment->grade = $request->grade;
+        $comment->client_id = !is_null($client) ? $client->id : 0;
+        $comment->active = 0;
+        $comment->parent_id = $request->parent_id ?? 0;
+
+        $comment->save();
+
+        $CommentShopItem = new CommentShopItem();
+        $CommentShopItem->shop_item_id = $request->shop_item_id;
+        $CommentShopItem->comment_id = $comment->id;
+        $CommentShopItem->save();
+
+        return redirect()->back()->withSuccess("Комментарий был успешно добавлен! После проверки, он станет доступен на сайте.");
     }
 }

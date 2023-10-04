@@ -28,6 +28,9 @@ class ToggleController extends Controller
                 case "shopDiscount":
                     $Model = new \App\Models\shopDiscount();
                     break;
+                case "comment":
+                    $Model = new \App\Models\Comment();
+                    break;
             }
 
             if ($Model) {

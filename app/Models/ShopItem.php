@@ -54,6 +54,11 @@ class ShopItem extends Model
         return $this->hasMany(ShopItemDiscount::class);
     }
 
+    public function CommentShopItem()
+    {
+        return $this->hasMany(CommentShopItem::class);
+    }
+
     public function getImages($all = true)
     {
         $aReturn = [];

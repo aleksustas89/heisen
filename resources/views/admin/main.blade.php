@@ -100,6 +100,12 @@
                                     <span>Поиск</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('comment.index') }}" class="nav-link">
+                                    <i class="ti ti-messages menu-icon"></i>
+                                    <span>Комментарии</span>
+                                </a>
+                            </li>
                             
                         </ul>
                     </div>

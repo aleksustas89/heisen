@@ -48,6 +48,14 @@
             @endif
 
             <div class="uk-width-expand@m">
+
+                @if (session('success'))
+                    <div class="uk-alert-success" uk-alert>
+                        <a href class="uk-alert-close" uk-close></a>
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <div class="uk-margin">
                     <a class="el-content uk-link-text" href="{{ $item->ShopGroup->url() }}">{{ $item->ShopGroup->name }}</a>   
                 </div>
@@ -214,6 +222,7 @@
                             </div>
                         </li>   
                     @endif 
+
                     <li>
                         <a class="uk-accordion-title">ПРЕИМУЩЕСТВА</a>
                         <div class="uk-accordion-content">
@@ -233,7 +242,102 @@
                             <p>Мы предлагаем аксессуары, в которых учтено всё, они очень долго служат хозяевам, сохраняют презентабельный вид, а в процессе носки приобретают неповторимую уникальность и изысканность. Такие вещи подчёркивают вкус владельца и помогают создать собственный стиль.</p>
                         </div>
                     </li>
+
+                    
+                    @if ($Comments)
+                        <li>
+                            <a class="uk-accordion-title">Отзывы <span class="uk-badge">{{ count($Comments) }}</span></a>
+                            <div class="uk-accordion-content">
+
+                                @foreach ($Comments as $Comment)
+
+                                    @include('comment.comment', [
+                                        'Comment' => $Comment,
+                                        'shopItem' => true,
+                                    ])
+                            
+                                @endforeach
+                                                            
+                            </div>
+                        </li>
+                    @endif
+
                 </ul>
+
+
+                <form action="{{ route('saveComment') }}" method="POST" enctype="multipart/form-data">
+
+                    @csrf
+
+                    <div class="uk-card uk-card-default uk-card-body uk-card-small uk-margin-xlarge-top">
+                        <div class="uk-h2">Добавить отзыв к товару</div>
+                        <hr>
+
+                        <div class="uk-flex uk-flex-around grade-stars">
+                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                плохо
+                            </span>
+                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                так себе
+                            </span>
+                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                нормально
+                            </span>
+                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                хорошо
+                            </span>
+                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                отлично
+                            </span>
+                            <input type="hidden" name="grade" value="" />
+                        </div>
+                        
+                
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-stacked-text">Тема</label>
+                            <div class="uk-form-controls">
+                                <input value="" class="uk-input " name="subject" required="" id="form-stacked-text" type="text" placeholder="Тема">
+                            </div>
+                        </div>
+                         	    	
+                        <div class="uk-margin">
+                            <div class="uk-form-label">Комментарий</div>   
+                            <textarea required="" name="text" class="uk-textarea" rows="5" placeholder="Комментарий" aria-label="Textarea"></textarea>
+                        </div>
+
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-stacked-text">Имя, Фамилия</label>
+                            <div class="uk-form-controls">
+                                <input required="" value="" class="uk-input" name="author" id="form-stacked-text" type="text" placeholder="Имя, Фамилия">
+                            </div>
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-stacked-text">Телефон</label>
+                            <div class="uk-form-controls">
+                                <input value="" class="uk-input " name="phone" id="form-stacked-text" type="text" placeholder="Введите телефон...">
+                            </div>
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-stacked-text">E-mail</label>
+                            <div class="uk-form-controls">
+                                <input value="" class="uk-input " name="email" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
+                            </div>
+                        </div>
+                    
+                        <input type="hidden" name="shop_item_id" value="{{ $item->id }}" />
+                        <div class="uk-text-center uk-margin">
+                            <button class="uk-button uk-button-primary uk-width-1-1">Оставить отзыв</button>
+                        </div>  
+            
+                    </div>
+
+                </form>
+
             </div>
         </div>
     </div>
@@ -241,12 +345,26 @@
 @endsection
 
 @section("css")
+    <link href="/assets/css/colors.css" rel="stylesheet" type="text/css">
     <style>
         .uk-slider-items a{
             height: 100px;
             width: 100%;
             display: inline-block;
             background-size: cover;
+        }
+        .grade-star.hover polygon, .grade-star.fill polygon {
+            fill: #c39c5c;
+            stroke: #cdb58d !important;
+        }
+
+        @media (max-width: 480px) {
+            .grade-star {
+                font-size: 10px;
+            }
+            .grade-star svg{ 
+                width: 30px;
+            }
         }
     </style>
 @endsection
@@ -274,6 +392,33 @@
                 });
 
                 return false;
+            });
+
+            $(".grade-star").mouseenter(function() {
+                let index = $(this).index();
+                $(".grade-stars").find(".grade-star").each(function() {
+                    if ($(this).index() <= index) {
+                        $(this).addClass("hover");
+                    } else {
+                        $(this).removeClass("hover");
+                    }
+                });
+            });
+
+            $(".grade-stars").mouseleave(function() {
+                $(".grade-star").removeClass("hover");
+            });
+
+            $(".grade-star").click(function() {
+                let index = $(this).index();
+                $("[name='grade']").val(index + 1);
+                $(".grade-stars").find(".grade-star").each(function() {
+                    if ($(this).index() <= index) {
+                        $(this).addClass("fill");
+                    } else {
+                        $(this).removeClass("fill");
+                    }
+                });
             });
 
         });

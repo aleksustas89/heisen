@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\ShopItem;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
@@ -53,6 +53,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::resource('shopDiscount', ShopDiscountController::class);
         Route::get('/list/values', [App\Http\Controllers\Admin\ShopDiscountController::class, 'listValues']);
         Route::resource('shopItemDiscount', ShopItemDiscountController::class);
+        Route::resource('comment', CommentController::class);
 
         Route::prefix("search")->group(function() {
             Route::get('/', [App\Http\Controllers\Admin\SearchController::class, 'index'])->name("adminSearch");
@@ -121,6 +122,7 @@ if (Schema::hasTable('shops')) {
     Route::get('/shop/ajax/group/{ShopGroupId}', function ($ShopGroupId) {
         return App\Http\Controllers\ShopGroupController::getAjaxGroup($ShopGroupId);
     });
+    Route::post('/save-comment', [App\Http\Controllers\ShopItemController::class, 'saveComment'])->name("saveComment");
 }
 
 Route::group(['namespace' => 'App\Http\Controllers'], function() {
@@ -158,6 +160,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
     });
     
     Route::post('/request-call', [App\Http\Controllers\RequestCallController::class, 'index']);
+
+    Route::get('/comments', [App\Http\Controllers\CommentController::class, 'index'])->name("comments");
 
 });
 

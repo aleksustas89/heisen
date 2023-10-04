@@ -384,3 +384,11 @@ a.add-to-favorite-link.active, a.add-to-favorite-link:active {
     -moz-animation: pulse 2s linear infinite;
     animation: pulse 2s linear infinite;
 }
+
+.uk-badge {
+    background: #9d8661;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
