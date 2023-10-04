@@ -23,7 +23,11 @@ h1,h2,h3,h4,h5,h6,.uk-h1,.uk-h2,.uk-h3,.uk-h4,.uk-h5,.uk-h6{font-family:"Haymake
 .tm-price{color:#8b6a1b;font-size:14px;font-weight:bold;}
 .uk-accordion-title{font-family:"Haymaker"!important;font-size: 1.05rem;line-height: 1.4;}
 
-.uk-logo img{height:70px;}
+.uk-logo{
+    font-family: "Haymaker"!important;
+    font-weight: bold;
+    font-size: 26px;
+}
 
 .tm-user .uk-button{padding-left:20px;padding-right:20px;}
 .tm-user .uk-button-link{font-size:11px;}
