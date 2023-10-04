@@ -97,11 +97,13 @@
 
                 </div>
                 
-                <!--пагенация-->
-                <div class="pagination-auto uk-hidden" data-group="{{ $group->id }}">
-                    {{ $items->appends($links)->links(('vendor.pagination.default')) }}
-                </div>
-                <!--пагенация-->
+                <!--пагинация-->
+                @if ($items->hasPages())
+                    <div class="pagination-auto uk-hidden" data-group="{{ $group->id }}">
+                        {{ $items->appends($links)->links(('vendor.pagination.default')) }}
+                    </div>
+                @endif
+                <!--пагинация-->
 
                 <div>
                     {!! $group->text !!}
