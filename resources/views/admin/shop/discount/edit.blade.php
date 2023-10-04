@@ -71,12 +71,17 @@
                                 <div class="col-2">
                                     <label class="mb-1">Величина скидки</label>
                                     <div class="d-flex">
-                                        <input type="text" value="{{ $discount->value }}" name="value" class="form-control" placeholder="Величина скидки">
-                                        <select name="type" class="form-control">
-                                            @foreach ($types as $key => $type)
-                                                <option {{ $key == $discount->type ? 'selected' : '' }} value="{{ $key }}">{{ $type }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div>
+                                            <input type="text" id="value" data-min="1" data-reg="[0-9\\.,:]" data-max="255" data-required="1" value="{{ $discount->value }}" name="value" class="form-control" placeholder="Величина скидки">
+                                            <div id="value_error" class="fieldcheck-error"></div>
+                                        </div>
+                                        <div>
+                                            <select name="type" class="form-control">
+                                                @foreach ($types as $key => $type)
+                                                    <option {{ $key == $discount->type ? 'selected' : '' }} value="{{ $key }}">{{ $type }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-2">
