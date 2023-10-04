@@ -244,7 +244,7 @@
                     </li>
 
                     
-                    @if ($Comments)
+                    @if ($Comments && count($Comments) > 0)
                         <li>
                             <a class="uk-accordion-title">Отзывы <span class="uk-badge">{{ count($Comments) }}</span></a>
                             <div class="uk-accordion-content">
