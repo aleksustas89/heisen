@@ -8,6 +8,7 @@ use App\Models\ShopGroup;
 use App\Models\ShopItem;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Comment;
 
 class HomeController extends Controller
 {
@@ -27,6 +28,7 @@ class HomeController extends Controller
             'client' => $client,
             'bottom_text' => Shop::get()->description,
             'clientFavorites' => !is_null($client) ? $client->getClientFavorites() : [],
+            'Comments' => Comment::where("active", 1)->where("parent_id", 0)->where("grade", 5)->inRandomOrder()->limit(15)->get(),
         ]);
     }
 }

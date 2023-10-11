@@ -172,6 +172,27 @@
         </div>
     @endif
 
+    @if (count($Comments) > 0)
+
+        <div class="uk-section-small uk-padding-remove-bottom">
+            <div class="uk-flex uk-flex-middle uk-flex-between">
+                <h1 class="uk-margin-remove">Отзывы</h1>
+                <div class="uk-text-right"><a href="{{ route("comments") }}">Все отзывы</a></div>
+            </div>
+
+            @foreach ($Comments as $Comment)
+                                
+                @include('comment.comment', [
+                    'Comment' => $Comment,
+                ])
+                
+            @endforeach  
+
+            <div class="uk-text-right"><a href="{{ route("comments") }}">Все отзывы</a></div>
+
+        </div>
+    @endif
+
     @if (!empty($bottom_text))
         {!! $bottom_text !!}
     @endif
@@ -182,40 +203,6 @@
 @section("css")
 
 <link href="/css/pages/home.css" rel="stylesheet">
-
-@endsection
-
-@section("js")
-
-    <script>
-
-        $(window).on("scroll", function() {
-            if ($(".discounts-block").length) {
-                var block = $(".discounts-block"),
-                    topBlock = block.offset().top,
-                    h = window.innerHeight
-                        || document.documentElement.clientHeight
-                        || document.body.clientHeight;
-
-                if (window.pageYOffset > topBlock - 2*h) {
-                    $.ajax({
-                        url: '/discounts/ajax',
-                        method: 'GET',
-                        dataType: "html",
-                        success: function(data) {
-                                
-                            block.response = $("<div>" + data + "</div>");
-
-                            if (block.response.find(".tm-tovar").length) {
-                                $(".discounts-block").replaceWith(block.response.find(".tm-tovar"))
-                            }
-                        }
-                    });
-
-                }
-            }
-        });
-
-    </script>
+<link href="/assets/css/colors.css" rel="stylesheet" type="text/css">
 
 @endsection
