@@ -396,3 +396,7 @@ a.add-to-favorite-link.active, a.add-to-favorite-link:active {
 .cursor-pointer {
     cursor: pointer;
 }
+.uk-comment .green polygon {fill: #8cc474 !important;}
+.uk-comment .yellow polygon {fill: #ffce55 !important;}
+.uk-comment .red polygon {fill: #df5138 !important;}
+.uk-comment .maroon polygon {fill: #981b48 !important;}
