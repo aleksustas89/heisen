@@ -128,6 +128,8 @@ if (Schema::hasTable('shops')) {
 
 Route::group(['namespace' => 'App\Http\Controllers'], function() {
 
+    Route::get('favorites', 'Auth\ClientController@cookieFavorites')->name("cookieFavorites");
+
     Route::prefix("client")->group(function() {
 
         Route::group(['middleware' => ['client-auth']], function() {
@@ -143,13 +145,11 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
             Route::post('logout', 'Auth\ClientController@logout')->name('clientLogout');
 
             Route::get('orders', 'Auth\ClientController@orders')->name("clientOrders");
-
-            Route::prefix("favorites")->group(function() {
-                Route::get('/', 'Auth\ClientController@favorites')->name("clientFavorites");
-                Route::post('add', 'Auth\ClientController@addFavorite')->name("addFavorite");
-            });
+            Route::get('favorites', 'Auth\ClientController@favorites')->name("clientFavorites");
 
         });
+
+        Route::post('favorites/add', 'Auth\ClientController@addFavorite')->name("addFavorite");
 
     });
 

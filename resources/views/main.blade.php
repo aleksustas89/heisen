@@ -4,7 +4,6 @@
 
     @php
     $client = Auth::guard('client')->user();
-    $countFavorites = !is_null($client) ? count($client->getClientFavorites()) : 0;
     @endphp
 
     <div uk-sticky="start: 200; animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky;">
@@ -85,10 +84,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="uk-navbar-item">
-                                    <a href="{{ route('clientFavorites') }}"><span uk-icon="icon: heart"></span> (<span class="favorites-count">{{ $countFavorites }}</span>)</a>
-                                </div>
+                                @if (\App\Models\ClientFavorite::$Type == 0)
+                                    @php
+                                    $countFavorites = !is_null($client) ? count($client->getClientFavorites()) : 0;
+                                    @endphp
+                                    <div class="uk-navbar-item">
+                                        <a href="{{ route('clientFavorites') }}"><span uk-icon="icon: heart"></span> (<span class="favorites-count">{{ $countFavorites }}</span>)</a>
+                                    </div>
+                                @endif
 
+                            @endif
+
+                            @if (\App\Models\ClientFavorite::$Type == 1)
+                                <div class="uk-navbar-item">
+                                    <a href="{{ route('cookieFavorites') }}"><span uk-icon="icon: heart"></span> (<span class="favorites-count">{{ \App\Http\Controllers\Auth\ClientController::getCookieFavoritesCount() }}</span>)</a>
+                                </div>
                             @endif
 
                             <div class="uk-navbar-item little-cart">

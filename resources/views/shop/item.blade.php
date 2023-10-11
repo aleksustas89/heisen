@@ -9,7 +9,7 @@
     @php
 
     $client = Auth::guard('client')->user();
-    $clientFavorites = !is_null($client) ? $client->getClientFavorites() : [];
+    
 
     @endphp
 
@@ -177,15 +177,28 @@
 
                         </div>
                     </div>
-        
-                    @if (is_null($client))
-                        @include('shop.window-login')
-                    @else
+
+                    @if (\App\Models\ClientFavorite::$Type == 0)
                         @php
+                            $clientFavorites = !is_null($client) ? $client->getClientFavorites() : [];
+                        @endphp
+                        @if (is_null($client))
+                            @include('shop.window-login')
+                        @else
+                            @php
+                            $active = in_array($item->id, $clientFavorites) ? true : false;
+                            @endphp
+                            <a onclick="Favorite.add($(this), {{ $item->id }}, '{{ route('addFavorite') }}')" @class(["add-to-favorite-link", "uk-icon", "uk-icon-button", "tm-icon", "active" => $active]) uk-icon="heart"></a>
+                        @endif
+                    @elseif (\App\Models\ClientFavorite::$Type == 1)
+                        @php
+                        $clientFavorites = \App\Http\Controllers\Auth\ClientController::getCookieFavorites();
                         $active = in_array($item->id, $clientFavorites) ? true : false;
                         @endphp
                         <a onclick="Favorite.add($(this), {{ $item->id }}, '{{ route('addFavorite') }}')" @class(["add-to-favorite-link", "uk-icon", "uk-icon-button", "tm-icon", "active" => $active]) uk-icon="heart"></a>
                     @endif
+        
+
                 </div>
 
                 <hr />
