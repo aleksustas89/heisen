@@ -9,6 +9,7 @@ use App\Models\PropertyValueInt;
 use App\Models\ShopItemProperty;
 use Illuminate\Http\Request;
 use App\Models\ShopItemListItem;
+use App\Models\ShopItem;
 
 class ShopDiscountController extends Controller
 {
@@ -110,12 +111,18 @@ class ShopDiscountController extends Controller
             switch ($request->apply_total_discount) {
                 case 1:
 
+                    $ShopItemDiscountController = new ShopItemDiscountController();
+
                     foreach (PropertyValueInt::where("value", $request->total_list_value)->get() as $Value) {
                         if (is_null(ShopItemDiscount::where("shop_item_id", $Value->entity_id)->where("shop_discount_id", $shopDiscount->id)->first())) {
-                            $ShopItemDiscount = new ShopItemDiscount();
-                            $ShopItemDiscount->shop_item_id = $Value->entity_id;
-                            $ShopItemDiscount->shop_discount_id = $shopDiscount->id;
-                            $ShopItemDiscount->save();
+                            
+                            if (!is_null($ShopItem = ShopItem::find($Value->entity_id))) {
+                                $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount = false, $shopDiscount, $ShopItem);
+
+                                $ShopItemDiscountController = new \App\Http\Controllers\Admin\ShopItemDiscountController;
+                                
+                                $ShopItemDiscountController->checkItemDiscounts($ShopItem->parentItemIfModification());
+                            }
                         } 
                     }
                     

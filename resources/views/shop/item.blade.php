@@ -69,19 +69,19 @@
                 <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical">{{ $item->name }}</h1>
                 <div class="uk-h3 uk-margin uk-margin-top"> 
 
-                        @if (count($prices) > 1)
-                            <span id="item-price">
-                                {{ App\Services\Helpers\Str::price(min($prices)) }} - {{ App\Services\Helpers\Str::price(max($prices)) }}
-                            </span>
-                            <span class="item-old-price" id="item-old-price">
-                                @if (!in_array($item->price, $prices))
-                                    {{ App\Services\Helpers\Str::price($item->price) }}
-                                @endif
-                            </span>
-                        @else 
-                            <span id="item-price">{{ App\Services\Helpers\Str::price($item->price()) }}</span> 
-                            <span class="item-old-price" id="item-old-price">{{ App\Services\Helpers\Str::price($item->oldPrice()) }}</span>
-                        @endif
+                    @if (count($prices) > 1)
+                        <span id="item-price">
+                            {{ App\Services\Helpers\Str::price(min($prices)) }} - {{ App\Services\Helpers\Str::price(max($prices)) }}
+                        </span>
+                        <span class="item-old-price" id="item-old-price">
+                            @if (!in_array($item->price, $prices))
+                                {{ App\Services\Helpers\Str::price($item->price) }}
+                            @endif
+                        </span>
+                    @else 
+                        <span id="item-price">{{ App\Services\Helpers\Str::price($item->price()) }}</span> 
+                        <span class="item-old-price" id="item-old-price">{{ App\Services\Helpers\Str::price($item->oldPrice()) }}</span>
+                    @endif
 
                     @php
                         $oCurrency = $item->ShopCurrency;

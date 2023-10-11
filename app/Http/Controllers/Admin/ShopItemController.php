@@ -71,8 +71,6 @@ class ShopItemController extends Controller
             $aProperty_Value_Float[$oProperty_Value_Float->property_id][$oProperty_Value_Float->id] = $oProperty_Value_Float->value;
         }
 
-        //dd($aProperty_Value_Int);
-
         return view('admin.shop.item.edit', [
             'shopItem' => $shopItem,
             'images' => $shopItem->getImages(),
@@ -225,6 +223,12 @@ class ShopItemController extends Controller
 
         $this->saveItemProperties($request, $shopItem);
 
+        //скидка
+        $ShopItemDiscountController = new ShopItemDiscountController();
+        foreach ($shopItem->ShopItemDiscount as $ShopItemDiscount) {
+            $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount, $ShopItemDiscount->ShopDiscount, $shopItem);
+        }
+        
         $message = "Товар был успешно сохранен!";
 
         if ($request->apply) {

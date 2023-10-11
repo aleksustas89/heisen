@@ -271,6 +271,12 @@ class ModificationController extends Controller
             $ShopModificationImage->save();
         }
 
+        //скидка
+        $ShopItemDiscountController = new ShopItemDiscountController();
+        foreach ($Modification->ShopItemDiscount as $ShopItemDiscount) {
+            $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount, $ShopItemDiscount->ShopDiscount, $Modification);
+        }
+
         $message = "Модификация была успешно изменена!";
         if ($request->apply) {
             return redirect()->to(route("modification.index") . '?shop_item_id=' . $Modification->modification_id)->withSuccess($message);

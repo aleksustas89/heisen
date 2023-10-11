@@ -150,11 +150,20 @@
 	</div>
 	<!--блок с популярными товарами-->
 
+    @if (\App\Http\Controllers\ShopItemDiscountController::countItemsWithDiscounts() > 0)
+        <h2 class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Скидки</h2>
+        <div class="uk-child-width-1-5@s uk-child-width-1-2 uk-grid-small uk-grid" uk-grid=""> 
+            @foreach ($discountItems as $item)
+                @include('shop.list-item', ['item' => $item])
+            @endforeach   
+        </div>
+    @endif
+
     @if (count($newItems) > 0)
 
         <h2 class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Новинки</h2>
 
-        <div class="uk-child-width-1-4@s uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
+        <div class="uk-child-width-1-5@s uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
 
             @foreach ($newItems as $item)
                 @include('shop.list-item', ['item' => $item])
@@ -173,5 +182,40 @@
 @section("css")
 
 <link href="/css/pages/home.css" rel="stylesheet">
+
+@endsection
+
+@section("js")
+
+    <script>
+
+        $(window).on("scroll", function() {
+            if ($(".discounts-block").length) {
+                var block = $(".discounts-block"),
+                    topBlock = block.offset().top,
+                    h = window.innerHeight
+                        || document.documentElement.clientHeight
+                        || document.body.clientHeight;
+
+                if (window.pageYOffset > topBlock - 2*h) {
+                    $.ajax({
+                        url: '/discounts/ajax',
+                        method: 'GET',
+                        dataType: "html",
+                        success: function(data) {
+                                
+                            block.response = $("<div>" + data + "</div>");
+
+                            if (block.response.find(".tm-tovar").length) {
+                                $(".discounts-block").replaceWith(block.response.find(".tm-tovar"))
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+
+    </script>
 
 @endsection

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer("shop_item_id")->index("shop_item_id")->default(0);
             $table->integer("shop_discount_id")->index("shop_discount_id")->default(0);
+            $table->decimal("value", 12, 2)->default(0);
             $table->timestamps();
         });
     }

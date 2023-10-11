@@ -47,7 +47,7 @@ class ShopItemController extends Controller
             'aModValues' => $modListValues,
             'item' => $shopItem,
             'images' => $shopItem->getImages(),
-            'prices' => $shopItem->discounts == 1 ? ShopDiscountController::getModificationsPricesWithDiscounts($shopItem) : [],
+            'prices' => ShopDiscountController::getModificationsPricesWithDiscounts($shopItem),
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
             'Comments' => $Comments,
         ]);

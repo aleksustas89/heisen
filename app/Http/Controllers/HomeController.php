@@ -22,7 +22,8 @@ class HomeController extends Controller
         return view('home', [
             'structure' => Structure::where("path", "/")->first(),
             'groups' => ShopGroup::where("parent_id", 0)->where('active', 1)->inRandomOrder()->get(),
-            'newItems' => ShopItem::where('active', 1)->where('modification_id', 0)->orderBy("id", "DESC")->limit(8)->get(),
+            'newItems' => ShopItem::where('active', 1)->where('modification_id', 0)->inRandomOrder()->limit(15)->get(),
+            'discountItems' => ShopItem::where('active', 1)->where('modification_id', 0)->where('discounts', 1)->inRandomOrder()->limit(15)->get(),
             'client' => $client,
             'bottom_text' => Shop::get()->description,
             'clientFavorites' => !is_null($client) ? $client->getClientFavorites() : [],

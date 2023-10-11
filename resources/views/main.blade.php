@@ -49,6 +49,11 @@
                                         </li>
                                     @endforeach
                                     <li><a href="{{ route("comments") }}">Отзывы</a></li>
+
+                                    @if (\App\Http\Controllers\ShopItemDiscountController::countItemsWithDiscounts() > 0)
+                                        <li><a href="{{ route("showItemWithDiscounts") }}">Скидки</a></li>
+                                    @endif
+
                                 </ul>
                             @endif
                             

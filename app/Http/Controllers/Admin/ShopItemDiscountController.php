@@ -61,7 +61,7 @@ class ShopItemDiscountController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->saveShopItemDiscount($request);
+        return $this->save($request);
     }
 
 
@@ -94,7 +94,7 @@ class ShopItemDiscountController extends Controller
      */
     public function update(Request $request, ShopItemDiscount $shopItemDiscount)
     {
-        return $this->saveShopItemDiscount($request, $shopItemDiscount);
+        return $this->save($request, $shopItemDiscount);
     }
 
     /**
@@ -112,7 +112,19 @@ class ShopItemDiscountController extends Controller
         return redirect()->back()->withSuccess("Скидка была успешно удалена!");
     }
 
-    public function saveShopItemDiscount(Request $request, $shopItemDiscount = false)
+    public function saveShopItemDiscount($ShopItemDiscount = false, ShopDiscount $ShopDiscount, ShopItem $ShopItem)
+    {
+        if (!$ShopItemDiscount) {
+            $ShopItemDiscount = new ShopItemDiscount();
+        }
+
+        $ShopItemDiscount->shop_discount_id = $ShopDiscount->id;
+        $ShopItemDiscount->shop_item_id = $ShopItem->id;
+        $ShopItemDiscount->value = \App\Http\Controllers\ShopDiscountController::getPriceApplyDiscount($ShopItem, $ShopDiscount);
+        $ShopItemDiscount->save();
+    }
+
+    public function save(Request $request, $shopItemDiscount = false)
     {
 
         if (!$shopItemDiscount) {
@@ -124,14 +136,13 @@ class ShopItemDiscountController extends Controller
             case '1':
 
                 if (is_null($shopItemDiscount)) {
-    
-                    $ShopItemDiscount = new ShopItemDiscount();
-                    $ShopItemDiscount->shop_discount_id = $request->shop_item_discount_id;
-                    $ShopItemDiscount->shop_item_id = $request->shop_item_id;
-                    $ShopItemDiscount->save();
 
-                    $this->checkItemDiscounts($ShopItemDiscount->ShopItem->parentItemIfModification());
+                    $ShopItem = ShopItem::find($request->shop_item_id);
    
+                    $this->saveShopItemDiscount($ShopItemDiscount = false, ShopDiscount::find($request->shop_item_discount_id), $ShopItem);
+
+                    $this->checkItemDiscounts($ShopItem->parentItemIfModification());
+    
                     $message = "Скидка была успешно добавлена к товару";
     
                     if ($request->apply) {
@@ -148,13 +159,13 @@ class ShopItemDiscountController extends Controller
             break;
             case '2':
 
+                $ShopDiscount = ShopDiscount::find($request->shop_item_discount_id);
+
                 foreach (ShopItem::where("modification_id", $request->shop_item_id)->get() as $ShopItem) {
                     
-                    if (is_null($ShopItemDiscount = ShopItemDiscount::where("shop_discount_id", $request->shop_item_discount_id)->where("shop_item_id", $ShopItem->id)->first())) {
-                        $ShopItemDiscount = new ShopItemDiscount();
-                        $ShopItemDiscount->shop_discount_id = $request->shop_item_discount_id;
-                        $ShopItemDiscount->shop_item_id = $ShopItem->id;
-                        $ShopItemDiscount->save();
+                    if (is_null(ShopItemDiscount::where("shop_discount_id", $request->shop_item_discount_id)->where("shop_item_id", $ShopItem->id)->first())) {
+        
+                        $this->saveShopItemDiscount($ShopItemDiscount = false, $ShopDiscount, $ShopItem);
                     }
                 }
 

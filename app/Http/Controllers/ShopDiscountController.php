@@ -84,17 +84,13 @@ class ShopDiscountController extends Controller
         $aResult = [];
  
         if ($ShopItem->modification_id == 0) {
-            foreach (ShopItem::where("modification_id", $ShopItem->id)->where("active", 1)->get() as $MShopItem) {
-                
-                if ($ShopItem->discounts == 1) {
-                    if ($priceDiscount = self::getShopItemPriceWithDiscount($MShopItem)) {
-                        $aResult[] = $priceDiscount;
-                    } else {
-                        $aResult[] = $MShopItem->price;
-                    }
-                } else {
-                    $aResult[] = $MShopItem->price;
-                }
+
+            $Modifications = ShopItemDiscount::select("shop_item_discounts.value", "shop_items.price")
+                                ->rightJoin("shop_items", "shop_items.id", "=", "shop_item_discounts.shop_item_id")
+                                ->where("shop_items.modification_id", $ShopItem->id)->get();
+
+            foreach ($Modifications as $Modification) {
+                $aResult[] = !is_null($Modification->value) ? $Modification->value : $Modification->price;
             }
         }
 
@@ -110,7 +106,7 @@ class ShopDiscountController extends Controller
    
             if (!is_null($ShopItemDiscount->ShopDiscount) && $ShopItemDiscount->ShopDiscount->check()) {
           
-                $aResult[] = self::getPriceApplyDiscount($ShopItem, $ShopItemDiscount->ShopDiscount);      
+                $aResult[] = $ShopItemDiscount->value;      
             }
         }
 
