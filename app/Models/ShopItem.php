@@ -9,6 +9,7 @@ use App\Models\ShopItemProperty;
 use App\Models\ShopItemListItem;
 use App\Models\Shop;
 use App\Http\Controllers\ShopDiscountController;
+use Illuminate\Support\Facades\Storage;
 
 class ShopItem extends Model
 {
@@ -64,14 +65,19 @@ class ShopItem extends Model
         $aReturn = [];
 
         foreach ($this->ShopItemImages as $k => $ShopItemImage) {
-            if (!empty($ShopItemImage->image_large) || !empty($ShopItemImage->image_small)) {
 
-                if ($all === false && $k > 0) {
-                    break;
+            if ($all === false && $k > 0) {
+                break;
+            }
+
+            $path = $this->shortPath();
+
+            if (!empty($ShopItemImage->image_small) && Storage::disk('shop')->exists($path . $ShopItemImage->image_small)) {
+                $aReturn[$ShopItemImage->id]["image_small"] = Shop::$store_path . $path . $ShopItemImage->image_small;
+
+                if (!empty($ShopItemImage->image_large) && Storage::disk('shop')->exists($path . $ShopItemImage->image_large)) {
+                    $aReturn[$ShopItemImage->id]["image_large"] = Shop::$store_path . $path . $ShopItemImage->image_large;
                 }
-
-                $aReturn[$ShopItemImage->id]["image_large"] = !empty($ShopItemImage->image_large) ? $this->path() . $ShopItemImage->image_large : '';
-                $aReturn[$ShopItemImage->id]["image_small"] = !empty($ShopItemImage->image_small) ? $this->path() . $ShopItemImage->image_small : '';
             }
         }
 
@@ -83,6 +89,16 @@ class ShopItem extends Model
         $object = $this->parentItemIfModification();
         if ($object->shop_group_id > 0) {
             return Shop::$store_path . 'group_' . $object->shop_group_id . '/item_' . $object->id . '/';
+        }
+
+        return false;
+    }
+
+    public function shortPath()
+    {
+        $object = $this->parentItemIfModification();
+        if ($object->shop_group_id > 0) {
+            return 'group_' . $object->shop_group_id . '/item_' . $object->id . '/';
         }
 
         return false;

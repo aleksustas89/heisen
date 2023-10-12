@@ -2,11 +2,11 @@
 $discountPercent = 0;
 $prices = App\Http\Controllers\ShopDiscountController::getModificationsPricesWithDiscounts($item);
 $Discount = App\Http\Controllers\ShopDiscountController::getMaxDiscount($item);
-
+$url = $item->url();
 @endphp
 
 
-    <div class="uk-card tm-tovar" data-id="{{ $item->id }}">
+    <div class="uk-card tm-tovar">
        
         <div class="uk-position-top-right add-to-favorite uk-position-xsmall uk-text-xsmall">
             @if (\App\Models\ClientFavorite::$Type == 0)
@@ -41,12 +41,30 @@ $Discount = App\Http\Controllers\ShopDiscountController::getMaxDiscount($item);
                 </div>
             @endif
 
-            @foreach ($item->getImages(false) as $image)
-                <div data-src="{{ $image['image_small'] }}" uk-img="loading: eager" class="uk-height-medium uk-background-cover" alt=""></div>
-            @endforeach  
+            <div uk-slider class="uk-slideshow">
+                <div class="uk-slider-container">
+                    <a href="{{ $url }}">
+                        <ul class="uk-slider-items">
+                            @foreach ($item->getImages() as $image)
+                                
+                                <li>
+                                    <div style="width:308px;" data-src="{{ $image['image_small'] }}" uk-img="loading: eager" class="uk-height-medium uk-background-cover">
+                                        
+                                    </div>
+                                </li>
+                            
+                            @endforeach 
+                        </ul>
+                    </a>
+                    <a class="uk-position-center-left uk-position-small uk-hidden-hover uk-slidenav-prev" href uk-slidenav-previous uk-slider-item="previous"></a>
+                    <a class="uk-position-center-right uk-position-small uk-hidden-hover uk-slidenav-next" href uk-slidenav-next uk-slider-item="next"></a>
+                </div>
+            </div>
+
+
         </div>
         <div class="uk-card-body uk-padding-remove-left uk-padding-remove-right">
-            <h3 class="uk-card-title uk-margin-small-bottom">{{ $item->name }}</h3>
+            <h3 class="uk-card-title uk-margin-small-bottom"><a href="{{ $url }}">{{ $item->name }}</a></h3>
             <p class="uk-margin-remove-top tm-price">
                
                 @if (count($prices) > 1)
@@ -66,5 +84,4 @@ $Discount = App\Http\Controllers\ShopDiscountController::getMaxDiscount($item);
                 
             </p>
         </div>
-        <a class="uk-position-cover" href="{{ $item->url() }}"></a>
     </div>

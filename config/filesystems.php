@@ -36,6 +36,12 @@ return [
             'throw' => false,
         ],
 
+        'shop' => [
+            'driver' => 'local',
+            'root' => storage_path('app/shop'),
+            'throw' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
