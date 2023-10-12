@@ -41,23 +41,21 @@ $url = $item->url();
                 </div>
             @endif
 
-            <div uk-slider class="uk-slideshow">
+            <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>
                 <div class="uk-slider-container">
                     <a href="{{ $url }}">
-                        <ul class="uk-slider-items">
+                        <ul class="uk-slideshow-items uk-height-medium">
                             @foreach ($item->getImages() as $image)
                                 
                                 <li>
-                                    <div style="width:308px;" data-src="{{ $image['image_small'] }}" uk-img="loading: eager" class="uk-height-medium uk-background-cover">
-                                        
-                                    </div>
+                                    <div data-src="{{ $image['image_small'] }}" uk-img="loading: eager" class="uk-height-1-1 uk-background-cover" alt=""></div>
                                 </li>
                             
                             @endforeach 
                         </ul>
                     </a>
-                    <a class="uk-position-center-left uk-position-small uk-hidden-hover uk-slidenav-prev" href uk-slidenav-previous uk-slider-item="previous"></a>
-                    <a class="uk-position-center-right uk-position-small uk-hidden-hover uk-slidenav-next" href uk-slidenav-next uk-slider-item="next"></a>
+                    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href uk-slidenav-previous uk-slideshow-item="previous"></a>
+                    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href uk-slidenav-next uk-slideshow-item="next"></a>
                 </div>
             </div>
 

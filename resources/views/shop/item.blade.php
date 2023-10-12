@@ -21,7 +21,9 @@
                         <div class="uk-position-relative uk-visible-toggle" tabindex="-1">
                             <ul class="uk-slideshow-items" uk-lightbox="animation: scale">
                                 @foreach ($images as $k => $image)
-                                    <li id="uk-slide-{{$k}}"><a href="{{ $image['image_large'] }}"><img src="{{ $image['image_large'] }}" alt="" uk-cover></a></li>
+                                    @if (isset($image['image_large']))
+                                        <li id="uk-slide-{{$k}}"><a href="{{ $image['image_large'] }}"><img src="{{ $image['image_large'] }}" alt="" uk-cover></a></li>
+                                    @endif
                                 @endforeach
                             </ul>
         
@@ -36,13 +38,14 @@
                                         $k = 0;
                                     @endphp
                                     @foreach ($images as $image)
-                  
-                                        <li uk-slideshow-item="{{ $k }}">
-                                            <a style="background-position: center;" data-src="{{ $image['image_large'] }}" uk-img=""></a>
-                                        </li>
-                                        @php
-                                            $k++;
-                                        @endphp
+                                        @if (isset($image['image_large']))
+                                            <li uk-slideshow-item="{{ $k }}">
+                                                <a style="background-position: center;" data-src="{{ $image['image_large'] }}" uk-img=""></a>
+                                            </li>
+                                            @php
+                                                $k++;
+                                            @endphp
+                                        @endif
                                     @endforeach
                                 </ul>
                                 <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slider-item="previous"></a>
