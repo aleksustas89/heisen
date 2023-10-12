@@ -35,7 +35,7 @@
                 
                 <!--пагинация-->
                 @if ($ShopItems->hasPages())
-                    <div class="pagination-auto uk-hidden" data-url="{{ route('showItemWithDiscountsAjaz') }}">
+                    <div class="pagination-auto uk-hidden" data-url="{{ route('showItemWithDiscountsAjax') }}">
                         {{ $ShopItems->links(('vendor.pagination.default')) }}
                     </div>
                 @endif

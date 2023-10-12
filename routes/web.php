@@ -123,7 +123,12 @@ if (Schema::hasTable('shops')) {
         return App\Http\Controllers\ShopGroupController::getAjaxGroup($ShopGroupId);
     });
     Route::post('/save-comment', [App\Http\Controllers\ShopItemController::class, 'saveComment'])->name("saveComment");
-    Route::get('/discounts', [App\Http\Controllers\ShopItemDiscountController::class, 'showItemWithDiscounts'])->name("showItemWithDiscounts");
+
+    Route::prefix("discounts")->group(function() {
+        Route::get('/', [App\Http\Controllers\ShopItemDiscountController::class, 'showItemWithDiscounts'])->name("showItemWithDiscounts");
+        Route::get('/ajax', [App\Http\Controllers\ShopItemDiscountController::class, 'showItemWithDiscountsAjax'])->name("showItemWithDiscountsAjax");
+    });
+    
 }
 
 Route::group(['namespace' => 'App\Http\Controllers'], function() {

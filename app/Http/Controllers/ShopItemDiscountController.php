@@ -36,4 +36,12 @@ class ShopItemDiscountController extends Controller
     {
         return ShopItem::where("discounts", 1)->where("active", 1);
     }
+
+    public function showItemWithDiscountsAjax() {
+
+        return view('shop.ajax-group', [
+            "items" => self::prepareSql()->paginate(self::$items_on_page),
+        ]);
+
+    }
 }
