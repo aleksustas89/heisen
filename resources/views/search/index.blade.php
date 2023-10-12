@@ -39,7 +39,7 @@
                 </div>
             
                 <!--пагенация-->
-                @if (count($SearchWords) > 0)
+                @if ($SearchWords->hasPages())
 
                     @php
                         $links = [
