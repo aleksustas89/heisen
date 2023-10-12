@@ -99,10 +99,12 @@ class SearchController extends Controller
 
         foreach ($SearchController->getWords($q) as $word) {
 
-            $lemmatize = $SearchController->lemmatize($word);
-            $word_lemma = $lemmatize ? $lemmatize[0] : $word;  
+            $weight = $SearchController->weight($word);
+            if ($weight > 1) {
+                $word = $SearchController->lemmatize($word);
+            }
 
-            $words[] = $SearchController->crc32($word_lemma);
+            $words[] = $SearchController->crc32($word);
         }
 
         return $words;

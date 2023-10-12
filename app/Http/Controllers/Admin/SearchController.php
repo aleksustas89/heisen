@@ -106,37 +106,34 @@ class SearchController extends Controller
     {
         foreach ($words as $word) {
 
-            $lemmatize = $this->lemmatize($word);
-            $Word = $lemmatize ? $lemmatize[0] : $word;
+            $weight = $this->weight($word);
+            if ($weight > 1) {
+                $this->addWord($this->lemmatize($word), $object, $weight);
+            }
 
-            $this->addWord($Word, $object);
+            $this->addWord($word, $object, $weight);
         }
     }
 
-    public function addWord($word, $object)
+    public function addWord($word, $object, $weight)
     {
-        $lemmatize = $this->lemmatize($word);
-        $Word = $lemmatize ? $lemmatize[0] : $word;
 
-        $weight = $this->weight($Word);
+        if (is_null($SearchPage = SearchPage::where("shop_item_id", $object->id)->first())) {
 
-        if ($weight > 0) {
-            if (is_null($SearchPage = SearchPage::where("shop_item_id", $object->id)->first())) {
-
-                $SearchPage = new SearchPage();
-                $SearchPage->shop_item_id = $object->id;
-                $SearchPage->save();
-            }
-    
-            $hash = self::crc32($Word);
-            if (is_null($SearchWord = SearchWord::where("hash", $hash)->where("search_page_id", $SearchPage->id)->first())) {
-                $SearchWord = new SearchWord(); 
-                $SearchWord->hash = $hash;
-                $SearchWord->weight = $weight;
-                $SearchWord->search_page_id = $SearchPage->id;
-                $SearchWord->save();
-            }
+            $SearchPage = new SearchPage();
+            $SearchPage->shop_item_id = $object->id;
+            $SearchPage->save();
         }
+
+        $hash = self::crc32($word);
+        if (is_null($SearchWord = SearchWord::where("hash", $hash)->where("search_page_id", $SearchPage->id)->first())) {
+            $SearchWord = new SearchWord(); 
+            $SearchWord->hash = $hash;
+            $SearchWord->weight = $weight;
+            $SearchWord->search_page_id = $SearchPage->id;
+            $SearchWord->save();
+        }
+        
     }
 
     public function getWords( $content, $filter=true ) {
@@ -159,11 +156,10 @@ class SearchController extends Controller
 
     public function lemmatize($word) {
 
-   
         // Получение базовой формы слова //
         $lemmas = $this->morphyus->getPseudoRoot($word);
 
-        return $lemmas;
+        return $lemmas[0] ?? $word;
     }
 
     public function weight($word, $profile = false) {
