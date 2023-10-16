@@ -30,7 +30,7 @@ $url = $item->url();
         <div class="uk-card-media-top uk-position-relative">
 
             @if ($Discount) 
-                <div class="uk-position-top-left uk-overlay uk-overlay-default uk-text-small">
+                <div class="uk-position-top-left uk-overlay uk-overlay-default uk-text-small uk-position-z-index">
                     
                     @if ($Discount->type == 0)
                         до -{{ $Discount->value }}% 
