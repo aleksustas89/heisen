@@ -39,10 +39,17 @@
         margin-left: auto;
      }
      .request-call-btn {
-        font-size: 10px;
+        font-size: 18px;
         line-height: 12px;
-        width: 50px;
-        height: 50px;
+        width: 100%;
+        height: 46px;
+        right: auto;
+        border-radius:0;
+        border: none;
+        bottom: 0;
+     }
+     .request-call-btn:before {
+        border-radius: 14%;
      }
 }
 

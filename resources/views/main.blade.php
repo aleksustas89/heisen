@@ -338,7 +338,7 @@
     </div>
 
     <a href="javascript:void(0)" uk-toggle="target: #request-call" class="request-call-btn">
-        <span>Сделать<br>заявку</span>
+        <span>Сделать заявку</span>
     </a>
 
     <div id="request-call" uk-modal="" class="uk-modal" tabindex="-1">

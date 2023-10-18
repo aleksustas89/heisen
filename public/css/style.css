@@ -353,7 +353,7 @@ a.add-to-favorite-link.active, a.add-to-favorite-link:active {
 .request-call-btn {
     position: fixed;
     right: 37px;
-    bottom: 90px;
+    bottom: 37px;
     text-align: center;
     text-decoration: none;
     line-height: normal;
