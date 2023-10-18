@@ -299,6 +299,11 @@ a.add-to-favorite-link.active, a.add-to-favorite-link:active {
     color: #666;
 }
 
+a.add-to-favorite-link.active path{
+    stroke: #bb0000;
+    fill: #d10000;
+}
+
 .item-old-price{
     text-decoration: line-through;
     color: #a5a5a5;
