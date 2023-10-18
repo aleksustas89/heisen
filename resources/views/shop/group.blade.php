@@ -120,5 +120,5 @@
 @endsection
 
 @section("js")
-    <script src="/js/shop-group.js"></script>
+    @vite(['resources/js/shop-group.js'])
 @endsection

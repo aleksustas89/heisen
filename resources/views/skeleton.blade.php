@@ -19,7 +19,7 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 		
-		<link href="/css/style.css" rel="stylesheet">
+        @vite(['resources/css/style.css'])
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
@@ -32,13 +32,14 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>       
-        <script src="/js/jquery.autocomplete.min.js"></script>
-        <script src="/js/main.js"></script>
+
+        @vite(['resources/js/jquery.autocomplete.min.js'])
+        @vite(['resources/js/main.js'])
 
         @yield('css')
         @yield('js')
 
-        <link href="/css/media.css" rel="stylesheet">
+        @vite(['resources/css/media.css'])
 	</body>
 </html>    
 

@@ -377,7 +377,7 @@
 @endsection
 
 @section("css")
-    <link href="/assets/css/colors.css" rel="stylesheet" type="text/css">
+    @vite(['resources/css/colors.css'])
     <style>
         .uk-slider-items a{
             height: 100px;
@@ -402,8 +402,9 @@
 @endsection
 
 @section("js")
-    <script src="/js/modification.js"></script>
-    <script src="/js/cart.js"></script>            
+
+    @vite(['resources/js/modification.js'])
+    @vite(['resources/js/cart.js'])        
     <script>
 
         $(function(){

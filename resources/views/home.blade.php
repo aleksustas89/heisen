@@ -202,7 +202,7 @@
 
 @section("css")
 
-<link href="/css/pages/home.css" rel="stylesheet">
-<link href="/assets/css/colors.css" rel="stylesheet" type="text/css">
+@vite(['resources/css/pages/home.css'])
+@vite(['resources/css/colors.css'])
 
 @endsection
