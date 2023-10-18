@@ -4,6 +4,13 @@
 
     @php
     $client = Auth::guard('client')->user();
+
+    if (\App\Models\ClientFavorite::$Type == 0) {
+        $countFavorites = !is_null($client) ? count($client->getClientFavorites()) : 0;
+    } else if (\App\Models\ClientFavorite::$Type == 1) {
+        $countFavorites = \App\Http\Controllers\Auth\ClientController::getCookieFavoritesCount();
+    }
+
     @endphp
 
     <div uk-sticky="start: 200; animation: uk-animation-slide-top; sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky;">
@@ -14,7 +21,7 @@
                     <div uk-navbar>
                         <div class="uk-navbar-left">
                         
-                            <div class="uk-navbar-item"><a class="uk-text-small" href="#"><span uk-icon="icon: phone"></span> 8 996 784 05 75</a></div>
+                            <div class="uk-navbar-item"><a class="uk-text-small" href="tel:89967840575"><span uk-icon="icon: phone"></span> 8 996 784 05 75</a></div>
 
                             @if (isset($TopMenuStructures) && count($TopMenuStructures) > 0)
                                 <ul class="uk-navbar-nav uk-visible@s">
@@ -85,9 +92,6 @@
                                     </div>
                                 </div>
                                 @if (\App\Models\ClientFavorite::$Type == 0)
-                                    @php
-                                    $countFavorites = !is_null($client) ? count($client->getClientFavorites()) : 0;
-                                    @endphp
                                     <div class="uk-navbar-item">
                                         <a href="{{ route('clientFavorites') }}"><span uk-icon="icon: heart"></span> (<span class="favorites-count">{{ $countFavorites }}</span>)</a>
                                     </div>
@@ -97,7 +101,7 @@
 
                             @if (\App\Models\ClientFavorite::$Type == 1)
                                 <div class="uk-navbar-item">
-                                    <a href="{{ route('cookieFavorites') }}"><span uk-icon="icon: heart"></span> (<span class="favorites-count">{{ \App\Http\Controllers\Auth\ClientController::getCookieFavoritesCount() }}</span>)</a>
+                                    <a href="{{ route('cookieFavorites') }}"><span uk-icon="icon: heart"></span> (<span class="favorites-count">{{ $countFavorites }}</span>)</a>
                                 </div>
                             @endif
 
@@ -230,6 +234,12 @@
                         @if (!is_null($client))
                             <div class="uk-navbar-item">
                                 <a href="{{ route('clientFavorites') }}"><span uk-icon="icon: heart"></span> (<span class="favorites-count">{{ $countFavorites }}</span>)</a>
+                            </div>
+                        @endif
+
+                        @if (\App\Models\ClientFavorite::$Type == 1)
+                            <div class="uk-navbar-item">
+                                <a href="{{ route('cookieFavorites') }}"><span uk-icon="icon: heart"></span> (<span class="favorites-count">{{ $countFavorites }}</span>)</a>
                             </div>
                         @endif
                             
