@@ -306,4 +306,24 @@ class ModificationController extends Controller
         
         return $aResult;
     }
+
+    public function defaultModification(Request $Request)
+    {
+
+        $response = false;
+
+        if ($Request->shop_item_id && $Request->modification_id) {
+            foreach (ShopItem::where("modification_id", $Request->shop_item_id)->get() as $ShopItem) {
+                if ($ShopItem->id == $Request->modification_id) {
+                    $ShopItem->default_modification = 1;
+                } else {
+                    $ShopItem->default_modification = 0;
+                }
+
+                $ShopItem->save();
+            }
+        }
+
+        return response()->json($response);
+    }
 }

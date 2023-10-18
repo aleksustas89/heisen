@@ -15,6 +15,13 @@ class ShopItem extends Model
 {
     use HasFactory;
 
+    /**
+     * default price view:
+     * 0 = show prices from - to, based on the modifications of item
+     * 1 = show specific price of default modification 'default_modification' of item based on color or size 
+    */
+    public static $priceView = 1;
+
     public function ShopGroup()
     {
         return $this->belongsTo(ShopGroup::class);
@@ -58,6 +65,12 @@ class ShopItem extends Model
     public function CommentShopItem()
     {
         return $this->hasMany(CommentShopItem::class);
+    }
+
+    public function defaultModification()
+    {
+
+        return ShopItem::where("modification_id", $this->id)->where("default_modification", 1)->first() ?? false;
     }
 
     public function getImages($all = true)

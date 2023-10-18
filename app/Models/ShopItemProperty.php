@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class ShopItemProperty extends Model
 {
+
+    /**
+     * destination = 1: colors
+     * destination = 0: others boxes, such as sizes
+    */
+
     use HasFactory;
 
     public function shopItemPropertyForGroup()

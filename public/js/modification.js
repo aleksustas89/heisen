@@ -23,7 +23,7 @@ var Modification = {
                 type: "POST",
                 data: $("#add_to_cart").serialize(),
                 dataType: "json",
-                success: function (data) {
+                success: function (data) {               
                     if (typeof data.item != 'undefined') {
                         item.parent("li").addClass("active");
                         item.parent("li").siblings("li").removeClass("active");

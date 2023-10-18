@@ -42,16 +42,55 @@ class ShopItemController extends Controller
             ->where("comments.active", 1)
             ->get();
 
-        Route::view($path, 'shop/item', [
+        $Return = [
             'aModProperties' => $ShopItemProperties,
             'aModValues' => $modListValues,
             'item' => $shopItem,
             'images' => $shopItem->getImages(),
-            'prices' => ShopDiscountController::getModificationsPricesWithDiscounts($shopItem),
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
             'Comments' => $Comments,
-        ]);
+        ];
+
+        switch ($shopItem::$priceView) {
+            case 0:
+                $Return["prices"] = ShopDiscountController::getModificationsPricesWithDiscounts($shopItem);
+            break;
+            case 1:
+
+                if (!is_null($Modification = $shopItem->defaultModification())) {
+
+                    $Return["default_modification_price"] = $Modification->price();
+                    $Return["default_modification_old_price"] = $Modification->oldPrice();
+                    $Return["Modification"] = $Modification;
+
+                    $ListValues = [];
+                    foreach (PropertyValueInt::select("property_value_ints.value")->where("property_value_ints.entity_id", $Modification->id)->get() as $PropertyValueInt) {
+                        $ListValues[] = $PropertyValueInt->value;
+                    }
+
+                    $Return['aDefaultValues'] = $ListValues;
+                }
+                
+            break;
+        }
+
+        Route::view($path, 'shop/item', $Return);
     }
+
+    static public function shopItemValues($shopItem) : array
+    {
+        $aModValues = PropertyValueInt::select("property_value_ints.value")->whereIn("property_value_ints.entity_id", function ($query) use ($shopItem) {
+            $query->select('id')->from('shop_it ems')->where("modification_id", $shopItem->id);
+        })->whereNot("value", 0)->get()->toArray();
+
+        $modListValues = [];
+        foreach ($aModValues as $aModValue) {
+            $modListValues[] = $aModValue["value"];
+        }
+
+        return $modListValues;
+    }
+    
 
     public static function breadcrumbs($shopItem)
     {

@@ -16,6 +16,7 @@ return new class extends Migration
                 $table->id();
                 $table->integer('shop_group_id')->default(0)->index();
                 $table->integer('modification_id')->default(0)->nullable();
+                $table->tinyInteger('default_modification')->default(0);
                 $table->integer('user_id')->default(0)->index();
                 $table->string('name');
                 $table->mediumText('description')->nullable();

@@ -191,8 +191,6 @@ input.uk-form-width-xsmall {
 .tm-tovar .uk-overlay{padding:5px;color:red;}
 .tm-price span{
     color: #898686;
-    -webkit-text-decoration-line: line-through;
-    text-decoration-line: line-through;
 }
 .tm-tovar-grid .tm-icon{
     height:auto!important;

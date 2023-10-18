@@ -1,6 +1,5 @@
 @php
 $discountPercent = 0;
-$prices = App\Http\Controllers\ShopDiscountController::getModificationsPricesWithDiscounts($item);
 $Discount = App\Http\Controllers\ShopDiscountController::getMaxDiscount($item);
 $url = $item->url();
 @endphp
@@ -65,20 +64,32 @@ $url = $item->url();
             <h3 class="uk-card-title uk-margin-small-bottom"><a href="{{ $url }}">{{ $item->name }}</a></h3>
             <p class="uk-margin-remove-top tm-price">
                
-                @if (count($prices) > 1)
-                    {{ App\Services\Helpers\Str::price(min($prices)) }} - {{ App\Services\Helpers\Str::price(max($prices)) }}
-                    <span class="item-old-price" id="item-old-price">
-                        @if (!in_array($item->price, $prices))
-                            {{ App\Services\Helpers\Str::price($item->price) }}
-                        @endif
-                    </span>
-                    {{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}
-                @else
+                @if ($item::$priceView == 0)
+
+                    @php
+                        $prices = App\Http\Controllers\ShopDiscountController::getModificationsPricesWithDiscounts($item);
+                    @endphp
+
+                    @if (count($prices) > 1)
+                        {{ App\Services\Helpers\Str::price(min($prices)) }} - {{ App\Services\Helpers\Str::price(max($prices)) }}
+                        <span class="item-old-price" id="item-old-price">
+                            @if (!in_array($item->price, $prices))
+                                {{ App\Services\Helpers\Str::price($item->price) }}
+                            @endif
+                        </span>
+                    @else 
                         {{ App\Services\Helpers\Str::price($item->price()) }} 
                         <span>{{ !empty($item->oldPrice()) ? App\Services\Helpers\Str::price($item->oldPrice()) : '' }}</span>
-                        {{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}
+                    @endif
+                @elseif($item::$priceView == 1)
+                    @php
+                    $Modification = $item->defaultModification();
+                    @endphp
+                    <span id="item-price">{{ App\Services\Helpers\Str::price($Modification->price()) }}</span> 
+                    <span class="item-old-price" id="item-old-price">{{ App\Services\Helpers\Str::price($Modification->oldPrice()) }}</span>
                 @endif
                 
+                <span>{{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}</span>
                 
             </p>
         </div>

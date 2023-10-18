@@ -42,7 +42,8 @@
                             <thead>
                                 <tr>
                                     <th style="width: 1%">#ID</th>
-                                    <th style="width: 40px"  class="px-0 text-center"><i class="fa fa-bars" title="—"></i></th>
+                                    <th style="width: 40px" class="px-0 text-center"><i class="fas fa-check" title="Модификация по умолчанию"></i></th>
+                                    <th style="width: 40px" class="px-0 text-center"><i class="fa fa-bars" title="—"></i></th>
                                     <th>Название</th>
                                     <th width="100px">Цена</th>
                                     <th width="40px" class="text-center"><i class="fas fa-money-bill-alt"></i></th>
@@ -63,8 +64,13 @@
                                         $isActive = $shopItem->active == 1 ? false : true;
                                     @endphp
 
-                                    <tr @class(['off' => $isActive])>
+                                    <tr @class(['off' => $isActive, "default" => $shopItem->default_modification == 1])>
                                         <td>{{ $shopItem->id }}</td>
+                                        <td class="text-center">
+                                            <div class="form-check">
+                                                <input title="default" class="form-check-input" type="radio" name="default_modification" data-parent="{{ $shopItem->modification_id }}" value="{{ $shopItem->id }}" @if($shopItem->default_modification == 1) checked @endif >
+                                            </div>
+                                        </td>
                                         <td class="px-0 text-center td_image">
 
                                             @php
@@ -144,4 +150,35 @@
     </div>
 
     
+@endsection
+
+@section("js")
+
+    <script>
+
+        $("[name='default_modification']").change(function() {
+
+            let value = $(this).val(),
+                shop_item_id = $(this).attr("data-parent"),
+                $this = $(this);   
+                
+                $this.parents("tr").addClass("default");
+                $this.parents("tr").siblings("tr").removeClass("default");
+
+                $.ajax({
+                    url: "/admin/default_modification",
+                    data: {"shop_item_id": shop_item_id, "modification_id" : value},
+                    type: "GET",
+                    dataType: "json"
+                });
+        });
+
+    </script>
+
+@endsection
+
+@section("css")
+    <style>
+        tr.default{background: #5d8cfb36}
+    </style>
 @endsection

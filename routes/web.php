@@ -48,6 +48,8 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::resource('shopDelivery', ShopDeliveryController::class);
         Route::resource('shopDeliveryField', ShopDeliveryFieldController::class);
         Route::resource('modification', ModificationController::class);
+        Route::get('/default_modification', [App\Http\Controllers\Admin\ModificationController::class, 'defaultModification'])->name("modByDefault");
+
         Route::resource('shopDiscount', ShopDiscountController::class);
         Route::get('/list/values', [App\Http\Controllers\Admin\ShopDiscountController::class, 'listValues']);
         Route::resource('shopItemDiscount', ShopItemDiscountController::class);
