@@ -48,13 +48,15 @@ class CartController extends Controller
 
             \Cart::session($cart_id);
 
+            $ShopItemImage = $ShopItem->getShopItemImage() ?? false;
+
             \Cart::session($cart_id)->add(array(
                 'id' => $ShopItem->id,
                 'name' => $ShopItem->name,
                 'price' => $ShopItem->price(),
                 'quantity' => $request->quantity ?? 1,
                 'attributes' => [
-                    "img" => $ShopItem->path() . $ShopItem->getShopItemImage()->image_small,
+                    "img" => $ShopItemImage ? $ShopItem->path() . $ShopItemImage->image_small : '',
                     "url" => $ShopItem->url(),
                     "oldPrice" => $ShopItem->oldPrice(),
                 ],

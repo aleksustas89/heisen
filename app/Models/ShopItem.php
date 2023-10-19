@@ -209,14 +209,16 @@ class ShopItem extends Model
      * 
      * @return modification image if modification or first image of item
     */
-    public function getShopItemImage(): ShopItemImage
+    public function getShopItemImage()
     {
         if ($this->modification_id > 0) {
-            if (!is_null($this->ShopModificationImage)) {
+            if (!is_null($this->ShopModificationImage) && !is_null($this->ShopModificationImage->ShopItemImage)) {
                 return $this->ShopModificationImage->ShopItemImage;
             } else {
                 //изображение основного товара
-                return $this->parentItemIfModification()->ShopItemImage;
+                foreach ($this->parentItemIfModification()->ShopItemImages as $ShopItemImage) {
+                    return $ShopItemImage;
+                }
             }
         } else {
             foreach ($this->ShopItemImages as $ShopItemImage) {
