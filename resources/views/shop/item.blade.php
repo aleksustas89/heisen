@@ -377,7 +377,9 @@
 @endsection
 
 @section("css")
-    @vite(['resources/css/colors.css'])
+    @php
+        App\Services\Helpers\File::css('/css/colors.css');
+    @endphp
     <style>
         .uk-slider-items a{
             height: 100px;
@@ -402,9 +404,11 @@
 @endsection
 
 @section("js")
-
-    @vite(['resources/js/modification.js'])
-    @vite(['resources/js/cart.js'])        
+   
+    @php
+        App\Services\Helpers\File::js('/js/modification.js');
+        App\Services\Helpers\File::js('/js/cart.js');
+    @endphp   
     <script>
 
         $(function(){

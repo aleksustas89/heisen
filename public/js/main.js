@@ -38,6 +38,7 @@ var Favorite = {
     }
 }
 
+
 $(function(){
 
     $(".search-autocomplete").autocomplete({

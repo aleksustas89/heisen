@@ -202,7 +202,9 @@
 
 @section("css")
 
-@vite(['resources/css/pages/home.css'])
-@vite(['resources/css/colors.css'])
+@php
+App\Services\Helpers\File::css('/css/pages/home.css');
+App\Services\Helpers\File::css('/css/colors.css');
+@endphp
 
 @endsection

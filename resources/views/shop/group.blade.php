@@ -120,5 +120,7 @@
 @endsection
 
 @section("js")
-    @vite(['resources/js/shop-group.js'])
+    @php
+        App\Services\Helpers\File::js('/js/shop-group.js');
+    @endphp
 @endsection

@@ -19,7 +19,9 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 		
-        @vite(['resources/css/style.css'])
+        @php
+        App\Services\Helpers\File::css('/css/style.css');
+        @endphp
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
@@ -33,13 +35,17 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>       
 
-        @vite(['resources/js/jquery.autocomplete.min.js'])
-        @vite(['resources/js/main.js'])
+        @php
+            App\Services\Helpers\File::js('/js/jquery.autocomplete.min.js');
+            App\Services\Helpers\File::js('/js/main.js');
+        @endphp
 
         @yield('css')
         @yield('js')
 
-        @vite(['resources/css/media.css'])
+        @php
+            App\Services\Helpers\File::css('/css/media.css');
+        @endphp
 	</body>
 </html>    
 

@@ -205,7 +205,9 @@
 @section("js")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-    @vite(['resources/js/cart.js'])   
+    @php
+        App\Services\Helpers\File::js('/js/cart.js');
+    @endphp
     <script>
         $('#city-autocomplete').autocomplete({
             serviceUrl: '/get-cities',
