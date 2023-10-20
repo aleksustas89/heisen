@@ -34,7 +34,17 @@ class ShopItemDiscountController extends Controller
 
     public static function prepareSql()
     {
-        return ShopItem::where("discounts", 1)->where("active", 1);
+
+        return ShopItem::select("shop_items.*")
+                        ->join("shop_item_discounts", "shop_item_discounts.shop_item_id", "=", "shop_items.id")
+                        ->join("shop_discounts", "shop_item_discounts.shop_discount_id", "=", "shop_discounts.id")
+                        ->where("shop_discounts.start_datetime", "<=", date("Y-m-d H:i:s"))
+                        ->where("shop_discounts.end_datetime", ">=", date("Y-m-d H:i:s"))
+                        ->whereIn("shop_items.id", function ($query) {
+                            $query->selectRaw('IF(`modification_id` > 0, shop_items.modification_id, shop_items.id)')
+                                ->from('shop_items')
+                                ->where("shop_items.active", 1);
+                        });
     }
 
     public function showItemWithDiscountsAjax() {

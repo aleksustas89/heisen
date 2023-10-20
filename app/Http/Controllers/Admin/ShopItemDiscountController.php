@@ -103,11 +103,7 @@ class ShopItemDiscountController extends Controller
     public function destroy(ShopItemDiscount $shopItemDiscount)
     {
 
-        $shopItem = $shopItemDiscount->ShopItem->parentItemIfModification();
-
         $shopItemDiscount->delete();
-
-        $this->checkItemDiscounts($shopItem);
         
         return redirect()->back()->withSuccess("Скидка была успешно удалена!");
     }
@@ -141,8 +137,6 @@ class ShopItemDiscountController extends Controller
    
                     $this->saveShopItemDiscount($ShopItemDiscount = false, ShopDiscount::find($request->shop_item_discount_id), $ShopItem);
 
-                    $this->checkItemDiscounts($ShopItem->parentItemIfModification());
-    
                     $message = "Скидка была успешно добавлена к товару";
     
                     if ($request->apply) {
@@ -169,8 +163,6 @@ class ShopItemDiscountController extends Controller
                     }
                 }
 
-                $this->checkItemDiscounts(ShopItem::find($request->shop_item_id));
-
                 $message = "Скидка была успешно добавлена к модификациям товара."; 
 
                 if ($request->apply) {
@@ -187,8 +179,6 @@ class ShopItemDiscountController extends Controller
                     $ShopItem = $shopItemDiscount->ShopItem->parentItemIfModification();
 
                     $shopItemDiscount->delete();
-
-                    $this->checkItemDiscounts($ShopItem);
 
                     $message = "Скидка была успешно отменена!";
 
@@ -211,8 +201,6 @@ class ShopItemDiscountController extends Controller
                     $oShopItemDiscount->delete();
                 }
 
-                $this->checkItemDiscounts(ShopItem::find($request->shop_item_id));
-
                 $message = "Скидки были успешно отменены у модификаций товара";
 
                 if ($request->apply) {
@@ -225,22 +213,6 @@ class ShopItemDiscountController extends Controller
             
         }
 
-    }
-
-    public function checkItemDiscounts(ShopItem $ShopItem)
-    {
-        $shopItemDiscountCount = ShopItemDiscount::where("shop_item_id", $ShopItem->id)
-                                    ->orWhereIn("shop_item_id", function ($query) use ($ShopItem) {
-                                        $query->selectRaw('shop_items.id')->from('shop_items')->where('modification_id', $ShopItem->id);
-                                    })
-                                    ->count();
-        if ($shopItemDiscountCount > 0) {
-            $ShopItem->discounts = 1;
-        } else {
-            $ShopItem->discounts = 0;
-        }
-
-        $ShopItem->save();
     }
 
     public static function breadcrumbs($ShopItem, $lastItemIsLink = false)
