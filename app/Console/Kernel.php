@@ -12,7 +12,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+         $schedule->command('app:send-comment-reminder');
+
+        // $schedule->call(function () {
+        //     DB::table('recent_users')->delete();
+        // })->daily();
     }
 
     /**
