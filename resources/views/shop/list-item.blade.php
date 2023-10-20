@@ -47,7 +47,7 @@ $url = $item->url();
                             @foreach ($item->getImages() as $image)
                                 
                                 <li>
-                                    <div data-src="{{ $image['image_small'] }}" uk-img="loading: eager" class="uk-height-1-1 uk-background-cover" alt=""></div>
+                                    <div data-src="{{ $image['image_small'] }}" uk-img="loading: lazy" class="uk-height-1-1 uk-background-cover" alt=""></div>
                                 </li>
                             
                             @endforeach 

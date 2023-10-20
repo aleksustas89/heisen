@@ -20,7 +20,7 @@
                             <ul class="uk-slideshow-items" uk-lightbox="animation: scale">
                                 @foreach ($images as $k => $image)
                                     @if (isset($image['image_large']))
-                                        <li id="uk-slide-{{$k}}"><a href="{{ $image['image_large'] }}"><img src="{{ $image['image_large'] }}" alt="" uk-cover></a></li>
+                                        <li id="uk-slide-{{$k}}"><a href="{{ $image['image_large'] }}"><img uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" alt="" uk-cover></a></li>
                                     @endif
                                 @endforeach
                             </ul>
@@ -38,7 +38,7 @@
                                     @foreach ($images as $image)
                                         @if (isset($image['image_large']))
                                             <li uk-slideshow-item="{{ $k }}">
-                                                <a style="background-position: center;" data-src="{{ $image['image_large'] }}" uk-img=""></a>
+                                                <a style="background-position: center;" uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" uk-img=""></a>
                                             </li>
                                             @php
                                                 $k++;
