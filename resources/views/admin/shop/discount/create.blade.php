@@ -94,155 +94,61 @@
                             </div>
 
 
+                            <div class="card mt-5" id="discountsFilter">
 
-                           <!-- 
-                            <div class="alert alert-danger border-0" role="alert">
-                                <strong>Применить ко всем товарам и модификациям по свойству типа - список!</strong>
-                            </div>
-
-                            <div class="row ">
-
-                            </div>
-                        -->
-
-                        <div class="card mt-5">
-
-                            <div class="card-header">
-                                <h4>Фильтр по товарам</h4>
-                                <p class="text-muted mb-0">Используйте фильтр, для поиска товаров, которым нужно применить скидку</p>
-                            </div>
-
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-12">
-                                        <label class="mb-1">Название товара</label>
-                                       
-                                        <div class="input-group">
-                                            <input type="text" name="name" class="form-control" placeholder="Поиск по названию товара" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                            <button class="btn btn-secondary" type="button" id="button-addon2"><i class="fas fa-search"></i></button>
-                                        </div>
-                                    </div>
+                                <div class="card-header">
+                                    <h4>Фильтр по товарам</h4>
+                                    <p class="text-muted mb-0">Используйте фильтр, для поиска товаров, которым нужно применить скидку</p>
                                 </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-2">
-                                        <label class="mb-1">Поиск по группе</label>
-                                        <label class="mb-1">&nbsp;</label>
-                                        <select name="shop_group_id" class="form-control">
-                                            <option value="0">...</option>
-                                            @php
-                                                \App\Http\Controllers\ShopGroupController::showTreeGroupsAsOptions();
-                                            @endphp
-                                        </select>
-                                    </div>
-                                    <div class="col-2">
-                                        <label class="mb-1">Поиск по свойству</label>
-                                        <select class="form-control" name="total_list_id">
-                                            <option>...</option>
-                                            @foreach ($propertys as $property)
-                                                <option value="{{ $property->shop_item_list_id }}">{{ $property->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-        
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-2"></div>
-                                    <div class="col-2 d-none">
-                                        <select class="form-control" name="total_list_value">
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div id="filter_result">
-                                    <!--
-                                    <div class="card bg-warning text-white">
-                                        <div class="card-body">
-                                            <blockquote class="card-bodyquote mb-0">
-                                                Применить скидку к найденным товарам?
-                                            </blockquote>
-                                        </div>
-                                    </div>
-                                    <div class="items-applied">
-
-                                        <table class="table table-bordered">
     
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex">
-                                                            <div class="form-check form-switch form-switch-warning">
-                                                                <input onclick="SwitchAll.init($(this))" id="apply_all" class="form-check-input" type="checkbox">
-                                                            </div>
-                                                            <label for="apply_all"><b>Применить/Отменить для всех</b></label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                @foreach (App\Models\ShopItem::limit(15)->get() as $ShopItem)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="d-flex">
-                                                                <div class="form-check form-switch form-switch-warning">
-                                                                    <input id="apply_{{$ShopItem->id}}" class="form-check-input" type="checkbox">
-                                                                </div>
-                                                                <label for="apply_{{$ShopItem->id}}">{{$ShopItem->ShopGroup->name}} / {{ $ShopItem->name }}({{$ShopItem->id}})</label>
-                                                            </div>
-                                                        </td>
-                                                      
-                                                    </tr>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <label class="mb-1">Название товара</label>
+                                           
+                                            <div class="input-group">
+                                                <input type="text" name="shop_item_name" class="form-control" placeholder="Поиск по названию товара" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="row mb-3">
+                                        <div class="col-2">
+                                            <label class="mb-1">Поиск по группе</label>
+                                            <label class="mb-1">&nbsp;</label>
+                                            <select name="shop_group_id" class="form-control">
+                                                <option value="0">...</option>
+                                                @php
+                                                    \App\Http\Controllers\ShopGroupController::showTreeGroupsAsOptions();
+                                                @endphp
+                                            </select>
+                                        </div>
+                                        <div class="col-2">
+                                            <label class="mb-1">Поиск по свойству</label>
+                                            <select class="form-control" name="total_list_id">
+                                                <option value="0">...</option>
+                                                @foreach ($propertys as $property)
+                                                    <option data-list="{{ $property->shop_item_list_id }}" value="{{ $property->id }}">{{ $property->name }}</option>
                                                 @endforeach
-                                            </tbody>
-    
-                                        </table>
+                                            </select>
+                                        </div>
             
                                     </div>
-                                    -->
-                                </div>
-
-
-                                <div class="card bg-success text-white">
-                                    <div class="card-body">
-                                        <blockquote class="card-bodyquote mb-0">
-                                            Товары, к которым применена скидка:
-                                        </blockquote>
+                                    <div class="row mb-3">
+                                        <div class="col-2"></div>
+                                        <div class="col-2 d-none">
+                                            <select class="form-control" name="total_list_value">
+                                            </select>
+                                        </div>
                                     </div>
+    
+                                    <div id="filter_result">
+                                    </div>
+
+    
                                 </div>
-                                <div class="items-applied">
-
-                                    <table class="table table-bordered">
-
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex">
-                                                        <div class="form-check form-switch form-switch-success">
-                                                            <input id="applied_all" onclick="SwitchAll.init($(this))" checked class="form-check-input" type="checkbox">
-                                                        </div>
-                                                        <label for="applied_all"><b>Применить/Отменить для всех</b></label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @foreach (App\Models\ShopItem::limit(15)->get() as $ShopItem)
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex">
-                                                            <div class="form-check form-switch form-switch-success">
-                                                                <input id="applied_{{$ShopItem->id}}" class="form-check-input" type="checkbox" checked="">
-                                                            </div>
-                                                            <label for="applied_{{$ShopItem->id}}">{{$ShopItem->ShopGroup->name}} / {{ $ShopItem->name }}({{$ShopItem->id}})</label>
-                                                        </div>
-                                                    </td>
-                                                  
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-
-                                    </table>
-        
-                                </div>
-
                             </div>
-                        </div>
+
 
                     </div>
                     

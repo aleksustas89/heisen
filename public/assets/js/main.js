@@ -310,3 +310,14 @@ var delay = (function(){
 		timer = setTimeout(callback, ms);
 	};
 })();
+
+var Spiner = {
+
+    show: function() {
+        $("body").append('<div class="spinner spinner-border spinner-border-custom-5 border-info"></div>');
+    },
+
+    hide: function() {
+        $(".spinner").remove();
+    }
+}

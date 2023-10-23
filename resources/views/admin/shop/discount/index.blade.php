@@ -54,15 +54,17 @@
 
                                 @php
                                     $isActive = $discount->active == 1 ? false : true;
+                                    $outOfDate = !$discount->check() ? false : true;
                                 @endphp
 
                                 <tr @class([
                                     'off' => $isActive,
+                                    'outOfDate' => !$outOfDate,
                                 ])>
                                     <td>{{ $discount->id }}</td>
                                     <td class="td_editable">
                                         <span class="line-through-if-off" id="apply_check_shopDiscount_name_{{ $discount->id }}" class="editable">{{ $discount->name }}</span>
-                                    
+                                        @if(!$outOfDate)<i class="las la-hourglass-end"></i>@endif
                                     </td>
                                     <td>
                                         @php
@@ -109,3 +111,8 @@
     
 @endsection
 
+@section("css")
+
+<style>.outOfDate{opacity:0.4}</style>
+
+@endsection

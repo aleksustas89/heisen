@@ -45,13 +45,9 @@
                                     <th style="width: 40px" class="px-0 text-center"><i class="fas fa-check" title="Модификация по умолчанию"></i></th>
                                     <th style="width: 40px" class="px-0 text-center"><i class="fa fa-bars" title="—"></i></th>
                                     <th>Название</th>
-                                    <th width="100px">Цена</th>
-                                    <th width="40px" class="text-center"><i class="fas fa-money-bill-alt"></i></th>
+                                    <th width="200px">Цена</th>
                                     <th width="200px">Свойства</th>
                                     <th width="40px"><i class="fa fa-lightbulb-o" title="Активность"></i></th>
-                                    <th width="40px">
-                                        <i class="las la-tags font-20"  title="Скидки"></i>
-                                    </th>
                                     <th width="60px"><i class="fas fa-sort-amount-down" title="—"></i></th>
                                     <th class="td-actions"></th>
                                 </tr>
@@ -92,8 +88,40 @@
                                         <td class="td_editable">
                                             <span id="apply_check_shopItem_name_{{ $shopItem->id }}" class="editable product-name fw-semibold line-through-if-off">{{ $shopItem->name }}</span>
                                         </td>
-                                        <td width="100px" class="td_editable"><span id="apply_check_shopItem_price_{{ $shopItem->id }}" class="editable">{{ $shopItem->price }}</span></td>
-                                        <td class=" text-center">{{ $shopItem->shop_currency_id > 0 ? $shopItem->ShopCurrency->name : ''}}</td>
+                                        <td width="200px" class="td_editable">
+                                            
+
+                                            @if ($shopItem::$priceView == 0)
+
+                                            <span id="apply_check_shopItem_price_{{ $shopItem->id }}" class="editable">{{ $shopItem->price }}</span>
+                                              
+                                            @elseif($shopItem::$priceView == 1)
+                                                @php
+                                     
+                                                $oldPrice = $shopItem->oldPrice();
+                                
+                                                @endphp
+                                                <span class=" mx-1" id="item-price">{{ App\Services\Helpers\Str::price($shopItem->price()) }}</span> 
+                                                @if ($oldPrice)<span class="item-old-price mx-1" id="item-old-price">{{ $oldPrice }}</span>@endif
+
+                                                <span class="mx-1">{{ $shopItem->shop_currency_id > 0 && $shopItem->ShopCurrency ? $shopItem->ShopCurrency->name : ''}}</span>
+                                                
+                                                @if ($oldPrice)
+                                                    @php
+                                                        $discounts = \App\Http\Controllers\ShopDiscountController::getDiscountsForItemAndModifications($shopItem);
+                                                        $aDiscountTitles = [];
+                                                        foreach ($discounts as $discount) {
+                                                            $aDiscountTitles[] = $discount->name;
+                                                        }
+                                                    @endphp
+                                                    <i class="las la-tags font-20 palegreen mx-1" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="{{ implode(',', $aDiscountTitles) }}"></i>
+                                                @endif
+
+                                            @endif
+
+
+                                        </td>
+                        
                                         <td>
                                             @foreach ($shopItem->PropertyValueInts as $propertyValueInt)
                                                 @if ($propertyValueInt->ShopItemListItem)
@@ -110,17 +138,6 @@
                                     
                                                 <i class="lar la-lightbulb font-20"></i>
                                             </span>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route("shopItemDiscount.index") }}?shop_item_id={{ $shopItem->id }}">
-                                                <i class="las la-tags font-20 palegreen"></i>
-                                                @php
-                                                    $count = $shopItem->ShopItemDiscount->count();
-                                                @endphp
-                                                @if ($count > 0)
-                                                    <span class="badge-count position-absolute badge-count-abs btn-success">{{ $count }}</span>
-                                                @endif
-                                            </a>
                                         </td>
                                         <td width="60px" class="td_editable"><span id="apply_check_shopItem_sorting_{{ $shopItem->id }}" class="editable">{{ $shopItem->sorting }}</span></td>
                                         <td class="td-actions">

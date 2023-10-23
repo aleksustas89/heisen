@@ -64,12 +64,9 @@
                                     <th style="width: 1%">#ID</th>
                                     <th style="width: 40px"  class="px-0 text-center"><i class="fa fa-bars" title="—"></i></th>
                                     <th>Название</th>
-                                    <th width="100px">Цена</th>
-                                    <th width="40px" class="text-center"><i class="fas fa-money-bill-alt"></i></th>
+                                    <th width="200px">Цена</th>
+    
                                     <th width="40px"><i class="fa fa-lightbulb-o" title="Активность"></i></th>
-                                    <th width="40px">
-                                        <i class="las la-tags font-20"  title="Скидки"></i>
-                                    </th>
                                     <th width="40px">
                                         <i class="lab la-buromobelexperte font-20" title="Модификации"></i>
                                     </th>
@@ -107,8 +104,8 @@
                                                 </a> 
                                             
                                         </td>
-                                        <td width="100px">&nbsp;</td>
-                                        <td width="40px">&nbsp;</td>
+                                        <td width="200px">&nbsp;</td>
+                                    
                                         <td width="40px">
                                             @if ($shopGroup->active == 1)
                                                 <i class="fa fa-lightbulb-o" title="Активность"></i>
@@ -116,7 +113,6 @@
                                                 <i class="fa fa-lightbulb-o fa-inactive" title="Активность"></i>
                                             @endif
                                         </td>
-                                        <td width="40px">&nbsp;</td>
                                         <td width="40px">&nbsp;</td>
                                         <td width="60px" class="td_editable"><span id="apply_check_shopGroup_sorting_{{ $shopGroup->id }}" class="editable">{{ $shopGroup->sorting }}</span></td>
 
@@ -174,8 +170,55 @@
                                             <span class="text-muted font-13 fw-semibold">{{ $shopItem->marking }} </span> 
                                             
                                         </td>
-                                        <td width="100px" class="td_editable"><span id="apply_check_shopItem_price_{{ $shopItem->id }}" class="editable">{{ $shopItem->price }}</span></td>
-                                        <td width="40px" class="text-center">{{ $shopItem->shop_currency_id > 0 && $shopItem->ShopCurrency ? $shopItem->ShopCurrency->name : ''}}</td>
+                                        <td width="200px" class="td_editable">
+                                            <div class="d-flex">
+
+                                                @if ($shopItem::$priceView == 0)
+
+                                                    @php
+                                                        $prices = App\Http\Controllers\ShopDiscountController::getModificationsPricesWithDiscounts($shopItem);
+                                                    @endphp
+                                
+                                                    @if (count($prices) > 1)
+                                                        {{ App\Services\Helpers\Str::price(min($prices)) }} - {{ App\Services\Helpers\Str::price(max($prices)) }}
+                                                        <span class="item-old-price" id="item-old-price">
+                                                            @if (!in_array($shopItem->price, $prices))
+                                                                {{ App\Services\Helpers\Str::price($shopItem->price) }}
+                                                            @endif
+                                                        </span>
+                                                    @else 
+                                                        {{ App\Services\Helpers\Str::price($shopItem->price()) }} 
+                                                        <span>{{ !empty($shopItem->oldPrice()) ? App\Services\Helpers\Str::price($shopItem->oldPrice()) : '' }}</span>
+                                                    @endif
+                                                @elseif($shopItem::$priceView == 1)
+                                                    @php
+                                                    $defaultModification = $shopItem->defaultModification();
+                                                    $Object = $defaultModification ? $defaultModification : $shopItem;
+                                                    $oldPrice = $Object->oldPrice();
+                                    
+                                                    @endphp
+                                                    <span class=" mx-1" id="item-price">{{ App\Services\Helpers\Str::price($Object->price()) }}</span> 
+                                                    @if ($oldPrice)<span class="item-old-price mx-1" id="item-old-price">{{ $oldPrice }}</span>@endif
+
+                                                    <span class="mx-1">{{ $shopItem->shop_currency_id > 0 && $shopItem->ShopCurrency ? $shopItem->ShopCurrency->name : ''}}</span>
+                                                    
+                                                    @if ($oldPrice)
+                                                        @php
+                                                            $discounts = \App\Http\Controllers\ShopDiscountController::getDiscountsForItemAndModifications($Object);
+                                                            $aDiscountTitles = [];
+                                                            foreach ($discounts as $discount) {
+                                                                $aDiscountTitles[] = $discount->name;
+                                                            }
+                                                        @endphp
+                                                        <i class="las la-tags font-20 palegreen mx-1" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="{{ implode(',', $aDiscountTitles) }}"></i>
+                                                    @endif
+
+                                                @endif
+
+
+                                            </div>
+                                        </td>
+                
                                         <td>
 
                                             <span onclick="toggle.init($(this))" @class([
@@ -186,17 +229,6 @@
                                                 <i class="lar la-lightbulb font-20"></i>
                                             </span>
 
-                                        </td>
-                                        <td width="40px">
-                                            <a href="{{ route("shopItemDiscount.index") }}?shop_item_id={{ $shopItem->id }}">
-                                                <i class="las la-tags font-20 palegreen"></i>
-                                                @php
-                                                    $count = $shopItem->ShopItemDiscount->count();
-                                                @endphp
-                                                @if ($count > 0)
-                                                    <span class="badge-count position-absolute badge-count-abs btn-success">{{ $count }}</span>
-                                                @endif
-                                            </a>
                                         </td>
                                         <td width="40px">
                                             <a href="{{route('modification.index')}}?shop_item_id={{ $shopItem->id }}">
@@ -236,3 +268,11 @@
 
     
 @endsection
+
+@section("css")
+    <style>
+
+    </style>
+@endsection
+
+

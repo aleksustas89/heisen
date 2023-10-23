@@ -95,35 +95,6 @@
                                 </div>
                             </div>
 
-                            <!--
-                            <div class="alert alert-danger border-0" role="alert">
-                                <strong>Применить ко всем товарам и модификациям по свойству типа - список!</strong>
-                            </div>
-
-                            <div class="row ">
-                                <div class="col-2">
-                                    <select class="form-control" name="apply_total_discount">
-                                        <option value="">...</option>
-                                        <option value="1">Применить</option>
-                                        <option value="2">Удалить</option>
-                                    </select>
-                                </div>
-                                <div class="col-2">
-                                    <select class="form-control" name="total_list_id">
-                                        <option>...</option>
-                                        @foreach ($propertys as $property)
-                                            <option value="{{ $property->shop_item_list_id }}">{{ $property->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-2 d-none">
-                                    <select class="form-control" name="total_list_value">
-                                    </select>
-                                </div>
-                            </div>
-                            -->
-
-
                             <div class="card mt-5" id="discountsFilter">
 
                                 <div class="card-header">
@@ -138,7 +109,6 @@
                                            
                                             <div class="input-group">
                                                 <input type="text" name="shop_item_name" class="form-control" placeholder="Поиск по названию товара" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                                <button class="btn btn-secondary" type="button" id="button-addon2"><i class="fas fa-search"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -159,7 +129,7 @@
                                             <select class="form-control" name="total_list_id">
                                                 <option value="0">...</option>
                                                 @foreach ($propertys as $property)
-                                                    <option value="{{ $property->shop_item_list_id }}">{{ $property->name }}</option>
+                                                    <option data-list="{{ $property->shop_item_list_id }}" value="{{ $property->id }}">{{ $property->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -200,17 +170,22 @@
                                                         </td>
                                                     </tr>
                                                     @foreach ($ShopItems as $ShopItem)
-                                                        <tr>
-                                                            <td>
-                                                                <div class="d-flex">
-                                                                    <div class="form-check form-switch form-switch-success">
-                                                                        <input value="{{ $ShopItem->id }}" name="applied[]" id="applied_{{$ShopItem->id}}" class="form-check-input" type="checkbox" checked="">
+                                                        @if ($oShopItem = $ShopItem->parentItemIfModification())
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="d-flex">
+                                                                        <div class="form-check form-switch form-switch-success">
+                                                                            <input value="{{ $ShopItem->id }}" name="applied[]" id="applied_{{$ShopItem->id}}" class="form-check-input" type="checkbox" checked="">
+                                                                        </div>
+                                                                        @php
+                                                                        $ShopGroup = $oShopItem->ShopGroup;
+                                                                        @endphp
+                                                                        <label for="applied_{{$ShopItem->id}}">{{!is_null($ShopGroup) ? $ShopGroup->name : ''}} / {{ $ShopItem->name }}({{$ShopItem->id}})</label>
                                                                     </div>
-                                                                    <label for="applied_{{$ShopItem->id}}">{{$ShopItem->parentItemIfModification()->ShopGroup->name}} / {{ $ShopItem->name }}({{$ShopItem->id}})</label>
-                                                                </div>
-                                                            </td>
-                                                        
-                                                        </tr>
+                                                                </td>
+                                                            
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                 </tbody>
         

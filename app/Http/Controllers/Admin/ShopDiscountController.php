@@ -112,15 +112,29 @@ class ShopDiscountController extends Controller
 
         ShopItemDiscount::where('shop_discount_id', $shopDiscount->id)->delete();
 
-        if ($request->applied && count($request->applied) > 0) {
+        $ShopItemDiscountController = new ShopItemDiscountController();
 
-            $ShopItemDiscountController = new ShopItemDiscountController();
+        $itemsToSave = [];
+
+        if ($request->applied && count($request->applied) > 0) {
 
             foreach ($request->applied as $value) {
 
-                if (!is_null($ShopItem = ShopItem::find($value))) {
-                    $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount = false, $shopDiscount, $ShopItem);
-                }
+                $itemsToSave[] = $value;
+            }
+        }
+
+        if ($request->apply_discount && count($request->apply_discount) > 0) {
+
+            foreach ($request->apply_discount as $value) {
+
+                $itemsToSave[] = $value;
+            }
+        }
+
+        foreach (array_unique($itemsToSave) as $id) {
+            if (!is_null($ShopItem = ShopItem::find($id))) {
+                $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount = false, $shopDiscount, $ShopItem);
             }
         }
 
@@ -161,16 +175,39 @@ class ShopDiscountController extends Controller
     public function filter(Request $request)
     {
 
-        $ShopItem = new ShopItem();
+        $ShopItems = ShopItem::select("shop_items.*")->where("active", 1)->where("modification_id", 0);
 
         if (!empty($request->shop_item_name)) {
-            $ShopItem->where("name", $request->shop_item_name);
+            $ShopItems->where("name", "LIKE", "%" . trim($request->shop_item_name) . "%");
         }
 
         if ($request->shop_group_id > 0) {
-            $ShopItem->where("shop_group_id", $request->shop_group_id);
+            $ShopItems->where("shop_group_id", $request->shop_group_id);
         }
 
-        return response()->view("admin.shop.discount.filter-items", ["ShopItems" => $ShopItem->get()]);
+        $aShopItems = [];
+        $oShopItems = $ShopItems->get();
+        foreach ($oShopItems as $Item) {
+            $aShopItems[] = $Item->id;
+        }
+
+        $Modifications = ShopItem::select("shop_items.id")->where("active", 1)->whereIn("modification_id", $aShopItems);
+
+        if (!empty($request->total_list_value) && !empty($request->total_list_id)) { 
+            $Modifications->join("property_value_ints", "property_value_ints.entity_id", "=", "shop_items.id")
+                            ->where("property_value_ints.property_id", $request->total_list_id)
+                            ->where("property_value_ints.value", $request->total_list_value);
+        }
+
+        $aModifications = [];
+        foreach ($Modifications->get() as $Item) {
+            $aModifications[] = $Item->id;
+        }
+
+
+        return response()->view("admin.shop.discount.filter-items", [
+            "ShopItems" => $oShopItems,
+            "aModifications" => $aModifications,
+        ]);
     }
 }

@@ -184,11 +184,11 @@ class ShopItem extends Model
 
         $aPrices[] = ShopDiscountController::getShopItemPriceWithDiscount($this);
 
-        if ($this->midification_id == 0) {
-            foreach (ShopDiscountController::getModificationsPricesWithDiscounts($this) as $price) {
-                $aPrices[] = $price;
-            }
-        }
+        // if ($this->midification_id == 0) {
+        //     foreach (ShopDiscountController::getModificationsPricesWithDiscounts($this) as $price) {
+        //         $aPrices[] = $price;
+        //     }
+        // }
 
         return min($aPrices);
     }
@@ -200,9 +200,19 @@ class ShopItem extends Model
 
     public function parentItemIfModification()
     {
+
+        if ($this->modification_id > 0) {
+            if (!is_null($ShopItem = ShopItem::find($this->modification_id))) {
+                return $ShopItem;
+            } else {
+                return false;
+            }
+        } else {
+            return $this;
+        }
         
-        return $this->modification_id > 0
-                    && !is_null($ShopItem = ShopItem::find($this->modification_id)) ? $ShopItem : $this;
+        // return $this->modification_id > 0
+        //             && !is_null($ShopItem = ShopItem::find($this->modification_id)) ? $ShopItem : $this;
     }
 
     /**

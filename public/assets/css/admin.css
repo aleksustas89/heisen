@@ -329,3 +329,18 @@
     background-color: #59161a;
     border-color: #59161a;
 }
+
+.spinner {
+    position: fixed;
+    top: calc(50% - 3rem);
+    left: calc(50% - 3rem);
+}
+
+.spinner-border {
+    width: 6rem;
+    height: 6rem;
+}
+.item-old-price {
+    text-decoration: line-through;
+    color: gray;
+}
