@@ -40,6 +40,7 @@
                             <tr>
                                 <th style="width: 1%">№</th>
                                 <th>Название</th>
+                                <th></th>
                                 <th style="width: 170px">Действует от</th>
                                 <th style="width: 170px">Действует до</th>
                                 <th class="text-center" style="width: 100px">Активность</th>
@@ -59,7 +60,18 @@
                                     'off' => $isActive,
                                 ])>
                                     <td>{{ $discount->id }}</td>
-                                    <td class="td_editable"><span class="line-through-if-off" id="apply_check_shopDiscount_name_{{ $discount->id }}" class="editable">{{ $discount->name }}</span></td>
+                                    <td class="td_editable">
+                                        <span class="line-through-if-off" id="apply_check_shopDiscount_name_{{ $discount->id }}" class="editable">{{ $discount->name }}</span>
+                                    
+                                    </td>
+                                    <td>
+                                        @php
+                                        $count = $discount->ShopItemDiscount->count();
+                                        @endphp
+                                        <button type="button" class="btn btn-primary btn-sm">
+                                            Кол-во товаров со скидкой <span class="badge bg-light text-dark">{{ $count }}</span>
+                                        </button>
+                                    </td>
                                     <td>{{ \App\Services\Helpers\Str::datetime($discount->start_datetime) }}</td>
                                     <td>{{ \App\Services\Helpers\Str::datetime($discount->end_datetime) }}</td>
                                     <td class="text-center">

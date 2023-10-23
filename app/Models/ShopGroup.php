@@ -105,4 +105,14 @@ class ShopGroup extends Model
 
         parent::delete();
     }
+
+    public static function getGroupTree($parent_id = 0, $aResult = [])
+    {
+        foreach (ShopGroup::where("parent_id", $parent_id)->orderBy("name", "ASC")->get() as $key => $ShopGroup) {
+            $aResult[$key]["group"] = $ShopGroup;
+            $aResult[$key]["group"]["children"] = self::getGroupTree($ShopGroup->id);
+        }
+
+        return $aResult;
+    }
 }

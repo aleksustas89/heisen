@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
 
         Route::resource('shopDiscount', ShopDiscountController::class);
         Route::get('/list/values', [App\Http\Controllers\Admin\ShopDiscountController::class, 'listValues']);
+        Route::get('/shop/discount/filter', [App\Http\Controllers\Admin\ShopDiscountController::class, 'filter']);
         Route::resource('shopItemDiscount', ShopItemDiscountController::class);
         Route::resource('comment', CommentController::class);
 

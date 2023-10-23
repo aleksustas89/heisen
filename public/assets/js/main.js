@@ -302,3 +302,11 @@ function confirmDelete(form, title = 'Вы уверенны, что хотите
 		}
 	})
 }
+
+var delay = (function(){
+	var timer = 0;
+	return function(callback, ms){
+		clearTimeout (timer);
+		timer = setTimeout(callback, ms);
+	};
+})();

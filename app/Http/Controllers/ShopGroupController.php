@@ -183,4 +183,10 @@ class ShopGroupController extends Controller
         }
     }
 
+    public static function showTreeGroupsAsOptions()
+    {
+
+        echo view("admin.shop.group-options", ["groups" => ShopGroup::getGroupTree()]);
+    }
+
 }
