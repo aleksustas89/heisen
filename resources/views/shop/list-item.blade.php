@@ -83,10 +83,11 @@ $url = $item->url();
                     @endif
                 @elseif($item::$priceView == 1)
                     @php
-                    $Modification = $item->defaultModification();
+                    $defaultModification = $item->defaultModification();
+                    $Object = $defaultModification ? $defaultModification : $item;
                     @endphp
-                    <span id="item-price">{{ App\Services\Helpers\Str::price($Modification->price()) }}</span> 
-                    <span class="item-old-price" id="item-old-price">{{ App\Services\Helpers\Str::price($Modification->oldPrice()) }}</span>
+                    <span id="item-price">{{ App\Services\Helpers\Str::price($Object->price()) }}</span> 
+                    <span class="item-old-price" id="item-old-price">{{ App\Services\Helpers\Str::price($Object->oldPrice()) }}</span>
                 @endif
                 
                 <span>{{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}</span>
