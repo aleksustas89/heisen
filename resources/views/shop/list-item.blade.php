@@ -43,7 +43,7 @@ $url = $item->url();
             <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>
                 <div class="uk-slider-container">
                     <a href="{{ $url }}">
-                        <ul class="uk-slideshow-items uk-height-medium">
+                        <ul class="uk-slideshow-items list-item-image">
                             @foreach ($item->getImages() as $image)
                                 
                                 <li>
