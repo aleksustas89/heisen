@@ -29,6 +29,11 @@
                     <div class="accordion-item">
                         <h5 class="accordion-header m-0" id="headingOne">
                             <button class="accordion-button fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shopitem{{ $ShopItem->id }}" aria-expanded="false" aria-controls="collapseOne">
+                                
+                                @foreach ($ShopItem->getImages(false) as $image)
+                                    <div class="mx-2"><img src="{{ $image['image_small'] }}" alt="" height="80"></div>
+                                @endforeach 
+                                
                                 {{ $ShopItem->name }} ({{ $ShopItem->id }})
                             </button>
                         </h5>
@@ -45,6 +50,7 @@
                                                         <div class="form-check form-switch form-switch-warning">
                                                             <input name="apply_discount[]" value="{{$Modification->id}}" id="apply_{{$Modification->id}}" class="form-check-input" type="checkbox">
                                                         </div>
+
                                                         <label for="apply_{{$Modification->id}}">{{ $Modification->parentItemIfModification()->ShopGroup->name }} / {{ $Modification->name }}({{$Modification->id}})</label>
                                                     </div>
                                                 </td>

@@ -173,10 +173,16 @@
                                                         @if ($oShopItem = $ShopItem->parentItemIfModification())
                                                             <tr>
                                                                 <td>
-                                                                    <div class="d-flex">
+                                                                    <div class="d-flex align-items-center">
+                                                                      
                                                                         <div class="form-check form-switch form-switch-success">
                                                                             <input value="{{ $ShopItem->id }}" name="applied[]" id="applied_{{$ShopItem->id}}" class="form-check-input" type="checkbox" checked="">
                                                                         </div>
+
+                                                                        @foreach ($oShopItem->getImages(false) as $image)
+                                                                            <div class="mx-2"><img src="{{ $image['image_small'] }}" alt="" height="80"></div>
+                                                                        @endforeach 
+
                                                                         @php
                                                                         $ShopGroup = $oShopItem->ShopGroup;
                                                                         @endphp
