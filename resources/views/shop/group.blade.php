@@ -81,7 +81,7 @@
                 </div>
                 <!--сортировка-->
                 
-                <div class="uk-child-width-1-5@s uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
+                <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
 
                     @php
                         $client = Auth::guard('client')->user();

@@ -12,7 +12,7 @@
             
                 <div class="uk-h3 uk-text-bold">Поиск</div>
             
-                <div class="uk-child-width-1-4@s uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
+                <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
 
                     <form class="uk-search uk-search-default search-form" id="search">
                         <a href="" class="uk-search-icon-flip uk-icon uk-search-icon" uk-search-icon=""><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path></svg></a>

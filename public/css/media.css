@@ -30,6 +30,13 @@
 
 }
 
+@media (max-width: 640px) {
+    .list-item-image {
+        height: 140px;
+        min-height: auto !important;
+    }
+}
+
 @media (max-width: 480px) {
     .add-favorite-window {
         position: fixed;

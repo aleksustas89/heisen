@@ -152,7 +152,7 @@
 
     @if (\App\Http\Controllers\ShopItemDiscountController::countItemsWithDiscounts() > 0)
         <h2 class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Скидки</h2>
-        <div class="uk-child-width-1-5@s uk-child-width-1-2 uk-grid-small uk-grid" uk-grid=""> 
+        <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid=""> 
             @foreach ($discountItems as $item)
                 @include('shop.list-item', ['item' => $item])
             @endforeach   
@@ -163,7 +163,7 @@
 
         <h2 class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Новинки</h2>
 
-        <div class="uk-child-width-1-5@s uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
+        <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
 
             @foreach ($newItems as $item)
                 @include('shop.list-item', ['item' => $item])
