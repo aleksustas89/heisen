@@ -63,7 +63,7 @@
 
 
 
-    <h2 class="uk-h1 uk-margin-xlarge uk-margin-remove-bottom uk-text-center">Насладись Перфекцианизмом Наших Изделий</h2>
+    <h2 class="uk-h1 uk-margin-xlarge uk-margin-remove-bottom uk-text-center">Насладись Аутентичностью Наших Изделий</h2>
 	<div class="uk-margin uk-width-xlarge uk-margin-auto uk-text-center">
         Наши менеджеры всегда на связи и с радостью проконсультируют Вас по всем вопросам
     </div>
