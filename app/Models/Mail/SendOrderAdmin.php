@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use App\Models\ShopOrder;
 
-class SendOrder extends Mailable
+class SendOrderAdmin extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +30,7 @@ class SendOrder extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Вы оформили заказ № '. $this->ShopOrder->id .' на сайте ' . env('APP_NAME', false),
+            subject: 'Новый заказ на сайте ' . env('APP_NAME', false),
         );
     }
 
@@ -38,7 +38,7 @@ class SendOrder extends Mailable
     {
 
 
-        return $this->view('mails.new-order', ['ShopOrder' => $this->ShopOrder]);
+        return $this->view('mails.new-order-admin', ['ShopOrder' => $this->ShopOrder]);
     }
 
     /**

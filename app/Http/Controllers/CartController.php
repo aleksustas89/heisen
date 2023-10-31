@@ -15,6 +15,7 @@ use App\Models\ShopCurrency;
 use App\Models\ShopDeliveryFieldValue;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Mail\SendOrder;
+use App\Models\Mail\SendOrderAdmin;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -234,7 +235,11 @@ class CartController extends Controller
 
         $Shop = Shop::get();
 
-        Mail::to($Shop->email)->send(new SendOrder($ShopOrder));
+        //admin
+        Mail::to($Shop->email)->send(new SendOrderAdmin($ShopOrder));
+
+        //client
+        Mail::to($ShopOrder->email)->send(new SendOrder($ShopOrder));
 
         return redirect()->back()->withSuccess("Спасибо! Ваш заказ оформлен!");
     }
