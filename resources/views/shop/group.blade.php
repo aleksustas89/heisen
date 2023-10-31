@@ -15,57 +15,105 @@
                     'sorting' => $sorting
                 ];
 
+                $total = $items->total();
+                $countProperties = count($filterProperties, COUNT_RECURSIVE) - count($filterProperties);
+
             @endphp
         
             <!--сам каталог-->
             <div class="uk-width-expand@m">
             
-                <div class="uk-h3 uk-text-bold">{{ $group->name }}</div>
+                <div class="uk-h3 uk-text-bold">
+                    <div class="uk-inline-block">{{ $group->name }}</div>
+                    @if (count($properties) > 0)
+                        <button class="uk-button uk-button-default filter-btn" type="button" uk-toggle="target: #filter">
+                            Фильтрация@if (isset($filterProperties) && $countProperties > 0):
+                                @php
+                                    $title = \App\Services\Helpers\Str::plural($countProperties, "Применен", "Применено", "Применено");
+                                    $title2 = \App\Services\Helpers\Str::plural($countProperties, "Фильтр", "Фильтра", "Фильтров");
+                                @endphp 
+                                {{ $title }} {{ $countProperties }} {{ $title2 }}  
+                            @endif
+                        </button>
+                    @endif
+
+                </div>
             
                 <!--фильтр-->
                 @if (count($properties) > 0)
-                    <form action="{{ $path }}" class="uk-child-width-auto uk-grid-small uk-grid" uk-grid="" id="filter">
-          
-                        @foreach ($properties as $property)
-
-                            @switch ($property->type)
-
-                                @case(4)
-
-                                    <div class="uk-inline">
-                                        <button class="uk-button uk-button-default" type="button">{{ $property->name }} <span uk-drop-parent-icon></span></button>
-                                            <div class="uk-card uk-card-body uk-card-default uk-card-small uk-margin-remove-top" uk-drop="mode: click">
-                                            <ul class="uk-nav uk-nav-default">
-                                                @foreach ($property->shopItemList->listItems as $ListItem)
-                                                    @php
-                                                        $checked = '';
-                                                        if (isset($filterProperties[$property->id]) && in_array($ListItem->id, $filterProperties[$property->id])) {
-                                                            $checked = ' checked="checked"';
-                                                            $links['property_' . $property->id . '_' . $ListItem->id]  = 'on';
-                                                        }
-                                                    @endphp
-                                                    <li><a><label><input {{ $checked }} class="uk-checkbox" name="property_{{ $property->id }}_{{ $ListItem->id }}" type="checkbox"> {{ $ListItem->value }}</label></a></li>
-                                                @endforeach
-                                                
-                                            </ul>
-                                            <button class="uk-button uk-button-primary uk-margin uk-width-1-1" type="submit">Применить</button>
-                                        </div>
-                                    </div>
+                    
+                    <form action="{{ $path }}" id="filter" uk-offcanvas="flip: true; overlay: true" class="uk-offcanvas filter">
+                        <div class="uk-offcanvas-bar tm-filtr-mob uk-dark" role="dialog" aria-modal="true">
+                    
+                            <div class="uk-card uk-card-default uk-position-relative uk-card-media-top uk-light">
+                                Все фильтры <button class="uk-offcanvas-close" type="button" uk-close></button>
+                            </div>
                             
-                                @break
+                            <div class="uk-section uk-section-small">
+                            
+                                <ul uk-accordion="multiple: true" class="uk-accordion">
 
-                            @endswitch
+                                    @foreach ($properties as $property)
 
-                        @endforeach
+                                        @switch ($property->type)
+
+                                            @case(4)
+
+                                                <li class="uk-open">
+                                                    <a class="uk-accordion-title" href="#" id="uk-accordion-50-title-0" role="button" aria-controls="uk-accordion-50-content-0" aria-expanded="true" aria-disabled="false">{{ $property->name }}</a>
+                                                    <div class="uk-accordion-content" id="uk-accordion-50-content-0" role="region" aria-labelledby="uk-accordion-50-title-0">
+                                                        <ul @class([
+                                                            "uk-nav", "uk-nav-default", "tm-color" => $property->destination == 1
+                                                        ]) data-id="{{ $property->id }}">   
+
+                                                            @foreach ($property->shopItemList->listItems as $ListItem)
+                                                                @php
+                                                                    $checked = '';
+                                                                    if (isset($filterProperties[$property->id]) && in_array($ListItem->id, $filterProperties[$property->id])) {
+                                                                        $checked = ' checked="checked"';
+                                                                    }
+                                                                    $background = $property->destination == 1 && !empty($ListItem->color) ? ' background-color:'. $ListItem->color : '';
+                                                                @endphp
+                                                     
+                                                                <li>
+                                                                    <label class="uk-margin-small-bottom uk-display-block">
+                                                                        <input data-id="{{ $ListItem->id }}" {{ $checked }} onclick="Filter.init($(this))" {{ $checked }} style="{{ $background }}" name="property_{{ $property->id }}_{{ $ListItem->id }}" value="1" class="uk-checkbox uk-margin-small-right" type="checkbox"><span>{{ $ListItem->value }}</span>
+                                                                    </label>
+                                                                </li>
+                                                            @endforeach
+
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                        
+                                            @break
+
+                                        @endswitch
+
+                                    @endforeach
+
+                                </ul>
+                            
+                            </div>
+                            
+                            <div class="uk-grid uk-child-width-1-1 uk-grid-small uk-grid-stack" uk-grid="">
+                                <div><button class="uk-button uk-button-primary uk-width-1-1" id="filter-items-found" type="submit">Показать {{ $items->total() }}</button></div>
+                                <div><button onclick="Filter.clear()" class="uk-button uk-button-default uk-width-1-1" type="button">Очистить все</button></div>
+                            </div>
+                    
+                        </div>
 
                         <input type="hidden" name="sorting" value="{{ $sorting }}" />
+
                     </form>
+
                 @endif
                 <!--фильтр-->
                 
                 <!--сортировка-->
                 <div class="uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
                     <div class="uk-text-small uk-first-column">
+                        {{ $total }} {{ \App\Services\Helpers\Str::plural($total, "Товар", "Товара", "Товаров"); }}
                     </div>
                     <div class="uk-text-right">
                         <div class="uk-inline">
@@ -80,8 +128,14 @@
                     </div>
                 </div>
                 <!--сортировка-->
+
+                @if (isset($filterProperties) && $countProperties > 0 && $total == 0)
+                    <h4 class="uk-text-center">Не найдены товары по заданным параметрам. Попробуйте изменить критерии поиска.</h4>
+                @endif
                 
                 <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
+
+ 
 
                     @php
                         $client = Auth::guard('client')->user();
@@ -123,4 +177,50 @@
     @php
         App\Services\Helpers\File::js('/js/shop-group.js');
     @endphp
+
+    <script>
+        var Filter = {
+
+            form: $("#filter"),
+
+            group: {{ $group->id }},
+
+            clear: function() {
+                this.form.find("input[type='checkbox']").each(function(){
+                    if ($(this).prop("checked") == true) {
+                        $(this).prop("checked", false);
+                    }
+                    if ($(this).is(':disabled')) {
+                        $(this).removeAttr("disabled");
+                    }
+                });
+
+                Filter.init();
+            },
+
+            init: function(item = false) {
+
+                Spiner.show();
+
+                $.ajax({
+                    url: "/filter",
+                    type: "POST",
+                    data: this.form.serialize() + "&shop_group_id=" + this.group,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: "json",
+                    success: function (data) {
+
+                    $("#filter-items-found").text(data.button);
+                    
+                    Spiner.hide();
+                    },
+                });
+
+            }
+        }
+    </script>
+
 @endsection
+

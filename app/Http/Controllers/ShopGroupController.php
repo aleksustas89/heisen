@@ -7,9 +7,9 @@ use App\Models\ShopGroup;
 use App\Models\ShopItem;
 use App\Models\Shop;
 use App\Http\Controllers\Admin\ShopItemController;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use App\Services\Helpers\Str;
 
 
 class ShopGroupController extends Controller
@@ -25,7 +25,7 @@ class ShopGroupController extends Controller
         }
         $aProperties = self::getProperties();
 
-        $aShopItems = DB::table('shop_items')->select('shop_items.id')->whereIn("shop_items.shop_group_id", $groups)->where("active", 1);
+        $aShopItems = ShopItem::select('shop_items.*')->whereIn("shop_items.shop_group_id", $groups)->where("active", 1);
 
         if (count($aProperties) > 0) {
             $aShopItems
@@ -40,33 +40,25 @@ class ShopGroupController extends Controller
                     }
                 })
                 ->havingRaw('COUNT(property_value_ints.property_id) = ' . count($aProperties));
+
+            $aShopItems->groupBy('shop_items.id');
+
         }
-
-        $aShopItems->groupBy('shop_items.id');
-
-        $ShopItems = $aShopItems->get();
-
-        $shop_item_id = [];
-        foreach ($ShopItems as $ShopItems) {
-            $shop_item_id[] = $ShopItems->id; 
-        }
-
-        $oShopItems = ShopItem::whereIn("id", $shop_item_id);
 
         $sorting = Arr::get($_REQUEST, 'sorting', 0);
 
         switch ($sorting) {
             case 'old':
-                $oShopItems->orderBy('created_at', 'ASC');
+                $aShopItems->orderBy('created_at', 'ASC');
                 $sorting = 'old';
             break;
             default:
-                $oShopItems->orderBy('created_at', 'DESC');
+                $aShopItems->orderBy('created_at', 'DESC');
                 $sorting = 'new';
             break;
         }
 
-        return $oShopItems;
+        return $aShopItems;
     }
 
     public static function getAjaxGroup($shop_group_id) {
@@ -106,7 +98,7 @@ class ShopGroupController extends Controller
         Route::view($path, 'shop/group', [
             'group' => $shopGroup,
             'items' => $oShopItems->paginate($oShop->items_on_page),
-            'properties' => ShopItemController::getProperties($shopGroup->id),
+            'properties' => ShopItemController::getProperties($shopGroup->id, 4, true),
             'path' => "/" . $path,
             'filterProperties' => $aProperties,
             'sorting' => $sorting,
@@ -187,6 +179,16 @@ class ShopGroupController extends Controller
     {
 
         echo view("admin.shop.group-options", ["groups" => ShopGroup::getGroupTree()]);
+    }
+
+    public function filter(Request $request)
+    {
+
+        $oShopItems = self::prepareItems(ShopGroup::find($request->shop_group_id));
+
+        $count = $oShopItems->count();
+
+        return response()->json(["button" => "Показать $count " . Str::plural($count, "товар", "товара", "товаров")]);
     }
 
 }

@@ -1,11 +1,11 @@
 var Spiner = {
 
     show: function() {
-        $("body").append('<div class="spinner"><span uk-spinner="ratio: 4.5"></span></div>');
+        $("body").append('<div class="spinner-bg"></div><div class="spinner"><span uk-spinner="ratio: 4.5"></span></div>');
     },
 
     hide: function() {
-        $(".spinner").remove();
+        $(".spinner, .spinner-bg").remove();
     }
 }
 

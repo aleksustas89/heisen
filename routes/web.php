@@ -111,7 +111,7 @@ if (Schema::hasTable('shops')) {
             App\Http\Controllers\ShopItemController::show($sCurrentPath, $shopObject);
         }
     }
-
+    Route::post('/filter', [App\Http\Controllers\ShopGroupController::class, 'filter'])->name("filter");
     Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name("cartIndex");
     Route::post('/cart', [App\Http\Controllers\CartController::class, 'saveOrder'])->name("saveIndex");
     Route::post('/add-to-cart', [App\Http\Controllers\CartController::class, 'addToCart'])->name("cartAdd");

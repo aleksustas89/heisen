@@ -85,7 +85,7 @@ class ShopItemController extends Controller
         ]);
     }
 
-    public static function getProperties($shop_group_id, $type = false)
+    public static function getProperties($shop_group_id, $type = false, $filter = false)
     {
         $properties = ShopItemProperty::join('shop_item_property_for_groups', 'shop_item_properties.id', '=', 'shop_item_property_for_groups.shop_item_property_id')
                         ->select('shop_item_properties.*')
@@ -94,6 +94,10 @@ class ShopItemController extends Controller
                         ;
         if ($type) {
             $properties->where("type", $type);
+        }
+
+        if ($filter) {
+            $properties->where("show_in_filter", 1);
         }
 
         return $properties->get();
