@@ -10,6 +10,7 @@ use App\Models\ShopItemListItem;
 use App\Models\Shop;
 use App\Http\Controllers\ShopDiscountController;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Filesystem\Filesystem;
 
 class ShopItem extends Model
 {
@@ -120,6 +121,14 @@ class ShopItem extends Model
         }
 
         return false;
+    }
+
+    public function createDir()
+    {
+        if (!file_exists('../storage/app' . $this->path())) {
+            $Filesystem = new Filesystem();
+            $Filesystem->makeDirectory('../storage/app' . $this->path(), 0755, true);
+        }
     }
 
     public function url()

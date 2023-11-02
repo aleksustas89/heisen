@@ -18,7 +18,7 @@ use App\Models\ShopItemListItem;
 use App\Models\PropertyValueInt;
 use App\Models\PropertyValueString;
 use App\Models\PropertyValueFloat;
-use Illuminate\Filesystem\Filesystem;
+
 use App\Http\Controllers\Admin\SearchController;
 
 class ShopItemController extends Controller
@@ -177,24 +177,16 @@ class ShopItemController extends Controller
 
         if (isset($request->image)) {
 
-            $Filesystem = new Filesystem();
+            $shopItem->createDir();
 
             for ($i = 0; $i < count($request->image); $i++) {
 
                 $oShopItemImage = new ShopItemImage();
-                $oShopItemImage->shop_item_id   = $shopItem->id;
-                $oShopItemImage->image_original = $request->image[$i]->getClientOriginalName();
+                $oShopItemImage->shop_item_id = $shopItem->id;
                 $oShopItemImage->save();
 
-                if (!file_exists('../storage/app' . $shopItem->path())) {
-                    $Filesystem->makeDirectory('../storage/app' . $shopItem->path(), 0755, true);
-                }
-
-                //сохраняем оригинал
-                $request->image[$i]->storeAs($shopItem->path(), $request->image[$i]->getClientOriginalName());
-
                 //большое изображение
-                $image_large = Image::make(Storage::path($shopItem->path()) . $request->image[$i]->getClientOriginalName());
+                $image_large = Image::make($request->image[$i]->getPathname());
                 if ($oShop->preserve_aspect_ratio == 1) {
                     $image_large->resize($oShop->image_large_max_width, $oShop->image_large_max_height, function ($constraint) {
                         $constraint->aspectRatio();
@@ -208,7 +200,7 @@ class ShopItemController extends Controller
                 $oShopItemImage->image_large = $sImageLargeName;
 
                 //превью
-                $image_small = Image::make(Storage::path($shopItem->path()) . $request->image[$i]->getClientOriginalName());
+                $image_small = Image::make($request->image[$i]->getPathname());
                 if ($oShop->preserve_aspect_ratio_small == 1) {
                     $image_small->resize($oShop->image_small_max_width, $oShop->image_small_max_height, function ($constraint) {
                         $constraint->aspectRatio();
