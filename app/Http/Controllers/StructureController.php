@@ -11,13 +11,6 @@ class StructureController extends Controller
     static public function show($path, $structure)
     {
 
-        $breadcrumbs = [
-            0 => [
-                "name" => "Главная",
-                "url" => '/'
-            ]
-        ];
-
         Route::view($path, 'structure', [
             'structure' => $structure,
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($structure)) 
