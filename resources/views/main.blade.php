@@ -142,7 +142,7 @@
                         <div class="uk-navbar-item uk-visible@s">
                             <form class="uk-search uk-search-default" action="{{ route("search") }}">
                                 <button class="uk-search-icon-flip" uk-search-icon></button>
-                                <input name="q" class="uk-search-input uk-border-rounded search-autocomplete uk-visible@l" type="search" placeholder="Search" aria-label="Search">
+                                <input name="q" class="uk-search-input uk-border-rounded search-autocomplete uk-visible@l" type="search" placeholder="Поиск" aria-label="Search">
                             </form>
                         </div>
                     </div>
@@ -220,7 +220,7 @@
                                 <div class="uk-grid-small uk-flex-middle" uk-grid>
                                     <div class="uk-width-expand">
                                         <form class="uk-search uk-search-navbar uk-width-1-1" action="{{ route("search") }}">
-                                            <input name="q" class="uk-search-input search-autocomplete" type="search" placeholder="Search" aria-label="Search" autofocus>
+                                            <input name="q" class="uk-search-input search-autocomplete" type="search" placeholder="Поиск" aria-label="Search" autofocus>
                                         </form>
                                         
                                     </div>
