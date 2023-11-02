@@ -338,7 +338,7 @@
                 <div class="uk-container uk-container-xlarge">                
                     <hr />
                     <div uk-grid>
-                        <div class="uk-text-small">© {{ date("Y") }} Tech Space. All rights reserved. Powered by <a target="_blank" href="https://www.astra-site.com/">AstraSite</a>.</div>
+                        <div class="uk-text-small">© {{ date("Y") }} Tech Space. All rights reserved.</div>
                         
                     </div>
                 </div>
