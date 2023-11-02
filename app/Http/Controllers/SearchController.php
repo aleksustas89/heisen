@@ -65,7 +65,7 @@ class SearchController extends Controller
         $Shop = Shop::get();
 
         return view('search.index', [
-            "SearchWords" => isset($SearchWords) ? $SearchWords->paginate($Shop->items_on_page) : [],
+            "SearchWords" => isset($SearchWords) ? $SearchWords->paginate($Shop->items_on_page) : false,
             'q' => $request->q,
         ]);
     

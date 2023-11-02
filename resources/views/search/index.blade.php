@@ -11,35 +11,33 @@
             <div class="uk-width-expand@m">
             
                 <div class="uk-h3 uk-text-bold">Поиск</div>
-            
-                <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
 
-                    <form class="uk-search uk-search-default search-form" id="search">
+                    <form class="uk-search uk-search-default search-form uk-margin-bottom" id="search">
                         <a href="" class="uk-search-icon-flip uk-icon uk-search-icon" uk-search-icon=""><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle><path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path></svg></a>
-                        <input name="q" class="uk-search-input uk-border-rounded" value="{{ $q }}" type="search" placeholder="Search" aria-label="Search">
+                        <input name="q" class="uk-search-input uk-border-rounded" value="{{ $q }}" type="search" placeholder="Поиск" aria-label="Search">
                     </form>
 
-                    @php
-                        $client = Auth::guard('client')->user();
+                    @if ($SearchWords)
 
-                    @endphp
+                        <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
+                            @php
+                                $client = Auth::guard('client')->user();
+                            @endphp
+                            @foreach ($SearchWords as $SearchWord)
+                                @include('shop.list-item', [
+                                    'item' => $SearchWord->SearchPage->ShopItem,
+                                    'client' => $client,
+                                    'clientFavorites' => !is_null($client) ? $client->getClientFavorites() : [],
+                                ])
+                            @endforeach 
+                        </div>
 
-
-                    @foreach ($SearchWords as $SearchWord)
-
-                        @include('shop.list-item', [
-                            'item' => $SearchWord->SearchPage->ShopItem,
-                            'client' => $client,
-                            'clientFavorites' => !is_null($client) ? $client->getClientFavorites() : [],
-                        ])
-
-                    @endforeach   
-
-           
-                </div>
+                    @else
+                        <h4 class="uk-text-center">Ничего не найдено по Вашему запросу. Попробуйте изменить критерии поиска.</h4>
+                    @endif
             
                 <!--пагенация-->
-                @if ($SearchWords->hasPages())
+                @if ($SearchWords && $SearchWords->hasPages())
 
                     @php
                         $links = [
