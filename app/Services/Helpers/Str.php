@@ -101,4 +101,9 @@ class Str
 
 		return date("d.m.Y H:i:s", strtotime($datetime));
 	}
+
+	public static function extension($str)
+	{
+		return substr(strrchr($str, '.'), 1);
+	}
 }

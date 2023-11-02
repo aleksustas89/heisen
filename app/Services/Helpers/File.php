@@ -21,4 +21,51 @@ class File
 
         echo '<link rel="stylesheet" href="'. $file .'?v='. self::filectime($file) .'">';
     }
+
+    public static function fileInfoFromStr($file)
+    {
+        return pathinfo($file);
+    }
+
+    /**
+     * @return full path to original or new webp file
+    */
+    public static function webpConvert($dir, $file)
+    {
+
+        $fileInfo = self::fileInfoFromStr($file);
+
+        $nameWithoutExt =  $fileInfo["filename"];
+
+        $return = $fullPath = $dir . $file;
+
+        switch (exif_imagetype($fullPath)) {
+            case IMAGETYPE_JPEG:
+                $img = imagecreatefromjpeg($fullPath);
+                imagepalettetotruecolor($img);
+                imagealphablending($img, true);
+                imagesavealpha($img, true);
+                $return = $dir . $nameWithoutExt . '.webp';
+                imagewebp($img, $return, 100);
+                imagedestroy($img);
+
+                unlink($fullPath);
+            break;
+
+            case IMAGETYPE_PNG:
+
+                $img = imagecreatefrompng($fullPath);
+                imagepalettetotruecolor($img);
+                imagealphablending($img, true);
+                imagesavealpha($img, true);
+                $return = $dir . $nameWithoutExt . '.webp';
+                imagewebp($img, $return, 100);
+
+                unlink($fullPath);
+
+            break;
+        }
+
+        return $return;
+    }
 }

@@ -18,8 +18,9 @@ use App\Models\ShopItemListItem;
 use App\Models\PropertyValueInt;
 use App\Models\PropertyValueString;
 use App\Models\PropertyValueFloat;
-
+use Illuminate\Filesystem\Filesystem;
 use App\Http\Controllers\Admin\SearchController;
+use App\Services\Helpers\File;
 
 class ShopItemController extends Controller
 {
@@ -177,16 +178,24 @@ class ShopItemController extends Controller
 
         if (isset($request->image)) {
 
-            $shopItem->createDir();
-
             for ($i = 0; $i < count($request->image); $i++) {
 
                 $oShopItemImage = new ShopItemImage();
-                $oShopItemImage->shop_item_id = $shopItem->id;
+                $oShopItemImage->shop_item_id   = $shopItem->id;
                 $oShopItemImage->save();
 
+                $shopItem->createDir();
+
+                //сохраняем оригинал
+                $request->image[$i]->storeAs($shopItem->path(), $request->image[$i]->getClientOriginalName());
+
+                //переводим в webp либо возвращаем исходный
+                $original = File::webpConvert(Storage::path($shopItem->path()), $request->image[$i]->getClientOriginalName());
+
+                $fileInfo = File::fileInfoFromStr($original);
+
                 //большое изображение
-                $image_large = Image::make($request->image[$i]->getPathname());
+                $image_large = Image::make($original);
                 if ($oShop->preserve_aspect_ratio == 1) {
                     $image_large->resize($oShop->image_large_max_width, $oShop->image_large_max_height, function ($constraint) {
                         $constraint->aspectRatio();
@@ -195,12 +204,12 @@ class ShopItemController extends Controller
                 } else {
                     $image_large->fit($oShop->image_large_max_width, $oShop->image_large_max_height);
                 }
-                $sImageLargeName = 'image_large'. $oShopItemImage->id .'.' . $request->image[$i]->getClientOriginalExtension();
+                $sImageLargeName = 'image_large'. $oShopItemImage->id .'.' . $fileInfo["extension"];
                 $image_large->save(Storage::path($shopItem->path()) . $sImageLargeName);
                 $oShopItemImage->image_large = $sImageLargeName;
 
                 //превью
-                $image_small = Image::make($request->image[$i]->getPathname());
+                $image_small = Image::make($original);
                 if ($oShop->preserve_aspect_ratio_small == 1) {
                     $image_small->resize($oShop->image_small_max_width, $oShop->image_small_max_height, function ($constraint) {
                         $constraint->aspectRatio();
@@ -209,9 +218,11 @@ class ShopItemController extends Controller
                 } else {
                     $image_small->fit($oShop->image_small_max_width, $oShop->image_small_max_height);
                 }
-                $sImageSmallName = 'image_small'. $oShopItemImage->id .'.' . $request->image[$i]->getClientOriginalExtension();
+                $sImageSmallName = 'image_small'. $oShopItemImage->id .'.' . $fileInfo["extension"];
                 $image_small->save(Storage::path($shopItem->path()) . $sImageSmallName);
                 $oShopItemImage->image_small = $sImageSmallName;
+
+                unlink($original);
 
                 $oShopItemImage->save();
 
@@ -326,5 +337,7 @@ class ShopItemController extends Controller
 
         return response()->json($response);
     }
+
+    
 
 }
