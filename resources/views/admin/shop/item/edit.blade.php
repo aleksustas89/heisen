@@ -176,8 +176,8 @@
                                         <div class="text-center">
                                             <div class="file-box-image">
                               
-                                                @if (!empty($image['image_large']))
-                                                    <img src="{{ $image['image_large'] }}">
+                                                @if (!empty($image['image_small']))
+                                                    <a href="{{ $image['image_large'] }}" class="lightbox"><img src="{{ $image['image_small'] }}"></a>
                                                 @endif
                                             </div>
                                         </div>                                                        
@@ -476,9 +476,18 @@
     </div>
 </div>
 
-<script src="/assets/image.js"></script>
-<script src="/assets//js/pages/shopItem.js"></script>
-<script src="/assets/pages/file-upload.init.js"></script>
+@endsection
 
-    
+@section("css")
+    <link href="/assets/plugins/tobii/tobii.min.css" rel="stylesheet" type="text/css" />
+@endsection
+
+@section("js")
+    <script src="/assets/image.js"></script>
+    <script src="/assets/js/pages/shopItem.js"></script>
+    <script src="/assets/pages/file-upload.init.js"></script>
+    <script src="/assets/plugins/tobii/tobii.min.js"></script>
+    <script>
+        const tobii = new Tobii()
+    </script>
 @endsection
