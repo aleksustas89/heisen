@@ -19,6 +19,7 @@ use App\Models\PropertyValueInt;
 use App\Models\PropertyValueString;
 use App\Models\PropertyValueFloat;
 use Illuminate\Filesystem\Filesystem;
+use App\Http\Controllers\Admin\SearchController;
 
 class ShopItemController extends Controller
 {
@@ -232,6 +233,9 @@ class ShopItemController extends Controller
         foreach ($shopItem->ShopItemDiscount as $ShopItemDiscount) {
             $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount, $ShopItemDiscount->ShopDiscount, $shopItem);
         }
+
+        $SearchController = new SearchController();
+        $SearchController->indexingShopItem($shopItem, true);
         
         $message = "Товар был успешно сохранен!";
 

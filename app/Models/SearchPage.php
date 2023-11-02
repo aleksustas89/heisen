@@ -13,4 +13,19 @@ class SearchPage extends Model
     {
         return $this->belongsTo(ShopItem::class);
     }
+
+    public function SearchWords()
+    {
+        return $this->hasMany(SearchWord::class);
+    }
+
+    public function delete()
+    {
+
+        foreach ($this->SearchWords as $SearchWord) {
+            $SearchWord->delete();
+        }
+
+        parent::delete();
+    }
 }

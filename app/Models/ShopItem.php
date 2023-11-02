@@ -67,6 +67,11 @@ class ShopItem extends Model
         return $this->hasMany(CommentShopItem::class);
     }
 
+    public function SearchPage()
+    {
+        return $this->hasOne(SearchPage::class);
+    }
+
     public function defaultModification()
     {
 
@@ -129,6 +134,10 @@ class ShopItem extends Model
     {
         foreach ($this->ShopItemImages as $ShopItemImage) {
             $ShopItemImage->delete();
+        }
+
+        if (!is_null($SearchPage = $this->SearchPage)) {
+            $SearchPage->delete();
         }
 
         parent::delete();

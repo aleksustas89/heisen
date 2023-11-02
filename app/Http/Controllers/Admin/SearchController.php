@@ -76,14 +76,7 @@ class SearchController extends Controller
 
             foreach ($aItems as $aItem) {
 
-                if (isset($aItem->name) && $words = $this->getWords($aItem->name)) {
-
-                    $this->addWords($words, $aItem);
-                }
-                if (isset($aItem->description) && $words = $this->getWords($aItem->description)) {
-    
-                    $this->addWords($words, $aItem);
-                }
+                $this->indexingShopItem($aItem);
             }
             $data["indexed"] = count($aItems) + $request->indexed;
             $data["finished"] = $data["indexed"] >= $count ? true : false;  
@@ -99,6 +92,25 @@ class SearchController extends Controller
 
         
         return response()->json($data);
+    }
+
+    public function indexingShopItem(ShopItem $ShopItem, $clear = false)
+    {
+
+        if ($clear) {
+            foreach (SearchPage::where("shop_item_id", $ShopItem->id)->get() as $SearchPage) {
+                $SearchPage->delete();
+            }
+        }
+
+        if (isset($ShopItem->name) && $words = $this->getWords($ShopItem->name)) {
+
+            $this->addWords($words, $ShopItem);
+        }
+        if (isset($ShopItem->description) && $words = $this->getWords($ShopItem->description)) {
+
+            $this->addWords($words, $ShopItem);
+        }
     }
 
 
