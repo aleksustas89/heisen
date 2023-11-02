@@ -31,7 +31,6 @@ class AppServiceProvider extends ServiceProvider
         View::share([
             'ShopGroups' => \App\Http\Controllers\ShopController::buildGroupTree(),
             'TopMenuStructures' => Structure::where("active", 1)->where("parent_id", 0)->where("structure_menu_id", 1)->orderBy("sorting")->get(),
-            //'bottom_menu_structures' => Structure::where("active", 1)->where("structure_menu_id", 3)->orderBy("sorting")->get(),
         ]);
     }
 }

@@ -29,7 +29,7 @@
                                         <li class="uk-flex">
                        
                                             @php
-                                                $Children = \App\Models\Structure::where("parent_id", $Structure->id)->get();
+                                                $Children = \App\Models\Structure::where("parent_id", $Structure->id)->where("active", 1)->orderBy("sorting")->get();
                                             @endphp
 
                                             @if (count($Children) > 0)
@@ -189,7 +189,22 @@
                         
                                     <ul class="uk-nav uk-nav-default"> 
                                         @foreach ($TopMenuStructures as $Structure) 
-                                            <li><a href="{{ $Structure->url() }}">{{ $Structure->name }}</a></li>
+                                            <li>
+                                                <a href="{{ $Structure->url() }}">{{ $Structure->name }}</a>
+
+                                                @php
+                                                $Children = \App\Models\Structure::where("parent_id", $Structure->id)->where("active", 1)->orderBy("sorting")->get();
+                                                @endphp
+
+                                                @if (count($Children) > 0)
+                                                    <ul class="uk-nav uk-dropdown-nav uk-text-small">
+                                                        @foreach ($Children as $cStructure)
+                                                            <li><a href="{{ $cStructure->url() }}">{{ $cStructure->name }}</a></li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+
+                                            </li>
                                         @endforeach
                         
                                         <li class="uk-nav-divider"></li>     
