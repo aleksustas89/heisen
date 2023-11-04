@@ -147,11 +147,8 @@ class ShopItemController extends Controller
 
         $oShop = Shop::get();
 
-        $oldPath = '';
-
         if (!$shopItem) {
             $shopItem = new ShopItem();
-            $oldPath = $shopItem->path;
         }
 
 
@@ -256,7 +253,7 @@ class ShopItemController extends Controller
         }
     }
 
-    public function setUrl($shopItem)
+    protected function setUrl(ShopItem $shopItem)
     {
 
         $shopItem->url = $shopItem->url();

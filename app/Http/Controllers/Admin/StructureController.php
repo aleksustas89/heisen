@@ -174,6 +174,8 @@ class StructureController extends Controller
                 $structure->parent_id = $request->parent_id ?? 0;
         
                 $structure->save();
+
+                $this->setUrl($structure);
         
                 $message = 'Структура была успешно обновлена!';
         
@@ -188,6 +190,19 @@ class StructureController extends Controller
         } else {
             return redirect()->back()->withError("Заполните поле path!");
         } 
+    }
+
+    protected function setUrl(Structure $structure)
+    {
+
+        $structure->url = $structure->url();
+        $structure->save();
+
+        if ($subStructures = Structure::where("parent_id", $structure->id)->get()) {
+            foreach ($subStructures as $subStructure) {
+                $this->setUrl($subStructure);
+            }
+        }
     }
 
 }

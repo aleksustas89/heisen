@@ -161,7 +161,7 @@ class ShopGroupController extends Controller
             
     }
 
-    public function setUrl($shopGroup)
+    protected function setUrl(ShopGroup $shopGroup)
     {
         if ($shopGroup->parent_id > 0) {
             if (!is_null($oShopGroup = ShopGroup::find($shopGroup->parent_id))) {
