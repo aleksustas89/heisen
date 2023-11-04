@@ -78,4 +78,31 @@ class StructureController extends Controller
             }
         }
     }
+
+    public static function buildStructureTree($menu = false)
+    {
+        $aResult = [];
+
+        $Structure = Structure::where("parent_id", 0)->where("active", 1)->orderBy("sorting", "ASC");
+
+        if ($menu) {
+            $Structure->where("structure_menu_id", $menu);
+        }
+
+        foreach ($Structure->get() as $Structure) {
+            $aResult[$Structure->id]["id"] = $Structure->id;
+            $aResult[$Structure->id]["name"] = $Structure->name;
+            $aResult[$Structure->id]["url"] = $Structure->url();
+            $aResult[$Structure->id]["sub"] = [];
+            foreach (Structure::where("parent_id", $Structure->id)->where("active", 1)->orderBy("sorting", "ASC")->get() as $sStructure) {
+
+                $aResult[$Structure->id]["sub"][$sStructure->id]["id"] = $sStructure->id;
+                $aResult[$Structure->id]["sub"][$sStructure->id]["name"] = $sStructure->name;
+                $aResult[$Structure->id]["sub"][$sStructure->id]["url"] = $sStructure->url();
+            }
+            
+        }
+
+        return $aResult;
+    }
 }

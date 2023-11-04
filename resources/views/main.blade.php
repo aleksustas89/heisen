@@ -25,23 +25,19 @@
 
                             @if (isset($TopMenuStructures) && count($TopMenuStructures) > 0)
                                 <ul class="uk-navbar-nav uk-visible@s">
-                                    @foreach ($TopMenuStructures as $Structure) 
+                                    @foreach ($TopMenuStructures as $aStructure) 
                                         <li class="uk-flex">
-                       
-                                            @php
-                                                $Children = \App\Models\Structure::where("parent_id", $Structure->id)->where("active", 1)->orderBy("sorting")->get();
-                                            @endphp
 
-                                            @if (count($Children) > 0)
-                                                <a href="{{ $Structure->url() }}" class="uk-button uk-button-link uk-padding-remove-left uk-padding-remove-right" type="button">
-                                                    {{ $Structure->name }} 
+                                            @if (count($aStructure["sub"]) > 0)
+                                                <a href="{{ $aStructure["url"] }}" class="uk-button uk-button-link uk-padding-remove-left uk-padding-remove-right" type="button">
+                                                    {{ $aStructure["name"] }} 
                                                     <span uk-drop-parent-icon></span>
                                                 </a>
                                                 <div class="uk-card uk-card-body uk-card-default uk-card-small uk-width-small uk-drop" uk-drop="">
                                                     <div class="uk-flex uk-flex-center">
                                                         <ul class="uk-nav uk-dropdown-nav uk-text-small">
-                                                            @foreach ($Children as $cStructure)
-                                                                <li><a href="{{ $cStructure->url() }}">{{ $cStructure->name }}</a></li>
+                                                            @foreach ($aStructure["sub"] as $sStructure)
+                                                                <li><a href="{{ $sStructure["url"] }}">{{ $sStructure["name"] }}</a></li>
                                                             @endforeach
                                                         </ul>
                                                     </div>
@@ -49,7 +45,7 @@
 
                                             @else
 
-                                                <a href="{{ $Structure->url() }}">{{ $Structure->name }}</a>
+                                                <a href="{{ $aStructure["url"] }}">{{ $aStructure["name"] }}</a>
 
                                             @endif
                                         </li>
@@ -188,18 +184,14 @@
                                 <div class=" uk-overlay uk-overlay-default uk-text-center off-footer-tm">
                         
                                     <ul class="uk-nav uk-nav-default"> 
-                                        @foreach ($TopMenuStructures as $Structure) 
+                                        @foreach ($TopMenuStructures as $aStructure) 
                                             <li>
-                                                <a href="{{ $Structure->url() }}">{{ $Structure->name }}</a>
+                                                <a href="{{ $aStructure["url"] }}">{{ $aStructure["name"] }}</a>
 
-                                                @php
-                                                $Children = \App\Models\Structure::where("parent_id", $Structure->id)->where("active", 1)->orderBy("sorting")->get();
-                                                @endphp
-
-                                                @if (count($Children) > 0)
+                                                @if (count($aStructure["sub"]) > 0)
                                                     <ul class="uk-nav uk-dropdown-nav uk-text-small">
-                                                        @foreach ($Children as $cStructure)
-                                                            <li><a href="{{ $cStructure->url() }}">{{ $cStructure->name }}</a></li>
+                                                        @foreach ($aStructure["sub"] as $sStructure)
+                                                            <li><a href="{{ $sStructure["url"] }}">{{ $sStructure["name"] }}</a></li>
                                                         @endforeach
                                                     </ul>
                                                 @endif
