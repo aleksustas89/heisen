@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ShopGroup;
+use App\Models\ShopItem;
 use App\Models\Str;
 use App\Models\Shop;
 use Illuminate\Http\Request;
@@ -68,8 +69,12 @@ class ShopGroupController extends Controller
 
     public function saveShopGroup (Request $request, $shopGroup = false) 
     {
+
+        $oldPath = '';
+
         if (!$shopGroup) {
             $shopGroup = new ShopGroup();
+            $oldPath = $shopGroup->path;
         }
 
         $oShop = Shop::get();
@@ -94,7 +99,7 @@ class ShopGroupController extends Controller
 
         $shopGroup->save();
 
-
+        $this->setUrl($shopGroup);
 
         if ($request->image_large || $request->image_small) {
 
@@ -154,6 +159,32 @@ class ShopGroupController extends Controller
             return redirect()->back()->withSuccess($message);
         }
             
+    }
+
+    public function setUrl($shopGroup)
+    {
+        if ($shopGroup->parent_id > 0) {
+            if (!is_null($oShopGroup = ShopGroup::find($shopGroup->parent_id))) {
+                $shopGroup->url = $oShopGroup->url() . "/" . $shopGroup->path;  
+            }
+        } else {
+            $shopGroup->url = "/" . Shop::path() . $shopGroup->path;  
+        }
+
+        $shopGroup->save();
+
+        if ($subGroups = ShopGroup::where("parent_id", $shopGroup->id)->get()) {
+            foreach ($subGroups as $subGroup) {
+                $this->setUrl($subGroup);
+            }
+        }
+
+        if ($subItems = ShopItem::where("shop_group_id", $shopGroup->id)->get()) {
+            $ShopItemController = new ShopItemController();
+            foreach ($subItems as $subItem) {
+                $ShopItemController->setUrl($subItem);
+            }
+        }
     }
 
 

@@ -81,7 +81,7 @@
 
                                     @php
                                         $ShopItem = $ShopOrderItem->ShopItem;
-                                        $url = !is_null($ShopItem) ? $ShopItem->url() : '';
+                                        $url = !is_null($ShopItem) ? $ShopItem->url : '';
 
                                         $images = $ShopItem->getImages(false);
 

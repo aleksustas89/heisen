@@ -28,7 +28,7 @@
                                         @endforeach  
                                     </td>
                                     <td style="padding:10px;">
-                                        <div><a style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;" href="https://{{ env('APP_NAME', false) }}{{ $ShopItem->url() }}">{{ $orderItem->name }}</a></div> 
+                                        <div><a style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;" href="https://{{ env('APP_NAME', false) }}{{ $ShopItem->url }}">{{ $orderItem->name }}</a></div> 
                                     </td>
                                 </tr>
                             </table>

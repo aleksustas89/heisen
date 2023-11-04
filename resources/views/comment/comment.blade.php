@@ -49,7 +49,7 @@
                         @endforeach  
                     </div>
                     <div class="uk-width-expand">
-                        <div class="uk-h4 uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="{{ $CommentShopItem->ShopItem->url() }}">{{ $CommentShopItem->ShopItem->name }}</a></div> 
+                        <div class="uk-h4 uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="{{ $CommentShopItem->ShopItem->url }}">{{ $CommentShopItem->ShopItem->name }}</a></div> 
                     </div>
                 </div>
             </header>

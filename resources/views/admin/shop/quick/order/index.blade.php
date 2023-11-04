@@ -65,7 +65,7 @@
                                     <td>
                                         @if (!is_null($quick_order->ShopItem))
                                             {{ $quick_order->ShopItem->name }}
-                                            <a href="{{ $quick_order->ShopItem->url() }}" target="_blank">
+                                            <a href="{{ $quick_order->ShopItem->url }}" target="_blank">
                                                 <i class="las la-external-link-alt"></i>
                                             </a>
                                         @endif

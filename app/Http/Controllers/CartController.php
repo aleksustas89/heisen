@@ -58,7 +58,7 @@ class CartController extends Controller
                 'quantity' => $request->quantity ?? 1,
                 'attributes' => [
                     "img" => $ShopItemImage ? $ShopItem->path() . $ShopItemImage->image_small : '',
-                    "url" => $ShopItem->url(),
+                    "url" => $ShopItem->url,
                     "oldPrice" => $ShopItem->oldPrice(),
                 ],
             ));

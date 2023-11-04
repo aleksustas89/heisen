@@ -1,7 +1,7 @@
 @php
 $discountPercent = 0;
 $Discount = App\Http\Controllers\ShopDiscountController::getMaxDiscount($item);
-$url = $item->url();
+$url = $item->url;
 @endphp
 
 

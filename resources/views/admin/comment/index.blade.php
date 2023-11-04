@@ -72,7 +72,7 @@
                                             @endif
 
                                             @if ($ShopItem)
-                                                <a href="{{ $ShopItem->url() }}" target="_blank">
+                                                <a href="{{ $ShopItem->url }}" target="_blank">
                                                     <i class="las la-external-link-alt"></i>
                                                 </a>
                                             @endif
@@ -92,7 +92,7 @@
                                             @endif
 
                                             @if ($ShopItem)
-                                                <a href="{{ $ShopItem->url() }}" target="_blank">
+                                                <a href="{{ $ShopItem->url }}" target="_blank">
                                                     <i class="las la-external-link-alt"></i>
                                                 </a>
                                             @endif

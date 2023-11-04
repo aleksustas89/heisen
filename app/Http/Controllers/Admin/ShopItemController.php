@@ -147,8 +147,11 @@ class ShopItemController extends Controller
 
         $oShop = Shop::get();
 
+        $oldPath = '';
+
         if (!$shopItem) {
             $shopItem = new ShopItem();
+            $oldPath = $shopItem->path;
         }
 
 
@@ -158,6 +161,8 @@ class ShopItemController extends Controller
             // 'seo_keywords' => ['required', 'string', 'max:255'],
             // 'path' => ['required', 'string', 'max:255'],
         //]);
+
+        
 
         $shopItem->name = $request->name;
         $shopItem->description = $request->description ?? '';
@@ -175,6 +180,8 @@ class ShopItemController extends Controller
         $shopItem->shop_currency_id = $request->shop_currency_id ?? 0;
 
         $shopItem->save();
+
+        $this->setUrl($shopItem);
 
         if (isset($request->image)) {
 
@@ -247,6 +254,13 @@ class ShopItemController extends Controller
         } else {
            return redirect()->back()->withSuccess($message);
         }
+    }
+
+    public function setUrl($shopItem)
+    {
+
+        $shopItem->url = $shopItem->url();
+        $shopItem->save();
     }
 
     public function saveItemProperties(Request $request, ShopItem $shopItem)

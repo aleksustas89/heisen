@@ -85,7 +85,7 @@
             <div class="uk-child-width-1-2@s uk-text-center uk-grid-small home-group-small" uk-grid>
                 @if ($first)
                     <div class="home-group-item">
-                        <a href="{{ $first->url() }}" class="uk-inline-block" style="background-image: url({{ $first->dir() }}{{ $first->image_large }});">
+                        <a href="{{ $first->url }}" class="uk-inline-block" style="background-image: url({{ $first->dir() }}{{ $first->image_large }});">
                             <div class="uk-position-bottom-center uk-padding">
                                 <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $first->name }}</h3>
                             </div>
@@ -94,7 +94,7 @@
                 @endif
                 @if ($second)
                     <div class="home-group-item">
-                        <a href="{{ $second->url() }}" class="uk-inline-block" style="background-image: url({{ $second->dir() }}{{ $second->image_large }});">
+                        <a href="{{ $second->url }}" class="uk-inline-block" style="background-image: url({{ $second->dir() }}{{ $second->image_large }});">
                             <div class="uk-position-bottom-center uk-padding">
                                 <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $second->name }}</h3>
                             </div>
@@ -105,7 +105,7 @@
             
             @if ($third)
                 <div class="uk-child-width-1-1 uk-text-center uk-grid-small home-group-large home-group-item" uk-grid>
-                    <a href="{{ $third->url() }}" class="uk-inline-block" style="background-image: url({{ $third->dir() }}{{ $third->image_large }});">
+                    <a href="{{ $third->url }}" class="uk-inline-block" style="background-image: url({{ $third->dir() }}{{ $third->image_large }});">
                         <div class="uk-position-bottom-center uk-padding">
                             <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $third->name }}</h3>
                         </div>
@@ -117,7 +117,7 @@
             @if ($fourth)
                 <div class="uk-child-width-1-1 uk-text-center uk-grid-small home-group-large home-group-item" uk-grid>
                     <div>
-                        <a href="{{ $fourth->url() }}" class="uk-inline-block" style="background-image: url({{ $fourth->dir() }}{{ $fourth->image_large }});">
+                        <a href="{{ $fourth->url }}" class="uk-inline-block" style="background-image: url({{ $fourth->dir() }}{{ $fourth->image_large }});">
                             <div class="uk-position-bottom-center uk-padding">
                                 <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $fourth->name }}</h3>
                             </div>
@@ -128,7 +128,7 @@
             <div class="uk-child-width-1-2@s uk-text-center uk-grid-small" uk-grid>
                 @if ($fifth)
                     <div class="home-group-small home-group-item">
-                        <a href="{{ $fifth->url() }}" class="uk-inline-block" style="background-image: url({{ $fifth->dir() }}{{ $fifth->image_large }});">
+                        <a href="{{ $fifth->url }}" class="uk-inline-block" style="background-image: url({{ $fifth->dir() }}{{ $fifth->image_large }});">
                             <div class="uk-position-bottom-center uk-padding">
                                 <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $fifth->name }}</h3>
                             </div>
@@ -137,7 +137,7 @@
                 @endif   
                 @if ($sixth) 
                     <div class="home-group-small home-group-item">
-                        <a href="{{ $sixth->url() }}" class="uk-inline-block" style="background-image: url({{ $sixth->dir() }}{{ $sixth->image_large }});">
+                        <a href="{{ $sixth->url }}" class="uk-inline-block" style="background-image: url({{ $sixth->dir() }}{{ $sixth->image_large }});">
                             <img src="{{ $sixth->dir() }}{{ $sixth->image_large }}">
                             <div class="uk-position-bottom-center uk-padding">
                                 <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $sixth->name }}</h3>

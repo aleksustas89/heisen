@@ -162,7 +162,7 @@ class ShopGroupController extends Controller
         $Result["name"] = $shopGroup->name;
 
         if ($firstElemIsActive || count($aResult) > 0) {
-            $Result["url"] = $shopGroup->url();
+            $Result["url"] = $shopGroup->url;
         }
         
         array_unshift($aResult, $Result);

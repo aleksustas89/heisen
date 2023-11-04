@@ -162,7 +162,7 @@
                                             
                                             <span id="apply_check_shopItem_name_{{ $shopItem->id }}" class="editable product-name fw-semibold line-through-if-off">{{ $shopItem->name }}</span>
 
-                                            <a href="{{ $shopItem->url() }}" target="_blank">
+                                            <a href="{{ $shopItem->url }}" target="_blank">
                                                 <i class="las la-external-link-alt"></i>
                                             </a> 
                                             <br>

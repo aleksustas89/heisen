@@ -65,7 +65,7 @@
                 @endif
 
                 <div class="uk-margin">
-                    <a class="el-content uk-link-text" href="{{ $item->ShopGroup->url() }}">{{ $item->ShopGroup->name }}</a>   
+                    <a class="el-content uk-link-text" href="{{ $item->ShopGroup->url }}">{{ $item->ShopGroup->name }}</a>   
                 </div>
                 @if (isset($Modification))
                     <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical">{{ $Modification->name }}</h1>
