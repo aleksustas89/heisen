@@ -106,6 +106,11 @@ class ShopOrderController extends Controller
         $shopOrder->delivery_information = $request->delivery_information;
         $shopOrder->guid = \App\Services\Helpers\Guid::get();
 
+        $shopOrder->weight = $request->weight;
+        $shopOrder->length = $request->length;
+        $shopOrder->width = $request->width;
+        $shopOrder->height = $request->height;
+
         $shopOrder->save();
 
         //доставка

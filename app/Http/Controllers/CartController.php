@@ -177,7 +177,7 @@ class CartController extends Controller
 
         $request->validate([
             'name' => 'required|max:255',
-            'email' => 'required|email',
+            //'email' => 'required|email',
             //'city' => 'required',
             'phone' => ['required', function ($attribute, $value, $fail) {
                 $value = preg_replace("/[^,.0-9]/", '', $value);
@@ -208,6 +208,8 @@ class CartController extends Controller
 
         $ShopOrder->save();
 
+        $weight = $length = $height = $width = 0;
+
         foreach (self::getCart() as $CartItem) {
 
             $ShopOrderItem = new ShopOrderItem();
@@ -218,7 +220,22 @@ class CartController extends Controller
             $ShopOrderItem->price = $CartItem->price;
             $ShopOrderItem->old_price = $CartItem->attributes["oldPrice"] > 0 ? $CartItem->attributes["oldPrice"] : 0;
             $ShopOrderItem->save();
+
+
+            //подсчет габаритов
+            $ShopItem = ShopItem::find($CartItem->id)->parentItemIfModification();
+            $weight += $ShopItem->weight * $CartItem->quantity;
+            $height += $ShopItem->height * $CartItem->quantity;
+            $length = $ShopItem->length > $length ? $ShopItem->length : $length;
+            $width = $ShopItem->width > $width ? $ShopItem->width : $width;
         }
+
+        $ShopOrder->weight = $weight;
+        $ShopOrder->height = $height;
+        $ShopOrder->length = $length;
+        $ShopOrder->width = $width;
+
+        $ShopOrder->save();
 
         //способы доставки
         if (!is_null($ShopDelivery = ShopDelivery::find($request->shop_delivery_id))) {

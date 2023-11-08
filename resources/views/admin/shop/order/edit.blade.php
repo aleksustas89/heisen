@@ -120,6 +120,34 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="activity-info mt-3">
+                                    <div class="icon-info-activity">
+                                        <i class="las la-balance-scale bg-soft-primary"></i>
+                                    </div>
+                                    <div class="activity-info-text">
+                                        <div class="row mb-3">
+                                            <div class="col-3"> 
+                                                <label class="mb-1 my-2">Вес</label>
+                                                <input type="text" name="weight" value="{{ $order->weight }}" class="form-control" placeholder="Вес заказа">
+                                            </div>
+                                            <div class="col-3"> 
+                                                <label class="mb-1 my-2">Ширина</label>
+                                                <input type="text" name="width" value="{{ $order->width }}" class="form-control" placeholder="Ширина">
+                                            </div>
+                                            <div class="col-3"> 
+                                                <label class="mb-1 my-2">Длина</label>
+                                                <input type="text" name="length" value="{{ $order->length }}" class="form-control" placeholder="Длина">
+                                            </div>
+                                            <div class="col-3"> 
+                                                <label class="mb-1 my-2">Высота</label>
+                                                <input type="text" name="height" value="{{ $order->height }}" class="form-control" placeholder="Высота">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="activity-info mt-3">
                                     <div class="icon-info-activity">
                                         <i class="las la-truck bg-soft-primary"></i>

@@ -30,6 +30,10 @@ return new class extends Migration
             $table->tinyInteger('not_call')->default(0);
             $table->text('description')->nullable();
             $table->text('delivery_information')->nullable();
+            $table->decimal('weight', 12, 2)->default(0.00);
+            $table->decimal('length', 12, 2)->default(0.00);
+            $table->decimal('width', 12, 2)->default(0.00);
+            $table->decimal('height', 12, 2)->default(0.00);
 
             $table->tinyInteger('canceled')->default(0);
             $table->string('guid', 100)->default('');
