@@ -57,7 +57,7 @@ class ShopItemController extends Controller
             break;
             case 1:
 
-                if (!is_null($Modification = $shopItem->defaultModification())) {
+                if ($Modification = $shopItem->defaultModification()) {
 
                     $Return["default_modification_price"] = $Modification->price();
                     $Return["default_modification_old_price"] = $Modification->oldPrice();
