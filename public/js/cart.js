@@ -85,6 +85,10 @@ var Cart = {
     },
 
     chooseDelivery: function(item) {
-        $("[name='shop_delivery_id']").val(item.data("id"));
+        $("[name='"+ item.data("hidden") +"']").val(item.data("id"));
+        setTimeout(function() {
+            $(item).parents("ul").siblings(".uk-switcher").find("select").trigger('refresh');
+        }, 100);
+        
     },
 }

@@ -118,18 +118,21 @@
                                     
                                             <div class="col-12"> 
                                                 <label class="mb-1 my-2">Доставка</label>
-
+<!--
                                                 <div class="form-group my-2">
                                                     <label class="label my-2">Город</label>
                                                     <input type="text" class="form-control" value="" name="city">
-                                                </div>
+                                                </div>-->
                                               
 
                                                 <div>
 
+                                                    <input id="delivery-cdek" onclick="radioTab.click($(this))" value="7" type="radio" class="btn-check" name="shop_delivery_id" autocomplete="off">
+                                                    <label class="btn btn-outline-{{ $ShopDelivery->color }} btn-sm" for="delivery-{{ $ShopDelivery->id }}">{{ $ShopDelivery->name }}</label>
+
                                                     @foreach ($shopDeliveries as $k => $ShopDelivery) 
                                                        
-                                                        <input  id="delivery-{{ $ShopDelivery->id }}" onclick="radioTab.click($(this))" value="{{ $ShopDelivery->id }}" type="radio" class="btn-check" name="shop_delivery_id" autocomplete="off">
+                                                        <input id="delivery-{{ $ShopDelivery->id }}" onclick="radioTab.click($(this))" value="{{ $ShopDelivery->id }}" type="radio" class="btn-check" name="shop_delivery_id" autocomplete="off">
                                                         <label class="btn btn-outline-{{ $ShopDelivery->color }} btn-sm" for="delivery-{{ $ShopDelivery->id }}">{{ $ShopDelivery->name }}</label>
                                                     @endforeach
 
@@ -139,7 +142,7 @@
                                                             <div class="tab-pane p-3 " id="tab-delivery-{{ $ShopDelivery->id }}" role="tabpanel">
                                                                 <div class="row">
 
-                                                                    @foreach ($ShopDelivery->ShopDeliveryFields as $ShopDeliveryField)
+                                                                    @foreach ($ShopDelivery->ShopDeliveryFields->sortBy('sorting') as $ShopDeliveryField)
                                     
                                                                         @if ($ShopDeliveryField->type == 1)
                                                                             <div class="form-group">
@@ -148,7 +151,13 @@
                                                                             </div>
                                                                         @elseif($ShopDeliveryField->type == 2)
                                                                             <input type="hidden" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
+                                                                        @elseif($ShopDeliveryField->type == 3)
+                                                                            <div class="form-group">
+                                                                                <label class="label my-2">{{$ShopDeliveryField->caption  }}</label>
+                                                                                <input type="text" class="form-control" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
+                                                                            </div>
                                                                         @endif
+          
                                                                     @endforeach
 
                                                                 </div>

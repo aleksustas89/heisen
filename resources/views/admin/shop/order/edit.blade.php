@@ -129,11 +129,11 @@
 
                                             <div class="col-12"> 
                                                 <label class="mb-1 my-2">Доставка</label>
-
+<!--
                                                 <div class="form-group my-2">
                                                     <label class="label my-2">Город</label>
                                                     <input type="text" class="form-control" value="{{ $order->city }}" name="city">
-                                                </div>
+                                                </div>-->
                                               
 
                                                 <div>
@@ -171,7 +171,7 @@
                                                             <div class="tab-pane p-3 {{ $active }}" id="tab-delivery-{{ $ShopDelivery->id }}" role="tabpanel">
                                                                 <div class="row">
 
-                                                                    @foreach ($ShopDelivery->ShopDeliveryFields as $ShopDeliveryField)
+                                                                    @foreach ($ShopDelivery->ShopDeliveryFields->where("parent", 0)->sortBy('sorting') as $ShopDeliveryField)
                                     
                                                                         @if ($ShopDeliveryField->type == 1)
                                                                             <div class="form-group">
@@ -180,7 +180,59 @@
                                                                             </div>
                                                                         @elseif($ShopDeliveryField->type == 2)
                                                                             <input type="hidden" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
+                                                                        @elseif($ShopDeliveryField->type == 3)
+                                                                            <div class="form-group">
+                                                                                <label class="label my-2">{{$ShopDeliveryField->caption  }}</label>
+                                                                                <input type="text" class="form-control" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
+                                                                            </div>
+                                                                        
+                                                                        @elseif($ShopDeliveryField->type == 4)
+
+                                                                            @php
+                                                                                $SubFields = \App\Models\ShopDeliveryField::where("parent", $ShopDeliveryField->id)->orderBy("sorting")->get();
+                                                                            @endphp
+
+                                                                            <input type="hidden" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}" value="{{ $SubFields[0]->id }}" />
+
+                                                                            <div class="form-group my-3">
+                                                                                @foreach ($SubFields as $SubField)
+                                                                                    
+                                                                                    @php
+                                                                                        $checked = isset($aDeliveryValues[$ShopDeliveryField->id]) && $aDeliveryValues[$ShopDeliveryField->id] == $SubField->id ? " checked" : '';
+                                                                                    @endphp
+
+                                                                                    <input {{ $checked }} data-id="{{ $SubField->id }}" id="delivery-{{ $SubField->id }}" data-hidden="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}" onclick="radioTab.click($(this))" value="{{ $SubField->id }}" type="radio" class="btn-check" name="delivery_field_{{ $ShopDeliveryField->id }}" autocomplete="off">
+                                                                                    <label class="btn btn-outline-cdek btn-sm" for="delivery-{{ $SubField->id }}">{{ $SubField->caption }}</label>
+
+                                                                                @endforeach
+                                                                                <div class="tab-content">
+                                                                                    @foreach ($SubFields as $k => $SubField)
+                                                                                        @php
+                                                                                            $subActive = '';
+                                                                                            if (isset($aDeliveryValues[$ShopDeliveryField->id])) {
+                                                                                                if ($aDeliveryValues[$ShopDeliveryField->id] == $SubField->id) {
+                                                                                                    $subActive = 'active';
+                                                                                                }
+                                                                                            } else if ($k == 0) {
+                                                                                                $subActive = 'active';
+                                                                                            }
+                                                                                        @endphp
+
+                                                                                        <div class="tab-pane p-3 {{ $subActive }}" id="tab-delivery-{{ $SubField->id }}" role="tabpanel">
+                                                                                            <div class="row">
+                                                                                                <div class="form-group">
+                                                                                                    <label class="label my-2">{{$SubField->caption  }}</label>
+                                                                                                    <input type="text" class="form-control" value="{{ $aDeliveryValues[$SubField->id] ?? '' }}" name="delivery_{{ $SubField->shop_delivery_id }}_{{ $SubField->field }}">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    @endforeach
+                                                                                </div>
+                                                                            </div>
+
                                                                         @endif
+
+                                                                            
                                                                     @endforeach
 
                                                                 </div>

@@ -32,7 +32,7 @@ class ShopOrderController extends Controller
     {
         return view('admin.shop.order.create', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
-            'shopDeliveries' => ShopDelivery::get(),
+            'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
         ]);
     }
 
@@ -58,7 +58,7 @@ class ShopOrderController extends Controller
         return view('admin.shop.order.edit', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'order' => $shopOrder,
-            'shopDeliveries' => ShopDelivery::get(),
+            'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
             'aDeliveryValues' => $aDeliveryValues,
         ]);
     }

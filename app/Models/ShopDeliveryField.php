@@ -13,6 +13,12 @@ class ShopDeliveryField extends Model
      * type:
      * 1: input-text
      * 2: input-hidden
+     * 3: select
+     * 4: hidden + radio, must have children
+     * 
+     * frontend_type:
+     * 0: show all
+     * 1: do not show options, show by ajax
     */
 
     public function ShopDelivery()
@@ -26,6 +32,7 @@ class ShopDeliveryField extends Model
         $aTypes = [
             "1" => "Текстовое поле",
             "2" => "Скрытое поле",
+            "3" => "Список",
         ];
 
         return $aTypes;

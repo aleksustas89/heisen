@@ -344,3 +344,16 @@
     text-decoration: line-through;
     color: gray;
 }
+.btn-outline-cdek {
+    color: #1ab248;
+    border-color: #1ab248;
+}
+.btn-outline-cdek {
+    color: #1ab248;
+    border-color: #1ab248;
+}
+.btn-check:checked+.btn-outline-cdek {
+    color: #fff;
+    background-color: #1ab248;
+    border-color: #1ab248;
+}

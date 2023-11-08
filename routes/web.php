@@ -119,6 +119,8 @@ if (Schema::hasTable('shops')) {
     Route::post('/delete-from-cart', [App\Http\Controllers\CartController::class, 'deleteFromCart'])->name("deleteFromCart");
     Route::post('/get-modification', [App\Http\Controllers\ShopItemController::class, 'getModification']);
     Route::get('/get-cities', [App\Http\Controllers\CartController::class, 'getCities']);
+    Route::post('/get-cdek-cities', [App\Http\Controllers\CartController::class, 'getCdekCities']);
+    Route::post('/get-cdek-offices', [App\Http\Controllers\CartController::class, 'getCdekOffices']);
     Route::post('/shop-quich-order', [App\Http\Controllers\ShopQuickOrderController::class, 'save']);
     Route::get('/shop/ajax/group/{ShopGroupId}', function ($ShopGroupId) {
         return App\Http\Controllers\ShopGroupController::getAjaxGroup($ShopGroupId);

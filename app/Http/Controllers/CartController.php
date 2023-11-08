@@ -7,6 +7,8 @@ use Darryldecode\Cart\Cart;
 use App\Models\Shop;
 use App\Models\ShopItem;
 use App\Models\ShopOrder;
+use App\Models\CdekCity;
+use App\Models\CdekOffice;
 use App\Models\ShopOrderItem;
 use App\Models\ShopCountryLocationCity;
 use App\Models\ShopPaymentSystem;
@@ -30,7 +32,7 @@ class CartController extends Controller
             "cartCount" => $cartCollection ? $cartCollection->count() : 0,
             "Cities" => ShopCountryLocationCity::get(),
             "Payments" => ShopPaymentSystem::get(),
-            'shopDeliveries' => ShopDelivery::get(),
+            'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
             "client" => $client,
         ]);
     }
@@ -174,7 +176,7 @@ class CartController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email',
-            'city' => 'required',
+            //'city' => 'required',
             'phone' => ['required', function ($attribute, $value, $fail) {
                 $value = preg_replace("/[^,.0-9]/", '', $value);
                 if (strlen($value) < 11) {
@@ -243,4 +245,34 @@ class CartController extends Controller
 
         return redirect()->back()->withSuccess("Спасибо! Ваш заказ оформлен!");
     }
+
+    public function getCdekCities(Request $request)
+    {
+
+        $aResult = [];
+
+        foreach (CdekCity::where("cdek_region_id", $request->region)->get() as $CdekCity) {
+            $aResult[$CdekCity->id] = $CdekCity->name;
+        }
+
+        return response()->view("shop.cart-options", [
+            "options" => $aResult
+        ]);
+    }
+
+    public function getCdekOffices(Request $request)
+    {
+
+        $aResult = [];
+
+        foreach (CdekOffice::where("cdek_city_id", $request->city)->get() as $CdekOffice) {
+            $aResult[$CdekOffice->id] = "[".$CdekOffice->code ."] ". $CdekOffice->name . (!empty($CdekOffice->address_comment) ? " (" . $CdekOffice->address_comment . ")" : "");
+        }
+
+        return response()->view("shop.cart-options", [
+            "options" => $aResult
+        ]);
+    }
+
+    
 }

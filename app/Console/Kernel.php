@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
          $schedule->command('app:send-comment-reminder');
+         $schedule->command('app:cdek-update-regions-and-cities');
+         $schedule->command('app:cdek-update-offices');
 
         // $schedule->call(function () {
         //     DB::table('recent_users')->delete();

@@ -53,6 +53,7 @@
                             <div class="uk-h4">Доставка</div>
                             <hr />   	
                 
+                            <!--
                             <div class="uk-form-label">Выберете город доставки</div>
                             <nav class="uk-navbar-container" uk-navbar>
                                 <div class="uk-inline uk-width-1-1 uk-margin">
@@ -80,14 +81,14 @@
                                         <input type="hidden" id="city" name="city" value="{{ old("city") }}" />
                                     </div>
                                 </div>
-                            </nav>
+                            </nav>-->
                 
                             @if (count($shopDeliveries))
                                 <div class="uk-form-label">Выберете способ доставки</div>
 
                                 <ul class="uk-subnav uk-subnav-pill" uk-switcher>
                                     @foreach ($shopDeliveries as $k => $ShopDelivery) 
-                                        <li @if(old('shop_delivery_id') == $ShopDelivery->id) class="uk-active" @endif><a data-id="{{ $ShopDelivery->id }}" href="javascript::void(0)" onclick="Cart.chooseDelivery($(this))">{{ $ShopDelivery->name }}</a></li>
+                                        <li @if(old('shop_delivery_id') == $ShopDelivery->id) class="uk-active" @endif><a data-hidden="shop_delivery_id" data-id="{{ $ShopDelivery->id }}" href="javascript::void(0)" onclick="Cart.chooseDelivery($(this))">{{ $ShopDelivery->name }}</a></li>
                                     @endforeach
                                 </ul>
 
@@ -96,8 +97,7 @@
                                 <ul class="uk-switcher uk-margin">
                                     @foreach ($shopDeliveries as $k => $ShopDelivery) 
                                         <li>
-                                            
-                                            @foreach ($ShopDelivery->ShopDeliveryFields as $ShopDeliveryField)
+                                            @foreach ($ShopDelivery->ShopDeliveryFields->where("parent", 0)->sortBy('sorting') as $ShopDeliveryField)
 
                                                 @php
                                                 $name = 'delivery_' . $ShopDeliveryField->shop_delivery_id . '_' . $ShopDeliveryField->field;
@@ -112,6 +112,82 @@
                                                     </div>
                                                 @elseif($ShopDeliveryField->type == 2)
                                                     <input type="hidden" @if(null !== old($name)) value="{{ old($name) }}"  @endif name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
+                                                @elseif($ShopDeliveryField->type == 3 && !empty($ShopDeliveryField->options_from))
+                                                    @php
+                                                        $className = $ShopDeliveryField->options_from;
+                                                    @endphp
+
+                                                    <div class="uk-margin">
+                                                        <label class="uk-form-label" for="form-stacked-text">{{$ShopDeliveryField->caption  }}</label>
+                                                        <div class="uk-form-controls">
+                                                            <select id="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
+                                                                <option value="">...</option>
+                                                                @if ($ShopDeliveryField->frontend_select_type == 0)
+                                                                    @foreach ($className::orderBy("name", "ASC")->get() as $Value)
+                                                                        <option data-id="{{ $Value->id }}" value="{{ $Value->name }}">{{ $Value->name }}</option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                     
+                                                @elseif($ShopDeliveryField->type == 4)
+
+                                                    @php
+                                                        $SubFields = \App\Models\ShopDeliveryField::where("parent", $ShopDeliveryField->id)->orderBy("sorting")->get();
+                                                    @endphp
+
+                                                    <input type="hidden" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}" value="{{ $SubFields[0]->id }}" />
+
+                                                    <ul class="uk-subnav uk-subnav-pill" uk-switcher>
+
+                                                        @foreach ($SubFields as $SubField)
+                                                            <li>
+                                                                <a data-id="{{ $SubField->id }}" data-hidden="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}" href="javascript::void(0)" onclick="Cart.chooseDelivery($(this))">{{ $SubField->caption }}</a>
+                                                            </li>
+                                                        @endforeach
+                                                     
+                                                    </ul>
+
+                                                    <ul class="uk-switcher uk-margin">
+                                                        @foreach ($SubFields as $SubField)
+
+                                                            @php
+                                                            $SubName = 'delivery_' . $SubField->shop_delivery_id . '_' . $SubField->field;
+                                                            @endphp
+
+                                                            @if ($SubField->type == 1)
+                                                                <div class="uk-margin">
+                                                    
+                                                                    <div class="uk-form-controls">
+                                                                        <input data-b="{{ $SubName }}" class="uk-input" type="text" placeholder="{{$SubField->caption  }}" name="delivery_{{ $SubField->shop_delivery_id }}_{{ $SubField->field }}">
+                                                                    </div>
+                                                                </div>
+                                                            @elseif($SubField->type == 3 && !empty($SubField->options_from))
+                                                                @php
+                                                                    $className = $ShopDeliveryField->options_from;
+                                                                @endphp
+            
+                                                                <div class="uk-margin">
+                                                           
+                                                                    <div class="uk-form-controls">
+                                                                        <select id="delivery_{{ $SubField->shop_delivery_id }}_{{ $SubField->field }}" name="delivery_{{ $SubField->shop_delivery_id }}_{{ $SubField->field }}">
+                                                                            <option value="">...</option>
+                                                                            @if ($SubField->frontend_select_type == 0)
+                                                                                @foreach ($className::orderBy("name", "ASC")->get() as $Value)
+                                                                                    <option data-id="{{ $Value->id }}" value="{{ $Value->name }}">{{ $Value->name }}</option>
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                            @endif
+
+                                                        @endforeach
+                                                    </ul>
+
                                                 @endif
                                             @endforeach
 
@@ -205,6 +281,8 @@
 @section("js")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-form-styler@2.0.2/dist/jquery.formstyler.min.js"></script>
+
     @php
         App\Services\Helpers\File::js('/js/cart.js');
     @endphp
@@ -237,13 +315,69 @@
                 }, 1000);
             });
 
+            $('select').styler({
+				selectSearch: true,
+			});
+
             $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
+
+            $("body").on("change", "#delivery_7_region", function() {
+
+                $("#delivery_7_office").html("<option>...</option>").trigger('refresh');
+
+                let value = $(this).find(":selected").data("id");
+
+                Spiner.show();
+
+                $.ajax({
+                    url: "/get-cdek-cities",
+                    type: "POST",
+                    data: {"region": value},
+                    dataType: "html",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        $("#delivery_7_city").html(data).trigger('refresh');
+                        Spiner.hide();
+                    },
+                });
+                
+            });
+
+            $("body").on("change", "#delivery_7_city", function() {
+
+                let value = $(this).find(":selected").data("id");
+
+                Spiner.show();
+
+                $.ajax({
+                    url: "/get-cdek-offices",
+                    type: "POST",
+                    data: {"city": value},
+                    dataType: "html",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (data) {
+                        $("#delivery_7_office").html(data).trigger('refresh');
+                        Spiner.hide();
+                    },
+                });
+
+            });
+
+
         });
         
     </script>
 @endsection
 
 @section("css")
+    <link href="https://cdn.jsdelivr.net/npm/jquery-form-styler@2.0.2/dist/jquery.formstyler.min.css" rel="stylesheet">
+    <link href="/css/jquery.formstyler.theme.css" rel="stylesheet">
+
+    
     <style>
         .empty-cart {
             height: 300px;

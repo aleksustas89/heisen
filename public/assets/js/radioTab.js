@@ -1,7 +1,10 @@
 var radioTab = {
     click: function(elem) {
         let id = elem.attr("id");
-        elem.siblings(".tab-content").find(".tab-pane").each(function () {
+        if (typeof elem.data("hidden") != 'undefined') {
+            $("[name='"+ elem.data("hidden") +"']").val(elem.data("id"));
+        }
+        elem.siblings(".tab-content").children(".tab-pane").each(function () {
             if ($(this).attr("id") == "tab-" + id) {
                 $(this).addClass("active");
             } else {
