@@ -53,6 +53,8 @@ class CartController extends Controller
 
             $ShopItemImage = $ShopItem->getShopItemImage() ?? false;
 
+            $ParentShopItem = $ShopItem->parentItemIfModification();
+
             \Cart::session($cart_id)->add(array(
                 'id' => $ShopItem->id,
                 'name' => $ShopItem->name,
@@ -60,7 +62,7 @@ class CartController extends Controller
                 'quantity' => $request->quantity ?? 1,
                 'attributes' => [
                     "img" => $ShopItemImage ? $ShopItem->path() . $ShopItemImage->image_small : '',
-                    "url" => $ShopItem->url,
+                    "url" => $ParentShopItem->url,
                     "oldPrice" => $ShopItem->oldPrice(),
                 ],
             ));
