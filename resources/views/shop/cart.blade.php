@@ -366,7 +366,12 @@
                 });
 
             });
-
+            
+            $("body").on("click", ".jq-selectbox", function() {
+                if (!$(this).hasClass(".opened")) {
+                    $(this).find("[type='search']").focus();
+                }
+            });
 
         });
         
