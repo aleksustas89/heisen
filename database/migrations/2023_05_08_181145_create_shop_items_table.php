@@ -29,6 +29,10 @@ return new class extends Migration
                 $table->integer('shop_currency_id')->default(0);
                 $table->integer('sorting')->default(0);
                 $table->string('marking', 50)->nullable();
+                $table->decimal('weight', 12, 2)->default(0.00);
+                $table->decimal('length', 12, 2)->default(0.00);
+                $table->decimal('width', 12, 2)->default(0.00);
+                $table->decimal('height', 12, 2)->default(0.00);
                 $table->integer('indexing')->default(1);
                 $table->integer('active')->default(1);
                 $table->string('path')->index();

@@ -42,6 +42,34 @@ class ShopItemController extends Controller
             ->where("comments.active", 1)
             ->get();
 
+        //габариты
+        $aDimensions = [];
+        $k = 0;
+        if ($shopItem->weight > 0) {
+            $aDimensions[$k]["name"] = "Вес";
+            $aDimensions[$k]["value"] = $shopItem->weight;
+            $aDimensions[$k]["measure"] = "гр";
+            $k++;
+        }
+        if ($shopItem->height > 0) {
+            $aDimensions[$k]["name"] = "Высота";
+            $aDimensions[$k]["value"] = $shopItem->height / 10;
+            $aDimensions[$k]["measure"] = "см";
+            $k++;
+        }
+        if ($shopItem->width > 0) {
+            $aDimensions[$k]["name"] = "Длина";
+            $aDimensions[$k]["value"] = $shopItem->width / 10;
+            $aDimensions[$k]["measure"] = "см";
+            $k++;
+        }
+        if ($shopItem->length > 0) {
+            $aDimensions[$k]["name"] = "Глубина";
+            $aDimensions[$k]["value"] = $shopItem->length / 10;
+            $aDimensions[$k]["measure"] = "см";
+            $k++;
+        }
+
         $Return = [
             'aModProperties' => $ShopItemProperties,
             'aModValues' => $modListValues,
@@ -49,6 +77,7 @@ class ShopItemController extends Controller
             'images' => $shopItem->getImages(),
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
             'Comments' => $Comments,
+            'Dimensions' => $aDimensions,
         ];
 
         switch ($shopItem::$priceView) {

@@ -148,6 +148,40 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <div class="col-12">
+
+                                    <div class="card card-warning">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Габариты</h3>
+                                        </div>
+                                        <div class="card-body" style="display: block;">
+                                            
+                                            <div class="row form-group">
+                                                <div class="col-2">
+                                                    <label class="mb-1">Вес, гр.</label>
+                                                    <input type="text" name="weight" class="form-control" placeholder="Вес" >
+                                                </div>
+                                                <div class="col-2">
+                                                    <label class="mb-1">Ширина, мм.</label>
+                                                    <input type="text" name="width" class="form-control" placeholder="Ширина" >
+                                                </div>
+                                                <div class="col-2">
+                                                    <label class="mb-1">Высота, мм.</label>
+                                                    <input type="text" name="height" class="form-control" placeholder="Высота" >
+                                                </div>
+                                                <div class="col-2">
+                                                    <label class="mb-1">Длина, мм.</label>
+                                                    <input type="text" name="length" class="form-control" placeholder="Длина" >
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="tab-pane" id="images">

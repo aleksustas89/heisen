@@ -233,24 +233,36 @@
                             $Values = true;
                         }
                     }
+
                     @endphp
 
-                    @if ($properties && count($properties) > 0 && $Values)
+                    @if (($properties && count($properties) > 0 && $Values) || count($Dimensions) > 0)
                         <li>
                             <a class="uk-accordion-title">ХАРАКТЕРИСТИКИ</a>
                             <div class="uk-accordion-content">
                         
                                     <ul class="uk-list">
-                                        @foreach ($properties as $property)
-                                            @if ($property["show_in_item"] == 1 && count($property["property_values"]) > 0)
+                                        @if (count($Dimensions) > 0)
+                                            @foreach ($Dimensions as $Dimension)
                                                 <li>
-                                                    <b>{{ $property["property_name"] }}:</b>
-                                                    @foreach ($property["property_values"] as $value)
-                                                        {{ $value }}
-                                                    @endforeach
+                                                    <b>{{ $Dimension["name"] }}:</b>
+                                                    {{ $Dimension["value"] }}{{ $Dimension["measure"] }}
                                                 </li>
-                                            @endif
-                                        @endforeach
+                                            @endforeach
+                                        @endif
+                                        @if ($properties && count($properties) > 0 && $Values)
+                                            @foreach ($properties as $property)
+                                                @if ($property["show_in_item"] == 1 && count($property["property_values"]) > 0)
+                                                    <li>
+                                                        <b>{{ $property["property_name"] }}:</b>
+                                                        @foreach ($property["property_values"] as $value)
+                                                            {{ $value }}
+                                                        @endforeach
+                                                    </li>
+                                                @endif
+                                            @endforeach
+                                        @endif
+
                                     </ul>
                             </div>
                         </li>   

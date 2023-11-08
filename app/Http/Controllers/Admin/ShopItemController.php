@@ -169,6 +169,10 @@ class ShopItemController extends Controller
         $shopItem->shop_group_id = $request->shop_group_id ?? 0;
         $shopItem->sorting = $request->sorting ?? 0;
         $shopItem->marking = $request->marking;
+        $shopItem->weight = $request->weight;
+        $shopItem->width = $request->width;
+        $shopItem->height = $request->height;
+        $shopItem->length = $request->length;
         $shopItem->path = !empty(trim($request->path)) ? $request->path : Str::transliteration($request->name);
         $shopItem->seo_title = $request->seo_title ?? '';
         $shopItem->seo_description = $request->seo_description ?? '';
