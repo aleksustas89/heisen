@@ -136,13 +136,14 @@
                                                 <input type="text" name="width" value="{{ $order->width }}" class="form-control" placeholder="Ширина">
                                             </div>
                                             <div class="col-3"> 
-                                                <label class="mb-1 my-2">Длина</label>
-                                                <input type="text" name="length" value="{{ $order->length }}" class="form-control" placeholder="Длина">
-                                            </div>
-                                            <div class="col-3"> 
                                                 <label class="mb-1 my-2">Высота</label>
                                                 <input type="text" name="height" value="{{ $order->height }}" class="form-control" placeholder="Высота">
                                             </div>
+                                            <div class="col-3"> 
+                                                <label class="mb-1 my-2">Глубина</label>
+                                                <input type="text" name="length" value="{{ $order->length }}" class="form-control" placeholder="Глубина">
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -203,14 +204,14 @@
                                     
                                                                         @if ($ShopDeliveryField->type == 1)
                                                                             <div class="form-group">
-                                                                                <label class="label my-2">{{$ShopDeliveryField->caption  }}</label>
+                                                                                <label class="label my-2">{{$ShopDeliveryField->caption }} {{ $ShopDeliveryField->description }}</label>
                                                                                 <input type="text" class="form-control" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
                                                                             </div>
                                                                         @elseif($ShopDeliveryField->type == 2)
                                                                             <input type="hidden" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
                                                                         @elseif($ShopDeliveryField->type == 3)
                                                                             <div class="form-group">
-                                                                                <label class="label my-2">{{$ShopDeliveryField->caption  }}</label>
+                                                                                <label class="label my-2">{{$ShopDeliveryField->caption }} {{ $ShopDeliveryField->description }}</label>
                                                                                 <input type="text" class="form-control" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
                                                                             </div>
                                                                         
@@ -249,7 +250,7 @@
                                                                                         <div class="tab-pane p-3 {{ $subActive }}" id="tab-delivery-{{ $SubField->id }}" role="tabpanel">
                                                                                             <div class="row">
                                                                                                 <div class="form-group">
-                                                                                                    <label class="label my-2">{{$SubField->caption  }}</label>
+                                                                                                    <label class="label my-2">{{$SubField->caption  }} {{ $SubField->description }}</label>
                                                                                                     <input type="text" class="form-control" value="{{ $aDeliveryValues[$SubField->id] ?? '' }}" name="delivery_{{ $SubField->shop_delivery_id }}_{{ $SubField->field }}">
                                                                                                 </div>
                                                                                             </div>
@@ -259,9 +260,68 @@
                                                                             </div>
 
                                                                         @endif
-
                                                                             
                                                                     @endforeach
+
+                                                                    <!--cdek-->
+                                                                    @if ($ShopDelivery->id == 7)
+
+                                                                        <div class="card card-warning">
+                                                                            <div class="card-header d-flex">
+                                                                                <h3 class="card-title">Данные отправителя <a target="_blank" href="{{ route('cdekSender.edit', 1) }}"><i class="las la-pen text-secondary font-16"></i></a></h3>
+                                                                                
+                                                                            </div>
+                                                                            <div class="card-body" style="display: block;">
+                                                                                
+                                                                                <div class="row form-group my-1">
+                                                                                    <div class="col-12">
+                                                                                        Город отправления: {{ $cdekSender->CdekCity->name }}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row form-group my-1">
+                                                                                    <div class="col-12">
+                                                                                        Тип: {{ App\Models\CdekSender::$Types[$cdekSender->type]["name"] }}
+                                                                                    </div>
+                                                                                </div>
+                                                                                @if ($cdekSender->type == 0 && $cdekSender->cdek_office_id > 0)
+                                                                                    <div class="row form-group my-1">
+                                                                                        <div class="col-12">
+                                                                                            Офис: {{ $cdekSender->CdekOffice->name }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                @endif
+                                                                                @if ($cdekSender->type == 1 && !empty($cdekSender->address))
+                                                                                    <div class="row form-group my-1">
+                                                                                        <div class="col-12">
+                                                                                            Адрес: {{ $cdekSender->address }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                @endif
+                                                                                @if (!empty($cdekSender->name))
+                                                                                    <div class="row form-group my-1">
+                                                                                        <div class="col-12">
+                                                                                            Имя отправителя: {{ $cdekSender->name }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                @endif
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="my-3">
+
+                                                                            @if (is_null($CdekOrder))
+                                                                                <button type="button" id="create_cdek_order_btn" onclick="Cdek.createOrder({{ $order->id }})" class="btn btn-danger">Создать Cdek заказ</button>
+                                                                            @elseif(!is_null($CdekOrder) && strtotime('+1 hour', strtotime($CdekOrder->updated_at)) > strtotime(date("Y-m-d H:i:s")) && !empty($CdekOrder->url))
+                                                                                <a href="{{ route("printCdekOrder", $CdekOrder->id) }}" target='_blank' class='btn btn-success mx-1'>Распечатать квитанции</a>
+                                                                            @elseif(!is_null($CdekOrder))
+                                                                                <button type="button" id="create_cdek_order_btn" onclick="Cdek.createOrder({{ $order->id }})" class="btn btn-warning">Получить квитанции</button>
+                                                                            @endif
+                                                                        
+                                                                            <div id="cdek-errors"></div>
+                                                                        </div>
+                                                                        
+                                                                    @endif  
 
                                                                 </div>
                                                             </div>
@@ -462,8 +522,70 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>                   
     <script>
-        
+
         new Selectr('.select');
+
+        let create_order_route = '{{ route("createCdekOrder") }}';
+
+        var Cdek = {
+            createOrder: function(shop_order_id, step = 0) {
+                Spiner.show();
+                $.ajax({
+                    url: '{{ route("createCdekOrder") }}',
+                    type: "POST",
+                    data: {
+                        "shop_order_id" : shop_order_id,
+                        "step" : step,
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: "json",
+                    success: function (data) {
+
+                        if (typeof data.error != 'undefined') {
+
+                            let errors = '';
+
+                            data.error.forEach(element => {
+                                errors += "<div>" + element + "</div>"
+                            });
+
+                            errors = '<div class="alert alert-danger border-0 my-2" role="alert">' + errors + '</div>';
+
+                            $("#cdek-errors").html(errors);
+
+                            Spiner.hide();
+
+                        } else {
+
+                            if (parseInt(data.id) > 0) {
+                                $("<a href='"+ data.printUrl +"' target='_blank' class='btn btn-success mx-1'>Распечатать квитанции (доступны в течении часа)</a>").insertAfter("#create_cdek_order_btn");
+                                Spiner.hide();
+                            } else {
+
+                                setTimeout(function() {
+                                    step++;
+                                    if (step < 6) {
+                                        console.log("пытаемся получить ссылку, попытка:" + step)
+                                        Cdek.createOrder(shop_order_id, step);
+                                    } else {
+                                        Spiner.hide();
+                                        alert("Error. Невозможно получить ссылку.");
+                                    }
+
+                                }, 3000);
+                            }
+                        }
+                    },
+
+                    error: function () {
+                        Spiner.hide();
+                        alert("Ошибка. Попробуйте немного позже.")
+                    },
+                });
+            }
+        }
 
         $(function(){
             $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
@@ -480,6 +602,9 @@
             width: 65%;
         }
         .badge {
+            color: #fff !important;
+        }
+        .btn-success {
             color: #fff !important;
         }
     </style>    

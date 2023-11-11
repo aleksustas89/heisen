@@ -45,21 +45,21 @@ class ShopItemController extends Controller
         //габариты
         $aDimensions = [];
         $k = 0;
-        if ($shopItem->weight > 0) {
-            $aDimensions[$k]["name"] = "Вес";
-            $aDimensions[$k]["value"] = $shopItem->weight;
-            $aDimensions[$k]["measure"] = "гр";
+        // if ($shopItem->weight > 0) {
+        //     $aDimensions[$k]["name"] = "Вес";
+        //     $aDimensions[$k]["value"] = $shopItem->weight;
+        //     $aDimensions[$k]["measure"] = "гр";
+        //     $k++;
+        // }
+        if ($shopItem->width > 0) {
+            $aDimensions[$k]["name"] = "Ширина";
+            $aDimensions[$k]["value"] = $shopItem->width / 10;
+            $aDimensions[$k]["measure"] = "см";
             $k++;
         }
         if ($shopItem->height > 0) {
             $aDimensions[$k]["name"] = "Высота";
             $aDimensions[$k]["value"] = $shopItem->height / 10;
-            $aDimensions[$k]["measure"] = "см";
-            $k++;
-        }
-        if ($shopItem->width > 0) {
-            $aDimensions[$k]["name"] = "Длина";
-            $aDimensions[$k]["value"] = $shopItem->width / 10;
             $aDimensions[$k]["measure"] = "см";
             $k++;
         }

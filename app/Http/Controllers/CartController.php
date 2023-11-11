@@ -225,9 +225,9 @@ class CartController extends Controller
             //подсчет габаритов
             $ShopItem = ShopItem::find($CartItem->id)->parentItemIfModification();
             $weight += $ShopItem->weight * $CartItem->quantity;
-            $height += $ShopItem->height * $CartItem->quantity;
-            $length = $ShopItem->length > $length ? $ShopItem->length : $length;
             $width = $ShopItem->width > $width ? $ShopItem->width : $width;
+            $height = $ShopItem->height > $height ? $ShopItem->height : $height;
+            $length += $ShopItem->length * $CartItem->quantity;
         }
 
         $ShopOrder->weight = $weight;
@@ -275,7 +275,8 @@ class CartController extends Controller
         }
 
         return response()->view("shop.cart-options", [
-            "options" => $aResult
+            "options" => $aResult,
+            "valueWithCode" => true
         ]);
     }
 

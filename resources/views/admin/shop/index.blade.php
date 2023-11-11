@@ -53,6 +53,7 @@
                         <a class="dropdown-item" href="{{ route('shopItemProperty.index') }}">Свойства товаров</a>
                         <a class="dropdown-item" href="{{ route('shopItemList.index') }}">Списки</a>
                         <a class="dropdown-item" href="{{ route('shopDelivery.index') }}">Доставка</a>
+                        <a class="dropdown-item" href="{{ route('cdekSender.edit', 1) }}">Cdek</a>
                     </div>
 
                 </div>

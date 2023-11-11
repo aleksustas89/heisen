@@ -7,6 +7,9 @@ use App\Models\ShopOrder;
 use App\Models\ShopDelivery;
 use App\Models\ShopDeliveryFieldValue;
 use Illuminate\Http\Request;
+use App\Models\CdekSender;
+use App\Models\CdekOrder;
+use App\Http\Controllers\CdekController;
 
 
 class ShopOrderController extends Controller
@@ -33,6 +36,7 @@ class ShopOrderController extends Controller
         return view('admin.shop.order.create', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
+            'cdekSender' => CdekSender::find(1),
         ]);
     }
 
@@ -60,6 +64,8 @@ class ShopOrderController extends Controller
             'order' => $shopOrder,
             'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
             'aDeliveryValues' => $aDeliveryValues,
+            'cdekSender' => CdekSender::find(1),
+            'CdekOrder' => CdekOrder::where("shop_order_id", $shopOrder->id)->first(),
         ]);
     }
 

@@ -13,6 +13,7 @@
         <link href="{{ asset('/assets/plugins/animate/animate.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ asset('/assets/css/admin.css') }}" rel="stylesheet" type="text/css" />
         <script src="{{ asset('/assets/plugins/jquery/jquery.min.js') }}"></script>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
 
     <body id="body" class="dark-sidebar">
@@ -175,7 +176,7 @@
                 <!-- Footer Start -->
                 <footer class="footer text-center text-sm-start">
                     &copy; <script>
-                        document.write(new Date().getFullYear())
+                        
                     </script> Powerful Admin-Panel, developed on Laravel <span class="text-muted d-none d-sm-inline-block float-end">Designed with <i class="mdi mdi-heart text-danger"></i> by Alex Potuzhniy</span>
                 </footer>
                 <!-- end Footer -->                

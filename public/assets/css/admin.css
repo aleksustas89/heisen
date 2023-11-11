@@ -24,6 +24,7 @@
     bottom: 1px;
     z-index: 15;
     text-align: center;
+    z-index: 0;
 }
 
 .fieldcheck-error {

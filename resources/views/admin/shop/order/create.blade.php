@@ -123,13 +123,14 @@
                                                 <input type="text" name="width" class="form-control" placeholder="Ширина">
                                             </div>
                                             <div class="col-3"> 
-                                                <label class="mb-1 my-2">Длина</label>
-                                                <input type="text" name="length" class="form-control" placeholder="Длина">
-                                            </div>
-                                            <div class="col-3"> 
                                                 <label class="mb-1 my-2">Высота</label>
                                                 <input type="text" name="height" class="form-control" placeholder="Высота">
                                             </div>
+                                            <div class="col-3"> 
+                                                <label class="mb-1 my-2">Глубина</label>
+                                                <input type="text" name="length" class="form-control" placeholder="Глубина">
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -151,9 +152,6 @@
                                               
 
                                                 <div>
-
-                                                    <input id="delivery-cdek" onclick="radioTab.click($(this))" value="7" type="radio" class="btn-check" name="shop_delivery_id" autocomplete="off">
-                                                    <label class="btn btn-outline-{{ $ShopDelivery->color }} btn-sm" for="delivery-{{ $ShopDelivery->id }}">{{ $ShopDelivery->name }}</label>
 
                                                     @foreach ($shopDeliveries as $k => $ShopDelivery) 
                                                        

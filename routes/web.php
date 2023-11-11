@@ -1,8 +1,9 @@
 <?php
 
-
+use App\Http\Controllers\Admin\CdekSenderController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use App\Models\CdekOrder;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,9 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::resource('shopItemListItem', ShopItemListItemController::class);
         Route::resource('structureMenu', StructureMenuController::class);
         Route::resource('shopOrder', ShopOrderController::class);
+        Route::post('/shop/order/cdek/create/order', [App\Http\Controllers\CdekController::class, 'cdekCreateOrder'])->name("createCdekOrder");
+        Route::get('/shop/order/cdek/create/print/{CdekOrder}', [App\Http\Controllers\CdekController::class, 'print'])->name("printCdekOrder");
+
         Route::resource('shopQuickOrder', ShopQuickOrderController::class);
         Route::resource('shopOrderItem', ShopOrderItemController::class);
         Route::resource('shopDelivery', ShopDeliveryController::class);
@@ -55,6 +59,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::get('/shop/discount/filter', [App\Http\Controllers\Admin\ShopDiscountController::class, 'filter']);
         Route::resource('shopItemDiscount', ShopItemDiscountController::class);
         Route::resource('comment', CommentController::class);
+        Route::resource('cdekSender', CdekSenderController::class);
 
         Route::prefix("search")->group(function() {
             Route::get('/', [App\Http\Controllers\Admin\SearchController::class, 'index'])->name("adminSearch");
