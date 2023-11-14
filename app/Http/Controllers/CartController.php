@@ -175,7 +175,7 @@ class CartController extends Controller
     public function saveOrder(Request $request)
     {
 
-        $request->validate([
+        $Fields = [
             'name' => 'required|max:255',
             //'email' => 'required|email',
             //'city' => 'required',
@@ -184,8 +184,28 @@ class CartController extends Controller
                 if (strlen($value) < 11) {
                     $fail('The '.$attribute.' is invalid.');
                 }
-            },]
-        ]);
+            },],
+        ];
+
+        if ($request->shop_delivery_id == 7) {
+            /*cdek*/
+            $Fields['delivery_7_region'] = 'required';
+            $Fields['delivery_7_city'] = 'required';
+
+
+            if ($request->delivery_7_delivery_type == 11) {
+                $Fields['delivery_7_office'] = 'required';
+            } else if ($request->delivery_7_delivery_type == 15) {
+                $Fields['delivery_7_courier'] = 'required';
+            }
+        }
+
+        if ($request->shop_delivery_id == 1) {
+            $Fields['delivery_1_city'] = 'required';
+            $Fields['delivery_1_office'] = 'required';
+        }
+
+        $request->validate($Fields);
 
         $ShopCurrency = ShopCurrency::where("default", 1)->first();
 
@@ -260,7 +280,9 @@ class CartController extends Controller
         Mail::to($Shop->email)->send(new SendOrderAdmin($ShopOrder));
 
         //client
-        Mail::to($ShopOrder->email)->send(new SendOrder($ShopOrder));
+        if (!empty($ShopOrder->email)) {
+            Mail::to($ShopOrder->email)->send(new SendOrder($ShopOrder));
+        }
 
         return redirect()->back()->withSuccess("Спасибо! Ваш заказ оформлен!");
     }

@@ -19,6 +19,8 @@
 
             <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical uk-section-small uk-padding-remove-top">Оформление заказа</h1>
 
+
+
             @error('email')
                 <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
                     <a class="uk-alert-close" uk-close></a>
@@ -43,6 +45,38 @@
                     <p>Заполните поле Город</p>
                 </div>
             @enderror
+            @error('delivery_7_region')
+                <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>Заполните поле Регион</p>
+                </div>
+            @enderror
+            @error('delivery_7_city')
+                <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>Заполните поле Город</p>
+                </div>
+            @enderror
+            @error('delivery_7_office')
+                <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>Заполните поле Отделение</p>
+                </div>
+            @enderror
+            @error('delivery_1_city')
+                <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>Заполните поле Город</p>
+                </div>
+            @enderror
+            @error('delivery_1_city')
+                <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>Заполните поле Отделение</p>
+                </div>
+            @enderror
+
+
 
             <div class="uk-grid" uk-grid class="cart-block">
                 <div class="uk-width-2-3@s cart-block-user-data">
@@ -237,7 +271,7 @@
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="form-stacked-text">E-mail</label>
                                 <div class="uk-form-controls">
-                                    <input value="{{ old('email') ?? $client->email ?? '' }}" class="uk-input @error('email') is-invalid @enderror" name="email" required="" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
+                                    <input value="{{ old('email') ?? $client->email ?? '' }}" class="uk-input" name="email" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
                                 </div>
                             </div>
                             <div class="uk-form-label">Комментарий к заказу (не обязательно)</div>    	    	

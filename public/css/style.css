@@ -111,7 +111,7 @@ input.uk-form-width-xsmall {
     color: #fff;
     border: 1px solid transparent;
 }
-.uk-button-primary.active { /* .uk-button-primary:not([disabled]):hover, */
+.uk-button-primary.active, .uk-button-primary:not([disabled]):hover {
     background-color: #302e2e;
 }
 .uk-button {
