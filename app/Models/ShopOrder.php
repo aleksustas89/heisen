@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\UkassaOrder;
 
 class ShopOrder extends Model
 {
@@ -59,5 +60,18 @@ class ShopOrder extends Model
         }
 
         return $sum;
+    }
+
+    public function delete()
+    {
+        foreach ($this->ShopOrderItems as $orderItem) {
+            $orderItem->delete();
+        }
+
+        if (!is_null($UkassaOrder = UkassaOrder::where("shop_order_id", $this->id)->first())) {
+            $UkassaOrder->delete();
+        }
+
+        parent::delete();
     }
 }
