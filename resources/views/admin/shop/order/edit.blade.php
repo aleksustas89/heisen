@@ -87,7 +87,7 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row mb-3">
-                                            <div class="col-5"> 
+                                            <div class="col-4"> 
                                                 <div class="d-inline-block order-col-sum">
                                                     <label class="mb-1 my-2">Сумма заказа</label>
                                                     <input type="text" disabled name="sum" value="{{ $order->getSum() }}" class="form-control" placeholder="Сумма заказа">
@@ -105,7 +105,7 @@
                                                 </div>
                                             
                                             </div>
-                                            <div class="col-7"> 
+                                            <div class="col-3"> 
                                                 <label class="mb-1 my-2">Способ оплаты</label>
                                                 <select class="form-control" name="shop_payment_system_id">
                                                     <option value="0">...</option>
@@ -116,6 +116,13 @@
                                                     <option {{ $selected }} value="{{ $ShopPaymentSystem->id }}">{{ $ShopPaymentSystem->name }}</option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                            <div class="col-4 d-flex align-items-end"> 
+                                                @if ($order->paid == 1)
+                                                    <div style="margin: 0 0 5px 0;">
+                                                        <span style="color: green; font-size: 18px;"><i class="las la-check-double"></i> <b>Оплачено</b></span>
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

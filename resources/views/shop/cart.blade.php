@@ -245,7 +245,7 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="uk-card uk-card-default uk-card-body uk-card-small">
+                        <div class="uk-card uk-card-default uk-card-body uk-card-small uk-margin">
                             <div class="uk-h4">Контактные данные</div>
                             <hr />
                     
@@ -280,7 +280,7 @@
                             </div>
                             <label class="uk-form-label"><input value="{{ old('not_call') ?? 1 }}" @if (old('not_call') == 1) checked @endif name="not_call" class="uk-checkbox" type="checkbox"> Не звоните мне для подтверждения заказа</label>
                             <div class="uk-text-center uk-margin">
-                                <button class="uk-button uk-button-primary uk-width-1-1">Оформить заказ</button>
+                                <button class="uk-button uk-button-primary uk-width-1-1">Оформить и оплатить заказ</button>
                             </div>  
                 
                         </div>

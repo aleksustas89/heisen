@@ -44,6 +44,7 @@
                                 <th>Фио</th>
                                 <th style="width: 50px"><i data-feather="list"></i></th>
                                 <th style="width: 100px">Сумма</th>
+                                <th style="width: 100px">Оплачено</th>
                                 <th class="controll-td"></th>
                             </tr>
                         </thead>
@@ -180,6 +181,11 @@
                                     </td>
                                     <td style="width: 100px">
                                         {{ App\Models\Str::price($sOrderSum) }} {{ $sOrderCurrency }}
+                                    </td>
+                                    <td style="width: 100px" class="text-center">
+                                        @if ($order->paid == 1)
+                                            <i style="color: green; font-size: 22px;" class="las la-check-double"></i>
+                                        @endif
                                     </td>
                                     <td class="td-actions">
                                         <a href="{{ route('shopOrder.edit', $order->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>

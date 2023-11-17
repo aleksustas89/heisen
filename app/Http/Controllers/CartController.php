@@ -15,10 +15,14 @@ use App\Models\ShopPaymentSystem;
 use App\Models\ShopDelivery;
 use App\Models\ShopCurrency;
 use App\Models\ShopDeliveryFieldValue;
+use App\Models\Ukassa;
+use App\Models\UkassaOrder;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Mail\SendOrder;
 use App\Models\Mail\SendOrderAdmin;
 use Illuminate\Support\Facades\Auth;
+use YooKassa\Client;
+use App\Services\Helpers\Guid;
 
 class CartController extends Controller
 {
@@ -31,7 +35,7 @@ class CartController extends Controller
         return view('shop.cart', [
             "cartCount" => $cartCollection ? $cartCollection->count() : 0,
             "Cities" => ShopCountryLocationCity::get(),
-            "Payments" => ShopPaymentSystem::get(),
+            "Payments" => ShopPaymentSystem::orderBy("sorting", "ASC")->get(),
             'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
             "client" => $client,
         ]);
@@ -39,6 +43,8 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
+
+        $this->clearLastOrderId();
 
         if (!$cart_id = self::isSetCart()) {
             
@@ -175,6 +181,12 @@ class CartController extends Controller
     public function saveOrder(Request $request)
     {
 
+        if (!isset($_COOKIE["last_order_id"])) {
+            $ShopOrder = new ShopOrder();
+        } else {
+            $ShopOrder = ShopOrder::find($_COOKIE["last_order_id"]);
+        }
+
         $Fields = [
             'name' => 'required|max:255',
             //'email' => 'required|email',
@@ -209,7 +221,6 @@ class CartController extends Controller
 
         $ShopCurrency = ShopCurrency::where("default", 1)->first();
 
-        $ShopOrder = new ShopOrder();
         $ShopOrder->shop_payment_system_id = $request->shop_payment_system_id ?? 0;
         $ShopOrder->shop_currency_id = $ShopCurrency->id ?? 0;
         $ShopOrder->shop_delivery_id = $request->shop_delivery_id ?? 0;
@@ -225,35 +236,41 @@ class CartController extends Controller
         $ShopOrder->city = $request->city;
         $ShopOrder->description = $request->description;
         $ShopOrder->not_call = $request->not_call ?? 0;
+        $ShopOrder->guid = Guid::get();
 
         $ShopOrder->save();
 
-        $weight = $length = $height = $width = 0;
+        $getCart = self::getCart();
 
-        foreach (self::getCart() as $CartItem) {
+        if (count($getCart) > 0) {
+            $weight = $length = $height = $width = 0;
 
-            $ShopOrderItem = new ShopOrderItem();
-            $ShopOrderItem->shop_item_id = $CartItem->id;
-            $ShopOrderItem->shop_order_id = $ShopOrder->id;
-            $ShopOrderItem->name = $CartItem->name;
-            $ShopOrderItem->quantity = $CartItem->quantity;
-            $ShopOrderItem->price = $CartItem->price;
-            $ShopOrderItem->old_price = $CartItem->attributes["oldPrice"] > 0 ? $CartItem->attributes["oldPrice"] : 0;
-            $ShopOrderItem->save();
-
-
-            //подсчет габаритов
-            $ShopItem = ShopItem::find($CartItem->id)->parentItemIfModification();
-            $weight += $ShopItem->weight * $CartItem->quantity;
-            $width = $ShopItem->width > $width ? $ShopItem->width : $width;
-            $height = $ShopItem->height > $height ? $ShopItem->height : $height;
-            $length += $ShopItem->length * $CartItem->quantity;
+            foreach ($getCart as $CartItem) {
+    
+                $ShopOrderItem = new ShopOrderItem();
+                $ShopOrderItem->shop_item_id = $CartItem->id;
+                $ShopOrderItem->shop_order_id = $ShopOrder->id;
+                $ShopOrderItem->name = $CartItem->name;
+                $ShopOrderItem->quantity = $CartItem->quantity;
+                $ShopOrderItem->price = $CartItem->price;
+                $ShopOrderItem->old_price = $CartItem->attributes["oldPrice"] > 0 ? $CartItem->attributes["oldPrice"] : 0;
+                $ShopOrderItem->save();
+    
+    
+                //подсчет габаритов
+                $ShopItem = ShopItem::find($CartItem->id)->parentItemIfModification();
+                $weight += $ShopItem->weight * $CartItem->quantity;
+                $width = $ShopItem->width > $width ? $ShopItem->width : $width;
+                $height = $ShopItem->height > $height ? $ShopItem->height : $height;
+                $length += $ShopItem->length * $CartItem->quantity;
+            }
+    
+            $ShopOrder->weight = $weight;
+            $ShopOrder->height = $height;
+            $ShopOrder->length = $length;
+            $ShopOrder->width = $width;
         }
 
-        $ShopOrder->weight = $weight;
-        $ShopOrder->height = $height;
-        $ShopOrder->length = $length;
-        $ShopOrder->width = $width;
 
         $ShopOrder->save();
 
@@ -282,6 +299,10 @@ class CartController extends Controller
         //client
         if (!empty($ShopOrder->email)) {
             Mail::to($ShopOrder->email)->send(new SendOrder($ShopOrder));
+        }
+
+        if ($url = $this->preparePayment($ShopOrder)) {
+            return redirect()->to($url);
         }
 
         return redirect()->back()->withSuccess("Спасибо! Ваш заказ оформлен!");
@@ -315,6 +336,100 @@ class CartController extends Controller
             "options" => $aResult
         ]);
     }
+
+    /**
+     * @param ShopOrder
+     * @return string link or false
+    */
+    public function preparePayment(ShopOrder $ShopOrder)
+    {
+
+        if (!is_null($Ukassa = Ukassa::find(1))) {
+
+            $client  = new Client();
+    
+            $client->setAuth($Ukassa->shop_id, $Ukassa->token);
+
+            $idempotenceKey = $ShopOrder->guid;
+
+            $response = $client->createPayment(
+                array(
+                    'amount' => array(
+                        'value' => $ShopOrder->getSum(),
+                        'currency' => 'RUB',
+                    ),
+                    'payment_method_data' => array(
+                        'type' => $ShopOrder->ShopPaymentSystem->description, // 'bank_card', //sbp
+                    ),
+                    'confirmation' => array(
+                        'type' => 'redirect',
+                        'return_url' => route("finish-order"),
+                    ),
+                    'description' => 'Заказ №' . $ShopOrder->id,
+                ),
+                $idempotenceKey
+            );
+
+            if (!is_null($confirmationUrl = $response->getConfirmation()->getConfirmationUrl())) {
+
+                if (!is_null($CheckUkassaOrder = UkassaOrder::where("shop_order_id", $ShopOrder->id)->first())) {
+                    $CheckUkassaOrder->delete();
+                }
+
+                $UkassaOrder = new UkassaOrder();
+                $UkassaOrder->shop_order_id = $ShopOrder->id;
+                $UkassaOrder->ukassa_result_uuid = $response->_id;
+                $UkassaOrder->save();
+
+                //сохраним id заказа в сессию
+                setcookie("last_order_id", $ShopOrder->id, time() + 3600, "/");
+
+                return $confirmationUrl;
+            }
+        }
+
+        return false;
+    }
+
+    public function finishOrder(Request $request)
+    {
+
+        $last_order_id = $_COOKIE["last_order_id"] ?? 0;
+
+        $this->clearLastOrderId();
+
+        $status = 0;
+
+        if (!is_null($Ukassa = Ukassa::find(1))) {
+            $client  = new Client();
+    
+            $client->setAuth($Ukassa->shop_id, $Ukassa->token);
+
+            if ($last_order_id > 0 && !is_null($UkassaOrder = UkassaOrder::where("shop_order_id", $last_order_id)->first())) {
+                $payment = $client->getPaymentInfo($UkassaOrder->ukassa_result_uuid); 
+                if (!is_null($ShopOrder = $UkassaOrder->ShopOrder)) {
+                    if ($payment->_status == 'succeeded') {
+                        $ShopOrder->paid = 1;
+                        $ShopOrder->save();
+                        $status = 1;
+                    }
+
+                }
+            }
+        }
+
+        return view("shop.cart.paid", [
+            "status" => $status, 
+            "order_id" => $last_order_id, 
+            "step" => $request->step ?? 0
+        ]);
+    }
+
+    public function clearLastOrderId () {
+        setcookie("last_order_id", "", time() - 3600);
+        unset($_COOKIE["last_order_id"]);
+    }
+    
 
     
 }
