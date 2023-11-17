@@ -234,7 +234,7 @@ class CartController extends Controller
         $ShopOrder->email = $request->email;
         $ShopOrder->phone = $request->phone;
         $ShopOrder->city = $request->city;
-        $ShopOrder->description = $request->description;
+        $ShopOrder->description = \App\Services\Helpers\Str::clean($request->description);
         $ShopOrder->not_call = $request->not_call ?? 0;
         $ShopOrder->guid = Guid::get();
 

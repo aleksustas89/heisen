@@ -99,6 +99,10 @@ class ShopGroup extends Model
             $aShopGroup->delete();
 		}
 
+        foreach ($this->ShopItemPropertyForGroups as $oShopItemPropertyForGroup) {
+            $oShopItemPropertyForGroup->delete();
+        }
+
         foreach ($this->ShopItems as $oShopItem) {
             $oShopItem->delete();
         }

@@ -141,6 +141,22 @@ class ShopItem extends Model
 
     public function delete()
     {
+        /*модификации*/
+        foreach (ShopItem::where("modification_id", $this->id)->get() as $Modification) {
+
+            //картинки
+            if (!is_null($ShopModificationImage = $Modification->ShopModificationImage)) {
+                $ShopModificationImage->delete();
+            }
+
+            $Modification->delete();
+        }
+
+        /*скидки*/
+        foreach ($this->ShopItemDiscount as $ShopItemDiscount) {
+            $ShopItemDiscount->delete();
+        }
+
         foreach ($this->ShopItemImages as $ShopItemImage) {
             $ShopItemImage->delete();
         }
@@ -148,6 +164,19 @@ class ShopItem extends Model
         if (!is_null($SearchPage = $this->SearchPage)) {
             $SearchPage->delete();
         }
+
+        foreach ($this->PropertyValueInts as $PropertyValueInt) {
+            $PropertyValueInt->delete();
+        }
+
+        foreach ($this->PropertyValueStrings as $PropertyValueString) {
+            $PropertyValueString->delete();
+        }
+
+        foreach ($this->PropertyValueFloats as $PropertyValueFloat) {
+            $PropertyValueFloat->delete();
+        }
+
 
         parent::delete();
     }

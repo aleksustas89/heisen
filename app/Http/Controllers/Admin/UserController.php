@@ -72,7 +72,9 @@ class UserController extends Controller
 
         DB::delete('delete from model_has_roles where model_id=' . $user->id);
 
-        return User::deleteUser($user);
+        $user->delete();
+
+        return redirect()->back()->withSuccess("Сотрудник был успешно удален!");
     }
 
     public static function getBreadcrumbs()

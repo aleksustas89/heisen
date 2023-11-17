@@ -106,4 +106,9 @@ class Str
 	{
 		return substr(strrchr($str, '.'), 1);
 	}
+
+	public static function clean($str)
+	{
+		return preg_replace('/[^ A-Za-zА-Яа-я\\n\d.]/ui', '', $str);
+	}
 }
