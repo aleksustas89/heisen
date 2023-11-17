@@ -400,23 +400,18 @@ class CartController extends Controller
 
         $status = 0;
 
-        if (!is_null($Ukassa = Ukassa::find(1))) {
-            $client  = new Client();
-    
-            $client->setAuth($Ukassa->shop_id, $Ukassa->token);
-
-            if ($last_order_id > 0 && !is_null($UkassaOrder = UkassaOrder::where("shop_order_id", $last_order_id)->first())) {
-                $payment = $client->getPaymentInfo($UkassaOrder->ukassa_result_uuid); 
-                if (!is_null($ShopOrder = $UkassaOrder->ShopOrder)) {
-                    if ($payment->_status == 'succeeded') {
-                        $ShopOrder->paid = 1;
-                        $ShopOrder->save();
-                        $status = 1;
-                    }
-
+        if ($last_order_id > 0 && !is_null($UkassaOrder = UkassaOrder::where("shop_order_id", $last_order_id)->first())) {
+            $payment = $this->getPaymentInfo($UkassaOrder->ukassa_result_uuid); 
+            if ($payment && !is_null($ShopOrder = $UkassaOrder->ShopOrder)) {
+                if ($payment->_status == 'succeeded') {
+                    $ShopOrder->paid = 1;
+                    $ShopOrder->save();
+                    $status = 1;
                 }
+
             }
         }
+        
 
         return view("shop.cart.paid", [
             "status" => $status, 
@@ -428,6 +423,17 @@ class CartController extends Controller
     public function clearLastOrderId () {
         setcookie("last_order_id", "", time() - 3600);
         unset($_COOKIE["last_order_id"]);
+    }
+
+    public function getPaymentInfo($ukassa_result_uuid)
+    {
+        if (!is_null($Ukassa = Ukassa::find(1))) {
+            $client = new Client();
+            $client->setAuth($Ukassa->shop_id, $Ukassa->token);
+            return $client->getPaymentInfo($ukassa_result_uuid); 
+        }
+        
+        return false;
     }
     
 

@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
          $schedule->command('app:send-comment-reminder');
          $schedule->command('app:cdek-update-regions-and-cities');
          $schedule->command('app:cdek-update-offices');
+         $schedule->command('app:update-order-payment-status');
 
         // $schedule->call(function () {
         //     DB::table('recent_users')->delete();

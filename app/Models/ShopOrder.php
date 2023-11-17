@@ -44,6 +44,11 @@ class ShopOrder extends Model
         return $this->belongsTo(ShopPaymentSystem::class);
     } 
 
+    public function UkassaOrder()
+    {
+        return $this->hasOne(UkassaOrder::class);
+    } 
+
     public function getSum()
     {
         $sum = 0;
