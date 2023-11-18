@@ -144,12 +144,6 @@
                                     
                                             <div class="col-12"> 
                                                 <label class="mb-1 my-2">Доставка</label>
-<!--
-                                                <div class="form-group my-2">
-                                                    <label class="label my-2">Город</label>
-                                                    <input type="text" class="form-control" value="" name="city">
-                                                </div>-->
-                                              
 
                                                 <div>
 
@@ -159,34 +153,67 @@
                                                         <label class="btn btn-outline-{{ $ShopDelivery->color }} btn-sm" for="delivery-{{ $ShopDelivery->id }}">{{ $ShopDelivery->name }}</label>
                                                     @endforeach
 
-                                                    <div class="tab-content">
-                                                        @foreach ($shopDeliveries as $k => $ShopDelivery) 
-
-                                                            <div class="tab-pane p-3 " id="tab-delivery-{{ $ShopDelivery->id }}" role="tabpanel">
-                                                                <div class="row">
-
-                                                                    @foreach ($ShopDelivery->ShopDeliveryFields->sortBy('sorting') as $ShopDeliveryField)
-                                    
-                                                                        @if ($ShopDeliveryField->type == 1)
-                                                                            <div class="form-group">
-                                                                                <label class="label my-2">{{$ShopDeliveryField->caption  }}</label>
-                                                                                <input type="text" class="form-control" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
-                                                                            </div>
-                                                                        @elseif($ShopDeliveryField->type == 2)
-                                                                            <input type="hidden" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
-                                                                        @elseif($ShopDeliveryField->type == 3)
-                                                                            <div class="form-group">
-                                                                                <label class="label my-2">{{$ShopDeliveryField->caption  }}</label>
-                                                                                <input type="text" class="form-control" value="{{ $aDeliveryValues[$ShopDeliveryField->id] ?? '' }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
-                                                                            </div>
-                                                                        @endif
-          
-                                                                    @endforeach
-
+                                                    <div class="tab-content">        
+                                                        <div @class([
+                                                            "tab-pane", "p-3"
+                                                        ]) id="tab-delivery-7" role="tabpanel">
+                                                            <div class="row">                         
+                                                                <div class="form-group">
+                                                                    <label class="label my-2">Город </label>
+                                                    
+                                                                    <input type="text" class="form-control" name="delivery_7_city">
+                                                                    <input type="hidden" name="delivery_7_city_id">
                                                                 </div>
+                                                                            
+                                                                <input type="hidden" name="delivery_7_delivery_type">
+
+                                                                <div class="form-group my-3">
+                                                                    <input data-id="11" id="delivery-11" data-hidden="delivery_7_delivery_type" onclick="radioTab.click($(this))" value="11" type="radio" class="btn-check" name="delivery_field_14" autocomplete="off">
+                                                                    <label class="btn btn-outline-cdek btn-sm" for="delivery-11">Отделение</label>
+
+                                                                    <input data-id="15" id="delivery-15" data-hidden="delivery_7_delivery_type" onclick="radioTab.click($(this))" value="15" type="radio" class="btn-check" name="delivery_field_14" autocomplete="off">
+                                                                    <label class="btn btn-outline-cdek btn-sm" for="delivery-15">Курьер</label>
+
+                                                                    <div class="tab-content">
+                                                                                                                                                                            
+                                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-11" role="tabpanel">
+                                                                            <div class="row">
+                                                                                <div class="form-group">
+                                                                                    <label class="label my-2">Отделение </label>
+                                                                                    <input type="text" class="form-control" name="delivery_7_office">
+                                                                                    <input type="hidden" value="" name="delivery_7_office_id">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                                                                                                                                                                                                                          
+                                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-15" role="tabpanel">
+                                                                            <div class="row">
+                                                                                <div class="form-group">
+                                                                                    <label class="label my-2">Курьер </label>
+                                                                                    <input type="text" class="form-control" value="" name="delivery_7_courier">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>                                                                                  
                                                             </div>
-                                                        @endforeach
-                
+
+                                                        </div>
+
+                                                        <div @class([
+                                                            "tab-pane", "p-3",
+                                                        ]) id="tab-delivery-1" role="tabpanel">
+                                                            <div class="row">                                 
+                                                                <div class="form-group">
+                                                                    <label class="label my-2">Город </label>
+                                                                    <input type="text" class="form-control" value="" name="delivery_1_city">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="label my-2">Отделение </label>
+                                                                    <input type="text" class="form-control" value="" name="delivery_1_office">
+                                                                </div>                                                                            
+                                                            </div>
+                                                        </div>       
                                                     </div>
 
                                                 </div>
@@ -293,16 +320,12 @@
     <script src="/assets/plugins/select/selectr.min.js"></script>          
     <script src="/assets/js/radioTab.js"></script>                              
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>                   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script> 
+    <script src="/js/jquery.autocomplete.min.js"></script>
     <script>
-        
-        new Selectr('.select');
-
-        $(function(){
-            $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
-        });
-        
+        var create_order_route = '{{ route("createCdekOrder") }}';
     </script>
+    <script src="/assets/js/pages/shopOrder.js"></script>
 @endsection
 
 

@@ -358,3 +358,9 @@
     background-color: #1ab248;
     border-color: #1ab248;
 }
+.autocomplete-suggestions {     background: #ffffff;overflow: auto;box-shadow: 0 5px 15px rgba(0,0,0,.08); }
+.autocomplete-suggestion { padding: 7px 10px; white-space: nowrap; overflow: hidden; cursor: pointer }
+.autocomplete-selected { background: #F0F0F0; }
+.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+.autocomplete-group { padding: 2px 5px; }
+.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }

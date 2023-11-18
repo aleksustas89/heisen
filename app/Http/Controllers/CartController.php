@@ -201,9 +201,7 @@ class CartController extends Controller
 
         if ($request->shop_delivery_id == 7) {
             /*cdek*/
-            $Fields['delivery_7_region'] = 'required';
             $Fields['delivery_7_city'] = 'required';
-
 
             if ($request->delivery_7_delivery_type == 11) {
                 $Fields['delivery_7_office'] = 'required';
@@ -301,40 +299,49 @@ class CartController extends Controller
             Mail::to($ShopOrder->email)->send(new SendOrder($ShopOrder));
         }
 
-        if ($url = $this->preparePayment($ShopOrder)) {
-            return redirect()->to($url);
+        if ($ShopOrder->shop_payment_system_id > 1) {
+            if ($url = $this->preparePayment($ShopOrder)) {
+                return redirect()->to($url);
+            }
         }
+
 
         return redirect()->back()->withSuccess("Спасибо! Ваш заказ оформлен!");
     }
 
     public function getCdekCities(Request $request)
     {
+        $query = $request->input('query');
 
-        $aResult = [];
+        $aResult["query"] = $query;
 
-        foreach (CdekCity::where("cdek_region_id", $request->region)->get() as $CdekCity) {
-            $aResult[$CdekCity->id] = $CdekCity->name;
+        $items = [];
+
+        foreach (CdekCity::where("name", "like", "%" . $query . "%")->get() as $CdekCity) {
+            $items[] = ["value" => $CdekCity->name .", ". $CdekCity->CdekRegion->name, "data" => $CdekCity->id];
         }
 
-        return response()->view("shop.cart-options", [
-            "options" => $aResult,
-            "valueWithCode" => true
-        ]);
+        $aResult["suggestions"] = $items;
+
+        return response()->json($aResult);
     }
 
     public function getCdekOffices(Request $request)
     {
 
-        $aResult = [];
+        $query = $request->input('query');
 
-        foreach (CdekOffice::where("cdek_city_id", $request->city)->get() as $CdekOffice) {
-            $aResult[$CdekOffice->id] = "[".$CdekOffice->code ."] ". $CdekOffice->name . (!empty($CdekOffice->address_comment) ? " (" . $CdekOffice->address_comment . ")" : "");
+        $aResult["query"] = $query;
+
+        $items = [];
+
+        foreach (CdekOffice::where("name", "like", "%" . $query . "%")->where("cdek_city_id", $request->city_id)->get() as $CdekOffice) {
+            $items[] = ["value" => $CdekOffice->name .", ". $CdekOffice->address_comment, "data" => $CdekOffice->id];
         }
 
-        return response()->view("shop.cart-options", [
-            "options" => $aResult
-        ]);
+        $aResult["suggestions"] = $items;
+
+        return response()->json($aResult);
     }
 
     /**

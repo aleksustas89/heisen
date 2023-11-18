@@ -6,6 +6,8 @@ use App\Models\ShopOrder;
 use App\Models\CdekSender;
 use App\Models\ShopDeliveryFieldValue;
 use App\Models\CdekOrder;
+use App\Models\CdekOffice;
+use App\Models\CdekCity;
 use Illuminate\Http\Request;
 
 class CdekController extends Controller
@@ -187,9 +189,11 @@ class CdekController extends Controller
     
             //на склад
             if (in_array($TariffCode, [136, 138])) {
-                $ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 11)->where("shop_order_id", $ShopOrder->id)->first();
-                preg_match('/\[(.+)\]/', $ShopDeliveryFieldValue->value, $code);
-                $aData["delivery_point"] = $code[1];
+                if (!is_null($ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 17)->where("shop_order_id", $ShopOrder->id)->first())) {
+                    if (!is_null($CdekOffice = CdekOffice::find($ShopDeliveryFieldValue->value))) {
+                        $aData["delivery_point"] = $CdekOffice->code;
+                    }
+                }                
             }
     
             //с двери
@@ -203,12 +207,18 @@ class CdekController extends Controller
             //до двери
             if (in_array($TariffCode, [137, 139])) {
                 $aData["to_location"] = [];
-                $ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 10)->where("shop_order_id", $ShopOrder->id)->first();
-                preg_match_all("/\[(.+?)\]/", $ShopDeliveryFieldValue->value, $matches);
-                $aData["to_location"]["code"] = isset($matches[1][0]) ? trim($matches[1][0]) : 0;
-                $aData["to_location"]["city"] = trim(preg_replace('/\[.*?\]/', '', $ShopDeliveryFieldValue->value));
-                $ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 15)->where("shop_order_id", $ShopOrder->id)->first();
-                $aData["to_location"]["address"] = $ShopDeliveryFieldValue->value;
+
+                if (!is_null($ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 16)->where("shop_order_id", $ShopOrder->id)->first())) {
+                    if (!is_null($CdekCity = CdekCity::find($ShopDeliveryFieldValue->value))) {
+                        $aData["to_location"]["code"] = $CdekCity->id;
+                        $aData["to_location"]["city"] = $CdekCity->name;
+                    }
+                }
+
+                if (!is_null($ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 15)->where("shop_order_id", $ShopOrder->id)->first())) {
+                    $aData["to_location"]["address"] = $ShopDeliveryFieldValue->value;
+                }
+                
             }
     
             $aData["recipient"]["name"] = implode(" ", [$ShopOrder->surname, $ShopOrder->name]);
@@ -404,12 +414,12 @@ class CdekController extends Controller
                 $aError["error"][] = "Телефон";
             }
 
-            if (is_null(ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 10)->first())) {
+            if (is_null(ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 16)->first())) {
                 $aError["error"][] = "Заполните поле Город";
             }
 
-            if (is_null(ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 11)->first()) &&
-                is_null(ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 15)->first())) {
+            if (is_null(ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 14)->first()) &&
+                is_null(ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 17)->first())) {
                     $aError["error"][] = "Заполните поле Отделение или Курьер";
             }
 

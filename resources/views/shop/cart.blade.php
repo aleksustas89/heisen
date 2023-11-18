@@ -45,12 +45,6 @@
                     <p>Заполните поле Город</p>
                 </div>
             @enderror
-            @error('delivery_7_region')
-                <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
-                    <a class="uk-alert-close" uk-close></a>
-                    <p>Заполните поле Регион</p>
-                </div>
-            @enderror
             @error('delivery_7_city')
                 <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
                     <a class="uk-alert-close" uk-close></a>
@@ -87,36 +81,6 @@
                             <div class="uk-h4">Доставка</div>
                             <hr />   	
                 
-                            <!--
-                            <div class="uk-form-label">Выберете город доставки</div>
-                            <nav class="uk-navbar-container" uk-navbar>
-                                <div class="uk-inline uk-width-1-1 uk-margin">
-                                    <button class="uk-button uk-button-default tm-bitton-fotm-list uk-width-1-1" type="button">
-                                        <span id="chosenCity" data-chosen="Выбран город" data-default="Выберете город">
-                                            
-                                            @if(null !== old("city_autocomplete"))
-                                                Выбран город: {{ old("city_autocomplete") }} <a onclick="Cart.cancelChosenCity()" class="cancel-chosen-city">Отменить</a>
-                                            @elseif (null !== old("city_custom"))
-                                                Выбран город: {{ old("city_custom") }} <a onclick="Cart.cancelChosenCity()" class="cancel-chosen-city">Отменить</a>
-                                            @else
-                                                Выберете город
-                                            @endif
-                                        </span> 
-                                        <span uk-drop-parent-icon></span>
-                                    </button>
-                                    <div class="uk-card uk-card-body uk-card-default uk-card-small" uk-drop="mode: click;boundary: !.uk-navbar; stretch: x; flip: false">
-                                        <input value="{{ old("city_autocomplete") }}" name="city_autocomplete" class="uk-input" id="city-autocomplete" type="text" placeholder="Начните печатать название города" id="autocomplete" />
-                                        <input type="hidden" id="city_id" name="city_id"  value="{{ old("city_id") }}" />
-                                        
-                                        <hr>
-                                        <div><b>Либо впишите название города:</b></div>
-                                        <br>
-                                        <input class="uk-input" id="city_custom" value="{{ old("city_custom") }}" name="city_custom" type="text" placeholder="Название города" />
-                                        <input type="hidden" id="city" name="city" value="{{ old("city") }}" />
-                                    </div>
-                                </div>
-                            </nav>-->
-                
                             @if (count($shopDeliveries))
                                 <div class="uk-form-label">Выберете способ доставки</div>
 
@@ -129,106 +93,65 @@
                                 <input type="hidden" name="shop_delivery_id" value="{{ $shopDeliveries[0]->id }}" />
 
                                 <ul class="uk-switcher uk-margin">
-                                    @foreach ($shopDeliveries as $k => $ShopDelivery) 
-                                        <li>
-                                            @foreach ($ShopDelivery->ShopDeliveryFields->where("parent", 0)->sortBy('sorting') as $ShopDeliveryField)
-
-                                                @php
-                                                $name = 'delivery_' . $ShopDeliveryField->shop_delivery_id . '_' . $ShopDeliveryField->field;
-                                                @endphp
-                                                
-                                                @if ($ShopDeliveryField->type == 1)
-                                                    <div class="uk-margin">
-                                                        <label class="uk-form-label" for="form-stacked-text">{{$ShopDeliveryField->caption  }}</label>
-                                                        <div class="uk-form-controls">
-                                                            <input data-b="{{ $name }}" @if(null !== old($name)) value="{{ old($name) }}"  @endif class="uk-input" type="text" placeholder="{{$ShopDeliveryField->caption  }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
-                                                        </div>
-                                                    </div>
-                                                @elseif($ShopDeliveryField->type == 2)
-                                                    <input type="hidden" @if(null !== old($name)) value="{{ old($name) }}"  @endif name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
-                                                @elseif($ShopDeliveryField->type == 3 && !empty($ShopDeliveryField->options_from))
-                                                    @php
-                                                        $className = $ShopDeliveryField->options_from;
-                                                    @endphp
-
-                                                    <div class="uk-margin">
-                                                        <label class="uk-form-label" for="form-stacked-text">{{$ShopDeliveryField->caption  }}</label>
-                                                        <div class="uk-form-controls">
-                                                            <select id="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}">
-                                                                <option value="">...</option>
-                                                                @if ($ShopDeliveryField->frontend_select_type == 0)
-                                                                    @foreach ($className::orderBy("name", "ASC")->get() as $Value)
-                                                                        <option data-id="{{ $Value->id }}" value="{{ $Value->name }}">{{ $Value->name }}</option>
-                                                                    @endforeach
-                                                                @endif
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
                                      
-                                                @elseif($ShopDeliveryField->type == 4)
+                                    <li role="tabpanel" class="uk-active">
+                                                                        
+                                        <div class="uk-margin">
+                                            <label class="uk-form-label" for="form-stacked-text">Город</label>
+                                            <div class="uk-form-controls">
+                                                <input class="uk-input" type="text" placeholder="Город" name="delivery_7_city"  value="{{ old('delivery_7_city') }}">
+                                                <input type="hidden" name="delivery_7_city_id" value="{{ old('delivery_7_city_id') }}">
+                                            </div>
+                                        </div>
+ 
+                                        <input type="hidden" name="delivery_7_delivery_type" value="{{ old('delivery_7_office_id') ?? 11 }}">
 
-                                                    @php
-                                                        $SubFields = \App\Models\ShopDeliveryField::where("parent", $ShopDeliveryField->id)->orderBy("sorting")->get();
-                                                    @endphp
+                                        <ul class="uk-subnav uk-subnav-pill" uk-switcher="">
+                                            <li class="uk-active" role="presentation">
+                                                <a data-id="11" data-hidden="delivery_7_delivery_type" href="javascript::void(0)" onclick="Cart.chooseDelivery($(this))" aria-selected="true" role="tab" id="uk-switcher-3-tab-0" aria-controls="uk-switcher-3-tabpanel-0">Отделение</a>
+                                            </li>
+                                            <li role="presentation">
+                                                <a data-id="15" data-hidden="delivery_7_delivery_type" href="javascript::void(0)" onclick="Cart.chooseDelivery($(this))" aria-selected="false" tabindex="-1" role="tab" id="uk-switcher-3-tab-1" aria-controls="uk-switcher-3-tabpanel-1">Курьер</a>
+                                            </li>                                             
+                                        </ul>
 
-                                                    <input type="hidden" name="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}" value="{{ $SubFields[0]->id }}" />
+                                        <ul class="uk-switcher uk-margin" role="presentation" >
 
-                                                    <ul class="uk-subnav uk-subnav-pill" uk-switcher>
-
-                                                        @foreach ($SubFields as $SubField)
-                                                            <li>
-                                                                <a data-id="{{ $SubField->id }}" data-hidden="delivery_{{ $ShopDeliveryField->shop_delivery_id }}_{{ $ShopDeliveryField->field }}" href="javascript::void(0)" onclick="Cart.chooseDelivery($(this))">{{ $SubField->caption }}</a>
-                                                            </li>
-                                                        @endforeach
-                                                     
-                                                    </ul>
-
-                                                    <ul class="uk-switcher uk-margin">
-                                                        @foreach ($SubFields as $SubField)
-
-                                                            @php
-                                                            $SubName = 'delivery_' . $SubField->shop_delivery_id . '_' . $SubField->field;
-                                                            @endphp
-
-                                                            @if ($SubField->type == 1)
-                                                                <div class="uk-margin">
-                                                    
-                                                                    <div class="uk-form-controls">
-                                                                        <input data-b="{{ $SubName }}" class="uk-input" type="text" placeholder="{{$SubField->caption  }}" name="delivery_{{ $SubField->shop_delivery_id }}_{{ $SubField->field }}">
-                                                                    </div>
-                                                                </div>
-                                                            @elseif($SubField->type == 3 && !empty($SubField->options_from))
-                                                                @php
-                                                                    $className = $ShopDeliveryField->options_from;
-                                                                @endphp
-            
-                                                                <div class="uk-margin">
-                                                           
-                                                                    <div class="uk-form-controls">
-                                                                        <select id="delivery_{{ $SubField->shop_delivery_id }}_{{ $SubField->field }}" name="delivery_{{ $SubField->shop_delivery_id }}_{{ $SubField->field }}">
-                                                                            <option value="">...</option>
-                                                                            @if ($SubField->frontend_select_type == 0)
-                                                                                @foreach ($className::orderBy("name", "ASC")->get() as $Value)
-                                                                                    <option data-id="{{ $Value->id }}" value="{{ $Value->name }}">{{ $Value->name }}</option>
-                                                                                @endforeach
-                                                                            @endif
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-
-                                                            @endif
-
-                                                        @endforeach
-                                                    </ul>
-
-                                                @endif
-                                            @endforeach
-
-                                        </li>
-                                    @endforeach
+                                            <li class="uk-margin uk-active">
+                                                <div class="uk-form-controls">
+                                                    <input @if(empty(old('delivery_7_city_id'))) disabled @endif class="uk-input" type="text" placeholder="Отделение" name="delivery_7_office" value="{{ old('delivery_7_office') }}">
+                                                    <input type="hidden" name="delivery_7_office_id" value="{{ old('delivery_7_office_id') }}">
+                                                </div>
+                                            </li>
+ 
+                                            <li class="uk-margin" id="uk-switcher-3-tabpanel-1">  
+                                                <div class="uk-form-controls">
+                                                    <input @if(empty(old('delivery_7_city_id'))) disabled @endif class="uk-input" type="text" placeholder="Адрес доставки" name="delivery_7_courier" value="{{ old('delivery_7_courier') }}">
+                                                </div>
+                                            </li>        
+                                        </ul>                                              
+                                    </li>
+                                 
+                                    <li>                                       
+                                        <div class="uk-margin">
+                                            <label class="uk-form-label" for="form-stacked-text">Город</label>
+                                            <div class="uk-form-controls">
+                                                <input class="uk-input" type="text" placeholder="Город" name="delivery_1_city" value="{{ old('delivery_1_city') }}">
+                                            </div>
+                                        </div>
+                                 
+                                        <div class="uk-margin">
+                                            <label class="uk-form-label" for="form-stacked-text">Отделение</label>
+                                            <div class="uk-form-controls">
+                                                <input class="uk-input" type="text" placeholder="Отделение" name="delivery_1_office" value="{{ old('delivery_1_office') }}">
+                                            </div>
+                                        </div>
+                                                                                        
+                                    </li>
                                 </ul>
                             @endif
+
+                            
 
                         </div>
                         @if (count($Payments) > 0)
@@ -315,19 +238,48 @@
 @section("js")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-form-styler@2.0.2/dist/jquery.formstyler.min.js"></script>
+    <script src="/js/jquery.autocomplete.min.js"></script>
 
     @php
         App\Services\Helpers\File::js('/js/cart.js');
     @endphp
     <script>
-        $('#city-autocomplete').autocomplete({
-            serviceUrl: '/get-cities',
+        $('[name="delivery_7_city"]').autocomplete({
+            serviceUrl: '/get-cdek-cities',
+            minChars: 0,
             onSelect: function (suggestion) {
-                $("#city_custom").val('');
-                $("#city_id").val(suggestion.data);
-                $("#city").val(suggestion.value);
-                $("#chosenCity").html($("#chosenCity").data("chosen") +": "+ suggestion.value + "<a onclick='Cart.cancelChosenCity()' class='cancel-chosen-city' click=''>Отменить</a>");
+                $("[name='delivery_7_office']").val("").removeAttr("disabled");
+                $("[name='delivery_7_courier']").removeAttr("disabled");
+                $("[name='delivery_7_city_id']").val(suggestion.data);
+
+                $('[name="delivery_7_office"]').autocomplete({
+                    serviceUrl: '/get-cdek-offices',
+                    params: {"city_id": suggestion.data},
+                    minChars: 0,
+                    onSelect: function (suggestion) {
+                        $("[name='delivery_7_office_id']").val(suggestion.data);
+                    }
+                });
+            }
+        });
+
+        if ($('[name="delivery_7_city_id"]').val().length) {
+            $('[name="delivery_7_office"]').autocomplete({
+                serviceUrl: '/get-cdek-offices',
+                params: {"city_id": $('[name="delivery_7_city_id"]').val()},
+                minChars: 0,
+                onSelect: function (suggestion) {
+                    $("[name='delivery_7_office_id']").val(suggestion.data);
+                }
+            });
+        }
+
+        $("[name='delivery_7_city']").keyup(function(){
+            let value = $(this).val();
+            if (!value.length) {
+                delay(function() {
+                    $("[name='delivery_7_office'], [name='delivery_7_office_id']").val("");
+                }, 1000);
             }
         });
 
@@ -340,83 +292,15 @@
         })();
 
         $(function(){
-            $("[name='city_custom']").keyup(function(){
-                let value = $(this).val();
-                delay(function(){
-                    $("#city").val(value);
-                    $("#city-autocomplete").val('');
-                    $("#chosenCity").html($("#chosenCity").data("chosen") +": "+ value + "<a onclick='Cart.cancelChosenCity()' class='cancel-chosen-city' click=''>Отменить</a>");
-                }, 1000);
-            });
-
-            $('select').styler({
-				selectSearch: true,
-			});
 
             $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
-
-            $("body").on("change", "#delivery_7_region", function() {
-
-                $("#delivery_7_office").html("<option>...</option>").trigger('refresh');
-
-                let value = $(this).find(":selected").data("id");
-
-                Spiner.show();
-
-                $.ajax({
-                    url: "/get-cdek-cities",
-                    type: "POST",
-                    data: {"region": value},
-                    dataType: "html",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (data) {
-                        $("#delivery_7_city").html(data).trigger('refresh');
-                        Spiner.hide();
-                    },
-                });
-                
-            });
-
-            $("body").on("change", "#delivery_7_city", function() {
-
-                let value = $(this).find(":selected").data("id");
-
-                Spiner.show();
-
-                $.ajax({
-                    url: "/get-cdek-offices",
-                    type: "POST",
-                    data: {"city": value},
-                    dataType: "html",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (data) {
-                        $("#delivery_7_office").html(data).trigger('refresh');
-                        Spiner.hide();
-                    },
-                });
-
-            });
-            
-            $("body").on("click", ".jq-selectbox", function() {
-                if (!$(this).hasClass(".opened")) {
-                    $(this).find("[type='search']").focus();
-                }
-            });
-
         });
         
     </script>
 @endsection
 
 @section("css")
-    <link href="https://cdn.jsdelivr.net/npm/jquery-form-styler@2.0.2/dist/jquery.formstyler.min.css" rel="stylesheet">
-    <link href="/css/jquery.formstyler.theme.css" rel="stylesheet">
 
-    
     <style>
         .empty-cart {
             height: 300px;
