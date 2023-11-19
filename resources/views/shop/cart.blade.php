@@ -100,6 +100,7 @@
                                             <label class="uk-form-label" for="form-stacked-text">Город</label>
                                             <div class="uk-form-controls">
                                                 <input class="uk-input" type="text" placeholder="Город" name="delivery_7_city"  value="{{ old('delivery_7_city') }}">
+                                                <div class="input-spiner"><span uk-spinner="ratio: 3" class="uk-icon uk-spinner" role="status"></span> Загрузка</div>
                                                 <input type="hidden" name="delivery_7_city_id" value="{{ old('delivery_7_city_id') }}">
                                             </div>
                                         </div>
@@ -121,6 +122,7 @@
                                                 <div class="uk-form-controls">
                                                     <input @if(empty(old('delivery_7_city_id'))) disabled @endif class="uk-input" type="text" placeholder="Отделение" name="delivery_7_office" value="{{ old('delivery_7_office') }}">
                                                     <input type="hidden" name="delivery_7_office_id" value="{{ old('delivery_7_office_id') }}">
+                                                    <div class="input-spiner"><span uk-spinner="ratio: 3" class="uk-icon uk-spinner" role="status"></span> Загрузка</div>
                                                 </div>
                                             </li>
  
@@ -247,6 +249,12 @@
         $('[name="delivery_7_city"]').autocomplete({
             serviceUrl: '/get-cdek-cities',
             minChars: 0,
+            onSearchStart: function() {
+                $(this).siblings(".input-spiner").show();
+            },
+            onSearchComplete: function() {
+                $(this).siblings(".input-spiner").hide();
+            },
             onSelect: function (suggestion) {
                 $("[name='delivery_7_office']").val("").removeAttr("disabled");
                 $("[name='delivery_7_courier']").removeAttr("disabled");
@@ -258,6 +266,12 @@
                     minChars: 0,
                     onSelect: function (suggestion) {
                         $("[name='delivery_7_office_id']").val(suggestion.data);
+                    },
+                    onSearchStart: function() {
+                        $(this).siblings(".input-spiner").show();
+                    },
+                    onSearchComplete: function() {
+                        $(this).siblings(".input-spiner").hide();
                     }
                 });
             }
@@ -270,6 +284,12 @@
                 minChars: 0,
                 onSelect: function (suggestion) {
                     $("[name='delivery_7_office_id']").val(suggestion.data);
+                },
+                onSearchStart: function() {
+                    $(this).siblings(".input-spiner").show();
+                },
+                onSearchComplete: function() {
+                    $(this).siblings(".input-spiner").hide();
                 }
             });
         }
@@ -306,6 +326,8 @@
             height: 300px;
         }
         .cancel-chosen-city {margin: 0 5px; font-weight: bold;border-bottom: 1px dashed;}
+        .input-spiner{font-size: 10px; position: absolute; display: none;}
+        .input-spiner span{width: 10px; height: 10px;}
 
         @media (max-width: 640px) { 
             .cart-block-user-data {
