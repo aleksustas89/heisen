@@ -201,10 +201,10 @@ class CartController extends Controller
 
         if ($request->shop_delivery_id == 7) {
             /*cdek*/
-            $Fields['delivery_7_city'] = 'required';
+            $Fields['delivery_7_city_id'] = 'required';
 
             if ($request->delivery_7_delivery_type == 11) {
-                $Fields['delivery_7_office'] = 'required';
+                $Fields['delivery_7_office_id'] = 'required';
             } else if ($request->delivery_7_delivery_type == 15) {
                 $Fields['delivery_7_courier'] = 'required';
             }

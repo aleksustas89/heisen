@@ -45,13 +45,13 @@
                     <p>Заполните поле Город</p>
                 </div>
             @enderror
-            @error('delivery_7_city')
+            @error('delivery_7_city_id')
                 <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
                     <a class="uk-alert-close" uk-close></a>
                     <p>Заполните поле Город</p>
                 </div>
             @enderror
-            @error('delivery_7_office')
+            @error('delivery_7_office_id')
                 <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
                     <a class="uk-alert-close" uk-close></a>
                     <p>Заполните поле Отделение</p>
