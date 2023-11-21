@@ -503,7 +503,10 @@
     <script>
         var create_order_route = '{{ route("createCdekOrder") }}';
     </script>
-    <script src="/assets/js/pages/shopOrder.js"></script>
+
+    @php
+        App\Services\Helpers\File::js('/assets/js/pages/shopOrder.js');
+    @endphp
 
 @endsection
 
