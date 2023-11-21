@@ -51,7 +51,7 @@ var Cart = {
                 dataType: "html",
                 success: function (data) {
                     if (data.length) {
-                        $(".little-cart").html(data);
+                        $("#cart").html(data);
                         Spiner.hide();
                     } else {
                         location.reload();
