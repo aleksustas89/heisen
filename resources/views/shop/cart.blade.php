@@ -189,7 +189,7 @@
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="form-stacked-text">Телефон</label>
                                 <div class="uk-form-controls">
-                                    <input value="{{ old('phone') ?? $client->phone ?? '' }}" class="uk-input @error('phone') is-invalid @enderror" name="phone" id="form-stacked-text" type="number" placeholder="Введите телефон...">
+                                    <input value="{{ old('phone') ?? $client->phone ?? '' }}" class="uk-input @error('phone') is-invalid @enderror" name="phone" id="form-stacked-text" type="tel" placeholder="Введите телефон...">
                                 </div>
                             </div>
 
