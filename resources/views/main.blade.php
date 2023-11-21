@@ -354,9 +354,10 @@
         </div>
     </div>
 
+    <!--
     <a href="javascript:void(0)" uk-toggle="target: #request-call" class="request-call-btn">
         <span>Сделать заявку</span>
-    </a>
+    </a>-->
 
     <div id="request-call" uk-modal="" class="uk-modal" tabindex="-1">
         <div class="uk-modal-dialog uk-modal-body" role="dialog" aria-modal="true">
