@@ -119,7 +119,6 @@ if (Schema::hasTable('shops')) {
     Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name("cartIndex");
     Route::post('/cart', [App\Http\Controllers\CartController::class, 'saveOrder'])->name("saveIndex");
 
-    Route::get('/cart/payment', [App\Http\Controllers\CartController::class, 'getPaymentUrl'])->name("payment");
     Route::get('/cart/payment/result', [App\Http\Controllers\CartController::class, 'finishOrder'])->name("finish-order");
 
     Route::post('/add-to-cart', [App\Http\Controllers\CartController::class, 'addToCart'])->name("cartAdd");

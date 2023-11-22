@@ -15,11 +15,26 @@
             </nav>
         </div>
 
-        @if ($cartCount > 0)
+        @if (isset($success))
+
+            <div class="uk-flex uk-flex uk-align-center uk-flex-center uk-text-center uk-flex-middle uk-flex-column empty-cart">
+                <div>
+                    <a class="uk-navbar-item uk-logo" href="/" aria-label="Back to Home" tabindex="0" role="menuitem">HEISEN</a>
+                </div>
+                <h1>Ваш заказ оформлен</h1>
+                <h3>Сейчас Вы будете перенаправлены на платежную систему</h3>
+
+                <script>
+                    setTimeout(function() {
+                        window.location.href = "{{ $paymentUrl }}";
+                    }, 3000);
+                </script>
+
+            </div>
+
+        @elseif (isset($cartCount) && $cartCount > 0)
 
             <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical uk-section-small uk-padding-remove-top">Оформление заказа</h1>
-
-
 
             @error('email')
                 <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
@@ -74,7 +89,7 @@
 
             <div class="uk-grid" uk-grid class="cart-block">
                 <div class="uk-width-2-3@s cart-block-user-data">
-                    <form method="POST">
+                    <form method="POST" id="cart-order">
                         @csrf
 
                         <div class="uk-card uk-card-default uk-card-body uk-card-small uk-form-stacked">
@@ -206,7 +221,7 @@
                             <label class="uk-form-label"><input value="{{ old('not_call') ?? 1 }}" @if (old('not_call') == 1) checked @endif name="not_call" class="uk-checkbox" type="checkbox"> Не звоните мне для подтверждения заказа</label>
                             <div class="uk-text-center uk-margin">
                                 <button class="uk-button uk-button-primary uk-width-1-1">Оформить и оплатить заказ</button>
-                            </div>  
+                            </div> 
                 
                         </div>
                     </form>
@@ -215,14 +230,6 @@
                 <div class="uk-width-expand@s cart-block-items" id="cart">
                     @include('shop.cart-items')
                 </div>
-            </div>
-        @elseif (null !== session('success'))
-            <div class="uk-flex uk-flex uk-align-center uk-flex-center uk-text-center uk-flex-middle uk-flex-column empty-cart">
-                <div>
-                    <a class="uk-navbar-item uk-logo" href="/" aria-label="Back to Home" tabindex="0" role="menuitem">HEISEN</a>
-                </div>
-                <h1>Ваш заказ оформлен</h1>
-                <div>Мы уже работаем, чтобы отправить Ваш заказ как можно скорее.</div>
             </div>
         @else
             <div class="uk-flex uk-flex uk-align-center uk-flex-center uk-text-center uk-flex-middle  uk-flex-column empty-cart">
@@ -315,7 +322,6 @@
 
             $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
         });
-        
     </script>
 @endsection
 

@@ -301,7 +301,12 @@ class CartController extends Controller
 
         if ($ShopOrder->shop_payment_system_id > 1) {
             if ($url = $this->preparePayment($ShopOrder)) {
-                return redirect()->to($url);
+
+                return view('shop.cart', [
+                    "success" => 1,
+                    "paymentUrl" => $url,
+                ]);
+
             }
         }
 
