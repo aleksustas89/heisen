@@ -188,7 +188,20 @@ class CartController extends Controller
         }
 
         $Fields = [
-            'name' => 'required|max:255',
+            'name' => ['required', function ($attribute, $value, $fail) {
+
+                if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/", $value)) 
+                {
+                    $fail('Имя может содержать только русские / латинские символы, пробел, цифры и знак _');
+                }
+            },],
+            'surname' => ['required', function ($attribute, $value, $fail) {
+
+                if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/", $value)) 
+                {
+                    $fail('Фамилия может содержать только русские / латинские символы, пробел, цифры и знак _');
+                }
+            },],
             //'email' => 'required|email',
             //'city' => 'required',
             'phone' => ['required', function ($attribute, $value, $fail) {

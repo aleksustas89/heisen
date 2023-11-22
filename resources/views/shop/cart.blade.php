@@ -45,9 +45,17 @@
             @error('name')
                 <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
                     <a class="uk-alert-close" uk-close></a>
-                    <p>Заполните поле Имя</p>
+                    <p>{{ $message }}</p>
                 </div>
             @enderror
+            @error('surname')
+                <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>{{ $message }}</p>
+                </div>
+            @enderror
+            
+
             @error('phone')
                 <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
                     <a class="uk-alert-close" uk-close></a>
