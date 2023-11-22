@@ -19,6 +19,40 @@
         <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Телефон:</b> {{ $ShopOrder->phone }}</p>
         <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>E-mail:</b> {{ $ShopOrder->email }}</p>
         <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Способ доставки:</b> {{ $ShopOrder->ShopDelivery->name }}</p>
+
+        @if ($ShopOrder->shop_delivery_id == 7)
+            @php
+            $value = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 10)->first();
+            @endphp
+            <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Город:</b> {{ $value->value ?? '' }}</p>  
+            @php
+            $Type = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 14)->first();
+            @endphp
+
+            @if ($Type->value == 11) 
+                @php
+                $value = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 11)->first();
+                @endphp
+                <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Отделение:</b> {{ $value->value ?? '' }}</p> 
+            @elseif($Type->value == 15)
+            @php
+                $value = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 15)->first();
+                @endphp
+                <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Адрес:</b> {{ $value->value ?? '' }}</p> 
+            @endif
+
+        @elseif($ShopOrder->shop_delivery_id == 1)
+            @php
+            $value = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 12)->first();
+            @endphp
+            <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Город:</b> {{ $value->value ?? '' }}</p>  
+            @php
+            $value = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 1)->first();
+            @endphp
+            <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Отделение:</b> {{ $value->value ?? '' }}</p>  
+
+        @endif
+        
         <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Способ оплаты:</b> {{ $ShopOrder->ShopPaymentSystem->name }}</p>
         @if (!empty($ShopOrder->description))
             <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Описание заказа:</b> {{ $ShopOrder->description }}</p>
