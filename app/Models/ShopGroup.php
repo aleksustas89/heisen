@@ -15,7 +15,7 @@ class ShopGroup extends Model
         return $this->hasMany(ShopItem::class);
     }
 
-    public function Shop_Item_Property_For_Groups()
+    public function ShopItemPropertyForGroups()
     {
         return $this->hasMany(ShopItemPropertyForGroup::class);
     }

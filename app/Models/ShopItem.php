@@ -185,20 +185,20 @@ class ShopItem extends Model
     {
         $aReturn = [];
 
-        foreach ($this->ShopGroup->Shop_Item_Property_For_Groups as $k => $Shop_Item_Property_For_Groups) {
+        foreach ($this->ShopGroup->ShopItemPropertyForGroups as $k => $ShopItemPropertyForGroup) {
 
-            if (!is_null($Shop_Item_Property_For_Groups->ShopItemProperty)) {
-                $aReturn[$k]["property_id"] = $Shop_Item_Property_For_Groups->ShopItemProperty->id;
-                $aReturn[$k]["property_name"] = $Shop_Item_Property_For_Groups->ShopItemProperty->name;
-                $aReturn[$k]["show_in_item"] = $Shop_Item_Property_For_Groups->ShopItemProperty->show_in_item;
+            if (!is_null($ShopItemPropertyForGroup->ShopItemProperty)) {
+                $aReturn[$k]["property_id"] = $ShopItemPropertyForGroup->ShopItemProperty->id;
+                $aReturn[$k]["property_name"] = $ShopItemPropertyForGroup->ShopItemProperty->name;
+                $aReturn[$k]["show_in_item"] = $ShopItemPropertyForGroup->ShopItemProperty->show_in_item;
                 
-                $object = ShopItemProperty::getObjectByType($Shop_Item_Property_For_Groups->ShopItemProperty->type);
+                $object = ShopItemProperty::getObjectByType($ShopItemPropertyForGroup->ShopItemProperty->type);
     
                 $values = [];
                 
-                foreach ($object::where("entity_id", $this->id)->where("property_id", $Shop_Item_Property_For_Groups->ShopItemProperty->id)->get() as $value) {
+                foreach ($object::where("entity_id", $this->id)->where("property_id", $ShopItemPropertyForGroup->ShopItemProperty->id)->get() as $value) {
                     
-                    switch ($Shop_Item_Property_For_Groups->ShopItemProperty->type) {
+                    switch ($ShopItemPropertyForGroup->ShopItemProperty->type) {
                         case 4:
                             $ShopItemListItem = ShopItemListItem::find($value->value);
                             if (!is_null($ShopItemListItem) && !empty($ShopItemListItem->value)) {
