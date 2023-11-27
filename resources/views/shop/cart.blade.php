@@ -196,19 +196,19 @@
                         <div class="uk-card uk-card-default uk-card-body uk-card-small uk-margin">
                             <div class="uk-h4">Контактные данные</div>
                             <hr />
-                    
-                            <div class="uk-margin">
-                                <label class="uk-form-label" for="form-stacked-text">Имя</label>
-                                <div class="uk-form-controls">
-                                    <input value="{{ old('name') ?? $client->name ?? '' }}" class="uk-input @error('name') is-invalid @enderror" name="name" required="" id="form-stacked-text" type="text" placeholder="Введите имя...">
-                                </div>
-                            </div>
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="form-stacked-text">Фамилия</label>
                                 <div class="uk-form-controls">
                                     <input value="{{ old('surname') ?? $client->surname ?? '' }}" class="uk-input" name="surname" id="form-stacked-text" type="text" placeholder="Введите фамилию...">
                                 </div>
                             </div>
+                            <div class="uk-margin">
+                                <label class="uk-form-label" for="form-stacked-text">Имя</label>
+                                <div class="uk-form-controls">
+                                    <input value="{{ old('name') ?? $client->name ?? '' }}" class="uk-input @error('name') is-invalid @enderror" name="name" required="" id="form-stacked-text" type="text" placeholder="Введите имя...">
+                                </div>
+                            </div>
+
                             <div class="uk-margin">
                                 <label class="uk-form-label" for="form-stacked-text">Телефон</label>
                                 <div class="uk-form-controls">
