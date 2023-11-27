@@ -228,6 +228,10 @@ class CartController extends Controller
             $Fields['delivery_1_office'] = 'required';
         }
 
+        if (!empty($request->email)) {
+            $Fields['email'] = 'required|email';
+        }
+
         $request->validate($Fields);
 
         $ShopCurrency = ShopCurrency::where("default", 1)->first();

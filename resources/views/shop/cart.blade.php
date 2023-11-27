@@ -39,7 +39,7 @@
             @error('email')
                 <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
                     <a class="uk-alert-close" uk-close></a>
-                    <p>Введите E-mail в формате borys-jonson@gmail.com</p>
+                    <p>Введите E-mail в формате heisen@gmail.com</p>
                 </div>
             @enderror
             @error('name')
