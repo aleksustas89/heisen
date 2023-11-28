@@ -48,6 +48,11 @@ class ShopOrderController extends Controller
         return self::saveOrder($request);
     }
 
+    public function show()
+    {
+        return redirect()->to(route("shopOrder.index"));
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
