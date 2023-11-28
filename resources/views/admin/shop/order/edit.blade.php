@@ -67,7 +67,7 @@
                                             <div class="col-4"> 
                                                 <label class="mb-1 my-2">Клиент</label>
             
-                                                <select class="select" name="client_id">
+                                                <select id="client_id" name="client_id">
                                                     <option value="0">...</option>
                                                     @foreach (App\Models\Client::get() as $Client)
                                                         @php
@@ -191,7 +191,19 @@
                                                         <div @class([
                                                             "tab-pane", "p-3", "active" => $order->shop_delivery_id == 7 ? true : false
                                                         ]) id="tab-delivery-7" role="tabpanel">
-                                                            <div class="row">                         
+                                                            <div class="row">     
+                                                                
+                                                                <div class="form-group">
+                                                                    <label class="label my-2">Упаковка </label>
+                                                                    <select id="cdek_dimension_id" name="cdek_dimension_id">
+                                                                        <option value="0">...</option>
+                                                                        @foreach ($CdekDimensions as $CdekDimension)
+                                                                            <option @if($CdekDimension->id == $order->cdek_dimension_id) selected @endif value="{{ $CdekDimension->id }}">{{ intval($CdekDimension->length) }}x{{ intval($CdekDimension->width) }}x{{ intval($CdekDimension->height) }}, до {{$CdekDimension->weight / 1000}} кг</option>
+                                                                        @endforeach
+                                                                    </select>         
+                                                                                                   
+                                                                </div>                                                       
+                                                                
                                                                 <div class="form-group">
                                                                     <label class="label my-2">Город </label>
                                                     
@@ -502,6 +514,8 @@
     
     <script>
         var create_order_route = '{{ route("createCdekOrder") }}';
+        new Selectr('#cdek_dimension_id');
+        new Selectr('#client_id');
     </script>
 
     @php

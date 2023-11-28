@@ -70,7 +70,7 @@
                                                     @foreach (App\Models\Client::get() as $Client)
                                                         <option value="{{ $Client->id }}">{{ $Client->name }} [{{ $Client->id }}]</option>
                                                     @endforeach
-                                                </select> 
+                                                </select>  
                                 
                                             </div>
                                         </div>
@@ -157,7 +157,18 @@
                                                         <div @class([
                                                             "tab-pane", "p-3"
                                                         ]) id="tab-delivery-7" role="tabpanel">
-                                                            <div class="row">                         
+                                                            <div class="row">  
+                                                                
+                                                                <div class="form-group">
+                                                                    <label class="label my-2">Упаковка </label>
+                                                                    <select id="cdek_dimension_id" name="cdek_dimension_id">
+                                                                        <option value="0">...</option>
+                                                                        @foreach ($CdekDimensions as $CdekDimension)
+                                                                            <option value="{{ $CdekDimension->id }}">{{ intval($CdekDimension->length) }}x{{ intval($CdekDimension->width) }}x{{ intval($CdekDimension->height) }}, до {{$CdekDimension->weight / 1000}} кг</option>
+                                                                        @endforeach
+                                                                    </select>                                                       
+                                                                </div> 
+                                                                
                                                                 <div class="form-group">
                                                                     <label class="label my-2">Город </label>
                                                     
@@ -324,6 +335,8 @@
     <script src="/js/jquery.autocomplete.min.js"></script>
     <script>
         var create_order_route = '{{ route("createCdekOrder") }}';
+        new Selectr('#cdek_dimension_id');
+        new Selectr('#client_id');
     </script>
     @php
         App\Services\Helpers\File::js('/assets/js/pages/shopOrder.js');

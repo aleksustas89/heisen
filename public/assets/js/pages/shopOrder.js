@@ -1,4 +1,3 @@
-new Selectr('.select');
 
 var Cdek = {
     createOrder: function(shop_order_id, step = 0) {

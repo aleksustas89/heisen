@@ -232,10 +232,11 @@ class CdekController extends Controller
     
             $package = [];
             $package["number"] = "order-" . $ShopOrder->id;
-            $package["weight"] = (int) $ShopOrder->weight;
-            $package["length"] = (int) $ShopOrder->length / 10;
-            $package["width"] = (int) $ShopOrder->width / 10;
-            $package["height"] = (int) $ShopOrder->height / 10;
+
+            $package["weight"] = (int) $ShopOrder->CdekDimension->weight;
+            $package["length"] = (int) $ShopOrder->CdekDimension->length / 10;
+            $package["width"] = (int) $ShopOrder->CdekDimension->width / 10;
+            $package["height"] = (int) $ShopOrder->CdekDimension->height / 10;
     
             foreach ($ShopOrder->ShopOrderItems as $ShopOrderItem) {
                 
@@ -392,18 +393,10 @@ class CdekController extends Controller
         if (!is_null($ShopOrder = ShopOrder::find($request->shop_order_id))) { 
 
             $aError["error"] = [];
-            if ($ShopOrder->weight == 0) {
-                $aError["error"][] = "Заполните поле Вес";
+            if ($ShopOrder->cdek_dimension_id == 0) {
+                $aError["error"][] = "Заполните поле Упаковка";
             }
-            if ($ShopOrder->width == 0) {
-                $aError["error"][] = "Заполните поле Ширина";
-            }
-            if ($ShopOrder->height == 0) {
-                $aError["error"][] = "Заполните поле Высота";
-            }
-            if ($ShopOrder->length == 0) {
-                $aError["error"][] = "Заполните поле Глубина";
-            }
+
             if (empty($ShopOrder->surname)) {
                 $aError["error"][] = "Фамилия";
             }

@@ -50,6 +50,11 @@ class ShopOrder extends Model
         return $this->hasOne(UkassaOrder::class);
     } 
 
+    public function CdekDimension()
+    {
+        return $this->belongsTo(CdekDimension::class);
+    }
+
     public function getSum()
     {
         $sum = 0;
