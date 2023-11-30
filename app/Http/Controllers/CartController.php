@@ -41,6 +41,36 @@ class CartController extends Controller
         ]);
     }
 
+    public function updateItemInCart(Request $request)
+    {
+
+        if (!$cart_id = self::isSetCart()) {
+            
+            $cart_id = uniqid();
+
+            setcookie("cart_id", $cart_id);
+        } 
+
+        if (!is_null($ShopItem = ShopItem::find($request->id))) {
+
+            \Cart::session($cart_id);
+
+            $ItemInCart = \Cart::session($cart_id)->get($ShopItem->id);
+
+            if ($request->quantity < 0 && $ItemInCart->quantity > 1) {
+                \Cart::session($cart_id)->update($ShopItem->id, [
+                    'quantity' => -1
+                ]);
+            } else if ($request->quantity > 0) {
+                \Cart::session($cart_id)->update($ShopItem->id, [
+                    'quantity' => 1
+                ]);
+            }
+        }
+
+        return self::getCartItemsTemplate();
+    }
+
     public function addToCart(Request $request)
     {
 

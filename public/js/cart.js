@@ -1,4 +1,49 @@
 var Cart = {
+
+    plus: function(route, id) {
+
+        Spiner.show();
+
+        $.ajax({
+            url: route,
+            type: "POST",
+            data: {
+                "id": id, 
+                "quantity": 1,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType: "html",
+            success: function (data) {
+                $("#cart").html(data);
+                Spiner.hide();
+            },
+        });
+
+    },
+
+    minus: function(route, id) {
+        Spiner.show();
+
+        $.ajax({
+            url: route,
+            type: "POST",
+            data: {
+                "id": id, 
+                "quantity": -1,
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType: "html",
+            success: function (data) {
+                $("#cart").html(data);
+                Spiner.hide();
+            },
+        });
+    },
+
     add: function(route, id, quantity) {
        
         Spiner.show();
@@ -16,17 +61,26 @@ var Cart = {
             dataType: "html",
             success: function (data) {
 
+                Cart.updateCart();
+
+                if (data.length) {
+                    $("#cart").html(data);
+                    Spiner.hide();
+                } else {
+                    location.reload();
+                }
+
                 if ($("#modal-full").length) {
                     $("#modal-full").remove();
                 }
 
                 $("body").append(data);
 
-                Spiner.hide();
                 UIkit.modal("#modal-full").show();
+                
 
-                Cart.updateCart();
-               
+                Spiner.hide();
+
             },
         });
 
@@ -74,7 +128,8 @@ var Cart = {
             },
             dataType: "html",
             success: function (data) {
-               $(".little-cart").html(data);
+                let cart = $("#cart").length ? $("#cart") : $(".little-cart");
+                cart.html(data);
             },
         });
     },

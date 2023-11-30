@@ -261,23 +261,43 @@
         App\Services\Helpers\File::js('/js/cart.js');
     @endphp
     <script>
-        $('[name="delivery_7_city"]').autocomplete({
-            serviceUrl: '/get-cdek-cities',
-            minChars: 0,
-            onSearchStart: function() {
-                $(this).siblings(".input-spiner").show();
-            },
-            onSearchComplete: function() {
-                $(this).siblings(".input-spiner").hide();
-            },
-            onSelect: function (suggestion) {
-                $("[name='delivery_7_office']").val("").removeAttr("disabled");
-                $("[name='delivery_7_courier']").removeAttr("disabled");
-                $("[name='delivery_7_city_id']").val(suggestion.data);
 
+        if ($("#cart-order").length) {
+            $('[name="delivery_7_city"]').autocomplete({
+                serviceUrl: '/get-cdek-cities',
+                minChars: 0,
+                onSearchStart: function() {
+                    $(this).siblings(".input-spiner").show();
+                },
+                onSearchComplete: function() {
+                    $(this).siblings(".input-spiner").hide();
+                },
+                onSelect: function (suggestion) {
+                    $("[name='delivery_7_office']").val("").removeAttr("disabled");
+                    $("[name='delivery_7_courier']").removeAttr("disabled");
+                    $("[name='delivery_7_city_id']").val(suggestion.data);
+
+                    $('[name="delivery_7_office"]').autocomplete({
+                        serviceUrl: '/get-cdek-offices',
+                        params: {"city_id": suggestion.data},
+                        minChars: 0,
+                        onSelect: function (suggestion) {
+                            $("[name='delivery_7_office_id']").val(suggestion.data);
+                        },
+                        onSearchStart: function() {
+                            $(this).siblings(".input-spiner").show();
+                        },
+                        onSearchComplete: function() {
+                            $(this).siblings(".input-spiner").hide();
+                        }
+                    });
+                }
+            });
+
+            if ($('[name="delivery_7_city_id"]').val().length) {
                 $('[name="delivery_7_office"]').autocomplete({
                     serviceUrl: '/get-cdek-offices',
-                    params: {"city_id": suggestion.data},
+                    params: {"city_id": $('[name="delivery_7_city_id"]').val()},
                     minChars: 0,
                     onSelect: function (suggestion) {
                         $("[name='delivery_7_office_id']").val(suggestion.data);
@@ -290,33 +310,16 @@
                     }
                 });
             }
-        });
 
-        if ($('[name="delivery_7_city_id"]').val().length) {
-            $('[name="delivery_7_office"]').autocomplete({
-                serviceUrl: '/get-cdek-offices',
-                params: {"city_id": $('[name="delivery_7_city_id"]').val()},
-                minChars: 0,
-                onSelect: function (suggestion) {
-                    $("[name='delivery_7_office_id']").val(suggestion.data);
-                },
-                onSearchStart: function() {
-                    $(this).siblings(".input-spiner").show();
-                },
-                onSearchComplete: function() {
-                    $(this).siblings(".input-spiner").hide();
+            $("[name='delivery_7_city']").keyup(function(){
+                let value = $(this).val();
+                if (!value.length) {
+                    delay(function() {
+                        $("[name='delivery_7_office'], [name='delivery_7_office_id']").val("");
+                    }, 1000);
                 }
             });
         }
-
-        $("[name='delivery_7_city']").keyup(function(){
-            let value = $(this).val();
-            if (!value.length) {
-                delay(function() {
-                    $("[name='delivery_7_office'], [name='delivery_7_office_id']").val("");
-                }, 1000);
-            }
-        });
 
         var delay = (function(){
             var timer = 0;

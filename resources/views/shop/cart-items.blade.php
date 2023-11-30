@@ -27,7 +27,17 @@
                         <h4 class="uk-margin-remove tm-name-card-small"><a class="uk-link-reset" href="{{ $row->attributes["url"] }}">{{ $row->name }}</a></h4>
                         
                         <ul class="uk-subnav uk-subnav-divider uk-margin-remove-top">
-                            <li>Кол-во: {{ $row->quantity }}</li>
+                            <li>
+                                Кол-во: {{ $row->quantity }}
+                                <div class="uk-flex uk-flex-column uk-margin-small-left">
+                                    <a href="javascript:void(0)" onclick="Cart.plus('{{ route('updateItemInCart') }}', {{ $row->id }})">
+                                        <span uk-icon="chevron-up"></span>
+                                    </a>
+                                    <a href="javascript:void(0)" onclick="Cart.minus('{{ route('updateItemInCart') }}', {{ $row->id }})">
+                                        <span uk-icon="chevron-down"></span>
+                                    </a>
+                                </div>
+                            </li>
                             <li>Цена: 
                                 {{ App\Services\Helpers\Str::price($row->price) }} 
                                 @if ($row->attributes["oldPrice"] && $row->attributes["oldPrice"] > $row->price)  

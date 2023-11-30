@@ -122,6 +122,7 @@ if (Schema::hasTable('shops')) {
     Route::get('/cart/payment/result', [App\Http\Controllers\CartController::class, 'finishOrder'])->name("finish-order");
 
     Route::post('/add-to-cart', [App\Http\Controllers\CartController::class, 'addToCart'])->name("cartAdd");
+    Route::post('/update-item-in-cart', [App\Http\Controllers\CartController::class, 'updateItemInCart'])->name("updateItemInCart");
     Route::post('/get-cart', [App\Http\Controllers\CartController::class, 'getLittleCart'])->name("getCart");
     Route::post('/delete-from-cart', [App\Http\Controllers\CartController::class, 'deleteFromCart'])->name("deleteFromCart");
     Route::post('/get-modification', [App\Http\Controllers\ShopItemController::class, 'getModification']);
