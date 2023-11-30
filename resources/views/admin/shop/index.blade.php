@@ -146,6 +146,7 @@
                                         <td class="px-0 text-center td_image">
                                             @php
                                                 $oShopItemImage = \App\Models\ShopItemImage::where("shop_item_id", "=", $shopItem->id)
+                                                    ->where("image_small", "!=", "")
                                                     ->orderBy('sorting', 'Asc')
                                                     ->orderBy('id', 'Asc')
                                                     ->first();

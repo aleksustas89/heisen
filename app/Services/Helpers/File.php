@@ -46,7 +46,7 @@ class File
                 imagealphablending($img, true);
                 imagesavealpha($img, true);
                 $return = $dir . $nameWithoutExt . '.webp';
-                imagewebp($img, $return, 100);
+                imagewebp($img, $return, 80);
                 imagedestroy($img);
 
                 unlink($fullPath);
@@ -59,7 +59,7 @@ class File
                 imagealphablending($img, true);
                 imagesavealpha($img, true);
                 $return = $dir . $nameWithoutExt . '.webp';
-                imagewebp($img, $return, 100);
+                imagewebp($img, $return, 80);
 
                 unlink($fullPath);
 

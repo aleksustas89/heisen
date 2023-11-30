@@ -257,7 +257,7 @@ class ShopItemController extends Controller
         }
     }
 
-    protected function setUrl(ShopItem $shopItem)
+    public function setUrl(ShopItem $shopItem)
     {
 
         $shopItem->url = $shopItem->url();
