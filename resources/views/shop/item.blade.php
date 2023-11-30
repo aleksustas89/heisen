@@ -168,9 +168,9 @@
                                 <p>Заполните форму и наши менеджеры свяжутся с Вами для завершения заказа</p>
 
                                 <div class="uk-margin">
-                                    <label class="uk-form-label" for="form-stacked-text">Фио</label>
+                                    <label class="uk-form-label" for="form-stacked-text">Имя</label>
                                     <div class="uk-form-controls">
-                                        <input required class="uk-input" name="name" type="text" placeholder="Ваше Фио">
+                                        <input required class="uk-input" name="name" type="text" placeholder="Ваше Имя">
                                     </div>
                                 </div>
 
