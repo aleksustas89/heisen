@@ -25,13 +25,35 @@ class ShopController extends Controller
 
             $parent = $request->parent_id ?? 0;
 
-            return view('admin.shop.index', [
+            $aResult = [
                 'shop_path' => $oShop->path,
-                'shopGroups' => ShopGroup::where('parent_id', $parent)->orderBy('sorting', 'desc')->orderBy("id")->get(),
-                'shopItems' => ShopItem::where('shop_group_id', $parent)->where("modification_id", "=", 0)->orderBy("sorting", "asc")->orderBy("id")->paginate(self::$items_on_page),
                 'parent' => $parent,
                 'breadcrumbs' => ShopGroupController::breadcrumbs($parent > 0 ? ShopGroup::find($parent) : false),
-            ]);
+                'global_search' => $request->global_search
+            ];
+
+            if ($request->global_search) {
+                $aResult['shopItems'] = ShopItem::where("modification_id", "=", 0)
+                                                ->where(function($query) use ($request) {
+                                                    $query->orWhere("id", "=", $request->global_search)
+                                                        ->orWhere("name", "LIKE", "%" . $request->global_search . "%");
+                                                })
+                                                ->orderBy("sorting", "asc")
+                                                ->orderBy("id")
+                                                ->paginate(self::$items_on_page);
+                
+                                                
+
+            } else {
+                $aResult['shopItems'] = ShopItem::where('shop_group_id', $parent)
+                                                ->where("modification_id", "=", 0)
+                                                ->orderBy("sorting", "asc")
+                                                ->orderBy("id")
+                                                ->paginate(self::$items_on_page);
+                $aResult['shopGroups'] = ShopGroup::where('parent_id', $parent)->orderBy('sorting', 'desc')->orderBy("id")->get();
+            }
+
+            return view('admin.shop.index', $aResult);
 
         } else {
             return "The store is off";

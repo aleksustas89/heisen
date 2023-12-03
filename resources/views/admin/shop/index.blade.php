@@ -56,6 +56,15 @@
                         <a class="dropdown-item" href="{{ route('cdekSender.edit', 1) }}">Cdek</a>
                     </div>
 
+                    <div>
+                        <form>
+                            <div class="mb-1 mt-1 position-relative">
+                                <input type="text" value="{{ $global_search }}" name="global_search" class="form-control" placeholder="Поиск" >
+                                <input type="hidden" name="parent_id" value="{{ $parent }}" />
+                                @if (!empty($global_search))<a class="clean-input" href="javascript:void(0)" onclick="$('[name=\'global_search\']').val(''); $(this).parents('form').submit()"><i class="las la-times-circle"></i></a>@endif
+                            </div>
+                        </form>
+                    </div>
                 </div>
    
                     <div class="card-body p-0">
@@ -76,59 +85,60 @@
                                 </tr>
                             </thead>
                             <tbody>
-        
-                                @foreach ($shopGroups as $shopGroup)
-                                    <tr>
-                                        <td>
-                                            {{ $shopGroup->id }}
-                                        </td>
-                                        <td class="px-0 text-center"><i data-feather="folder"></i></td>
-                                        <td>
-                                        
-                                                <a href="?parent_id={{ $shopGroup->id }}">{{ $shopGroup->name }}</a>
-                                                @php
-                                                    $subCount = $shopGroup->getChildCount();
-                                                @endphp
-                                                @if ($subCount["groupsCount"] > 0)
-                                                    <span class="badge-count btn-primary">{{ $subCount["groupsCount"] }}</span>
-                                                @endif
-                                                @if ($subCount["itemsCount"] > 0)
-                                                    <span class="badge-count btn-success">{{ $subCount["itemsCount"] }}</span>
-                                                @endif
-
-                                                @php
-                                                $url = '/' . $shop_path . '/' . $shopGroup->path();
-                                                @endphp
-
-                                                <a href="{{ $url }}" target="_blank">
-                                                    <i class="las la-external-link-alt"></i>
-                                                </a> 
+                                @if (isset($shopGroups))
+                                    @foreach ($shopGroups as $shopGroup)
+                                        <tr>
+                                            <td>
+                                                {{ $shopGroup->id }}
+                                            </td>
+                                            <td class="px-0 text-center"><i data-feather="folder"></i></td>
+                                            <td>
                                             
-                                        </td>
-                                        <td width="200px">&nbsp;</td>
-                                    
-                                        <td width="40px">
-                                            @if ($shopGroup->active == 1)
-                                                <i class="fa fa-lightbulb-o" title="Активность"></i>
-                                            @else
-                                                <i class="fa fa-lightbulb-o fa-inactive" title="Активность"></i>
-                                            @endif
-                                        </td>
-                                        <td width="40px">&nbsp;</td>
-                                        <td width="60px" class="td_editable"><span id="apply_check_shopGroup_sorting_{{ $shopGroup->id }}" class="editable">{{ $shopGroup->sorting }}</span></td>
+                                                    <a href="?parent_id={{ $shopGroup->id }}">{{ $shopGroup->name }}</a>
+                                                    @php
+                                                        $subCount = $shopGroup->getChildCount();
+                                                    @endphp
+                                                    @if ($subCount["groupsCount"] > 0)
+                                                        <span class="badge-count btn-primary">{{ $subCount["groupsCount"] }}</span>
+                                                    @endif
+                                                    @if ($subCount["itemsCount"] > 0)
+                                                        <span class="badge-count btn-success">{{ $subCount["itemsCount"] }}</span>
+                                                    @endif
 
-                                        <td class="td-actions">
-                                            <a href="{{ route('shopGroup.edit', $shopGroup->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                            <form action="{{ route('shopGroup.destroy', $shopGroup->id) }}" method="POST" style="display:inline-block;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">
-                                                    <i class="las la-trash-alt text-secondary font-16"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                                    @php
+                                                    $url = '/' . $shop_path . '/' . $shopGroup->path();
+                                                    @endphp
+
+                                                    <a href="{{ $url }}" target="_blank">
+                                                        <i class="las la-external-link-alt"></i>
+                                                    </a> 
+                                                
+                                            </td>
+                                            <td width="200px">&nbsp;</td>
+                                        
+                                            <td width="40px">
+                                                @if ($shopGroup->active == 1)
+                                                    <i class="fa fa-lightbulb-o" title="Активность"></i>
+                                                @else
+                                                    <i class="fa fa-lightbulb-o fa-inactive" title="Активность"></i>
+                                                @endif
+                                            </td>
+                                            <td width="40px">&nbsp;</td>
+                                            <td width="60px" class="td_editable"><span id="apply_check_shopGroup_sorting_{{ $shopGroup->id }}" class="editable">{{ $shopGroup->sorting }}</span></td>
+
+                                            <td class="td-actions">
+                                                <a href="{{ route('shopGroup.edit', $shopGroup->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                                <form action="{{ route('shopGroup.destroy', $shopGroup->id) }}" method="POST" style="display:inline-block;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">
+                                                        <i class="las la-trash-alt text-secondary font-16"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
         
                                 @foreach ($shopItems as $shopItem)
 
