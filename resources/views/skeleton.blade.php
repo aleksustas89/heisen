@@ -7,6 +7,12 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta property="og:title" content="@yield('seo_title')" />
+        <meta property="og:description" content="@yield('seo_description')" />
+        <meta property="og:image" content="{{ request()->getScheme() }}://{{ request()->getHttpHost() }}/images/heisen.jpg" />
+        <meta property="og:url" content="{{ url()->current() }}" />
+        <link rel="shortcut icon" href="{{ request()->getScheme() }}://{{ request()->getHttpHost() }}/images/favicon.ico">
 		
 		<!-- UIkit CSS -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.6/dist/css/uikit.min.css" />
@@ -24,6 +30,8 @@
         @endphp
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
+
+
     </head>
     <body>
     
