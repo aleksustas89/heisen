@@ -50,6 +50,16 @@ class ShopItemController extends Controller
         return $this->saveShopItem($request);
     }
 
+    public function show()
+    {
+        return redirect()->to(route("shop.index"));
+    }
+
+    public function index()
+    {
+        return redirect()->to(route("shop.index"));
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

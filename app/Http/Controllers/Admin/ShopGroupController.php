@@ -67,6 +67,17 @@ class ShopGroupController extends Controller
         return redirect()->back()->withSuccess("Группа была успешно удалена!");
     }
 
+    
+    public function show()
+    {
+        return redirect()->to(route("shop.index"));
+    }
+
+    public function index()
+    {
+        return redirect()->to(route("shop.index"));
+    }
+
     public function saveShopGroup (Request $request, $shopGroup = false) 
     {
 
