@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,6 +34,8 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::get('/shopGroup/{id}/delete/{field}', [ShopGroupController::class, 'deleteImage']);
         Route::resource('shopCurrency', ShopCurrencyController::class);
         Route::resource('shopItem', ShopItemController::class);
+        Route::get('/shop/shopItem/{shopItem}/copy', [App\Http\Controllers\Admin\ShopItemController::class, 'copy'])->name("copyShopItem");
+        
         Route::get('/deleteShopItemImage/{id}', [App\Http\Controllers\Admin\ShopItemController::class, 'deleteImage']);
         Route::resource('shopItemProperty', ShopItemPropertyController::class);
         //удаление свойств

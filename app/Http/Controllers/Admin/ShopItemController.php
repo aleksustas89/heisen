@@ -22,6 +22,7 @@ use Illuminate\Filesystem\Filesystem;
 use App\Http\Controllers\Admin\SearchController;
 use App\Services\Helpers\File;
 
+
 class ShopItemController extends Controller
 {
     /**
@@ -58,6 +59,14 @@ class ShopItemController extends Controller
     public function index()
     {
         return redirect()->to(route("shop.index"));
+    }
+
+    public function copy(ShopItem $shopItem)
+    {
+
+        $shopItem->copy($shopItem->modification_id > 0 ? $shopItem->modification_id : 0);
+
+        return redirect()->back()->withSucces("Элемент был успешно скопирован!");
     }
 
     /**
@@ -251,7 +260,7 @@ class ShopItemController extends Controller
 
         //скидка
         $ShopItemDiscountController = new ShopItemDiscountController();
-        foreach ($shopItem->ShopItemDiscount as $ShopItemDiscount) {
+        foreach ($shopItem->ShopItemDiscounts as $ShopItemDiscount) {
             $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount, $ShopItemDiscount->ShopDiscount, $shopItem);
         }
 

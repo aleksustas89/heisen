@@ -303,6 +303,22 @@ function confirmDelete(form, title = 'Вы уверенны, что хотите
 	})
 }
 
+function confirmCopy(elem, title = 'Вы уверенны, что хотите копировать?') {
+
+	Swal.fire({
+		title: title,
+		showCancelButton: true,
+		confirmButtonText: 'Да',
+		cancelButtonText: 'Отмена',
+	}).then((result) => {
+		if (result.isConfirmed) {
+			window.location.href = elem.attr("href");
+		} else if (result.isDenied) {
+			return false
+		}
+	})
+}
+
 var delay = (function(){
 	var timer = 0;
 	return function(callback, ms){

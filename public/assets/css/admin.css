@@ -5,6 +5,7 @@
 .td-list-delete-btn {
     border: none;
     background: none;
+    display: contents;
 }
 
 .table tbody .feather, 

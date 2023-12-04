@@ -9,6 +9,8 @@ class ShopItemDiscount extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['shop_item_id', 'shop_discount_id', 'value'];
+
     public function ShopDiscount()
     {
         return $this->belongsTo(ShopDiscount::class);

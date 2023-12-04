@@ -85,7 +85,7 @@ class ShopDiscountController extends Controller
     public function destroy(ShopDiscount $shopDiscount)
     {
 
-        foreach ($shopDiscount->ShopItemDiscount as $ShopItemDiscount) {
+        foreach ($shopDiscount->ShopItemDiscounts as $ShopItemDiscount) {
             $ShopItemDiscount->delete();
         }
 

@@ -10,7 +10,7 @@ class ShopDiscount extends Model
 {
     use HasFactory;
 
-    public function ShopItemDiscount()
+    public function ShopItemDiscounts()
     {
         return $this->hasMany(ShopItemDiscount::class);
     }

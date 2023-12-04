@@ -11,6 +11,8 @@ use App\Models\Shop;
 use App\Http\Controllers\ShopDiscountController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Filesystem\Filesystem;
+use App\Models\ShopItemDiscount;
+use App\Models\ShopModificationImage;
 
 class ShopItem extends Model
 {
@@ -22,6 +24,8 @@ class ShopItem extends Model
      * 1 = show specific price of default modification 'default_modification' of item based on color or size 
     */
     public static $priceView = 1;
+
+    protected $fillable = ['name', 'shop_group_id', 'modification_id', 'default_modification', 'user_id', 'description', 'text', 'seo_title', 'seo_description', 'seo_keywords', 'price', 'shop_currency_id', 'sorting', 'marking', 'weight', 'length', 'width', 'height', 'indexing', 'active'];
 
     public function ShopGroup()
     {
@@ -58,7 +62,7 @@ class ShopItem extends Model
         return $this->hasOne(ShopModificationImage::class);
     }
 
-    public function ShopItemDiscount()
+    public function ShopItemDiscounts()
     {
         return $this->hasMany(ShopItemDiscount::class);
     }
@@ -153,7 +157,7 @@ class ShopItem extends Model
         }
 
         /*скидки*/
-        foreach ($this->ShopItemDiscount as $ShopItemDiscount) {
+        foreach ($this->ShopItemDiscounts as $ShopItemDiscount) {
             $ShopItemDiscount->delete();
         }
 
@@ -185,7 +189,9 @@ class ShopItem extends Model
     {
         $aReturn = [];
 
-        foreach ($this->ShopGroup->ShopItemPropertyForGroups as $k => $ShopItemPropertyForGroup) {
+        $object = $this->parentItemIfModification();
+
+        foreach ($object->ShopGroup->ShopItemPropertyForGroups as $k => $ShopItemPropertyForGroup) {
 
             if (!is_null($ShopItemPropertyForGroup->ShopItemProperty)) {
                 $aReturn[$k]["property_id"] = $ShopItemPropertyForGroup->ShopItemProperty->id;
@@ -282,5 +288,88 @@ class ShopItem extends Model
                 return $ShopItemImage;
             }
         }
+    }
+
+    public function copy($modification_id = false, $imagesHistory = false)
+    {
+        $this->modification_id = $modification_id ?? 0;
+        $this->name = $this->name . ($this->modification_id == 0 ? " [copy-" . date("d.m.Y-H:i:s") . "]" : "");
+        $this->path = $this->path . "-copy-" . time();
+        $this->url = $this->url . "-copy-" . time();
+        
+
+        $nShopItem = $this->replicate()->fill([
+            'type' => 'billing'
+        ]);
+
+        $nShopItem->push();
+
+        if ($this->modification_id > 0) {
+
+            //картинки модификаций
+            if (!is_null($ShopModificationImage = ShopModificationImage::where("shop_item_id", $this->id)->first())) {
+                $nShopModificationImage = new ShopModificationImage();
+                $nShopModificationImage->shop_item_id = $nShopItem->id;
+                $nShopModificationImage->shop_item_image_id = $imagesHistory[$ShopModificationImage->shop_item_image_id] ?? $ShopModificationImage->shop_item_image_id;
+                $nShopModificationImage->save();
+            }
+        }
+
+
+        $nShopItem->createDir();
+
+        //скидки
+        foreach ($this->ShopItemDiscounts as $ShopItemDiscount) {
+            $ShopItemDiscount->shop_item_id = $nShopItem->id;
+            $nShopItemDiscount = $ShopItemDiscount->replicate()->fill([
+                'type' => 'billing'
+            ]);
+
+            $nShopItemDiscount->save();
+        }
+
+        //картинки
+        $oldPath = Storage::path($this->path());
+        $newPath = Storage::path($nShopItem->path());
+   
+        foreach ($this->ShopItemImages as $ShopItemImage) {
+            
+            $imageLarge = $oldPath . $ShopItemImage->image_large;
+            $newImageLarge = $newPath . $ShopItemImage->image_large;
+            $imageSmall = $oldPath . $ShopItemImage->image_small;
+            $newImageSmall = $newPath . $ShopItemImage->image_small;
+
+            $copyLarge = copy($imageLarge, $newImageLarge);
+            $copySmall = copy($imageSmall, $newImageSmall);
+
+            if ($copyLarge || $copySmall) {
+                $nShopItemImage = new ShopItemImage();
+                $nShopItemImage->shop_item_id = $nShopItem->id;
+                $nShopItemImage->image_large = $copyLarge ? $ShopItemImage->image_large : '';
+                $nShopItemImage->image_small = $copySmall ? $ShopItemImage->image_small : '';
+                $nShopItemImage->sorting = $ShopItemImage->sorting;
+                $nShopItemImage->save();
+
+                $imagesHistory[$ShopItemImage->id] = $nShopItemImage->id;
+                
+            }
+        }
+
+        //свойства
+        foreach ([new PropertyValueInt(), new PropertyValueFloat(), new PropertyValueString()] as $Object) {
+            foreach ($Object::whereEntityId($this->id)->get() as $PropertyValue) {
+                $PropertyValue->entity_id = $nShopItem->id;
+                $nPropertyValueInt = $PropertyValue->replicate()->fill([
+                    'type' => 'billing'
+                ]);
+                $nPropertyValueInt->push();
+            }
+        }
+
+        //модификации
+        foreach (ShopItem::whereModificationId($this->id)->get() as $ShopItem) {
+            $ShopItem->copy($nShopItem->id, $imagesHistory);
+        }
+
     }
 }

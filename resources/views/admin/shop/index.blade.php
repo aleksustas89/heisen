@@ -258,6 +258,7 @@
 
                                         <td class="td-actions">
                                             <a href="{{ route('shopItem.edit', $shopItem->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                            <a onclick="confirmCopy($(this)); return false;" href="{{ route('copyShopItem', $shopItem->id) }}" class="mr-2"><i class="las la-copy text-secondary font-16"></i></a>
                                             <form action="{{ route('shopItem.destroy', $shopItem->id) }}" method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')

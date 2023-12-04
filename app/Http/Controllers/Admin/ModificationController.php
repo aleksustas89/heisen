@@ -273,7 +273,7 @@ class ModificationController extends Controller
 
         //скидка
         $ShopItemDiscountController = new ShopItemDiscountController();
-        foreach ($Modification->ShopItemDiscount as $ShopItemDiscount) {
+        foreach ($Modification->ShopItemDiscounts as $ShopItemDiscount) {
             $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount, $ShopItemDiscount->ShopDiscount, $Modification);
         }
 

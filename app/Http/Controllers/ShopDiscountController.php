@@ -102,7 +102,7 @@ class ShopDiscountController extends Controller
 
         $aResult = [$ShopItem->price];
 
-        foreach ($ShopItem->ShopItemDiscount as $ShopItemDiscount) {
+        foreach ($ShopItem->ShopItemDiscounts as $ShopItemDiscount) {
    
             if (!is_null($ShopItemDiscount->ShopDiscount) && $ShopItemDiscount->ShopDiscount->check()) {
           
