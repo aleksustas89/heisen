@@ -37,6 +37,14 @@
                         </button>
                     @endif
 
+                    @if (count($SubGroups) > 0) 
+                        <div>
+                            @foreach ($SubGroups as $SubGroup)
+                                <a class="uk-button uk-button-default filter-btn uk-margin-small-top uk-margin-small-bottom" href="{{ $SubGroup->url }}">{{ $SubGroup->name }}</a>
+                            @endforeach
+                        </div>
+                    @endif
+
                 </div>
             
                 <!--фильтр-->

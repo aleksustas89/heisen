@@ -97,6 +97,7 @@ class ShopGroupController extends Controller
         
         Route::view($path, 'shop/group', [
             'group' => $shopGroup,
+            'SubGroups' => ShopGroup::where("parent_id", $shopGroup->id)->where("active", 1)->get(),
             'items' => $oShopItems->paginate($oShop->items_on_page),
             'properties' => ShopItemController::getProperties($shopGroup->id, 4, true),
             'path' => "/" . $path,
