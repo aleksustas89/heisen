@@ -21,7 +21,9 @@
                 @foreach ($ShopOrders as $ShopOrder)
 
                     @php
-                        $orderImage = $ShopOrder->ShopOrderItems[0]->ShopItem->getImages(false);
+
+                        $orderImage = $ShopOrder->ShopOrderItems[0]->ShopItem->parentItemIfModification()->getImages(false);
+                        //dd($ShopOrder->ShopOrderItems[0]->ShopItem->parentItemIfModification()->getImages(false));
                     @endphp
 
                     <li>
@@ -80,7 +82,7 @@
                                 @foreach ($ShopOrder->ShopOrderItems as $ShopOrderItem)
 
                                     @php
-                                        $ShopItem = $ShopOrderItem->ShopItem;
+                                        $ShopItem = $ShopOrderItem->ShopItem->parentItemIfModification();
                                         $url = !is_null($ShopItem) ? $ShopItem->url : '';
 
                                         $images = $ShopItem->getImages(false);
