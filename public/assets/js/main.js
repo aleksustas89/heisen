@@ -1,3 +1,7 @@
+$.fn.hasAttr = function(name) {
+    return this.attr(name) !== undefined;
+};
+
 $(document).ready(function () {
     $(".nav-treeview .nav-link, .nav-link").each(function () {
         var location2 = window.location.protocol + '//' + window.location.host + window.location.pathname;

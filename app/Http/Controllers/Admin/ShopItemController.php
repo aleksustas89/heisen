@@ -372,6 +372,17 @@ class ShopItemController extends Controller
         return response()->json($response);
     }
 
-    
+    public function sortShopItemImages(Request $request)
+    {
+
+        foreach (json_decode($request->images) as $key => $item_image_id) {
+            if (!is_null($ShopItemImage = ShopItemImage::find($item_image_id))) {
+                $ShopItemImage->sorting = $key;
+                $ShopItemImage->save();
+            }
+        }
+
+        return response()->json(true);
+    }
 
 }

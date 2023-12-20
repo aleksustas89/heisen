@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::get('/shop/shopItem/{shopItem}/copy', [App\Http\Controllers\Admin\ShopItemController::class, 'copy'])->name("copyShopItem");
         
         Route::get('/deleteShopItemImage/{id}', [App\Http\Controllers\Admin\ShopItemController::class, 'deleteImage']);
+        Route::get('/sortShopItemImages', [App\Http\Controllers\Admin\ShopItemController::class, 'sortShopItemImages']);
         Route::resource('shopItemProperty', ShopItemPropertyController::class);
         //удаление свойств
         Route::get('/deleteShopItemPropertyValue/{property}/{id}', [App\Http\Controllers\Admin\ShopItemController::class, 'deletePropertyValue']);

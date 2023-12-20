@@ -199,10 +199,10 @@
 
                         <div class="tab-pane" id="images">
 
-                            <div class="file-box-content mb-3 d-flex flex-wrap">
+                            <div class="file-box-content mb-3 d-flex flex-wrap" id="sortContainer">
 
                                 @foreach ($images as $k => $image)
-                                    <div class="file-box d-flex align-items-center justify-content-center position-relative" id="admin_image_{{ $k }}">
+                                    <div class="file-box d-flex align-items-center justify-content-center sortable" id="{{ $k }}">
 
                                         <a href="javascript:void(0)" onclick="if(confirm('Вы действительно хотите удалить изображение?')) {adminImage.remove({{ $k }})}">
                                             <i class="las la-times file-close-icon"></i>
@@ -515,6 +515,13 @@
 
 @section("css")
     <link href="/assets/plugins/tobii/tobii.min.css" rel="stylesheet" type="text/css" />
+    
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/themes/sunny/jquery-ui.css">
+
+    <style type="text/css">
+        div.sortable {float: left;}
+    </style>
+
 @endsection
 
 @section("js")
@@ -522,7 +529,34 @@
     <script src="/assets/js/pages/shopItem.js"></script>
     <script src="/assets/pages/file-upload.init.js"></script>
     <script src="/assets/plugins/tobii/tobii.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
     <script>
         const tobii = new Tobii()
+        
+        $(function() {
+            $('#sortContainer').sortable({
+                update: function() {
+                    let aResult = [];
+
+                    $('#sortContainer').find(".sortable").each(function(k) {
+                        if ($(this).hasAttr("id")) {
+                            aResult[k] = $(this).attr("id");
+                        }
+                    });
+
+                    $.ajax({
+                        url: "/admin/sortShopItemImages",
+                        type: "GET",
+                        data: {
+                            "images": JSON.stringify(aResult) 
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        dataType: "json",
+                    });
+                }
+            });  
+        });
     </script>
 @endsection

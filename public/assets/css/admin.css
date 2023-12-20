@@ -366,3 +366,4 @@
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 .clean-input {position: absolute;top: 8px;right: 10px;}
+.file-box-content .file-box {position: relative;}
