@@ -74,13 +74,13 @@
                                     <th style="width: 1%">#ID</th>
                                     <th style="width: 40px"  class="px-0 text-center"><i class="fa fa-bars" title="—"></i></th>
                                     <th>Название</th>
-                                    <th width="200px">Цена</th>
+                                    <th  class="d-mob-none" width="200px">Цена</th>
     
-                                    <th width="40px"><i class="fa fa-lightbulb-o" title="Активность"></i></th>
-                                    <th width="40px">
+                                    <th class="d-mob-none" width="40px"><i class="fa fa-lightbulb-o" title="Активность"></i></th>
+                                    <th class="d-mob-none" width="40px">
                                         <i class="lab la-buromobelexperte font-20" title="Модификации"></i>
                                     </th>
-                                    <th width="60px"><i class="fas fa-sort-amount-down" title="—"></i></th>
+                                    <th class="d-mob-none" width="60px"><i class="fas fa-sort-amount-down" title="—"></i></th>
                                     <th class="controll-td"></th>
                                 </tr>
                             </thead>
@@ -114,17 +114,17 @@
                                                     </a> 
                                                 
                                             </td>
-                                            <td width="200px">&nbsp;</td>
+                                            <td class="d-mob-none" width="200px">&nbsp;</td>
                                         
-                                            <td width="40px">
+                                            <td class="d-mob-none" width="40px">
                                                 @if ($shopGroup->active == 1)
                                                     <i class="fa fa-lightbulb-o" title="Активность"></i>
                                                 @else
                                                     <i class="fa fa-lightbulb-o fa-inactive" title="Активность"></i>
                                                 @endif
                                             </td>
-                                            <td width="40px">&nbsp;</td>
-                                            <td width="60px" class="td_editable"><span id="apply_check_shopGroup_sorting_{{ $shopGroup->id }}" class="editable">{{ $shopGroup->sorting }}</span></td>
+                                            <td class="d-mob-none" width="40px">&nbsp;</td>
+                                            <td width="60px" class="td_editable d-mob-none"><span id="apply_check_shopGroup_sorting_{{ $shopGroup->id }}" class="editable">{{ $shopGroup->sorting }}</span></td>
 
                                             <td class="td-actions">
                                                 <a href="{{ route('shopGroup.edit', $shopGroup->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
@@ -182,7 +182,7 @@
                                             <span class="text-muted font-13 fw-semibold">{{ $shopItem->marking }} </span> 
                                             
                                         </td>
-                                        <td width="200px" class="td_editable">
+                                        <td width="200px" class="td_editable d-mob-none">
                                             <div class="d-flex">
 
                                                 @if ($shopItem::$priceView == 0)
@@ -231,7 +231,7 @@
                                             </div>
                                         </td>
                 
-                                        <td>
+                                        <td class="d-mob-none">
 
                                             <span onclick="toggle.init($(this))" @class([
                                                 'pointer',
@@ -242,7 +242,7 @@
                                             </span>
 
                                         </td>
-                                        <td width="40px">
+                                        <td class="d-mob-none" width="40px">
                                             <a href="{{route('modification.index')}}?shop_item_id={{ $shopItem->id }}">
                                                 @php
                                                     $count = $shopItem->getModificationCount();
@@ -254,9 +254,9 @@
                                                 @endif
                                             </a>
                                         </td>
-                                        <td width="60px" class="td_editable"><span id="apply_check_shopItem_sorting_{{ $shopItem->id }}" class="editable">{{ $shopItem->sorting }}</span></td>
+                                        <td class="d-mob-none" width="60px" class="td_editable"><span id="apply_check_shopItem_sorting_{{ $shopItem->id }}" class="editable">{{ $shopItem->sorting }}</span></td>
 
-                                        <td class="td-actions">
+                                        <td class="td-actions-large">
                                             <a href="{{ route('shopItem.edit', $shopItem->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
                                             <a onclick="confirmCopy($(this)); return false;" href="{{ route('copyShopItem', $shopItem->id) }}" class="mr-2"><i class="las la-copy text-secondary font-16"></i></a>
                                             <form action="{{ route('shopItem.destroy', $shopItem->id) }}" method="POST" style="display:inline-block;">

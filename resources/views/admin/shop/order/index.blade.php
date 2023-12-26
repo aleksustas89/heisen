@@ -40,11 +40,11 @@
                             <tr>
                                 <th style="width: 1%">№</th>
                                 <th style="width: 170px">Дата</th>
-                                <th style="width: 40px">Источник</th>
-                                <th>Фио</th>
-                                <th style="width: 50px"><i data-feather="list"></i></th>
+                                <th style="width: 40px" class="d-mob-none">Источник</th>
+                                <th class="d-mob-none">Фио</th>
+                                <th style="width: 50px" class="d-mob-none"><i data-feather="list"></i></th>
                                 <th style="width: 100px">Сумма</th>
-                                <th style="width: 100px">Оплачено</th>
+                                <th style="width: 100px" class="d-mob-none">Оплачено</th>
                                 <th class="controll-td"></th>
                             </tr>
                         </thead>
@@ -68,20 +68,20 @@
 
                                 @endphp
 
-                                <tr>
+                                <tr @class(["tr-paid" => $order->paid == 1 ? true : false])>
                                     <td>
                                         {{ $order->id }}
                                     </td>
                                     <td style="width: 170px" >
                                         {{ date("d.m.Y H:i", strtotime($order->created_at)) }}
                                     </td>
-                                    <td style="width: 40px">
+                                    <td style="width: 40px" class="d-mob-none">
                                         {!! $source !!}
                                     </td>
-                                    <td>
+                                    <td class="d-mob-none">
                                         {{ $fio }}
                                     </td>
-                                    <td>
+                                    <td class="d-mob-none">
 
                                         @php
                                             
@@ -182,7 +182,7 @@
                                     <td style="width: 100px">
                                         {{ App\Models\Str::price($sOrderSum) }} {{ $sOrderCurrency }}
                                     </td>
-                                    <td style="width: 100px" class="text-center">
+                                    <td class="d-mob-none" style="width: 100px" class="text-center">
                                         @if ($order->paid == 1)
                                             <i style="color: green; font-size: 22px;" class="las la-check-double"></i>
                                         @endif
@@ -214,6 +214,11 @@
 
 @section('css')
     <link rel="stylesheet" href="/assets/css/popover.css">
+    <style>
+        .paid {
+            background: #22b783!important
+        }
+    </style>
 @endsection
 
 @section('js')

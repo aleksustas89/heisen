@@ -44,13 +44,13 @@
                                 <tr>
                                     <th style="width: 1%">#ID</th>
                                     <th>Название структуры</th>
-                                    <th>Путь</th>
-                                    <th width="200px">Меню</th>
-                                    <th class="td_editable">Сортировка</th>
-                                    <th width="40px">
+                                    <th class="d-mob-none">Путь</th>
+                                    <th class="d-mob-none" width="200px">Меню</th>
+                                    <th class="d-mob-none" class="td_editable">Сортировка</th>
+                                    <th class="d-mob-none" width="40px">
                                         <i data-feather="eye" title="Активность"></i>
                                     </th>
-                                    <th width="40px">
+                                    <th class="d-mob-none" width="40px">
                                         <i data-feather="search"></i>
                                     </th>
                                     <th class="controll-td"></th>
@@ -71,22 +71,22 @@
     
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="d-mob-none">
                                         @php
                                             $path = $structure->url();
                                             $url = $path != '/' ? $path : $path;
                                         @endphp
                                         <a class="line-through-if-off" target="_blank" href="{{ $url }}">{{ $url }}</a>
                                     </td>
-                                    <td>
+                                    <td class="d-mob-none">
                                         {{ $structure->structure_menu_id > 0 ? $structure->StructureMenu->name : '' }}
                                     </td>
-                                    <td class="td_editable">
+                                    <td class="td_editable d-mob-none">
                                         <div>
                                             <span id="apply_check_structure_sorting_{{ $structure->id }}" class="editable">{{ $structure->sorting }}</span>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="d-mob-none">
                                         @php
                                             $notActive = $structure->active == 0 ? true : false;
                                         @endphp
@@ -98,7 +98,7 @@
                                         </span>
                                         
                                     </td>
-                                    <td>
+                                    <td class="d-mob-none">
                                         @php
                                             $notIndexing = $structure->indexing == 0 ? true : false;
                                         @endphp

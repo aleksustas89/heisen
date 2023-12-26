@@ -50,11 +50,11 @@
 
                             <div class="row mb-3">
 
-                                <div class="col-3">
+                                <div class="col-6 col-sm-3">
                                     <label class="mb-1">Действует от</label>
                                     <input type="datetime-local" value="{{ $discount->start_datetime }}" name="start_datetime" class="form-control" placeholder="Действует от">
                                 </div>
-                                <div class="col-3">
+                                <div class="col-6 col-sm-3">
                                     <label class="mb-1">Действует до</label>
                                     <input type="datetime-local" value="{{ $discount->end_datetime }}" name="end_datetime" class="form-control" placeholder="Действует до">
                                 </div>
@@ -63,7 +63,7 @@
 
                             <div class="row mb-3">
 
-                                <div class="col-2">
+                                <div class="col-6 col-sm-3">
                                     <label class="mb-1">Величина скидки</label>
                                     <div class="d-flex">
                                         <div>
@@ -79,7 +79,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-6 col-sm-2">
                                     <label class="mb-1">&nbsp;</label>
                                     <div class="d-flex">
                                         <div class="form-check field-check-center">
@@ -114,7 +114,7 @@
                                     </div>
     
                                     <div class="row mb-3">
-                                        <div class="col-2">
+                                        <div class="col-6 col-sm-4">
                                             <label class="mb-1">Поиск по группе</label>
                                             <label class="mb-1">&nbsp;</label>
                                             <select name="shop_group_id" class="form-control">
@@ -124,7 +124,7 @@
                                                 @endphp
                                             </select>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-6 col-sm-4">
                                             <label class="mb-1">Поиск по свойству</label>
                                             <select class="form-control" name="total_list_id">
                                                 <option value="0">...</option>

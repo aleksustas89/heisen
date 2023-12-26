@@ -54,30 +54,30 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-3">
+                            <div class="col-12 col-sm-4">
                                 <label class="mb-1">Автор</label>
                                 <input type="text" name="author" value="{{ $comment->author }}" class="form-control" placeholder="Автор">
                             </div>
-                            <div class="col-3">
+                            <div class="col-12 col-sm-4">
                                 <label class="mb-1">E-mail</label>
                                 <input type="text" name="email" value="{{ $comment->email }}" class="form-control" placeholder="E-mail">
                             </div>
-                            <div class="col-3">
+                            <div class="col-12 col-sm-4">
                                 <label class="mb-1">Телефон</label>
                                 <input type="text" name="phone" value="{{ $comment->phone }}" class="form-control" placeholder="Телефон">
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-3">
+                            <div class="col-12 col-sm-4">
                                 <label class="mb-1">Оценка (1-5)</label>
                                 <input type="text" name="grade" value="{{ $comment->grade }}" class="form-control" placeholder="Оценка (1-5)">
                             </div>
-                            <div class="col-3">
+                            <div class="col-12 col-sm-4">
                                 <label class="mb-1">#ID товара</label>
                                 <input type="text" name="shop_item_id" value="" class="form-control" placeholder="#ID товара">
                             </div>
-                            <div class="col-3">
+                            <div class="col-12 col-sm-4">
                                 <label>&nbsp;</label>
                                 <div class="form-check form-switch form-switch-success field-check-center">
                                     <div>

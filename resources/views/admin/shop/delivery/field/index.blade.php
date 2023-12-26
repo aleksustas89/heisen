@@ -40,9 +40,9 @@
                             <tr>
                                 <th style="width: 1%">#ID</th>
                                 <th>Название</th>
-                                <th>Название в input</th>
+                                <th class="d-mob-none">Название в input</th>
                                 <th style="width: 200px">Тип</th>
-                                <th style="width: 100px">Сортировка</th>
+                                <th class="d-mob-none" style="width: 100px">Сортировка</th>
                                 <th class="controll-td"></th>
                             </tr>
                         </thead>
@@ -54,9 +54,9 @@
                                 <tr>
                                     <td style="widtd: 1%">{{ $field->id }}</td>
                                     <td><span id="apply_check_deliveryField_caption_{{ $field->id }}" class="editable">{{ $field->caption }}</span></td>
-                                    <td><span id="apply_check_deliveryField_field_{{ $field->id }}" class="editable">{{ $field->field }}</span></td>
+                                    <td class="d-mob-none"><span id="apply_check_deliveryField_field_{{ $field->id }}" class="editable">{{ $field->field }}</span></td>
                                     <td style="width: 200px">{{ $types[$field->type] }}</td>
-                                    <td style="width: 100px"><span id="apply_check_deliveryField_sorting_{{ $field->id }}" class="editable">{{ $field->sorting }}</span></td>
+                                    <td class="d-mob-none" style="width: 100px"><span id="apply_check_deliveryField_sorting_{{ $field->id }}" class="editable">{{ $field->sorting }}</span></td>
                                     <td class="td-actions">
                                         <a href="{{ route('shopDeliveryField.edit', $field->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
                                         <form action="{{ route('shopDeliveryField.destroy', $field->id) }}" method="POST" class="d-inline">

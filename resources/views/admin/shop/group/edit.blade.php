@@ -81,7 +81,7 @@
                                     </div>
 
                                     <div class="row mb-3">
-                                        <div class="col-6 d-flex">
+                                        <div class="col-12 col-xsl-6 mb-2 d-flex">
                              
                                      
                                             @php
@@ -119,7 +119,7 @@
                                             </div>
 
                                         </div>
-                                        <div class="col-6 d-flex">
+                                        <div class="col-12 col-xsl-6 mb-2 d-flex">
                              
                                      
                                             @php

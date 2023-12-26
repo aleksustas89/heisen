@@ -72,15 +72,15 @@
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-3">
+                                <div class="col-12 col-sm-3">
                                     <label class="mb-1">Кол-во элементов на странице</label>
                                     <input type="text" name="items_on_page" value="{{ $shop['items_on_page'] }}" class="form-control" placeholder="Кол-во элементов на странице">
                                 </div>
-                                <div class="col-3">
+                                <div class="col-12 col-sm-3">
                                     <label class="mb-1">Путь</label>
                                     <input type="text" name="path" value="{{ $shop['path'] }}" class="form-control" placeholder="Путь" data-min="2"  data-max="255" data-required="1">
                                 </div>
-                                <div class="col-3">
+                                <div class="col-12 col-sm-3">
                                     <label class="mb-1">Валюта магазина</label>
                                     <select id="currency_id" name="currency_id"  class="form-control">  
                                         <option value="0">...</option>  
@@ -90,7 +90,7 @@
                                         @endforeach                                    
                                     </select> 
                                 </div>
-                                <div class="col-3">
+                                <div class="col-12 col-sm-3">
                                     <label>&nbsp;</label>
                                     <div class="form-check field-check-center">
 
@@ -128,29 +128,29 @@
                         <div class="tab-pane" id="images">
 
                             <div class="row mb-3">
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     <label class="mb-1">Максимальная ширина большого изображения товара</label>
                                     <input type="text" name="image_large_max_width" value="{{ $shop['image_large_max_width'] }}" class="form-control" placeholder="Максимальная ширина большого изображения товара">
                                 </div>
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     <label class="mb-1">Максимальная высота большого изображения товара</label>
                                     <input type="text" name="image_large_max_height" value="{{ $shop['image_large_max_height'] }}" class="form-control" placeholder="Максимальная высота большого изображения товара">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     <label class="mb-1">Максимальная ширина малого изображения товара</label>
                                     <input type="text" name="image_small_max_width" value="{{ $shop['image_small_max_width'] }}" class="form-control" placeholder="Максимальная ширина малого изображения товара">
                                 </div>
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     <label class="mb-1">Максимальная высота малого изображения товара</label>
                                     <input type="text" name="image_small_max_height" value="{{ $shop['image_small_max_height'] }}" class="form-control" placeholder="Максимальная высота малого изображения товара">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
 
                                     <div class="form-check form-switch form-switch-success">
                                         <input {{ $shop->preserve_aspect_ratio == 1 ? 'checked' : '' }} value="1" class="form-check-input" name="preserve_aspect_ratio" type="checkbox" id="preserve_aspect_ratio">
@@ -158,7 +158,7 @@
                                     </div>
 
                                 </div>
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
 
                                     <div class="form-check form-switch form-switch-success">
                                         <input {{ $shop->preserve_aspect_ratio_small == 1 ? 'checked' : '' }} value="1" class="form-check-input" name="preserve_aspect_ratio_small" type="checkbox" id="preserve_aspect_ratio_small">
@@ -172,29 +172,29 @@
 
 
                             <div class="row mb-3">
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     <label class="mb-1">Максимальная ширина большого изображения группы</label>
                                     <input type="text" name="group_image_large_max_width" value="{{ $shop['group_image_large_max_width'] }}" class="form-control" placeholder="Максимальная ширина большого изображения группы">
                                 </div>
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     <label class="mb-1">Максимальная высота большого изображения группы</label>
                                     <input type="text" name="group_image_large_max_height" value="{{ $shop['group_image_large_max_height'] }}" class="form-control" placeholder="Максимальная высота большого изображения группы">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     <label class="mb-1">Максимальная ширина малого изображения группы</label>
                                     <input type="text" name="group_image_small_max_width" value="{{ $shop['group_image_small_max_width'] }}" class="form-control" placeholder="Максимальная ширина малого изображения группы">
                                 </div>
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
                                     <label class="mb-1">Максимальная высота малого изображения группы</label>
                                     <input type="text" name="group_image_small_max_height" value="{{ $shop['group_image_small_max_height'] }}" class="form-control" placeholder="Максимальная высота малого изображения группы">
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
 
                                     <div class="form-check form-switch form-switch-success">
                                         <input {{ $shop->preserve_aspect_ratio_group == 1 ? 'checked' : '' }} value="1" class="form-check-input" name="preserve_aspect_ratio_group" type="checkbox" id="preserve_aspect_ratio_group">
@@ -202,7 +202,7 @@
                                     </div>
                    
                                 </div>
-                                <div class="col-6">
+                                <div class="col-12 col-sm-6">
 
                                     <div class="form-check form-switch form-switch-success">
                                         <input {{ $shop->preserve_aspect_ratio_group_small == 1 ? 'checked' : '' }} value="1" class="form-check-input" name="preserve_aspect_ratio_group_small" type="checkbox" id="preserve_aspect_ratio_group_small">

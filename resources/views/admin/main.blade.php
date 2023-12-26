@@ -25,7 +25,7 @@
                     <span>
                         <img src="/assets/images/logo-sm.png" alt="logo-small" class="logo-sm">
                     </span>
-                    <span class="logo-text">
+                    <span class="logo-text d-xxl-inline d-lg-none">
                         Powerful
                     </span>
                 </a>
@@ -115,6 +115,24 @@
         </div>
         <!-- end left-sidenav-->
         <!-- end leftbar-menu-->
+
+        <!-- Top Bar Start -->
+        <div class="topbar">            
+            <!-- Navbar -->
+            <nav class="navbar-custom" id="navbar-custom">    
+ 
+
+                <ul class="list-unstyled topbar-nav mb-0">                        
+                    <li>
+                        <button class="nav-link button-menu-mobile nav-icon" id="togglemenu">
+                            <i class="ti ti-menu-2"></i>
+                        </button>
+                    </li>                     
+                </ul>
+            </nav>
+            <!-- end navbar-->
+        </div>
+        <!-- Top Bar End -->
 
         <div class="page-wrapper">
 

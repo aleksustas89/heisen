@@ -58,20 +58,20 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <div class="col-3">
+                                    <div class="col-6 col-xs-3 mb-3">
                                         <label class="mb-1">Код</label>
                                         <input type="text" name="code" class="form-control" placeholder="Код" value="{{ $currency->code }}">
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-6 col-xs-3 mb-3">
                                         <label class="mb-1">Курс</label>
                                         <input type="text" name="exchange_rate" class="form-control" placeholder="Курс" value="{{ $currency->exchange_rate }}">
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-6 col-xs-3 mb-3">
                                         <label class="mb-1">Сортировка</label>
                                         <input type="text" name="sorting" class="form-control" placeholder="Сортировка" value="{{ $currency->sorting }}">
                                     </div>
 
-                                    <div class="col-3 d-flex align-items-end">
+                                    <div class="col-6 col-xs-3 d-flex align-items-end mb-3">
                                         <div class="d-flex switch-col">
                                             <div class="form-check form-switch form-switch-success">
                                                 @if ($currency->default == 1)

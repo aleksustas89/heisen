@@ -31,7 +31,7 @@
 
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-lg-6">
 
             <div class="card" id="id_content">
                 <form action="{{ route('shopOrder.update', $order->id) }}" method="POST" id="formEdit" enctype="multipart/form-data">
@@ -55,17 +55,17 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row mb-3">
-                                            <div class="col-4"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <label class="mb-1 my-2">Номер заказа</label>
                                                 <input type="text" disabled name="id" value="{{ $order->id }}" class="form-control" placeholder="Номер заказа">
                                             </div>
             
-                                            <div class="col-4"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <label class="mb-1 my-2">Дата заказа</label>
                                                 <input type="datetime-local" name="datetime" value="{{ $order->created_at }}" class="form-control" placeholder="Дата заказа">
                                             </div>
             
-                                            <div class="col-4"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <label class="mb-1 my-2">Клиент</label>
             
                                                 <select id="client_id" name="client_id">
@@ -88,7 +88,7 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row mb-3">
-                                            <div class="col-4"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <div class="d-inline-block order-col-sum">
                                                     <label class="mb-1 my-2">Сумма заказа</label>
                                                     <input type="text" disabled name="sum" value="{{ $order->getSum() }}" class="form-control" placeholder="Сумма заказа">
@@ -106,7 +106,7 @@
                                                 </div>
                                             
                                             </div>
-                                            <div class="col-3"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <label class="mb-1 my-2">Способ оплаты</label>
                                                 <select class="form-control" name="shop_payment_system_id">
                                                     <option value="0">...</option>
@@ -118,7 +118,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="col-4 d-flex align-items-end"> 
+                                            <div class="col-12 col-sm-4 d-flex align-items-end"> 
                                                 @if ($order->paid == 1)
                                                     <div style="margin: 0 0 5px 0;">
                                                         <span style="color: green; font-size: 18px;"><i class="las la-check-double"></i> <b>Оплачено</b></span>
@@ -135,19 +135,19 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row mb-3">
-                                            <div class="col-3"> 
+                                            <div class="col-6 col-sm-4"> 
                                                 <label class="mb-1 my-2">Вес</label>
                                                 <input type="text" name="weight" value="{{ $order->weight }}" class="form-control" placeholder="Вес заказа">
                                             </div>
-                                            <div class="col-3"> 
+                                            <div class="col-6 col-sm-4"> 
                                                 <label class="mb-1 my-2">Ширина</label>
                                                 <input type="text" name="width" value="{{ $order->width }}" class="form-control" placeholder="Ширина">
                                             </div>
-                                            <div class="col-3"> 
+                                            <div class="col-6 col-sm-4"> 
                                                 <label class="mb-1 my-2">Высота</label>
                                                 <input type="text" name="height" value="{{ $order->height }}" class="form-control" placeholder="Высота">
                                             </div>
-                                            <div class="col-3"> 
+                                            <div class="col-6 col-sm-4"> 
                                                 <label class="mb-1 my-2">Глубина</label>
                                                 <input type="text" name="length" value="{{ $order->length }}" class="form-control" placeholder="Глубина">
                                             </div>
@@ -166,7 +166,7 @@
 
                                             <div class="col-12"> 
                                                 <label class="mb-1 my-2">Доставка</label>
-<!--
+                                                <!--
                                                 <div class="form-group my-2">
                                                     <label class="label my-2">Город</label>
                                                     <input type="text" class="form-control" value="{{ $order->city }}" name="city">
@@ -331,19 +331,19 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row">
-                                            <div class="col-4">
+                                            <div class="col-12 col-sm-4">
                                                 <div class="form-group">
                                                     <label class="label my-2">Фамилия</label>
                                                     <input type="text" class="form-control" value="{{ $order->surname }}" name="surname">
                                                 </div>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-12 col-sm-4">
                                                 <div class="form-group">
                                                     <label class="label my-2">Имя</label>
                                                     <input type="text" class="form-control" value="{{ $order->name }}" name="name">
                                                 </div>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-12 col-sm-4">
                                                 <div class="form-group">
                                                     <label class="label my-2">Отчество</label>
                                                     <input type="text" class="form-control" value="{{ $order->patronymic }}" name="patronymic">
@@ -352,13 +352,13 @@
                                         </div>
         
                                         <div class="row">
-                                            <div class="col-6">                            
+                                            <div class="col-12 col-sm-4">                            
                                                 <div class="form-group">
                                                     <label class="label my-2">Email</label>
                                                     <input type="email" class="form-control" name="email" value="{{ $order->email }}">
                                                 </div>
                                             </div>
-                                            <div class="col-6">                            
+                                            <div class="col-12 col-sm-4">                            
                                                 <div class="form-group">
                                                     <label class="label my-2">Телефон</label>
                                                     <input type="text" class="form-control" name="phone" value="{{ $order->phone }}">
@@ -373,13 +373,13 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row">
-                                            <div class="col-6">                            
+                                            <div class="col-12 col-sm-6">                            
                                                 <div class="form-group">
                                                     <label class="label my-2">Информация к заказу</label>
                                                     <textarea name="description" class="form-control">{{ $order->description }}</textarea>
                                                 </div>
                                             </div>
-                                            <div class="col-6">                            
+                                            <div class="col-12 col-sm-6">                            
                                                 <div class="form-group">
                                                     <label class="label my-2">Информация к доставке</label>
                                                     <textarea name="delivery_information" class="form-control">{{ $order->delivery_information }}</textarea>
@@ -449,14 +449,14 @@
 
         </div>
 
-        <div class="col-6">
+        <div class="col-12 col-lg-6">
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-8 d-flex align-items-center">
+                        <div class="col-6 col-sm-8 d-flex align-items-center">
                             <h4 class="card-title">Список товаров в заказе № {{ $order->id }}</h4>
                         </div>
-                        <div class="col-4 d-flex justify-content-end">
+                        <div class="col-6 col-sm-4 d-flex justify-content-end align-items-start">
                             <a href="{{ route("shopOrderItem.create") }}?shop_order_id={{ $order->id }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
                         </div>
                     </div>
@@ -470,7 +470,7 @@
                                 <th>Название</th>
                                 <th>Кол-во</th>
                                 <th>Цена</th>
-                                <th>Сумма</th>
+                                <th class="d-mob-none">Сумма</th>
                                 <th class="td-actions"></th>
                             </tr>
                             </thead>
@@ -481,7 +481,7 @@
                                         <td class="td_editable">{{ $orderItem->name }}</td>
                                         <td class="td_editable">{{ $orderItem->quantity }}</td>
                                         <td class="td_editable">{{ $orderItem->price }}</td>
-                                        <td>{{ $orderItem->price * $orderItem->quantity }}</td>
+                                        <td class="d-mob-none">{{ $orderItem->price * $orderItem->quantity }}</td>
                                         <td class="td-actions">
                                             <a href="{{ route('shopOrderItem.edit', $orderItem->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
                                             <form action="{{ route('shopOrderItem.destroy', $orderItem->id) }}" method="POST" class="d-inline">

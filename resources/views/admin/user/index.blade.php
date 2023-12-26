@@ -40,8 +40,8 @@
                                 <tr>
                                     <th style="width: 1%">#ID</th>
                                     <th>E-mail</th>
-                                    <th>Фамилия, Имя</th>
-                                    <th width="40px"><i class="fa fa-lightbulb-o" title="Активность"></i></th>
+                                    <th class="d-mob-none">Фамилия, Имя</th>
+                                    <th class="d-mob-none" width="40px"><i class="fa fa-lightbulb-o" title="Активность"></i></th>
                                     <th class="controll-td"></th>
                                 </tr>
                             </thead>
@@ -56,12 +56,12 @@
                                                 {{ $user->email }}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="d-mob-none">
                                             <div>
                                                 {{ $user->name }}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="d-mob-none">
                                             @if ($user->active == 1)
                                                 <i class="fa fa-lightbulb-o" title="Активность"></i>
                                             @else

@@ -49,7 +49,7 @@
                             <tr>
                                 <th style="width: 1%">#ID</th>
                                 <th>Название</th>
-                                <th>Описание</th>
+                                <th class="d-mob-none">Описание</th>
                                 <th class="text-center" width="100">Элементы</th>
                                 <th class="controll-td"></th>
                             </tr>
@@ -66,7 +66,7 @@
                                         {{ $list->name }}
                                     </td>
                         
-                                    <td>
+                                    <td class="d-mob-none">
                                         {{ $list->description }}
                                     </td>
 

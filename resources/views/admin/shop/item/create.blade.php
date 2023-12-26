@@ -75,19 +75,22 @@
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="mb-1">Сортировка</label>
                                     <input type="text" name="sorting" class="form-control" placeholder="Сортировка">
                                 </div>
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="mb-1">Артикул</label>
                                     <input type="text" name="marking" class="form-control" placeholder="Артикул">
                                 </div>
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="mb-1">Путь</label>
                                     <input type="text" name="path" class="form-control" placeholder="Путь" >
                                 </div>
-                                <div class="col-3 d-flex align-items-end">
+                            
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12 d-flex align-items-end">
 
                                     <div class="d-flex">
 
@@ -110,7 +113,6 @@
 
                                     </div>
                                 </div>
-                            
                             </div>
 
                             <div class="row mb-3">
@@ -158,19 +160,19 @@
                                         <div class="card-body" style="display: block;">
                                             
                                             <div class="row form-group">
-                                                <div class="col-2">
+                                                <div class="col-6 col-sm-3">
                                                     <label class="mb-1">Вес, гр.</label>
                                                     <input type="text" name="weight" class="form-control" placeholder="Вес" >
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-6 col-sm-3">
                                                     <label class="mb-1">Ширина, мм.</label>
                                                     <input type="text" name="width" class="form-control" placeholder="Ширина" >
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-6 col-sm-3">
                                                     <label class="mb-1">Высота, мм.</label>
                                                     <input type="text" name="height" class="form-control" placeholder="Высота" >
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-6 col-sm-3">
                                                     <label class="mb-1">Длина, мм.</label>
                                                     <input type="text" name="length" class="form-control" placeholder="Длина" >
                                                 </div>

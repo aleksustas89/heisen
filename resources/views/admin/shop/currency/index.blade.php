@@ -42,10 +42,10 @@
                         <thead>
                             <tr>
                                 <th style="width: 1%">#ID</th>
-                                <th style="width: 40px" class="px-0 text-center">Код</th>
-                                <th>Название</th>
+                                <th class="d-mob-none" style="width: 40px" class="px-0 text-center">Код</th>
+                                <th><span class="d-mob-none">Название</span></th>
                                 <th>Курс</th>
-                                <th width="40px" class="px-0 text-center">Базовая</th>
+                                <th width="40px" class="px-0 text-center"><span class="d-mob-none">Базовая</span></th>
                                 <th class="controll-td"></th>
                             </tr>
                         </thead>
@@ -58,7 +58,7 @@
                                     {{ $currency->id }}
                                 </td>
 
-                                <td class="px-0 text-center">
+                                <td class="px-0 text-center d-mob-none">
                                     {{ $currency->code }}
                                 </td>
 

@@ -1,5 +1,8 @@
 .td-actions {
-    width: 100px;
+    width: 70px;
+}
+.td-actions-large {
+    width: 90px;
 }
 
 .td-list-delete-btn {
@@ -51,7 +54,7 @@
     color: #333;
     font-weight: 600;
     cursor: pointer;
-    width: 80%;
+    width: 65%;
     display: table-cell;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -367,3 +370,15 @@
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 .clean-input {position: absolute;top: 8px;right: 10px;}
 .file-box-content .file-box {position: relative;}
+.tr-paid{
+   background: #c3ffea!important;
+}
+
+@media (max-width:768px){
+    .d-mob-none{
+        display: none !important;
+    }
+    .table>:not(caption)>*>* {
+        padding: 0.9689rem 0.5rem;
+    }
+}

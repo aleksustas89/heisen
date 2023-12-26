@@ -75,14 +75,14 @@
 
                                     <div class="row mb-3">
 
-                                        <div class="col-1">
+                                        <div class="col-6 col-sm-2">
                                             <label for="exampleColorInput" class="mb-1">Цвет</label>
                                             <div class="col-sm-10">
                                                 <input name="color" type="color" class="form-control form-control-color" title="Выберите цвет">
                                             </div>
                                         </div>
 
-                                        <div class="col-2 d-flex align-items-end">
+                                        <div class="col-6 col-sm-2 d-flex align-items-end">
                                             <div class="form-check form-switch form-switch-success mb-2">
                                                 
                                                 <input class="form-check-input" name="active" type="checkbox" id="active" checked="">

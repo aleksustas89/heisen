@@ -70,7 +70,7 @@
                                     </div>
 
                                     <div class="row mb-3">
-                                        <div class="col-4">
+                                        <div class="col-12 col-sm-4 mb-3">
                                             <label class="mb-1">Тип</label>
                                             <select id="shop_item_property_type" name="type">
                                                 @foreach ($types as $k => $type)
@@ -79,7 +79,7 @@
                                             </select> 
                                             <script>new Selectr('[name="type"]');</script>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-12 col-sm-4 mb-3">
                                             <label class="mb-1">Предназначение</label>
                                             <select id="shop_item_property_destination" name="destination">
                                                 <option value="0">По умолчанию</option>
@@ -87,7 +87,7 @@
                                             </select> 
                                             <script>new Selectr('[name="destination"]');</script>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-12 col-sm-4 mb-3">
                                             <div class="shop-property-lists hidden">
                                                 <label class="mb-1">Списки</label>
                                                 <select name="shop_item_list_id">
@@ -114,13 +114,13 @@
                                     </div>
 
                                     <div class="row mb-3">
-                                        <div class="col-4">
+                                        <div class="col-12 col-sm-4 mb-3">
                                             <div class="form-check form-switch form-switch-purple">
                                                 <input class="form-check-input" type="checkbox" name="show_in_item" id="show_in_item">
                                                 <label class="form-check-label" for="show_in_item">Показывать в товаре</label>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-12 col-sm-4 mb-3">
                                             <div class="form-check form-switch form-switch-purple">
                                                 <input class="form-check-input" type="checkbox" name="show_in_filter" id="show_in_filter">
                                                 <label class="form-check-label" for="show_in_filter">Показывать в фильтре</label>
@@ -134,7 +134,7 @@
                                     
                                     @foreach ($groups as $group)
 
-                                        <div class="col-3 d-flex align-items-end">
+                                        <div class="col-12 col-sm-3 d-flex align-items-end">
 
                                             <div class="d-flex">
                                                 <div class="form-check field-check-center">

@@ -70,13 +70,13 @@
                                     </div>
 
                                     <div class="row mb-3">
-                                        <div class="col-lg-6">
+                                        <div class="col-12 col-xsl-6 mb-2 d-flex">
                                             <div class="input-group">
                                                 <input type="file" name="image_large" class="form-control" id="image_large" aria-describedby="image_large" aria-label="Upload">
                                                 <button class="btn btn-outline-secondary" type="button" id="image_large">Большое изображение</button>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
+                                        <div class="col-12 col-xsl-6 mb-2 d-flex">
                                             <div class="input-group">
                                                 <input type="file" name="image_small" class="form-control" id="image_small" aria-describedby="image_small" aria-label="Upload">
                                                 <button class="btn btn-outline-secondary" type="button" id="image_small">Малое изображение</button>

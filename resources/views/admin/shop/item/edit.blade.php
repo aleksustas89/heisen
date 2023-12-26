@@ -77,18 +77,23 @@
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="mb-1">Сортировка</label>
                                     <input type="text" value="{{ $shopItem->sorting }}" name="sorting" class="form-control" placeholder="Сортировка">
                                 </div>
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="mb-1">Артикул</label>
                                     <input type="text" value="{{ $shopItem->marking }}" name="marking" class="form-control" placeholder="Артикул">
                                 </div>
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="mb-1">Путь</label>
                                     <input type="text" name="path" value="{{ $shopItem->path }}" class="form-control" placeholder="Путь">
                                 </div>
+                                
+                            
+                            </div>
+
+                            <div class="row mb-3">
                                 <div class="col-3 d-flex align-items-end">
 
                                     <div class="d-flex">
@@ -122,7 +127,6 @@
 
                                     </div>
                                 </div>
-                            
                             </div>
 
                             <div class="row mb-3">
@@ -136,10 +140,10 @@
                                             
                                             <div class="row form-group">
                     
-                                                <div class="col-lg-2">
+                                                <div class="col-lg-2 mb-2">
                                                     <input type="text" value="{{ $shopItem->price }}" name="price" class="form-control" placeholder="Цена" >
                                                 </div>
-                                                <div class="col-lg-2">
+                                                <div class="col-lg-2 mb-2">
                                                     @if ($currencies)
                                                         <select name="shop_currency_id" class="form-select">
                                                             @foreach ($currencies as $currency)
@@ -171,19 +175,19 @@
                                         <div class="card-body" style="display: block;">
                                             
                                             <div class="row form-group">
-                                                <div class="col-2">
+                                                <div class="col-6 col-sm-3 mb-2">
                                                     <label class="mb-1">Вес, гр.</label>
                                                     <input type="text" value="{{ $shopItem->weight }}" name="weight" class="form-control" placeholder="Вес" >
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-6 col-sm-3 mb-2">
                                                     <label class="mb-1">Ширина, мм.</label>
                                                     <input type="text" value="{{ $shopItem->width }}" name="width" class="form-control" placeholder="Ширина" >
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-6 col-sm-3 mb-2">
                                                     <label class="mb-1">Высота, мм.</label>
                                                     <input type="text" value="{{ $shopItem->height }}" name="height" class="form-control" placeholder="Высота" >
                                                 </div>
-                                                <div class="col-2">
+                                                <div class="col-6 col-sm-3 mb-2">
                                                     <label class="mb-1">Длина, мм.</label>
                                                     <input type="text" value="{{ $shopItem->length }}" name="length" class="form-control" placeholder="Длина" >
                                                 </div>

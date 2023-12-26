@@ -40,9 +40,9 @@
                             <tr>
                                 <th style="width: 1%">#ID</th>
                                 <th>Название доставки</th>
-                                <th>Описание</th>
-                                <th style="width: 40px">Цвет</th>
-                                <th style="width: 100px">Сортировка</th>
+                                <th class="d-mob-none">Описание</th>
+                                <th class="d-mob-none" style="width: 40px">Цвет</th>
+                                <th class="d-mob-none" style="width: 100px">Сортировка</th>
                                 <th class="text-center" width="100">Поля</th>
                                 <th class="controll-td"></th>
                             </tr>
@@ -54,9 +54,9 @@
                                 <tr>
                                     <td style="width: 1%">{{ $delivery->id }}</td>
                                     <td><span id="apply_check_delivery_name_{{ $delivery->id }}" class="editable">{{ $delivery->name }}</span></td>
-                                    <td><span id="apply_check_delivery_description_{{ $delivery->id }}" class="editable">{{ $delivery->description }}</span></td>
-                                    <td style="width: 40px"><span id="apply_check_delivery_color_{{ $delivery->id }}" class="editable">{{ $delivery->color }}</span></td>
-                                    <td style="width: 100px"><span id="apply_check_delivery_sorting_{{ $delivery->id }}" class="editable">{{ $delivery->sorting }}</span></td>
+                                    <td class="d-mob-none"><span id="apply_check_delivery_description_{{ $delivery->id }}" class="editable">{{ $delivery->description }}</span></td>
+                                    <td class="d-mob-none" style="width: 40px"><span id="apply_check_delivery_color_{{ $delivery->id }}" class="editable">{{ $delivery->color }}</span></td>
+                                    <td class="d-mob-none" style="width: 100px"><span id="apply_check_delivery_sorting_{{ $delivery->id }}" class="editable">{{ $delivery->sorting }}</span></td>
                                     <td class="text-center">
                                         <a href="{{ route('shopDeliveryField.index') }}?shop_delivery_id={{ $delivery->id }}"><i data-feather="list"></i></a>
                                     </td>

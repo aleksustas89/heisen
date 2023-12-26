@@ -40,10 +40,10 @@
                             <tr>
                                 <th style="width: 1%">№</th>
                                 <th style="width: 300px">Автор</th>
-                                <th style="width: 200px">Тема</th>
-                                <th>Текст</th>
-                                <th style="width: 100px">Оценка</th>
-                                <th style="width: 100px">Активность</th>
+                                <th class="d-mob-none" style="width: 200px">Тема</th>
+                                <th class="d-mob-none">Текст</th>
+                                <th class="d-mob-none" style="width: 100px">Оценка</th>
+                                <th class="d-mob-none" style="width: 100px">Активность</th>
                                 <th class="td-actions"></th>
                             </tr>
                         </thead>
@@ -101,10 +101,10 @@
 
 
                                     </td>
-                                    <td><span class="line-through-if-off">{{ $comment->subject }}</span></td>
-                                    <td><span class="line-through-if-off">{!! $comment->text !!}</span></td>
+                                    <td class="d-mob-none"><span class="line-through-if-off">{{ $comment->subject }}</span></td>
+                                    <td class="d-mob-none"><span class="line-through-if-off">{!! $comment->text !!}</span></td>
 
-                                    <td>
+                                    <td class="d-mob-none">
                                         @if ($comment->grade > 0)
                                             <span @class([
                                                 "green" => $comment->grade == 5 ? true : false,
@@ -117,7 +117,7 @@
                                         @endif
                                     </td>
                      
-                                    <td class="text-center">
+                                    <td class="text-center d-mob-none">
                                         <span onclick="toggle.init($(this))" @class([
                                             'pointer',
                                             'ico-inactive' => $isActive,

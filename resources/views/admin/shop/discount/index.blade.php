@@ -40,10 +40,10 @@
                             <tr>
                                 <th style="width: 1%">№</th>
                                 <th>Название</th>
-                                <th></th>
-                                <th style="width: 170px">Действует от</th>
-                                <th style="width: 170px">Действует до</th>
-                                <th class="text-center" style="width: 100px">Активность</th>
+                                <th class="d-none d-lg-inline-block"></th>
+                                <th class="d-none d-lg-inline-block" style="width: 170px">Действует от</th>
+                                <th class="d-none d-lg-inline-block" style="width: 170px">Действует до</th>
+                                <th class="d-none d-lg-inline-block" class="text-center" style="width: 100px">Активность</th>
                                 <th style="width: 100px">Величина</th>
                                 <th class="td-actions"></th>
                             </tr>
@@ -66,17 +66,18 @@
                                         <span class="line-through-if-off" id="apply_check_shopDiscount_name_{{ $discount->id }}" class="editable">{{ $discount->name }}</span>
                                         @if(!$outOfDate)<i class="las la-hourglass-end"></i>@endif
                                     </td>
-                                    <td>
+                                    <td class="d-none d-lg-inline-block">
                                         @php
-                                        $count = $discount->ShopItemDiscount->count();
+                                        $ShopItemDiscount = $discount->ShopItemDiscount;
+                                        $count = !is_null($ShopItemDiscount) ? $discount->ShopItemDiscount->count() : 0;
                                         @endphp
                                         <button type="button" class="btn btn-primary btn-sm">
                                             Кол-во товаров со скидкой <span class="badge bg-light text-dark">{{ $count }}</span>
                                         </button>
                                     </td>
-                                    <td>{{ \App\Services\Helpers\Str::datetime($discount->start_datetime) }}</td>
-                                    <td>{{ \App\Services\Helpers\Str::datetime($discount->end_datetime) }}</td>
-                                    <td class="text-center">
+                                    <td class="d-none d-lg-inline-block">{{ \App\Services\Helpers\Str::datetime($discount->start_datetime) }}</td>
+                                    <td class="d-none d-lg-inline-block">{{ \App\Services\Helpers\Str::datetime($discount->end_datetime) }}</td>
+                                    <td class="text-center d-none d-lg-inline-block">
                                         <span onclick="toggle.init($(this))" @class([
                                             'pointer',
                                             'ico-inactive' => $isActive,

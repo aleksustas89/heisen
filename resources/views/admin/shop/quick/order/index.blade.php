@@ -40,9 +40,9 @@
                             <tr>
                                 <th style="width: 1%">№</th>
                                 <th style="width: 170px">Дата</th>
-                                <th style="width: 300px">Фио</th>
-                                <th style="width: 200px">Телефон</th>
-                                <th>Товар</th>
+                                <th>Фио</th>
+                                <th style="width: 200px" class="d-mob-none">Телефон</th>
+                                <th class="d-mob-none">Товар</th>
                                 <th class="controll-td"></th>
                             </tr>
                         </thead>
@@ -56,13 +56,13 @@
                                     <td style="width: 170px" >
                                         {{ date("d.m.Y H:i", strtotime($quick_order->created_at)) }}
                                     </td>
-                                    <td style="width: 300px">
+                                    <td>
                                         {{ $quick_order->name }}
                                     </td>
-                                    <td style="width: 200px">
+                                    <td class="d-mob-none" style="width: 200px">
                                         {{ $quick_order->phone }}
                                     </td>
-                                    <td>
+                                    <td class="d-mob-none">
                                         @if (!is_null($quick_order->ShopItem))
                                             {{ $quick_order->ShopItem->name }}
                                             <a href="{{ $quick_order->ShopItem->url }}" target="_blank">

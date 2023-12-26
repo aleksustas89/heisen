@@ -35,7 +35,7 @@
 
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-lg-6">
 
             <div class="card" id="id_content">
                 <form action="{{ route('shopOrder.store') }}" method="POST" id="formEdit" enctype="multipart/form-data">
@@ -52,20 +52,20 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row mb-3">
-                                            <div class="col-4"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <label class="mb-1 my-2">Номер заказа</label>
                                                 <input type="text" disabled name="id" class="form-control" placeholder="Номер заказа">
                                             </div>
             
-                                            <div class="col-4"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <label class="mb-1 my-2">Дата заказа</label>
                                                 <input type="datetime-local" name="datetime" class="form-control" placeholder="Дата заказа">
                                             </div>
             
-                                            <div class="col-4"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <label class="mb-1 my-2">Клиент</label>
             
-                                                <select class="select" name="client_id">
+                                                <select class="select" id="client_id" name="client_id">
                                                     <option value="0">...</option>
                                                     @foreach (App\Models\Client::get() as $Client)
                                                         <option value="{{ $Client->id }}">{{ $Client->name }} [{{ $Client->id }}]</option>
@@ -82,7 +82,7 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row mb-3">
-                                            <div class="col-5"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <div class="d-inline-block order-col-sum">
                                                     <label class="mb-1 my-2">Сумма заказа</label>
                                                     <input type="text" disabled name="sum" value="" class="form-control" placeholder="Сумма заказа">
@@ -96,7 +96,7 @@
                                                 </div>
                                             
                                             </div>
-                                            <div class="col-7"> 
+                                            <div class="col-12 col-sm-4"> 
                                                 <label class="mb-1 my-2">Способ оплаты</label>
                                                 <select class="form-control" name="shop_payment_system_id">
                                                     <option value="0">...</option>
@@ -114,19 +114,19 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row mb-3">
-                                            <div class="col-3"> 
+                                            <div class="col-6 col-sm-4"> 
                                                 <label class="mb-1 my-2">Вес</label>
                                                 <input type="text" name="weight" class="form-control" placeholder="Вес заказа">
                                             </div>
-                                            <div class="col-3"> 
+                                            <div class="col-6 col-sm-4"> 
                                                 <label class="mb-1 my-2">Ширина</label>
                                                 <input type="text" name="width" class="form-control" placeholder="Ширина">
                                             </div>
-                                            <div class="col-3"> 
+                                            <div class="col-6 col-sm-4"> 
                                                 <label class="mb-1 my-2">Высота</label>
                                                 <input type="text" name="height" class="form-control" placeholder="Высота">
                                             </div>
-                                            <div class="col-3"> 
+                                            <div class="col-6 col-sm-4"> 
                                                 <label class="mb-1 my-2">Глубина</label>
                                                 <input type="text" name="length" class="form-control" placeholder="Глубина">
                                             </div>
@@ -241,19 +241,19 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row">
-                                            <div class="col-4">
+                                            <div class="col-12 col-sm-4">
                                                 <div class="form-group">
                                                     <label class="form-label my-2">Фамилия</label>
                                                     <input type="text" class="form-control" name="surname">
                                                 </div>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-12 col-sm-4">
                                                 <div class="form-group">
                                                     <label class="form-label my-2">Имя</label>
                                                     <input type="text" class="form-control" name="name">
                                                 </div>
                                             </div>
-                                            <div class="col-4">
+                                            <div class="col-12 col-sm-4">
                                                 <div class="form-group">
                                                     <label class="form-label my-2">Отчество</label>
                                                     <input type="text" class="form-control" name="patronymic">
@@ -262,13 +262,13 @@
                                         </div>
         
                                         <div class="row">
-                                            <div class="col-6">                            
+                                            <div class="col-12 col-sm-4">                            
                                                 <div class="form-group">
                                                     <label class="form-label my-2">Email</label>
                                                     <input type="email" name="email" class="form-control">
                                                 </div>
                                             </div>
-                                            <div class="col-6">                            
+                                            <div class="col-12 col-sm-4">                            
                                                 <div class="form-group">
                                                     <label class="form-label my-2">Телефон</label>
                                                     <input type="text" name="phone" class="form-control">
@@ -283,13 +283,13 @@
                                     </div>
                                     <div class="activity-info-text">
                                         <div class="row">
-                                            <div class="col-6">                            
+                                            <div class="col-12 col-sm-4">                            
                                                 <div class="form-group">
                                                     <label class="form-label my-2">Информация к заказу</label>
                                                     <textarea name="description" class="form-control"></textarea>
                                                 </div>
                                             </div>
-                                            <div class="col-6">                            
+                                            <div class="col-12 col-sm-4">                            
                                                 <div class="form-group">
                                                     <label class="form-label my-2">Информация к доставке</label>
                                                     <textarea name="delivery_information" class="form-control"></textarea>
@@ -311,7 +311,7 @@
 
         </div>
 
-        <div class="col-6">
+        <div class="col-12 col-lg-6">
             <div class="card">
                 <div class="card-header">
                     <div class="row">
