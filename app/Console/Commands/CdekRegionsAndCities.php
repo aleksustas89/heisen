@@ -33,28 +33,28 @@ class CdekRegionsAndCities extends Command
         $CdekController = new CdekController();
 
         if ($aRegions = $CdekController->getRegions()) {
-            DB::table('cdek_regions')->truncate();
 
             foreach ($aRegions as $aRegion) {
-
-                $CdekRegion = new CdekRegion();
-                $CdekRegion->name = $aRegion->region;
-                $CdekRegion->id = $aRegion->region_code;
-                $CdekRegion->save();
+                if (is_null(CdekRegion::where("code", $aRegion->region_code)->first())) {
+                    $CdekRegion = new CdekRegion();
+                    $CdekRegion->name = $aRegion->region;
+                    $CdekRegion->code = $aRegion->region_code;
+                    $CdekRegion->save();
+                }
             }
         }
 
         if ($aCities = $CdekController->getCities()) {
-            
-            DB::table('cdek_cities')->truncate();
-
+        
             foreach ($aCities as $aCity) {
 
-                $CdekCity = new CdekCity();
-                $CdekCity->name = $aCity->city;
-                $CdekCity->id = $aCity->code;
-                $CdekCity->cdek_region_id = $aCity->region_code;
-                $CdekCity->save();
+                if (is_null(CdekCity::where("code", $aCity->code)->first())) {
+                    $CdekCity = new CdekCity();
+                    $CdekCity->name = $aCity->city;
+                    $CdekCity->cdek_region_id = $aCity->region_code;
+                    $CdekCity->code = $aCity->code;
+                    $CdekCity->save();
+                }
             }
         }
     }

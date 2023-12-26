@@ -370,7 +370,7 @@ class CartController extends Controller
         $items = [];
 
         foreach (CdekCity::where("name", "like", "%" . $query . "%")->get() as $CdekCity) {
-            $items[] = ["value" => $CdekCity->name .", ". $CdekCity->CdekRegion->name, "data" => $CdekCity->id];
+            $items[] = ["value" => $CdekCity->name .", ". $CdekCity->CdekRegion->name, "data" => $CdekCity->code];
         }
 
         $aResult["suggestions"] = $items;
