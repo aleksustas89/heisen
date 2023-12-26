@@ -59,6 +59,18 @@ $(document).ready(function () {
         $form.on('keyup change paste blur', ':input[data-required]', function(e) { mainFieldChecker.check($(this)) });
     }
 
+	setTimeout(function() {
+		Swal.fire({
+			title: "Страница будет перезагружена через 1 минуту",
+			showCancelButton: false,
+		})
+	}, 600000 * 4);
+
+
+	setTimeout(function() {
+		location.reload();
+	}, 600000 * 5); //5min
+
 });
 
 function elFinderBrowser (callback, value, meta) {
