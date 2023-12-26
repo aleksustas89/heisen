@@ -395,27 +395,52 @@ class CdekController extends Controller
         if (!is_null($ShopOrder = ShopOrder::find($request->shop_order_id))) { 
 
             $aError["error"] = [];
-            if ($ShopOrder->cdek_dimension_id == 0) {
+            if ($request->cdek_dimension_id == 0) {
                 $aError["error"][] = "Заполните поле Упаковка";
+            } else {
+                $ShopOrder->cdek_dimension_id = $request->cdek_dimension_id;
             }
 
-            if (empty($ShopOrder->surname)) {
+            if (empty($request->surname)) {
                 $aError["error"][] = "Фамилия";
+            } else {
+                $ShopOrder->surname = $request->surname;
             }
-            if (empty($ShopOrder->name)) {
+
+            if (empty($request->name)) {
                 $aError["error"][] = "Имя";
+            } else {
+                $ShopOrder->name = $request->name;
             }
-            if (empty($ShopOrder->phone)) {
+
+            if (empty($request->phone)) {
                 $aError["error"][] = "Телефон";
+            } else {
+                $ShopOrder->phone = $request->phone;
             }
 
-            if (is_null(ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 16)->first())) {
+            $ShopOrder->save();
+
+            if (empty($request->delivery_7_city_id)) {
                 $aError["error"][] = "Заполните поле Город";
+            } else {
+
+                self::SaveShopDeliveryFieldValue($ShopOrder->id, 16, $request->delivery_7_city_id);
+                self::SaveShopDeliveryFieldValue($ShopOrder->id, 10, $request->delivery_7_city);
             }
 
-            if (is_null(ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 14)->first()) &&
-                is_null(ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 17)->first())) {
-                    $aError["error"][] = "Заполните поле Отделение или Курьер";
+            if (empty($request->delivery_7_city_id) && empty($request->delivery_7_courier)) {
+                $aError["error"][] = "Заполните поле Отделение или Курьер";
+            } else {
+
+                if ($request->delivery_7_delivery_type == 11) {
+                    self::SaveShopDeliveryFieldValue($ShopOrder->id, 11, $request->delivery_7_office);
+                    self::SaveShopDeliveryFieldValue($ShopOrder->id, 17, $request->delivery_7_office_id);
+                }
+
+                if ($request->delivery_7_delivery_type == 15) {
+                    self::SaveShopDeliveryFieldValue($ShopOrder->id, 15, $request->delivery_7_courier);
+                }  
             }
 
             if ($ShopOrder->ShopOrderItems->count() == 0) {
@@ -434,6 +459,18 @@ class CdekController extends Controller
         }
 
         return response()->json($result);
+    }
+
+    public static function SaveShopDeliveryFieldValue($shop_order_id, $field_id, $value)
+    {
+        if (is_null($ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_order_id", $shop_order_id)->where("shop_delivery_field_id", $field_id)->first())) {
+            $ShopDeliveryFieldValue = new ShopDeliveryFieldValue();
+        }
+
+        $ShopDeliveryFieldValue->shop_order_id = $shop_order_id;
+        $ShopDeliveryFieldValue->shop_delivery_field_id = $field_id;
+        $ShopDeliveryFieldValue->value = $value;
+        $ShopDeliveryFieldValue->save();
     }
 
     public function print(CdekOrder $CdekOrder)

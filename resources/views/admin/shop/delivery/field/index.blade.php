@@ -55,7 +55,7 @@
                                     <td style="widtd: 1%">{{ $field->id }}</td>
                                     <td><span id="apply_check_deliveryField_caption_{{ $field->id }}" class="editable">{{ $field->caption }}</span></td>
                                     <td class="d-mob-none"><span id="apply_check_deliveryField_field_{{ $field->id }}" class="editable">{{ $field->field }}</span></td>
-                                    <td style="width: 200px">{{ $types[$field->type] }}</td>
+                                    <td style="width: 200px">{{ $types[$field->type] ?? $field->type }}</td>
                                     <td class="d-mob-none" style="width: 100px"><span id="apply_check_deliveryField_sorting_{{ $field->id }}" class="editable">{{ $field->sorting }}</span></td>
                                     <td class="td-actions">
                                         <a href="{{ route('shopDeliveryField.edit', $field->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>

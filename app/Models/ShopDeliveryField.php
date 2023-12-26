@@ -28,6 +28,7 @@ class ShopDeliveryField extends Model
             "1" => "Текстовое поле",
             "2" => "Скрытое поле",
             "3" => "Список",
+            "4" => "Переключатель",
         ];
 
         return $aTypes;

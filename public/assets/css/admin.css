@@ -370,11 +370,12 @@
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 .clean-input {position: absolute;top: 8px;right: 10px;}
 .file-box-content .file-box {position: relative;}
-.tr-paid{
-   background: #c3ffea!important;
-}
 
-@media (max-width:768px){
+
+@media (max-width:768px) {
+    .tr-paid{
+        background: #c3ffea!important;
+     }
     .d-mob-none{
         display: none !important;
     }
