@@ -370,6 +370,7 @@
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 .clean-input {position: absolute;top: 8px;right: 10px;}
 .file-box-content .file-box {position: relative;}
+.enlarge-menu .developer-text{display: none !important;}
 
 
 @media (max-width:768px) {

@@ -25,7 +25,7 @@
                     <span>
                         <img src="/assets/images/logo-sm.png" alt="logo-small" class="logo-sm">
                     </span>
-                    <span class="logo-text d-xxl-inline d-lg-none">
+                    <span class="developer-text logo-text d-xxl-inline d-lg-none">
                         Powerful
                     </span>
                 </a>
