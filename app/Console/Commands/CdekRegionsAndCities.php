@@ -35,10 +35,10 @@ class CdekRegionsAndCities extends Command
         if ($aRegions = $CdekController->getRegions()) {
 
             foreach ($aRegions as $aRegion) {
-                if (is_null(CdekRegion::where("code", $aRegion->region_code)->first())) {
+                if (is_null(CdekRegion::where("id", $aRegion->region_code)->first())) {
                     $CdekRegion = new CdekRegion();
                     $CdekRegion->name = $aRegion->region;
-                    $CdekRegion->code = $aRegion->region_code;
+                    $CdekRegion->id = $aRegion->region_code;
                     $CdekRegion->save();
                 }
             }
@@ -48,11 +48,11 @@ class CdekRegionsAndCities extends Command
         
             foreach ($aCities as $aCity) {
 
-                if (is_null(CdekCity::where("code", $aCity->code)->first())) {
+                if (is_null(CdekCity::whereId($aCity->code)->first())) {
                     $CdekCity = new CdekCity();
                     $CdekCity->name = $aCity->city;
                     $CdekCity->cdek_region_id = $aCity->region_code;
-                    $CdekCity->code = $aCity->code;
+                    $CdekCity->id = $aCity->code;
                     $CdekCity->save();
                 }
             }

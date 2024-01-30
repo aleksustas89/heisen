@@ -19,12 +19,21 @@ class HomeController extends Controller
 
         $client = Auth::guard('client')->user();
 
-        
+        $shop = Shop::get();
 
+        $newItems = ShopItem::where('active', 1)->where('modification_id', 0);
+        if ($shop->new_items == 1) {
+            $newItems->inRandomOrder();
+        } elseif ($shop->new_items == 2) {
+            $newItems->orderBy("id", "DESC");
+        }
+
+        $newItems->limit($shop->new_items_count > 0 ? $shop->new_items_count : 15);
+        
         return view('home', [
             'structure' => Structure::where("path", "/")->first(),
             'groups' => ShopGroup::where("parent_id", 0)->where('active', 1)->inRandomOrder()->get(),
-            'newItems' => ShopItem::where('active', 1)->where('modification_id', 0)->inRandomOrder()->limit(15)->get(),
+            'newItems' => $newItems->get(),
             'discountItems' => ShopItemDiscountController::prepareSql()->inRandomOrder()->limit(15)->get(),
             'client' => $client,
             'bottom_text' => Shop::get()->description,

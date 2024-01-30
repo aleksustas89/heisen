@@ -20,6 +20,12 @@ class ShopController extends Controller
     public function index(Request $request)
     {
 
+        if ($request->test) {
+            $Controller = new \App\Http\Controllers\CdekController();
+
+            $Controller->createOrder(\App\Models\ShopOrder::find(105), \App\Models\CdekSender::find(1));
+        }
+
         $oShop = Shop::find(Shop::$shop_id);
         if (!is_null($oShop->id) && $oShop->active == 1) {
 
@@ -101,6 +107,9 @@ class ShopController extends Controller
         $shop->group_image_small_max_height = $request->group_image_small_max_height;
         $shop->preserve_aspect_ratio_group = $request->preserve_aspect_ratio_group;
         $shop->preserve_aspect_ratio_group_small = $request->preserve_aspect_ratio_group_small;
+
+        $shop->new_items = $request->new_items;
+        $shop->new_items_count = $request->new_items_count;
 
         $shop->save();
 

@@ -32,7 +32,7 @@ class CdekController extends Controller
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.cdek.ru/v2/oauth/token?grant_type=client_credentials&client_id=raHsvosp1lzzVdhtBeG5xxvdM8AcPIOJ&client_secret=2WrwnXn7Tr8gXhfsiwgb2k8cEGIiDTMw',
+            CURLOPT_URL => 'https://api.cdek.ru/v2/oauth/token?grant_type=client_credentials&client_id=' . $this->Cdek->client_id . '&client_secret=' . $this->Cdek->client_secret,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -41,8 +41,8 @@ class CdekController extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_HTTPHEADER => array(
-                'client_id: raHsvosp1lzzVdhtBeG5xxvdM8AcPIOJ',
-                'client_secret: 2WrwnXn7Tr8gXhfsiwgb2k8cEGIiDTMw'
+                'client_id: ' . $this->Cdek->client_id,
+                'client_secret: ' . $this->Cdek->client_secret
             ),
             ));
             
@@ -236,9 +236,15 @@ class CdekController extends Controller
             $package["number"] = "order-" . $ShopOrder->id;
 
             $package["weight"] = (int) $ShopOrder->CdekDimension->weight;
-            $package["length"] = (int) $ShopOrder->CdekDimension->length / 10;
-            $package["width"] = (int) $ShopOrder->CdekDimension->width / 10;
-            $package["height"] = (int) $ShopOrder->CdekDimension->height / 10;
+           // $package["length"] = 10; // (int) $ShopOrder->CdekDimension->length / 10;
+           // $package["width"] = 10; // (int) $ShopOrder->CdekDimension->width / 10;
+           // $package["height"] = 80; // (int) $ShopOrder->CdekDimension->height / 10;
+
+       
+            $service['code'] = $ShopOrder->CdekDimension->box_name;
+            $service['parameter'] = 1;
+            $aData["services"][] = $service;
+
     
             foreach ($ShopOrder->ShopOrderItems as $ShopOrderItem) {
                 
@@ -258,6 +264,8 @@ class CdekController extends Controller
             }
     
             $aData["packages"][] = $package;
+
+           // dd($aData);
 
             $curl = curl_init();
     

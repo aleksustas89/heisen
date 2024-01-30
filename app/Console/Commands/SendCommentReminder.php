@@ -30,7 +30,7 @@ class SendCommentReminder extends Command
     public function handle()
     {
 
-        foreach ($days = [7] as $day) {
+        foreach ($days = [14] as $day) {
 
             $Orders = ShopOrder::where("created_at", "<=", date("Y-m-d", strtotime("-". ($day - 1) ." days")) . ' 00:00:00')
                 ->where("created_at", ">=", date("Y-m-d", strtotime("-". ($day + 1) ." days")) . ' 00:00:00')    

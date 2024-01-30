@@ -32,33 +32,54 @@ class CdekOffices extends Command
 
         $CdekController = new CdekController();
 
-        DB::table('cdek_offices')->truncate();
+        $CdekCities = CdekCity::orderBy("updated_at", "ASC")->limit(50)->get();
 
-        foreach (CdekCity::get() as $CdekCity) {
-            if ($aOffices = $CdekController->getOffices($CdekCity->code)) {
+        foreach ($CdekCities as $CdekCity) {
 
-                foreach ($aOffices as $aOffice) {
-                    $CdekOffice = new CdekOffice();
-                    $CdekOffice->code = $aOffice->code;
-                    $CdekOffice->name = $aOffice->name;
-                    $CdekOffice->address_comment = $aOffice->address_comment ?? $aOffice->note ?? '';
-                    $CdekOffice->uuid = $aOffice->uuid;
-                    $CdekOffice->work_time = $aOffice->work_time;
-                    $CdekOffice->cdek_region_id = $aOffice->location->region_code;
-                    $CdekOffice->cdek_city_id = $aOffice->location->city_code;
-                    $CdekOffice->longitude = $aOffice->location->longitude;
-                    $CdekOffice->latitude = $aOffice->location->latitude;
-                    $CdekOffice->weight_min = $aOffice->weight_min ?? 0;
-                    $CdekOffice->weight_max = $aOffice->weight_max ?? 0;
-    
-                    $CdekOffice->save();
-                }
-    
+            $aIdsCdekOffices = [];
+            foreach ($getOffices = $CdekController->getOffices($CdekCity->id) as $Office) {
+                $aIdsCdekOffices[] = $Office->code;
             }
+
+            foreach (CdekOffice::where("cdek_city_id", $CdekCity->id)->get() as $aOffice) {
+                //если в полученном массиве нет офиса - удаляем
+                if (!in_array($aOffice->code, $aIdsCdekOffices)) {
+                    $aOffice->active = 0;
+                    $aOffice->save();
+                } 
+
+                $key = array_search($aOffice->code, $aIdsCdekOffices);
+                if (isset($aIdsCdekOffices[$key])) {
+                    unset($aIdsCdekOffices[$key]);
+                }
+            }
+
+            //добавляем те, которых нет
+            if (count($aIdsCdekOffices) > 0) {
+                foreach ($getOffices as $Office) {
+                    if (in_array($Office->code, $aIdsCdekOffices)) {
+                        $CdekOffice = new CdekOffice();
+                        $CdekOffice->code = $Office->code;
+                        $CdekOffice->name = $Office->name;
+                        $CdekOffice->address_comment = $Office->address_comment ?? $Office->note ?? '';
+                        $CdekOffice->uuid = $Office->uuid;
+                        $CdekOffice->work_time = $Office->work_time;
+                        $CdekOffice->cdek_region_id = $Office->location->region_code;
+                        $CdekOffice->cdek_city_id = $Office->location->city_code;
+                        $CdekOffice->longitude = $Office->location->longitude;
+                        $CdekOffice->latitude = $Office->location->latitude;
+                        $CdekOffice->weight_min = $Office->weight_min ?? 0;
+                        $CdekOffice->weight_max = $Office->weight_max ?? 0;
+        
+                        $CdekOffice->save();
+                    }
+                }
+            }
+
+            $CdekCity->updated_at = date("Y-m-d H:i:s");
+            $CdekCity->save();
+
         }
-
-
-
 
     }
 }

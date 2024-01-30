@@ -44,6 +44,7 @@
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#seo" data-bs-toggle="tab" role="tab">SEO</a></li>
                         <li class="nav-item"><a class="nav-link" href="#images" data-bs-toggle="tab" role="tab">Изображения</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#index" data-bs-toggle="tab" role="tab">Главная</a></li>
                     </ul>
                 </div>
 
@@ -212,6 +213,30 @@
                                 </div>
                             </div>
 
+
+                        </div>
+
+                        <div class="tab-pane" id="index">
+
+                            <div class="row mb-3">
+                                <div class="col-12 col-sm-6">
+
+                                    <label class="mb-1">Тип вывода новинок на главной</label>
+                                    <select name="new_items"  class="form-control">  
+                                        <option value="0">...</option>  
+
+                                        <option @if($shop['new_items'] == 1) selected @endif value="1">Показывать рамдомно товары со всего магазина</option>
+                                        <option @if($shop['new_items'] == 2) selected @endif value="2">Показывать последние добавленные товары</option>                                   
+                                    </select> 
+                   
+                                </div>
+                                <div class="col-12 col-sm-6">
+
+                                    <label class="mb-1">Количество товаров</label>
+                                    <input type="text" name="new_items_count" value="{{ $shop['new_items_count'] }}" class="form-control" placeholder="Количество товаров">
+
+                                </div>
+                            </div>
 
                         </div>
 

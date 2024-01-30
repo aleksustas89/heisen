@@ -199,7 +199,9 @@
                                                                     <select id="cdek_dimension_id" name="cdek_dimension_id">
                                                                         <option value="0">...</option>
                                                                         @foreach ($CdekDimensions as $CdekDimension)
-                                                                            <option @if($CdekDimension->id == $order->cdek_dimension_id) selected @endif value="{{ $CdekDimension->id }}">{{ intval($CdekDimension->length) }}x{{ intval($CdekDimension->width) }}x{{ intval($CdekDimension->height) }}, до {{$CdekDimension->weight / 1000}} кг</option>
+                                                                            @if (!empty($CdekDimension->box_name))
+                                                                                <option @if($CdekDimension->id == $order->cdek_dimension_id) selected @endif value="{{ $CdekDimension->id }}">{{ intval($CdekDimension->length) }}x{{ intval($CdekDimension->width) }}x{{ intval($CdekDimension->height) }}, до {{$CdekDimension->weight / 1000}} кг</option>
+                                                                            @endif
                                                                         @endforeach
                                                                     </select>         
                                                                                                    
@@ -226,7 +228,18 @@
                                                                         <div @class(["tab-pane", "p-3", "active" => isset($aDeliveryValues[14]) && $aDeliveryValues[14] == 11 ? true : false]) id="tab-delivery-11" role="tabpanel">
                                                                             <div class="row">
                                                                                 <div class="form-group">
-                                                                                    <label class="label my-2">Отделение </label>
+                                                                                    @php
+                                                                                        $CdekOffice = null;
+                                                                                        if ($aDeliveryValues[17] > 0) {
+                                                                                            $CdekOffice = \App\Models\CdekOffice::find($aDeliveryValues[17]);
+                                                                                        }
+                                                                                    @endphp
+                                                                                    <label class="label my-2">
+                                                                                        Отделение 
+                                                                                        @if (!is_null($CdekOffice) && $CdekOffice->active == 0) 
+                                                                                            <span style="color: red">(Отделение было отключено)</span> 
+                                                                                        @endif
+                                                                                    </label>
                                                                                     <input type="text" class="form-control" value="{{ $aDeliveryValues[11] ?? '' }}" name="delivery_7_office">
                                                                                     <input type="hidden" value="{{ $aDeliveryValues[17] ?? '' }}" name="delivery_7_office_id">
                                                                                 </div>
@@ -262,7 +275,7 @@
                                                                             Тип: {{ App\Models\CdekSender::$Types[$cdekSender->type]["name"] }}
                                                                         </div>
                                                                     </div>
-                                                                    @if ($cdekSender->type == 0 && $cdekSender->cdek_office_id > 0)
+                                                                    @if (!is_null($cdekSender->CdekOffice) && $cdekSender->type == 0 && $cdekSender->cdek_office_id > 0)
                                                                         <div class="row form-group my-1">
                                                                             <div class="col-12">
                                                                                 Офис: {{ $cdekSender->CdekOffice->name }}

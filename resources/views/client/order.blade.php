@@ -58,7 +58,10 @@
                                             <li>Способ доставки: {{ $ShopOrder->ShopDelivery->name }}</li>
                                             
                                             @foreach ($ShopOrder->ShopDeliveryFieldValues as $ShopDeliveryFieldValue)
-                                                <li>{{ $ShopDeliveryFieldValue->ShopDeliveryField->caption }}: {{ $ShopDeliveryFieldValue->value }}</li>
+                                                @if (!in_array($ShopDeliveryFieldValue->shop_delivery_field_id, [14, 16, 17]))
+                                                    <li>{{ $ShopDeliveryFieldValue->ShopDeliveryField->caption }}: {{ $ShopDeliveryFieldValue->value }}</li>
+                                                @endif
+                                                
                                             @endforeach
                                         </ul>
                                     </div>
