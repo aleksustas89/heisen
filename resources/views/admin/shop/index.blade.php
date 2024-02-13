@@ -41,7 +41,15 @@
                     <a href="{{ route('shopOrder.index') }}" class="btn btn-danger"><i class="fas fa-shopping-cart icon-separator"></i>Заказы</a>
                     <a href="{{ route('shopQuickOrder.index') }}" class="btn btn-burgundy"><i class="fas fa-shopping-cart icon-separator"></i>Быстрые заказы</a>
 
-                    <a href="{{ route('shopDiscount.index') }}" class="btn btn-warning"><i class="fas fa-tags icon-separator"></i>Скидки</a>
+
+                    <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-tags icon-separator"></i>Цены<i class="mdi mdi-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" style="">
+                        <a class="dropdown-item" href="{{ route('shopDiscount.index') }}">Скидки</a>
+                        <a class="dropdown-item" href="{{ route('shop.shop-price.index', ['shop' => 1]) }}">Изменение цен</a>
+                    </div>
+
 
                     <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-cogs icon-separator"></i>

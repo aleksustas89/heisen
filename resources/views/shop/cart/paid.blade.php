@@ -31,7 +31,7 @@
                 @endif
                 <script>
                     $(function() {
-                        OrderStatus.update({{ $order_id }});
+                        OrderStatus.update({{ $guid }});
                     });
                 </script>
             @endif
@@ -47,11 +47,11 @@
 @section("js")
     <script>
         var OrderStatus = {
-            update: function(order_id, step = 0) {
+            update: function(guid, step = 0) {
                 if (step < 5) {
                     setTimeout(function() {
                         step++;
-                        window.location.href = "https://heisen.ru/cart/payment/result?order_id=" + order_id + "&step=" + step;
+                        window.location.href = "https://heisen.ru/cart/payment/result?guid=" + guid + "&step=" + step;
                     }, 2000);
                 }
 

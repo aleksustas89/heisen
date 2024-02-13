@@ -1,6 +1,6 @@
 var Cart = {
 
-    plus: function(route, id) {
+    plus: function(route, id, littleCart = 0) {
 
         Spiner.show();
 
@@ -9,7 +9,8 @@ var Cart = {
             type: "POST",
             data: {
                 "id": id, 
-                "quantity": 1,
+                "count": 1,
+                "littleCart": littleCart
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -23,7 +24,7 @@ var Cart = {
 
     },
 
-    minus: function(route, id) {
+    minus: function(route, id, littleCart = 0) {
         Spiner.show();
 
         $.ajax({
@@ -31,7 +32,8 @@ var Cart = {
             type: "POST",
             data: {
                 "id": id, 
-                "quantity": -1,
+                "count": -1,
+                "littleCart": littleCart
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -44,16 +46,16 @@ var Cart = {
         });
     },
 
-    add: function(route, id, quantity) {
-       
+    add: function(route, shop_item_id, count) {
+        
         Spiner.show();
 
         $.ajax({
             url: route,
             type: "POST",
             data: {
-                "id": id, 
-                "quantity": quantity
+                "shop_item_id": shop_item_id, 
+                "count": count
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

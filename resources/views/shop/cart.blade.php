@@ -22,17 +22,25 @@
                     <a class="uk-navbar-item uk-logo" href="/" aria-label="Back to Home" tabindex="0" role="menuitem">HEISEN</a>
                 </div>
                 <h1>Ваш заказ оформлен</h1>
-                <h3>Сейчас Вы будете перенаправлены на платежную систему</h3>
 
-                <script>
-                    setTimeout(function() {
-                        window.location.href = "{{ $paymentUrl }}";
-                    }, 3000);
-                </script>
+                @if (isset($paymentUrl))
+                    <h3>Сейчас Вы будете перенаправлены на платежную систему</h3>
+
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = "{{ $paymentUrl }}";
+                        }, 3000);
+                    </script>
+
+                @else
+
+                    <h3>Наши менеджеры скоро свяжутся с Вами!</h3>
+
+                @endif
 
             </div>
 
-        @elseif (isset($cartCount) && $cartCount > 0)
+        @elseif (isset($Cart["countItems"]) && $Cart["countItems"] > 0)
 
             <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical uk-section-small uk-padding-remove-top">Оформление заказа</h1>
 

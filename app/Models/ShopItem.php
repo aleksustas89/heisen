@@ -83,6 +83,23 @@ class ShopItem extends Model
         return ShopItem::where("modification_id", $this->id)->where("default_modification", 1)->first() ?? false;
     }
 
+    public function modificationName()
+    {
+
+        $second = [];
+
+        foreach ($this->PropertyValueInts as $propertyValueInt) {
+            if ($propertyValueInt->ShopItemListItem) {
+                $second[] = $propertyValueInt->ShopItemProperty->name . ": " . $propertyValueInt->ShopItemListItem->value;
+            }
+        }
+
+        return [
+            "name" => trim($this->parentItemIfModification()->name),
+            "params" => implode(",", $second)
+        ];
+    }
+
     public function getImages($all = true)
     {
         $aReturn = [];
@@ -249,6 +266,26 @@ class ShopItem extends Model
     public function oldPrice()
     {
         return $this->price != $this->price() ? $this->price : false;
+    }
+
+    public function getPriceApplyCurrency(ShopCurrency $ShopCurrency)
+    {
+
+        return $this->applyCurrency($this->price(), $ShopCurrency);
+    }
+
+    public function getOldPriceApplyCurrency(ShopCurrency $ShopCurrency)
+    {
+
+        return $this->applyCurrency($this->oldPrice(), $ShopCurrency);
+    }
+
+    protected function applyCurrency($price, ShopCurrency $ShopCurrency)
+    {
+        if ($price) {
+            return $ShopCurrency->default != 1 ? $price * $ShopCurrency->exchange_rate : $price;
+        }
+        return false;
     }
 
     public function parentItemIfModification()

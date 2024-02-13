@@ -62,6 +62,8 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::resource('comment', CommentController::class);
         Route::resource('cdekSender', CdekSenderController::class);
 
+        Route::resource('shop.shop-price', App\Http\Controllers\Admin\ShopPriceController::class)->only(['index', 'update']);
+
         Route::prefix("search")->group(function() {
             Route::get('/', [App\Http\Controllers\Admin\SearchController::class, 'index'])->name("adminSearch");
             Route::get('/indexing', [App\Http\Controllers\Admin\SearchController::class, 'indexing'])->name("adminSearchIndexing");

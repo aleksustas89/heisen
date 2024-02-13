@@ -40,7 +40,7 @@
         $CommentShopItem = $Comment->CommentShopItem;
         @endphp
 
-        @if (!is_null($CommentShopItem))
+        @if (!is_null($CommentShopItem) && !is_null($CommentShopItem->ShopItem))
             <header class="uk-comment-header uk-margin">
                 <div class="uk-grid-medium uk-flex-middle" uk-grid>
                     <div class="uk-width-auto">

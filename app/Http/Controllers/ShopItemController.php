@@ -15,6 +15,19 @@ use App\Models\CommentShopItem;
 class ShopItemController extends Controller
 {
 
+    public static function quickBuy(ShopItem $shopItem)
+    {
+
+        if (!is_null($shopItem)) {
+
+            $CartController = new CartController();
+            $CartController->add($shopItem, 1);
+
+            header("Location: /cart");
+            exit();
+        }
+    }
+
     static public function show($path, $shopItem)
     {
         $ShopItemProperties = ShopItemProperty::select("shop_item_properties.*")

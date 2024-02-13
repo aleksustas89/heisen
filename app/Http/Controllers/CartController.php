@@ -23,17 +23,21 @@ use App\Models\Mail\SendOrderAdmin;
 use Illuminate\Support\Facades\Auth;
 use YooKassa\Client;
 use App\Services\Helpers\Guid;
+use App\Models\ShopCartItem;
+use App\Http\Controllers\Shop\Payment\Handler\ShopPaymentHandlerController;
 
 class CartController extends Controller
 {
+
+    protected static $_cookie_live = 3600 * 24 * 7;
+
     public function index()
     {
 
-        $cartCollection = \App\Http\Controllers\CartController::getCart();
         $client = Auth::guard('client')->user();
 
         return view('shop.cart', [
-            "cartCount" => $cartCollection ? $cartCollection->count() : 0,
+            "Cart" => self::getCart(),
             "Cities" => ShopCountryLocationCity::get(),
             "Payments" => ShopPaymentSystem::orderBy("sorting", "ASC")->get(),
             'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
@@ -44,150 +48,120 @@ class CartController extends Controller
     public function updateItemInCart(Request $request)
     {
 
-        if (!$cart_id = self::isSetCart()) {
-            
-            $cart_id = uniqid();
-
-            setcookie("cart_id", $cart_id);
-        } 
-
-        if (!is_null($ShopItem = ShopItem::find($request->id))) {
-
-            \Cart::session($cart_id);
-
-            $ItemInCart = \Cart::session($cart_id)->get($ShopItem->id);
-
-            if ($request->quantity < 0 && $ItemInCart->quantity > 1) {
-                \Cart::session($cart_id)->update($ShopItem->id, [
-                    'quantity' => -1
-                ]);
-            } else if ($request->quantity > 0) {
-                \Cart::session($cart_id)->update($ShopItem->id, [
-                    'quantity' => 1
-                ]);
+        if ($cart_id = self::isSetCart()) {
+            if (!is_null($ShopCartItem = ShopCartItem::where("cart_id", $cart_id)->where("id", request()->id)->first())) {
+                $count = $ShopCartItem->count + request()->count;
+                $ShopCartItem->count = $count > 0 ? $count : 1;
+                $ShopCartItem->save();
             }
         }
 
-        return self::getCartItemsTemplate();
+        return self::getCartItemsTemplate(request()->littleCart ?? 0);
+    }
+
+    public function add(ShopItem $shopItem, $count)
+    {
+        if (!$cart_id = self::isSetCart()) {
+            
+            $cart_id = $this->setCart();
+        }
+
+        if (!is_null($ShopCartItem = ShopCartItem::where("cart_id", $cart_id)->where("shop_item_id", $shopItem->id)->first())) {
+            $ShopCartItem->count = $ShopCartItem->count + $count;
+        } else {
+            $ShopCartItem = new ShopCartItem();
+            $ShopCartItem->price = $shopItem->price();
+            $ShopCartItem->old_price = $shopItem->oldPrice();
+            $ShopCartItem->cart_id = $cart_id;
+            $ShopCartItem->count = $count;
+            $ShopCartItem->shop_item_id = $shopItem->id;
+        }
+
+        $ShopCartItem->save();
+
+        return true;
+
     }
 
     public function addToCart(Request $request)
     {
+        if (!is_null($ShopItem = ShopItem::find($request->shop_item_id))) {
 
-        $this->clearLastOrderId();
-
-        if (!$cart_id = self::isSetCart()) {
-            
-            $cart_id = uniqid();
-
-            setcookie("cart_id", $cart_id);
-        } 
-
-        if (!is_null($ShopItem = ShopItem::find($request->id))) {
-
-            \Cart::session($cart_id);
-
-            $ShopItemImage = $ShopItem->getShopItemImage() ?? false;
-
-            $ParentShopItem = $ShopItem->parentItemIfModification();
-
-            \Cart::session($cart_id)->add(array(
-                'id' => $ShopItem->id,
-                'name' => $ShopItem->name,
-                'price' => $ShopItem->price(),
-                'quantity' => $request->quantity ?? 1,
-                'attributes' => [
-                    "img" => $ShopItemImage ? $ShopItem->path() . $ShopItemImage->image_small : '',
-                    "url" => $ParentShopItem->url,
-                    "oldPrice" => $ShopItem->oldPrice(),
-                ],
-            ));
-
-            return response()->view("shop.add-cart-window", ["ShopItem" => $ShopItem]);
+            $this->add($ShopItem, $request->count);
     
+            return response()->view("shop.add-cart-window", ["ShopItem" => $ShopItem]);
         }
     }
 
-    public static function getTotalDiscount()
+
+
+    public static function deleteFromCart()
     {
-        $discount = 0;
-        if ($Cart = self::getCart()) {
-            foreach ($Cart as $item) {
-                $discount += $item["attributes"]["oldPrice"] > 0 ? $item["attributes"]["oldPrice"] - $item["price"] : 0;
+
+        if ($cart_id = self::isSetCart()) {
+            if (!is_null($ShopCartItem = ShopCartItem::where("cart_id", $cart_id)->where("id", request()->id)->first())) {
+                $ShopCartItem->delete();
             }
         }
-        
-        return $discount;
+
+        return self::getCartItemsTemplate(request()->littleCart ?? 0);
     }
 
-    public static function deleteFromCart(Request $request)
+    public static function getLittleCart()
     {
-        if ($cart_id = self::isSetCart()) {
-            \Cart::session($cart_id)->remove($request->id);
-        }
 
-        return self::getCartItemsTemplate($request->littleCart ?? 0);
-    }
-
-    public static function getLittleCart(Request $request)
-    {
-        return self::getCartItemsTemplate($request->littleCart ?? 0);
+        return self::getCartItemsTemplate(request()->littleCart ?? 0);
     }
 
     public static function getCartItemsTemplate($littleCart = 0)
     {
-        return response()->view("shop.cart-items", ["littleCart" => $littleCart]);
+        return response()->view('shop.cart-items', ["littleCart" => $littleCart]);
     }
 
     public static function getCart()
     {
+        $aResult = false;
+
+        $ShopCurrency = ShopCurrencyController::getCurrent();
+
         if ($cart_id = self::isSetCart()) {
-            $aCart = \Cart::session($cart_id)->getContent()->toArray();
 
+            $ShopCartItems = ShopCartItem::where("cart_id", $cart_id)->get();
 
-            foreach ($aCart as $aCartItem) {
+            $aResult["items"] = $ShopCartItems;
 
-                $ShopItem = ShopItem::find($aCartItem["id"]);
-                $current_price = $ShopItem->price();
-                if ($current_price != $aCartItem["price"]) {
-
-                    $attributes = $aCartItem["attributes"];
-                    $attributes["priceChanged"] = 1;
-                    
-                    \Cart::session($cart_id)->update($aCartItem["id"], [
-                        'price' => $current_price,
-                        'attributes' => $attributes,
-                    ]);
-                }
+            $total = 0;
+            $totalDiscount = 0;
+            
+            foreach ($ShopCartItems as $ShopCartItem) {
+                $total += $ShopCartItem->ShopItem->getPriceApplyCurrency($ShopCurrency) * $ShopCartItem->count;
+                $totalDiscount += $ShopCartItem->old_price > 0 ? $ShopCartItem->old_price - $ShopCartItem->price : 0;
             }
 
-            return \Cart::session($cart_id)->getContent();
-        } else {
-            return false;
-        }
-    }
+            $aResult["totalPrice"] = $total;
+            $aResult["countItems"] = count($aResult["items"]);
+            $aResult["totalDiscount"] = $totalDiscount;
 
+        } 
+        
+        return $aResult;
 
-    public static function getTotal()
-    {
-        if ($cart_id = self::isSetCart()) {
-            return \Cart::session($cart_id)->getSubTotal();
-        } else {
-            return false;
-        }
-    }
-
-    protected static function clear()
-    {
-        if ($cart_id = self::isSetCart()) {
-            \Cart::session($cart_id)->clear();
-        }
     }
 
     protected static function isSetCart()
     {
         return isset($_COOKIE["cart_id"]) ? $_COOKIE["cart_id"] : false;
     }
+
+    protected function setCart()
+    {
+        $cart_id = uniqid();
+
+        setcookie("cart_id", $cart_id, time() + (self::$_cookie_live), "/");
+
+        return $cart_id;
+    }
+
 
     public function getCities(Request $request)
     {
@@ -211,154 +185,163 @@ class CartController extends Controller
     public function saveOrder(Request $request)
     {
 
-        if (!isset($_COOKIE["last_order_id"])) {
-            $ShopOrder = new ShopOrder();
-        } else {
-            $ShopOrder = ShopOrder::find($_COOKIE["last_order_id"]);
-        }
-
-        $Fields = [
-            'name' => ['required', function ($attribute, $value, $fail) {
-
-                if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/", $value)) 
-                {
-                    $fail('Имя может содержать только русские / латинские символы, пробел, цифры и знак _');
-                }
-            },],
-            'surname' => ['required', function ($attribute, $value, $fail) {
-
-                if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/", $value)) 
-                {
-                    $fail('Фамилия может содержать только русские / латинские символы, пробел, цифры и знак _');
-                }
-            },],
-            //'email' => 'required|email',
-            //'city' => 'required',
-            'phone' => ['required', function ($attribute, $value, $fail) {
-                $value = preg_replace("/[^,.0-9]/", '', $value);
-                if (strlen($value) < 11) {
-                    $fail('The '.$attribute.' is invalid.');
-                }
-            },],
-        ];
-
-        if ($request->shop_delivery_id == 7) {
-            /*cdek*/
-            $Fields['delivery_7_city_id'] = 'required';
-
-            if ($request->delivery_7_delivery_type == 11) {
-                $Fields['delivery_7_office_id'] = 'required';
-            } else if ($request->delivery_7_delivery_type == 15) {
-                $Fields['delivery_7_courier'] = 'required';
-            }
-        }
-
-        if ($request->shop_delivery_id == 1) {
-            $Fields['delivery_1_city'] = 'required';
-            $Fields['delivery_1_office'] = 'required';
-        }
-
-        if (!empty($request->email)) {
-            $Fields['email'] = 'required|email';
-        }
-
-        $request->validate($Fields);
-
-        $ShopCurrency = ShopCurrency::where("default", 1)->first();
-
-        $ShopOrder->shop_payment_system_id = $request->shop_payment_system_id ?? 0;
-        $ShopOrder->shop_currency_id = $ShopCurrency->id ?? 0;
-        $ShopOrder->shop_delivery_id = $request->shop_delivery_id ?? 0;
-
-        if (!is_null($client = Auth::guard('client')->user())) {
-            $ShopOrder->client_id = $client->id;;
-        }
-
-        $ShopOrder->name = $request->name;
-        $ShopOrder->surname = $request->surname;
-        $ShopOrder->email = $request->email;
-        $ShopOrder->phone = $request->phone;
-        $ShopOrder->city = $request->city;
-        $ShopOrder->description = \App\Services\Helpers\Str::clean($request->description);
-        $ShopOrder->not_call = $request->not_call ?? 0;
-        $ShopOrder->guid = Guid::get();
-
-        $ShopOrder->save();
-
         $getCart = self::getCart();
 
-        if (count($getCart) > 0) {
-            $weight = $length = $height = $width = 0;
+        if ($getCart && $getCart["totalPrice"] > 0) {
+            
+            $ShopOrder = new ShopOrder();
 
-            foreach ($getCart as $CartItem) {
+            $Fields = [
+                'name' => ['required', function ($attribute, $value, $fail) {
     
-                $ShopOrderItem = new ShopOrderItem();
-                $ShopOrderItem->shop_item_id = $CartItem->id;
-                $ShopOrderItem->shop_order_id = $ShopOrder->id;
-                $ShopOrderItem->name = $CartItem->name;
-                $ShopOrderItem->quantity = $CartItem->quantity;
-                $ShopOrderItem->price = $CartItem->price;
-                $ShopOrderItem->old_price = $CartItem->attributes["oldPrice"] > 0 ? $CartItem->attributes["oldPrice"] : 0;
-                $ShopOrderItem->save();
+                    if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/", $value)) 
+                    {
+                        $fail('Имя может содержать только русские / латинские символы, пробел, цифры и знак _');
+                    }
+                },],
+                'surname' => ['required', function ($attribute, $value, $fail) {
     
+                    if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/", $value)) 
+                    {
+                        $fail('Фамилия может содержать только русские / латинские символы, пробел, цифры и знак _');
+                    }
+                },],
+                'phone' => ['required', function ($attribute, $value, $fail) {
+                    $value = preg_replace("/[^,.0-9]/", '', $value);
+                    if (strlen($value) < 11) {
+                        $fail('The '.$attribute.' is invalid.');
+                    }
+                },],
+            ];
+
+            if ($request->shop_delivery_id == 7) {
+                /*cdek*/
+                $Fields['delivery_7_city_id'] = 'required';
     
-                //подсчет габаритов
-                $ShopItem = ShopItem::find($CartItem->id)->parentItemIfModification();
-                $weight += $ShopItem->weight * $CartItem->quantity;
-                $width = $ShopItem->width > $width ? $ShopItem->width : $width;
-                $height = $ShopItem->height > $height ? $ShopItem->height : $height;
-                $length += $ShopItem->length * $CartItem->quantity;
+                if ($request->delivery_7_delivery_type == 11) {
+                    $Fields['delivery_7_office_id'] = 'required';
+                } else if ($request->delivery_7_delivery_type == 15) {
+                    $Fields['delivery_7_courier'] = 'required';
+                }
             }
     
+            if ($request->shop_delivery_id == 1) {
+                $Fields['delivery_1_city'] = 'required';
+                $Fields['delivery_1_office'] = 'required';
+            }
+    
+            if (!empty($request->email)) {
+                $Fields['email'] = 'required|email';
+            }
+    
+            $request->validate($Fields);
+
+            $ShopCurrency = ShopCurrency::where("default", 1)->first();
+
+            $ShopOrder->shop_payment_system_id = $request->shop_payment_system_id ?? 0;
+            $ShopOrder->shop_currency_id = $ShopCurrency->id ?? 0;
+            $ShopOrder->shop_delivery_id = $request->shop_delivery_id ?? 0;
+
+            if (!is_null($client = Auth::guard('client')->user())) {
+                $ShopOrder->client_id = $client->id;;
+            }
+
+            $ShopOrder->name = $request->name;
+            $ShopOrder->surname = $request->surname;
+            $ShopOrder->email = $request->email;
+            $ShopOrder->phone = $request->phone;
+            $ShopOrder->city = $request->city;
+            $ShopOrder->description = \App\Services\Helpers\Str::clean($request->description);
+            $ShopOrder->not_call = $request->not_call ?? 0;
+            $ShopOrder->guid = Guid::get();
+
+            $ShopOrder->save();
+
+            $weight = $length = $height = $width = 0;
+
+            //foreach ($getCart as $CartItem) {
+            foreach ($getCart["items"] as $ShopCartItem) {
+
+                $name = '';
+
+                $ShopItem = $ShopCartItem->ShopItem;
+
+                if ($ShopItem->modification_id > 0) {
+                    $name = implode(" ", $ShopItem->modificationName());
+                } else {
+                    $name = $ShopItem->name;
+                }
+
+                $ShopOrderItem = new ShopOrderItem();
+                $ShopOrderItem->shop_item_id = $ShopCartItem->shop_item_id;
+                $ShopOrderItem->shop_order_id = $ShopOrder->id;
+                $ShopOrderItem->name = $name;
+                $ShopOrderItem->quantity = $ShopCartItem->count;
+                $ShopOrderItem->price = $ShopCartItem->price;
+                $ShopOrderItem->old_price = $ShopCartItem->old_price > 0 ? $ShopCartItem->old_price : 0;
+                $ShopOrderItem->save();
+
+
+                //подсчет габаритов
+                $ShopItem = ShopItem::find($ShopCartItem->shop_item_id)->parentItemIfModification();
+                $weight += $ShopItem->weight * $ShopCartItem->count;
+                $width = $ShopItem->width > $width ? $ShopItem->width : $width;
+                $height = $ShopItem->height > $height ? $ShopItem->height : $height;
+                $length += $ShopItem->length * $ShopCartItem->count;
+            }
+
             $ShopOrder->weight = $weight;
             $ShopOrder->height = $height;
             $ShopOrder->length = $length;
             $ShopOrder->width = $width;
-        }
+            
 
 
-        $ShopOrder->save();
+            $ShopOrder->save();
 
-        //способы доставки
-        if (!is_null($ShopDelivery = ShopDelivery::find($request->shop_delivery_id))) {
-            foreach ($ShopDelivery->ShopDeliveryFields as $ShopDeliveryField) {
-                $key = "delivery_" . $request->shop_delivery_id . "_" . $ShopDeliveryField->field;
-                if (isset($request->$key)) {
+            //способы доставки
+            if (!is_null($ShopDelivery = ShopDelivery::find($request->shop_delivery_id))) {
+                foreach ($ShopDelivery->ShopDeliveryFields as $ShopDeliveryField) {
+                    $key = "delivery_" . $request->shop_delivery_id . "_" . $ShopDeliveryField->field;
+                    if (isset($request->$key)) {
 
-                    $ShopDeliveryFieldValue = new ShopDeliveryFieldValue();
-                    $ShopDeliveryFieldValue->shop_order_id = $ShopOrder->id;
-                    $ShopDeliveryFieldValue->shop_delivery_field_id = $ShopDeliveryField->id;
-                    $ShopDeliveryFieldValue->value = $request->$key;
-                    $ShopDeliveryFieldValue->save();
+                        $ShopDeliveryFieldValue = new ShopDeliveryFieldValue();
+                        $ShopDeliveryFieldValue->shop_order_id = $ShopOrder->id;
+                        $ShopDeliveryFieldValue->shop_delivery_field_id = $ShopDeliveryField->id;
+                        $ShopDeliveryFieldValue->value = $request->$key;
+                        $ShopDeliveryFieldValue->save();
+                    }
                 }
             }
-        }
 
-        self::clear();
+            $this->clear();
+            
+            $Shop = Shop::get();
 
-        $Shop = Shop::get();
+            //admin
+            Mail::to($Shop->email)->send(new SendOrderAdmin($ShopOrder));
 
-        //admin
-        Mail::to($Shop->email)->send(new SendOrderAdmin($ShopOrder));
-
-        //client
-        if (!empty($ShopOrder->email)) {
-            Mail::to($ShopOrder->email)->send(new SendOrder($ShopOrder));
-        }
-
-        if ($ShopOrder->shop_payment_system_id > 1) {
-            if ($url = $this->preparePayment($ShopOrder)) {
-
-                return view('shop.cart', [
-                    "success" => 1,
-                    "paymentUrl" => $url,
-                ]);
-
+            //client
+            if (!empty($ShopOrder->email)) {
+                Mail::to($ShopOrder->email)->send(new SendOrder($ShopOrder));
             }
+
+            return ShopPaymentHandlerController::factory($ShopOrder->ShopPaymentSystem)->execute($ShopOrder);
+
+        } else {
+
+            return $this->index();
         }
+    }
 
+    protected function clear()
+    {
+        if ($cart_id = self::isSetCart()) {
+            ShopCartItem::where("cart_id", $cart_id)->delete();
 
-        return redirect()->back()->withSuccess("Спасибо! Ваш заказ оформлен!");
+            setcookie("cart_id", "", time() - 3600);
+            unset($_COOKIE["cart_id"]);
+        }
     }
 
     public function getCdekCities(Request $request)
@@ -422,7 +405,7 @@ class CartController extends Controller
                     ),
                     'confirmation' => array(
                         'type' => 'redirect',
-                        'return_url' => route("finish-order"),
+                        'return_url' => route("finish-order") . '?guid=' . $ShopOrder->guid,
                     ),
                     'description' => 'Заказ №' . $ShopOrder->id,
                 ),
@@ -440,9 +423,6 @@ class CartController extends Controller
                 $UkassaOrder->ukassa_result_uuid = $response->_id;
                 $UkassaOrder->save();
 
-                //сохраним id заказа в сессию
-                setcookie("last_order_id", $ShopOrder->id, time() + 3600, "/");
-
                 return $confirmationUrl;
             }
         }
@@ -453,35 +433,33 @@ class CartController extends Controller
     public function finishOrder(Request $request)
     {
 
-        $last_order_id = $_COOKIE["last_order_id"] ?? 0;
-
-        $this->clearLastOrderId();
-
         $status = 0;
 
-        if ($last_order_id > 0 && !is_null($UkassaOrder = UkassaOrder::where("shop_order_id", $last_order_id)->first())) {
-            $payment = $this->getPaymentInfo($UkassaOrder->ukassa_result_uuid); 
-            if ($payment && !is_null($ShopOrder = $UkassaOrder->ShopOrder)) {
-                if ($payment->_status == 'succeeded') {
-                    $ShopOrder->paid = 1;
-                    $ShopOrder->save();
-                    $status = 1;
-                }
+        if ($request->guid) {
+            $UkassaOrder = UkassaOrder::select("ukassa_orders.*")
+                ->join("shop_orders", "shop_orders.id", "=", "ukassa_orders.shop_order_id")
+                ->where("shop_orders.guid", $request->guid)
+                ->first();
 
-            }
-        }
+            if (!is_null($UkassaOrder)) {
+                $payment = $this->getPaymentInfo($UkassaOrder->ukassa_result_uuid); 
         
+                if ($payment && !is_null($ShopOrder = $UkassaOrder->ShopOrder)) {
+                    if ($payment->_status == 'succeeded') {
+                        $ShopOrder->paid = 1;
+                        $ShopOrder->save();
+                        $status = 1;
+                    }
+                }
+            }
+
+        }
 
         return view("shop.cart.paid", [
             "status" => $status, 
-            "order_id" => $last_order_id, 
+            "guid" => $request->guid, 
             "step" => $request->step ?? 0
         ]);
-    }
-
-    public function clearLastOrderId () {
-        setcookie("last_order_id", "", time() - 3600);
-        unset($_COOKIE["last_order_id"]);
     }
 
     public function getPaymentInfo($ukassa_result_uuid)

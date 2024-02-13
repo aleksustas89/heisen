@@ -230,7 +230,7 @@
                                                                                 <div class="form-group">
                                                                                     @php
                                                                                         $CdekOffice = null;
-                                                                                        if ($aDeliveryValues[17] > 0) {
+                                                                                        if (isset($aDeliveryValues[17]) && $aDeliveryValues[17] > 0) {
                                                                                             $CdekOffice = \App\Models\CdekOffice::find($aDeliveryValues[17]);
                                                                                         }
                                                                                     @endphp
