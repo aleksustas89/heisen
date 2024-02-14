@@ -156,6 +156,12 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
             Route::post('login', 'Auth\LoginController@login')->name("login");
             Route::get('register', 'Auth\RegisterController@registerForm')->name("registerForm");
             Route::post('register', 'Auth\RegisterController@register')->name("register");
+
+            Route::controller("Auth\ResetPasswordController")->group(function() {
+                Route::get('restore', 'showForm')->name("restoreForm");
+                Route::post('restore', 'restore')->name("restore");
+            });
+
         });
 
         Route::group(['middleware' => ['client']], function() {

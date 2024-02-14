@@ -55,6 +55,7 @@
                 </div> 
 
                 <button class="uk-button uk-button-primary" type="submit">Войти</button>
+                <a class="uk-margin-left" href="{{ route("restoreForm") }}">Восстановить пароль</a>
             </form>
         
         </div>
