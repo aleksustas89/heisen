@@ -216,7 +216,7 @@
                                             <div class="file-box-image">
                               
                                                 @if (!empty($image['image_small']))
-                                                    <a href="{{ $image['image_large'] }}" class="lightbox"><img src="{{ $image['image_small'] }}"></a>
+                                                    <a @if (!empty($image['image_large'])) href="{{ $image['image_large'] }}" @endif class="lightbox"><img src="{{ $image['image_small'] }}"></a>
                                                 @endif
                                             </div>
                                         </div>                                                        
