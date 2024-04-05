@@ -85,12 +85,20 @@ $url = $item->url;
                     @php
                     $defaultModification = $item->defaultModification();
                     $Object = $defaultModification ? $defaultModification : $item;
+                    $oldPrice = $Object->getOldPriceApplyCurrency($Currency);
                     @endphp
-                    <span id="item-price">{{ App\Services\Helpers\Str::price($Object->price()) }}</span> 
-                    <span class="item-old-price" id="item-old-price">{{ App\Services\Helpers\Str::price($Object->oldPrice()) }}</span>
+                    <span data-t="{{ $oldPrice }}" id="item-price" class="item-price">
+                        {{ $Currency->name ?? '' }}
+                        {{ App\Services\Helpers\Str::price($Object->getPriceApplyCurrency($Currency)) }}
+                    </span> 
+                    @if ($oldPrice > 0)
+                        <span class="item-old-price" id="item-old-price">
+                            <span>{{ $Currency->name ?? '' }}</span>
+                            {{ App\Services\Helpers\Str::price($oldPrice) }}
+                        </span>
+                    @endif
                 @endif
-                
-                <span>{{ !is_null($item->ShopCurrency) ? $item->ShopCurrency->code : '' }}</span>
+
                 
             </p>
         </div>

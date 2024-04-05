@@ -254,12 +254,6 @@ class ShopItem extends Model
 
         $aPrices[] = ShopDiscountController::getShopItemPriceWithDiscount($this);
 
-        // if ($this->midification_id == 0) {
-        //     foreach (ShopDiscountController::getModificationsPricesWithDiscounts($this) as $price) {
-        //         $aPrices[] = $price;
-        //     }
-        // }
-
         return min($aPrices);
     }
 

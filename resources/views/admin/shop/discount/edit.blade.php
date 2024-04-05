@@ -52,11 +52,11 @@
 
                                 <div class="col-6 col-sm-3">
                                     <label class="mb-1">Действует от</label>
-                                    <input type="datetime-local" value="{{ $discount->start_datetime }}" name="start_datetime" class="form-control" placeholder="Действует от">
+                                    <input type="text" value="{{ $discount->start_datetime }}" name="start_datetime" class="form-control datepicker" placeholder="Действует от">
                                 </div>
                                 <div class="col-6 col-sm-3">
                                     <label class="mb-1">Действует до</label>
-                                    <input type="datetime-local" value="{{ $discount->end_datetime }}" name="end_datetime" class="form-control" placeholder="Действует до">
+                                    <input type="text" value="{{ $discount->end_datetime }}" name="end_datetime" class="form-control datepicker" placeholder="Действует до">
                                 </div>
 
                             </div>
@@ -222,6 +222,11 @@
 
 @section("js")
     <script src="/assets/js/pages/shopDiscount.js"></script>
+    <script>
+        $(function() {
+            $( ".datepicker" ).datepicker();
+        });
+    </script>
 @endsection
 
 @section("css")

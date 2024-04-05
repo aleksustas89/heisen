@@ -68,8 +68,8 @@
                                     </td>
                                     <td class="d-none d-lg-inline-block">
                                         @php
-                                        $ShopItemDiscount = $discount->ShopItemDiscount;
-                                        $count = !is_null($ShopItemDiscount) ? $discount->ShopItemDiscount->count() : 0;
+                                        $ShopItemDiscounts = $discount->ShopItemDiscounts;
+                                        $count = !is_null($ShopItemDiscounts) ? $ShopItemDiscounts->count() : 0;
                                         @endphp
                                         <button type="button" class="btn btn-primary btn-sm">
                                             Кол-во товаров со скидкой <span class="badge bg-light text-dark">{{ $count }}</span>

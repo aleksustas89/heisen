@@ -425,3 +425,8 @@ input[disabled="disabled"], input[disabled="disabled"] + span {
 .uk-icon path {
     stroke: currentcolor;
 }
+
+.item-price {
+    font-size: 16px;
+    color: #8b6a1b !important;
+}

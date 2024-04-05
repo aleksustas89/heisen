@@ -59,18 +59,6 @@ $(document).ready(function () {
         $form.on('keyup change paste blur', ':input[data-required]', function(e) { mainFieldChecker.check($(this)) });
     }
 
-	setTimeout(function() {
-		Swal.fire({
-			title: "Страница будет перезагружена через 1 минуту",
-			showCancelButton: false,
-		})
-	}, 600000 * 4);
-
-
-	setTimeout(function() {
-		location.reload();
-	}, 600000 * 5); //5min
-
 });
 
 function elFinderBrowser (callback, value, meta) {
@@ -353,3 +341,32 @@ var Spiner = {
         $(".spinner").remove();
     }
 }
+
+$.datepicker.setDefaults({
+	dateFormat: 'dd.mm.yy', 
+	showAnim: "fold",
+	showTodayButton: true, 
+	showButtonPanel: true,
+	showClear: true,
+	monthNames: [ "Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сен", "Окт", "Ноя", "Дек" ],
+	dayNamesMin: [ "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб" ],
+	firstDay: 1,
+	changeYear: true,
+	onSelect: function(datetext) {
+		
+		var now = new Date();
+
+		var h = now.getHours();
+		h = (h < 10) ? ("0" + h) : h;
+
+		var m = now.getMinutes();
+		m = (m < 10) ? ("0" + m) : m;
+
+		var s = now.getSeconds();
+		s = (s < 10) ? ("0" + s) : s;
+
+		datetext = datetext + " " + h + ":" + m + ":" + s;
+
+		$(this).val(datetext);
+	}
+});

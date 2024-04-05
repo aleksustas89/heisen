@@ -208,6 +208,10 @@
         <!-- App js -->
         <script src="{{ asset('/assets/js/app.js') }}"></script>
         <script src="{{ asset('/assets/plugins/wysiwyg/jquery.tinymce.min.js') }}"></script>
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
         <script src="{{ asset('/assets/js/main.js') }}"></script>
         <script src="{{ asset('/assets/js/editable.js') }}"></script>
         <script src="{{ asset('/assets/js/toggle.js') }}"></script>
