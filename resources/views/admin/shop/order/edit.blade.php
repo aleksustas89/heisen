@@ -195,9 +195,9 @@
                                                             <div class="row">     
                                                                 
                                                                 <div class="form-group">
-                                                                    <label class="label my-2">Упаковка </label>
+                                                                    <label class="label my-2">Коробка</label>
                                                                     <select id="cdek_dimension_id" name="cdek_dimension_id">
-                                                                        <option value="0">...</option>
+                                                                        <option value="0">Без коробки</option>
                                                                         @foreach ($CdekDimensions as $CdekDimension)
                                                                             @if (!empty($CdekDimension->box_name))
                                                                                 <option @if($CdekDimension->id == $order->cdek_dimension_id) selected @endif value="{{ $CdekDimension->id }}">{{ intval($CdekDimension->length) }}x{{ intval($CdekDimension->width) }}x{{ intval($CdekDimension->height) }}, до {{$CdekDimension->weight / 1000}} кг</option>
@@ -323,11 +323,11 @@
                                                             <div class="row">                                 
                                                                 <div class="form-group">
                                                                     <label class="label my-2">Город </label>
-                                                                    <input type="text" class="form-control" value="" name="delivery_1_city">
+                                                                    <input type="text" class="form-control" value="{{ $aDeliveryValues[12] ?? '' }}" name="delivery_1_city">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label class="label my-2">Отделение </label>
-                                                                    <input type="text" class="form-control" value="" name="delivery_1_office">
+                                                                    <input type="text" class="form-control" value="{{ $aDeliveryValues[1] ?? '' }}" name="delivery_1_office">
                                                                 </div>                                                                            
                                                             </div>
                                                         </div>       
@@ -365,13 +365,13 @@
                                         </div>
         
                                         <div class="row">
-                                            <div class="col-12 col-sm-4">                            
+                                            <div class="col-12 col-sm-12">                            
                                                 <div class="form-group">
                                                     <label class="label my-2">Email</label>
                                                     <input type="email" class="form-control" name="email" value="{{ $order->email }}">
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-4">                            
+                                            <div class="col-12 col-sm-12">                            
                                                 <div class="form-group">
                                                     <label class="label my-2">Телефон</label>
                                                     <input type="text" class="form-control" name="phone" value="{{ $order->phone }}">

@@ -15,7 +15,7 @@ use App\Models\CdekDimension;
 class ShopOrderController extends Controller
 {
 
-    public static $item_on_page = 15;
+    public static $item_on_page = 50;
 
     /**
      * Display a listing of the resource.
@@ -37,7 +37,7 @@ class ShopOrderController extends Controller
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
             'cdekSender' => CdekSender::find(1),
-            'CdekDimensions' => CdekDimension::get()
+            'CdekDimensions' => CdekDimension::orderBy("sorting", "ASC")->get()
         ]);
     }
 
@@ -72,7 +72,7 @@ class ShopOrderController extends Controller
             'aDeliveryValues' => $aDeliveryValues,
             'cdekSender' => CdekSender::find(1),
             'CdekOrder' => CdekOrder::where("shop_order_id", $shopOrder->id)->first(),
-            'CdekDimensions' => CdekDimension::get()
+            'CdekDimensions' => CdekDimension::orderBy("sorting", "ASC")->get()
         ]);
     }
 

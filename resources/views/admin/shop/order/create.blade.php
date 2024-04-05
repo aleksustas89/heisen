@@ -160,9 +160,9 @@
                                                             <div class="row">  
                                                                 
                                                                 <div class="form-group">
-                                                                    <label class="label my-2">Упаковка </label>
+                                                                    <label class="label my-2">Коробка</label>
                                                                     <select id="cdek_dimension_id" name="cdek_dimension_id">
-                                                                        <option value="0">...</option>
+                                                                        <option value="0">Без коробки</option>
                                                                         @foreach ($CdekDimensions as $CdekDimension)
                                                                             <option value="{{ $CdekDimension->id }}">{{ intval($CdekDimension->length) }}x{{ intval($CdekDimension->width) }}x{{ intval($CdekDimension->height) }}, до {{$CdekDimension->weight / 1000}} кг</option>
                                                                         @endforeach
@@ -262,13 +262,13 @@
                                         </div>
         
                                         <div class="row">
-                                            <div class="col-12 col-sm-4">                            
+                                            <div class="col-12 col-sm-12">                            
                                                 <div class="form-group">
                                                     <label class="form-label my-2">Email</label>
                                                     <input type="email" name="email" class="form-control">
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-4">                            
+                                            <div class="col-12 col-sm-12">                            
                                                 <div class="form-group">
                                                     <label class="form-label my-2">Телефон</label>
                                                     <input type="text" name="phone" class="form-control">

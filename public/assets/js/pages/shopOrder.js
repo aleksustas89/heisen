@@ -2,24 +2,22 @@
 var Cdek = {
     createOrder: function(shop_order_id, step = 0) {
         Spiner.show();
+
+        let form = $("#formEdit").serializeArray();
+
+        let Data = '?', i = 0;
+        form.forEach(element => {
+            if (i > 1) {
+                Data += element["name"] + "=" + element["value"] + "&";
+            }
+            
+            i++;
+        });
+
         $.ajax({
             url: create_order_route,
             type: "POST",
-            data: {
-                "shop_order_id" : shop_order_id,
-                "step" : step,
-                "cdek_dimension_id" : $("[name='cdek_dimension_id']").val(),
-                "delivery_7_city_id" : $("[name='delivery_7_city_id']").val(),
-                "delivery_7_office_id" : $("[name='delivery_7_office_id']").val(),
-                "delivery_7_courier" : $("[name='delivery_7_courier']").val(),
-                "delivery_7_office" : $("[name='delivery_7_office']").val(),
-                "delivery_7_city" : $("[name='delivery_7_city']").val(),
-                "delivery_7_delivery_type" : $("[name='delivery_7_delivery_type']").val(),
-                "surname" : $("[name='surname']").val(),
-                "name" : $("[name='name']").val(),
-                "patronymic" : $("[name='patronymic']").val(),
-                "phone" : $("[name='phone']").val(),
-            },
+            data: Data + "shop_order_id=" + shop_order_id + "&step=" + step,
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
