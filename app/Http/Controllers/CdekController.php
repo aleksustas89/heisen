@@ -235,15 +235,23 @@ class CdekController extends Controller
             $package = [];
             $package["number"] = "order-" . $ShopOrder->id;
 
-            $package["weight"] = (int) $ShopOrder->CdekDimension->weight;
-           // $package["length"] = 10; // (int) $ShopOrder->CdekDimension->length / 10;
-           // $package["width"] = 10; // (int) $ShopOrder->CdekDimension->width / 10;
-           // $package["height"] = 80; // (int) $ShopOrder->CdekDimension->height / 10;
+           if (!is_null($CdekDimension = $ShopOrder->CdekDimension)) {
+
+                $package["weight"] = (int) $ShopOrder->CdekDimension->weight;
+                $service['code'] = $CdekDimension->box_name;
+                $service['parameter'] = 1;
+                $aData["services"][] = $service;
+                
+           } else if ($ShopOrder->weight > 0 && $ShopOrder->width > 0 && $ShopOrder->height > 0 && $ShopOrder->length > 0) {
+
+                $package["weight"] = (int) $ShopOrder->weight;
+                $package["width"] = (int) $ShopOrder->width / 10;
+                $package["height"] = (int) $ShopOrder->height / 10;
+                $package["length"] = (int) $ShopOrder->length / 10;
+           }
 
        
-            $service['code'] = $ShopOrder->CdekDimension->box_name;
-            $service['parameter'] = 1;
-            $aData["services"][] = $service;
+
 
     
             foreach ($ShopOrder->ShopOrderItems as $ShopOrderItem) {
@@ -403,8 +411,8 @@ class CdekController extends Controller
         if (!is_null($ShopOrder = ShopOrder::find($request->shop_order_id))) { 
 
             $aError["error"] = [];
-            if ($request->cdek_dimension_id == 0) {
-                $aError["error"][] = "Заполните поле Упаковка";
+            if ($request->cdek_dimension_id == 0 && (!$request->width > 0 && !$request->height > 0 && !$request->length > 0)) {
+                $aError["error"][] = "Заполните поле упаковка либо заполните габариты! - " . $request->width;
             } else {
                 $ShopOrder->cdek_dimension_id = $request->cdek_dimension_id;
             }
