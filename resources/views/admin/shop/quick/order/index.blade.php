@@ -49,6 +49,11 @@
                         <tbody>
                             @foreach ($quick_orders as $quick_order)
 
+                            @php
+                            $ShopItem = $quick_order->ShopItem->parentItemIfModification();
+
+                            @endphp
+
                                 <tr>
                                     <td>
                                         {{ $quick_order->id }}
@@ -65,7 +70,7 @@
                                     <td class="d-mob-none">
                                         @if (!is_null($quick_order->ShopItem))
                                             {{ $quick_order->ShopItem->name }}
-                                            <a href="{{ $quick_order->ShopItem->url }}" target="_blank">
+                                            <a href="{{ $ShopItem->url }}" target="_blank">
                                                 <i class="las la-external-link-alt"></i>
                                             </a>
                                         @endif
