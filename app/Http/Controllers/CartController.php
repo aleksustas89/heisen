@@ -134,8 +134,12 @@ class CartController extends Controller
             $totalDiscount = 0;
             
             foreach ($ShopCartItems as $ShopCartItem) {
-                $total += $ShopCartItem->ShopItem->getPriceApplyCurrency($ShopCurrency) * $ShopCartItem->count;
-                $totalDiscount += $ShopCartItem->old_price > 0 ? $ShopCartItem->old_price - $ShopCartItem->price : 0;
+                if (!is_null($ShopItem = $ShopCartItem->ShopItem)) {
+                    $total += $ShopItem->getPriceApplyCurrency($ShopCurrency) * $ShopCartItem->count;
+                    $totalDiscount += $ShopCartItem->old_price > 0 ? $ShopCartItem->old_price - $ShopCartItem->price : 0;
+                } else {
+                    $ShopCartItem->delete();
+                }
             }
 
             $aResult["totalPrice"] = $total;
