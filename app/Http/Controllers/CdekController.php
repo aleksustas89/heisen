@@ -260,7 +260,7 @@ class CdekController extends Controller
     
                 $OrderItem = [];
                 $OrderItem["ware_key"] = $ShopOrderItem->shop_item_id;
-                $OrderItem["payment"]["value"] = 0;
+                $OrderItem["payment"]["value"] = request()->cash_on_delivery == 1 ? $ShopOrderItem->price : 0;
                 $OrderItem["name"] = $ShopOrderItem->ShopItem->name;
                 $OrderItem["cost"] = $ShopOrderItem->price;
                 $OrderItem["amount"] = (int) $ShopOrderItem->quantity;
@@ -269,6 +269,10 @@ class CdekController extends Controller
     
                 $package["items"][] = $OrderItem;
                 
+            }
+
+            if (request()->delivery_price > 0) {
+                $aData["delivery_recipient_cost"]["value"] = request()->delivery_price;
             }
     
             $aData["packages"][] = $package;

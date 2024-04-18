@@ -166,12 +166,6 @@
 
                                             <div class="col-12"> 
                                                 <label class="mb-1 my-2">Доставка</label>
-                                                <!--
-                                                <div class="form-group my-2">
-                                                    <label class="label my-2">Город</label>
-                                                    <input type="text" class="form-control" value="{{ $order->city }}" name="city">
-                                                </div>-->
-                                              
 
                                                 <div>
 
@@ -258,6 +252,21 @@
                                                                 </div>                                                                                  
                                                             </div>
 
+                                                            <div class="form-group my-3">
+                                                                <div class="form-check form-switch form-switch-success">
+                                                                    <input value="1" class="form-check-input" name="cash_on_delivery" type="checkbox" id="cash_on_delivery">
+                                                                    <label for="cash_on_delivery">
+                                                                        Наложенный платеж
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group my-3">
+                                                                <label class="label my-2">Цена доставки </label>
+                                                
+                                                                <input type="number" class="form-control" value="" name="delivery_price">
+                                                            </div>
+
                                                             <div class="card card-warning">
                                                                 <div class="card-header d-flex">
                                                                     <h3 class="card-title">Данные отправителя <a target="_blank" href="{{ route('cdekSender.edit', 1) }}"><i class="las la-pen text-secondary font-16"></i></a></h3>
@@ -299,6 +308,7 @@
 
                                                                 </div>
                                                             </div>
+
 
                                                             
                                                             <div class="my-3">
