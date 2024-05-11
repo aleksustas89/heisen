@@ -23,7 +23,7 @@ class ModificationController extends Controller
     {
         if (!is_null($ShopItem = ShopItem::find($request->shop_item_id))) {
 
-            $breadcrumbs = ShopGroupController::breadcrumbs($ShopItem->shop_group_id > 0 ? $ShopItem->ShopGroup : false, [], true);
+            $breadcrumbs = ShopGroupController::breadcrumbs($ShopItem->shop_group_id > 0 ? $ShopItem->ShopGroup : false, [], false);
 
             $breadcrumbs[] = self::breadcrumbs($ShopItem);
 

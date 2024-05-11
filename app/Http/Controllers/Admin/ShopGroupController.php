@@ -224,11 +224,9 @@ class ShopGroupController extends Controller
 
             $Result["name"] = $shopGroup->name;
             $Result["url"] = '';
-            if ($lastItemIsLink && count($aResult) == 0) {
+            if (!$lastItemIsLink) {
                 $Result["url"] = route("shop.index") . '?parent_id=' . $shopGroup->id;
-            } else if ($lastItemIsLink === false && count($aResult) > 0 && $shopGroup->parent_id == 0) {
-                $Result["url"] = route("shop.index") . '?parent_id=' . $shopGroup->id;
-            }
+            } 
             array_unshift($aResult, $Result);
 
             if ($shopGroup->parent_id > 0) {

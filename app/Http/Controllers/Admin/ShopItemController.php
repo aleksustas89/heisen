@@ -95,7 +95,7 @@ class ShopItemController extends Controller
         return view('admin.shop.item.edit', [
             'shopItem' => $shopItem,
             'images' => $shopItem->getImages(),
-            'breadcrumbs' => ShopGroupController::breadcrumbs($shopItem->ShopGroup, [], true),
+            'breadcrumbs' => ShopGroupController::breadcrumbs($shopItem->ShopGroup, [], false),
             'store_path' => Shop::$store_path,
             'currencies' => ShopCurrency::orderBy('sorting', 'asc')->get(),
             'properties' => self::getProperties($shopItem->shop_group_id),

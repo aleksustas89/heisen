@@ -34,7 +34,7 @@ class ShopController extends Controller
             $aResult = [
                 'shop_path' => $oShop->path,
                 'parent' => $parent,
-                'breadcrumbs' => ShopGroupController::breadcrumbs($parent > 0 ? ShopGroup::find($parent) : false),
+                'breadcrumbs' => ShopGroupController::breadcrumbs($parent > 0 ? ShopGroup::find($parent) : false, [], true),
                 'global_search' => $request->global_search
             ];
 
