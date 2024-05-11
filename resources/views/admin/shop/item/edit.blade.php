@@ -420,7 +420,7 @@
                                         @case(3)
 
                                             @php
-                                                $checkboxChecked = isset($property_value_ints[$property->id]) ? 'checked="checked"' : ''
+                                                $checkboxChecked = isset($property_value_ints[$property->id]) && $property_value_ints[$property->id][key($property_value_ints[$property->id])] == 1 ? 'checked="checked"' : '';
                                             @endphp
 
                                             <div class="list-group-item">
