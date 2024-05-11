@@ -119,4 +119,27 @@ class ShopGroup extends Model
 
         return $aResult;
     }
+
+    public function setSubCount()
+    {
+
+        $count = $this->getChildCount();
+        $this->subgroups_count = $count["groupsCount"];
+        $this->subitems_count = $count["itemsCount"];
+        $this->save();
+
+      
+
+        while ($this->parent_id != 0 && $oGroup = $this->getParent()) {
+            return $oGroup->setSubCount();
+        }
+    
+    }
+
+    public function getParent()
+    {
+        return $this->parent_id
+            ? ShopGroup::find($this->parent_id)
+            : NULL;
+    }
 }
