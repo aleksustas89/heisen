@@ -82,8 +82,11 @@ class SearchController extends Controller
                     $query->where("hash", $word);
                 });
             }
-            })
-            ->havingRaw('COUNT(search_words.hash) = ' . count($words));
+            });
+
+        if (count($words) > 1) {
+            $SearchWords->havingRaw('COUNT(DISTINCT `search_words`.`hash`) = ' . count($words));
+        }
 
         $SearchWords->groupBy('search_words.search_page_id');
 
