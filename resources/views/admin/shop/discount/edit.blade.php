@@ -34,7 +34,7 @@
         <div class="col-12">
 
             <div class="card" id="id_content">
-                <form action="{{ route('shopDiscount.update', $discount->id) }}" method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-discount.update', ['shop' => $shop->id, 'shop_discount' => $discount->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
              
                     @csrf
                     @method('PUT')
@@ -136,7 +136,7 @@
             
                                     </div>
                                     <div class="row mb-3">
-                                        <div class="col-2"></div>
+                                        <div class="col-4"></div>
                                         <div class="col-2 d-none">
                                             <select class="form-control" name="total_list_value">
                                             </select>
@@ -220,16 +220,31 @@
     
 @endsection
 
+
 @section("js")
-    <script src="/assets/js/pages/shopDiscount.js"></script>
     <script>
+        var shopDiscountFilter = '{{ route("shopDiscountFilter") }}',
+            shopDiscountPropertyValues = '{{ route("shopDiscountPropertyValues") }}';
+    </script>
+    <script src="/assets/js/jquery.datetimepicker.full.js"></script> 
+    <script>
+
+        $.datetimepicker.setLocale('ru');
+
         $(function() {
-            $( ".datepicker" ).datepicker();
+            $('.datetimepicker').datetimepicker({
+                format:'d.m.Y H:i:s',
+                dayOfWeekStart: 1
+            });
         });
     </script>
+    @php
+        App\Services\Helpers\File::js('/assets/js/pages/shopDiscount.js');
+    @endphp
 @endsection
 
 @section("css")
+    <link rel="stylesheet" type="text/css" href="/assets/css/jquery.datetimepicker.css"/>
     <style>
         .items-applied {
             max-height: 500px;

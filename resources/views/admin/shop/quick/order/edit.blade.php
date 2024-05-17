@@ -34,7 +34,7 @@
         <div class="col-12">
 
             <div class="card" id="id_content">
-                <form action="{{ route('shopQuickOrder.update', $shopQuickOrder->id) }}" method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-quick-order.update', ['shop' => $shop->id, 'shop_quick_order' => $shopQuickOrder->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
              
                     @csrf
                     @method('PUT')

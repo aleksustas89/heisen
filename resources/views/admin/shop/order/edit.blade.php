@@ -34,7 +34,7 @@
         <div class="col-12 col-lg-6">
 
             <div class="card" id="id_content">
-                <form action="{{ route('shopOrder.update', $order->id) }}" method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop-order.update', $order->id) }}" method="POST" id="formEdit" enctype="multipart/form-data">
 
                     @csrf
                     @method('PUT')
@@ -269,7 +269,7 @@
 
                                                             <div class="card card-warning">
                                                                 <div class="card-header d-flex">
-                                                                    <h3 class="card-title">Данные отправителя <a target="_blank" href="{{ route('cdekSender.edit', 1) }}"><i class="las la-pen text-secondary font-16"></i></a></h3>
+                                                                    <h3 class="card-title">Данные отправителя <a target="_blank" href="{{ route('cdek-sender.edit', 1) }}"><i class="las la-pen text-secondary font-16"></i></a></h3>
                                                                     
                                                                 </div>
                                                                 <div class="card-body" style="display: block;">
@@ -480,7 +480,7 @@
                             <h4 class="card-title">Список товаров в заказе № {{ $order->id }}</h4>
                         </div>
                         <div class="col-6 col-sm-4 d-flex justify-content-end align-items-start">
-                            <a href="{{ route("shopOrderItem.create") }}?shop_order_id={{ $order->id }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                            <a href="{{ route("shop-order.shop-order-item.create", ['shop_order' => $order->id]) }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
                         </div>
                     </div>
                     
@@ -506,8 +506,8 @@
                                         <td class="td_editable">{{ $orderItem->price }}</td>
                                         <td class="d-mob-none">{{ $orderItem->price * $orderItem->quantity }}</td>
                                         <td class="td-actions">
-                                            <a href="{{ route('shopOrderItem.edit', $orderItem->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                            <form action="{{ route('shopOrderItem.destroy', $orderItem->id) }}" method="POST" class="d-inline">
+                                            <a href="{{ route('shop-order.shop-order-item.edit', ['shop_order' => $order->id, 'shop_order_item' => $orderItem->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                            <form action="{{ route('shop-order.shop-order-item.destroy', ['shop_order' => $order->id, 'shop_order_item' => $orderItem->id]) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">

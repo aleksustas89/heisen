@@ -38,7 +38,7 @@
         <div class="col-12 col-lg-6">
 
             <div class="card" id="id_content">
-                <form action="{{ route('shopOrder.store') }}" method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop-order.store') }}" method="POST" id="formEdit" enctype="multipart/form-data">
              
                     @csrf
                     @method('POST')

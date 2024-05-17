@@ -38,7 +38,7 @@
 
         <div class="card" id="id_content">
             
-            <form action="{{ route('shopItem.update', $shopItem['id']) }}" method="POST" id="formEdit" enctype="multipart/form-data">
+            <form action="{{ route('shop.shop-item.update', ['shop' => $shop->id, 'shop_item' => $shopItem->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -98,32 +98,13 @@
 
                                     <div class="d-flex">
 
-                                        <div class="form-check field-check-center">
-                                            <div>
-                                                    
-                                                @if ($shopItem['active'] == 1)
-                                                    <input class="form-check-input" name="active" type="checkbox" id="active" checked="">
-                                                @else
-                                                    <input class="form-check-input" name="active" type="checkbox" id="active" >
-                                                @endif
-                                                <label for="active">
-                                                    Активность
-                                                </label>
-                                            </div>
+                                        <div class="form-check form-switch form-switch-success"> 
+                                            <input value="1" @if ($shopItem->active == 1) checked="" @endif class="form-check-input" name="active" type="checkbox" id="active">
+                                            <label for="active">
+                                                Активность
+                                            </label>
                                         </div>
-                                        <div class="form-check field-check-center mx-3">
-                                            <div>
-                                                    
-                                                @if ($shopItem['indexing'] == 1)
-                                                    <input class="form-check-input" name="indexing" type="checkbox" id="indexing" checked="">
-                                                @else
-                                                    <input class="form-check-input" name="indexing" type="checkbox" id="indexing" >
-                                                @endif
-                                                <label for="indexing">
-                                                    Индексирование
-                                                </label>
-                                            </div>
-                                        </div>  
+                                      
 
                                     </div>
                                 </div>

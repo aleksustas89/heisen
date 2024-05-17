@@ -12,14 +12,24 @@ class File
 
     public static function js($file)
     {
-        
-        echo '<script src="'. $file .'?v='. self::filectime($file) .'"></script>';
+
+        $pathToFile = public_path() . $file;
+
+        if (file_exists($pathToFile)) {
+
+            echo '<script>' . file_get_contents($pathToFile) . '</script>';
+        }
     }
 
     public static function css($file)
     {
 
-        echo '<link rel="stylesheet" href="'. $file .'?v='. self::filectime($file) .'">';
+        $pathToFile = public_path() . $file;
+
+        if (file_exists($pathToFile)) {
+
+            echo '<style>' . file_get_contents($pathToFile) . '</style>';
+        }
     }
 
     public static function fileInfoFromStr($file)

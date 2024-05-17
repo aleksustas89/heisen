@@ -39,7 +39,7 @@
 
             <div class="card" id="id_content">
     
-                <form action="{{ route('shopGroup.update', $shopGroup['id']) }} " method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-group.update', ['shop' => $shopGroup->shop_id, 'shop_group' => $shopGroup->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -164,6 +164,7 @@
                                             <label class="mb-1">Сортировка</label>
                                             <input type="text" name="sorting" class="form-control" placeholder="Сортировка" value="{{ $shopGroup['sorting'] }}">
                                         </div>
+                                        
                                         <div class="col-4">
                                             <label class="mb-1">Путь</label>
                                             <input type="text" name="path" class="form-control" placeholder="Путь" data-min="2"  data-max="255" data-required="1" value="{{ $shopGroup['path'] }}">
@@ -171,13 +172,9 @@
                                         <div class="col-lg-4">
                                             <label>&nbsp;</label>
                                             <div class="form-check field-check-center">
-                                                <div>
+                                                <div class="form-check form-switch form-switch-success">
                                                     
-                                                    @if ($shopGroup['active'] == 1)
-                                                        <input class="form-check-input" name="active" type="checkbox" id="active" checked="">
-                                                    @else
-                                                        <input class="form-check-input" name="active" type="checkbox" id="active" >
-                                                    @endif
+                                                    <input value="1" @if ($shopGroup->active == 1) checked="" @endif class="form-check-input" name="active" type="checkbox" id="active" >
                                                     <label for="active">
                                                         Активность
                                                     </label>

@@ -32,7 +32,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="{{ route("shopQuickOrder.create") }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                    <a href="{{ route("shop.shop-quick-order.create", ['shop' => $shop->id]) }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-bordered">
@@ -49,10 +49,10 @@
                         <tbody>
                             @foreach ($quick_orders as $quick_order)
 
-                            @php
-                            $ShopItem = $quick_order->ShopItem->parentItemIfModification();
+                                @php
+                                $ShopItem = $quick_order->ShopItem->parentItemIfModification();
 
-                            @endphp
+                                @endphp
 
                                 <tr>
                                     <td>
@@ -69,15 +69,15 @@
                                     </td>
                                     <td class="d-mob-none">
                                         @if (!is_null($quick_order->ShopItem))
-                                            {{ $quick_order->ShopItem->name }}
+                                            {{ implode(", ", $quick_order->ShopItem->modificationName()) }}
                                             <a href="{{ $ShopItem->url }}" target="_blank">
                                                 <i class="las la-external-link-alt"></i>
                                             </a>
                                         @endif
                                     </td>
                                     <td class="td-actions">
-                                        <a href="{{ route('shopQuickOrder.edit', $quick_order->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                        <form action="{{ route('shopQuickOrder.destroy', $quick_order->id) }}" method="POST" class="d-inline">
+                                        <a href="{{ route('shop.shop-quick-order.edit', ['shop' => $shop->id, 'shop_quick_order' => $quick_order->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                        <form action="{{ route('shop.shop-quick-order.destroy', ['shop' => $shop->id, 'shop_quick_order' => $quick_order->id]) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">

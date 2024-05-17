@@ -34,7 +34,7 @@
             <div class="card">
 
                 <div class="card-header">
-                    <a href="{{ route('shopCurrency.create') }}" class="btn btn-primary">Добавить</a>
+                    <a href="{{ route('shop.shop-currency.create', ['shop' => $shop->id]) }}" class="btn btn-primary">Добавить</a>
                 </div>
 
                 <div class="card-body p-0">
@@ -79,8 +79,8 @@
                                 </td>
 
                                 <td class="td-actions">
-                                    <a href="{{ route('shopCurrency.edit', $currency->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                    <form action="{{ route('shopCurrency.destroy', $currency->id) }}" method="POST" style="display:inline-block;">
+                                    <a href="{{ route('shop.shop-currency.edit', ['shop' => $shop->id, 'shop_currency' => $currency->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                    <form action="{{ route('shop.shop-currency.destroy', ['shop' => $shop->id, 'shop_currency' => $currency->id]) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">

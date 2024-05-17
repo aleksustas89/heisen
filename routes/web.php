@@ -14,67 +14,103 @@ use Illuminate\Support\Facades\Schema;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-//Auth::routes();
 
 /* админка */
 Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' => 'App\Http\Controllers\Admin'], function() {
     
     Route::middleware(['role:admin'])->prefix("admin")->group(function() {
-        Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('homeAdmin');
-        Route::resource('structure', StructureController::class);
-        Route::resource('client', ClientController::class);
-        Route::resource('user', UserController::class);
-        Route::resource('shop', ShopController::class);
-        Route::resource('shopGroup', ShopGroupController::class);
-        //удаление картинок
-        Route::get('/shopGroup/{id}/delete/{field}', [ShopGroupController::class, 'deleteImage']);
-        Route::resource('shopCurrency', ShopCurrencyController::class);
-        Route::resource('shopItem', ShopItemController::class);
-        Route::get('/shop/shopItem/{shopItem}/copy', [App\Http\Controllers\Admin\ShopItemController::class, 'copy'])->name("copyShopItem");
-        
-        Route::get('/deleteShopItemImage/{id}', [App\Http\Controllers\Admin\ShopItemController::class, 'deleteImage']);
-        Route::get('/sortShopItemImages', [App\Http\Controllers\Admin\ShopItemController::class, 'sortShopItemImages']);
-        Route::resource('shopItemProperty', ShopItemPropertyController::class);
-        //удаление свойств
-        Route::get('/deleteShopItemPropertyValue/{property}/{id}', [App\Http\Controllers\Admin\ShopItemController::class, 'deletePropertyValue']);
-        Route::resource('shopItemList', ShopItemListController::class);
-        Route::resource('shopItemListItem', ShopItemListItemController::class);
-        Route::resource('structureMenu', StructureMenuController::class);
-        Route::resource('shopOrder', ShopOrderController::class);
-        Route::post('/shop/order/cdek/create/order', [App\Http\Controllers\CdekController::class, 'cdekCreateOrder'])->name("createCdekOrder");
-        Route::get('/shop/order/cdek/create/print/{CdekOrder}', [App\Http\Controllers\CdekController::class, 'print'])->name("printCdekOrder");
 
-        Route::resource('shopQuickOrder', ShopQuickOrderController::class);
-        Route::resource('shopOrderItem', ShopOrderItemController::class);
-        Route::resource('shopDelivery', ShopDeliveryController::class);
-        Route::resource('shopDeliveryField', ShopDeliveryFieldController::class);
-        Route::resource('modification', ModificationController::class);
-        Route::get('/default_modification', [App\Http\Controllers\Admin\ModificationController::class, 'defaultModification'])->name("modByDefault");
-
-        Route::resource('shopDiscount', ShopDiscountController::class);
-        Route::get('/list/values', [App\Http\Controllers\Admin\ShopDiscountController::class, 'listValues']);
-        Route::get('/shop/discount/filter', [App\Http\Controllers\Admin\ShopDiscountController::class, 'filter']);
-        Route::resource('shopItemDiscount', ShopItemDiscountController::class);
-        Route::resource('comment', CommentController::class);
-        Route::resource('cdekSender', CdekSenderController::class);
+        Route::get('/', 'HomeController@index')->name('homeAdmin');
+       
+        Route::resources([
+            'structure' => 'StructureController',
+            'structure-menu' => 'StructureMenuController',
+            'user' => 'UserController',
+            'client' => 'ClientController',
+            'shop' => 'ShopController',
+            'shop.shop-group' => 'ShopGroupController',
+            'shop.shop-item' => 'ShopItemController',
+            'modification' => 'ModificationController',
+            'shop.shop-currency' => 'ShopCurrencyController',
+            'comment' => 'CommentController',
+            'shop.shop-quick-order' => 'ShopQuickOrderController',
+            'shop.shop-delivery' => 'ShopDeliveryController',
+            'shop.shop-discount' => 'ShopDiscountController',
+            'shop.shop-item-property' => 'ShopItemPropertyController',
+            'shop.shop-item-list' => 'ShopItemListController',
+            'shop.shop-item-list-item' => 'ShopItemListItemController',
+            'shop.shop-delivery-field' => 'ShopDeliveryFieldController',
+            'shop-order' => 'ShopOrderController',
+            'shop-order.shop-order-item' => 'ShopOrderItemController',
+            'language' => 'LanguageController',
+            'shop.shop-payment-system' => 'ShopPaymentSystemController',
+            'cdek-sender' => 'CdekSenderController',
+        ]);
 
         Route::resource('shop.shop-price', App\Http\Controllers\Admin\ShopPriceController::class)->only(['index', 'update']);
 
-        Route::prefix("search")->group(function() {
-            Route::get('/', [App\Http\Controllers\Admin\SearchController::class, 'index'])->name("adminSearch");
-            Route::get('/indexing', [App\Http\Controllers\Admin\SearchController::class, 'indexing'])->name("adminSearchIndexing");
+        Route::prefix("search")->controller('SearchController')->group(function() {
+            Route::get('/', 'index')->name("adminSearch");
+            Route::get('/indexing', 'indexing')->name("adminSearchIndexing");
+        });
+
+        Route::prefix("shop")->group(function() {
+
+            Route::prefix("shop-group/{shopGroup}")->group(function() {
+                Route::get('/delete/{field}', 'ShopGroupController@deleteImage')->name('deleteShopGroup');
+            });
+
+            Route::prefix("shop-item")->controller('ShopItemController')->group(function() {
+                Route::prefix("{shopItem}")->group(function() {
+                    Route::get('/copy', 'copy')->name("copyShopItem"); 
+                    Route::prefix("image")->group(function() {
+                        Route::get('/{shopItemImage}/delete', 'deleteImage')->name("deleteShopItemImage");
+                        Route::get('/sorting', 'sortShopItemImages')->name("sortingShopItemImages");
+                    });
+                    Route::get('/shop-item-property/{shopItemProperty}/value/{id}', 'deletePropertyValue')->name('deleteShopItemPropertyValue');
+                    Route::post('image-upload', 'uploadShopItemImage')->name("uploadShopItemImage");
+                    Route::get('gallery', 'getShopItemGallery')->name("getShopItemGallery");
+    
+                    Route::prefix("associated")->group(function() {
+                        Route::get('load-sub-groups-and-items', 'addAssociated')->name("addAssociated");
+                        Route::post('save', 'saveAssociated')->name("saveAssociated");
+    
+                        Route::post('delete/group/{shopItemAssociatedGroup}', 'deleteShopItemAssociatedGroup')->name("deleteShopItemAssociatedGroup");
+                        Route::post('delete/item/{shopItemAssociatedItem}', 'deleteShopItemAssociatedItem')->name("deleteShopItemAssociatedItem");
+                    });
+                    Route::prefix("shortcut")->group(function() {
+                        Route::get('/delete/{shopGroup}', 'ShopItemController@deleteShortcutGroup')->name("deleteShortcutGroup");
+                    });
+                });
+
+                Route::prefix("shortcut")->group(function() {
+                    Route::get('/get-groups', 'ShopItemController@getShortcutGroup')->name("getShortcutGroup");
+                });
+            });
+
+            Route::get('/modification/{shopItem}/default', 'ModificationController@defaultModification')->name('defaultModification');
+
+            Route::prefix('discount')->controller('ShopDiscountController')->group(function() {
+                Route::get('/filter', 'filter')->name("shopDiscountFilter");
+                Route::get('/property/values', 'listValues')->name("shopDiscountPropertyValues");
+            });
+
+            Route::prefix('order')->controller('App\Http\Controllers\Admin\ShopOrderController')->group(function() {
+                Route::get('/get-clients', 'getClients')->name("getClients");
+                Route::get('/get-orders', 'getOrders')->name("getOrders");
+
+                Route::prefix('cdek/create')->controller('App\Http\Controllers\CdekController')->group(function() {
+                    Route::post('order', [App\Http\Controllers\CdekController::class, 'cdekCreateOrder'])->name("createCdekOrder");
+                    Route::get('print/{CdekOrder}', [App\Http\Controllers\CdekController::class, 'print'])->name("printCdekOrder");
+                });
+            });
         });
         
    
         //editable-fields
-        Route::get('/editable/', [App\Http\Controllers\Admin\EditableController::class, 'query']);
-        Route::get('/toggle/', [App\Http\Controllers\Admin\ToggleController::class, 'query']);
-
-        Route::post('logout', 'App\Http\Controllers\Admin\LoginController@logout')->name('logout');
+        Route::get('/editable', 'EditableController@query');
+        Route::get('/toggle', 'ToggleController@query')->name("adminToggle");
+        Route::post('logout', 'LoginController@logout')->name('logout');
     });
 });
 /*если админ не авторизован*/

@@ -5,61 +5,63 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ShopCurrency;
 use Illuminate\Http\Request;
+use App\Models\Shop;
 
 class ShopCurrencyController extends Controller
 {
 
-    public static $path = '/admin/shopCurrency/'; 
-
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Shop $shop)
     {
         return view('admin.shop.currency.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(false),
-            'currencies' => ShopCurrency::orderBy('sorting', 'asc')->get()
+            'currencies' => ShopCurrency::orderBy('sorting', 'asc')->get(),
+            'shop' => $shop
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Shop $shop)
     {
         return view('admin.shop.currency.create', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
+            'shop' => $shop
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Shop $shop)
     {
-        return $this->saveCurrency($request);
+        return $this->saveCurrency($request, $shop);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ShopCurrency $shopCurrency)
+    public function edit(Shop $shop, ShopCurrency $shopCurrency)
     {
         return view('admin.shop.currency.edit', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'currency' => $shopCurrency,
+            'shop' => $shop
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ShopCurrency $shopCurrency)
+    public function update(Request $request, Shop $shop, ShopCurrency $shopCurrency)
     {
-        return $this->saveCurrency($request, $shopCurrency);
+        return $this->saveCurrency($request, $shop, $shopCurrency);
     }
 
-    public function saveCurrency(Request $request, $shopCurrency = false)
+    public function saveCurrency(Request $request, Shop $shop, $shopCurrency = false)
     {
         if (!$shopCurrency) {
             $shopCurrency = new ShopCurrency();
@@ -72,9 +74,9 @@ class ShopCurrencyController extends Controller
         $shopCurrency->code = $request->code;
         $shopCurrency->exchange_rate = $request->exchange_rate;
         $shopCurrency->sorting = $request->sorting;
-        $shopCurrency->default = $request->default == 'on' ? 1 : 0;
+        $shopCurrency->default = $request->default;
 
-        if ($request->default == 'on') {
+        if ($request->default == 1) {
             foreach (ShopCurrency::whereNot("id", $shopCurrency->id)->get() as $oShopCurrency) {
                 $oShopCurrency->default = 0;
                 $oShopCurrency->save();
@@ -88,7 +90,7 @@ class ShopCurrencyController extends Controller
         $shopCurrency->save();
 
         if ($request->apply > 0) {
-            return redirect()->to(self::$path)->withSuccess($message);
+            return redirect()->to(route('shop.shop-currency.index', ['shop' => $shop->id]))->withSuccess($message);
         } else {
             return redirect()->back()->withSuccess($message);
         }
@@ -97,7 +99,7 @@ class ShopCurrencyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ShopCurrency $shopCurrency)
+    public function destroy(Shop $shop, ShopCurrency $shopCurrency)
     {
         $shopCurrency->delete();
 
@@ -107,9 +109,11 @@ class ShopCurrencyController extends Controller
     public static function breadcrumbs($link = true)
     {
 
+        $shop = Shop::get();
+
         $aResult[1]["name"] = 'Валюты';
         if ($link) {
-            $aResult[1]["url"] = self::$path;
+            $aResult[1]["url"] = route('shop.shop-currency.index', ['shop' => $shop->id]);
         }
         
 

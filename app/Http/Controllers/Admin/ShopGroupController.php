@@ -19,20 +19,21 @@ class ShopGroupController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Shop $shop)
     {
         $parent = Arr::get($_REQUEST, 'parent_id', 0);
 
         return view('admin.shop.group.create', [
             'breadcrumbs' => self::breadcrumbs($parent > 0 ? ShopGroup::find($parent) : false, [], true),
             'parent_id' => $parent,
+            'shop' => $shop,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Shop $shop)
     {
         return $this->saveShopGroup($request);
     }
@@ -40,7 +41,7 @@ class ShopGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ShopGroup $shopGroup)
+    public function edit(Shop $shop, ShopGroup $shopGroup)
     {
         return view('admin.shop.group.edit', [
             'shopGroup' => $shopGroup,
@@ -52,7 +53,7 @@ class ShopGroupController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ShopGroup $shopGroup)
+    public function update(Request $request, Shop $shop, ShopGroup $shopGroup)
     {
         return $this->saveShopGroup($request, $shopGroup);
     }
@@ -60,7 +61,7 @@ class ShopGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ShopGroup $shopGroup)
+    public function destroy(Shop $shop, ShopGroup $shopGroup)
     {
         $shopGroup->delete();
 
@@ -81,11 +82,8 @@ class ShopGroupController extends Controller
     public function saveShopGroup (Request $request, $shopGroup = false) 
     {
 
-        $oldPath = '';
-
         if (!$shopGroup) {
             $shopGroup = new ShopGroup();
-            $oldPath = $shopGroup->path;
         }
 
         $oShop = Shop::get();
@@ -97,16 +95,29 @@ class ShopGroupController extends Controller
             // 'path' => ['required', 'string', 'max:255'],
         //]);
 
+        $aPath = [];
+
+        if (!empty(trim($request->path))) {
+            $aPath[] = trim($request->path);
+        }
+
+        if (!empty($request->name)) {
+            $aPath[] = Str::transliteration($request->name);
+        }
+        
+        $aPath[] = $shopGroup->id;
+
         $shopGroup->name = $request->name;
         $shopGroup->description = $request->description;
         $shopGroup->text = $request->text;
-        $shopGroup->active = $request->active == 'on' ? 1 : 0;
+        $shopGroup->active = $request->active ?? 1;
         $shopGroup->parent_id = $request->parent_id ?? 0;
         $shopGroup->sorting = $request->sorting ?? 0;
         $shopGroup->path = !empty(trim($request->path)) ? $request->path : Str::transliteration($request->name);
         $shopGroup->seo_title = $request->seo_title;
         $shopGroup->seo_description = $request->seo_description;
         $shopGroup->seo_keywords = $request->seo_keywords;
+        $shopGroup->path = $aPath[0];
 
         $shopGroup->save();
 
@@ -164,7 +175,7 @@ class ShopGroupController extends Controller
 
         $message = "Группа была успешно сохранена!";
 
-        if (Arr::get($_REQUEST, 'apply') > 0) {
+        if ($request->apply) {
             return redirect()->to(route("shop.index") . ($shopGroup->parent_id > 0 ? '?parent_id=' . $shopGroup->parent_id : ''))->withSuccess($message);
         } else {
             return redirect()->back()->withSuccess($message);
@@ -199,23 +210,20 @@ class ShopGroupController extends Controller
     }
 
 
-    public function deleteImage ($id, $field)
+    public function deleteImage (ShopGroup $shopGroup, $field)
     {
 
-        $oShopGroup = ShopGroup::find($id);
-        if ($oShopGroup) {
+        if (!is_null($shopGroup)) {
 
-            Storage::delete(Shop::$store_path . 'group_' . $oShopGroup->id . '/' . $oShopGroup->$field);
+            Storage::delete(Shop::$store_path . 'group_' . $shopGroup->id . '/' . $shopGroup->$field);
 
-            $oShopGroup->$field = '';
-            $oShopGroup->save();
+            $shopGroup->$field = '';
+            $shopGroup->save();
 
             return response()->json('true');
         } else {
             return response()->json('false');
         }
-
-        return response()->json($id);
     }
 
     public static function breadcrumbs($shopGroup, $aResult = array(), $lastItemIsLink = false)

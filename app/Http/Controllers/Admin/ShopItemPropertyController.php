@@ -8,21 +8,21 @@ use App\Models\ShopItemList;
 use Illuminate\Http\Request;
 use App\Models\ShopGroup;
 use App\Models\ShopItemPropertyForGroup;
+use App\Models\Shop;
 
 class ShopItemPropertyController extends Controller
 {
 
-    public static $path = '/admin/shopItemProperty/'; 
-
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Shop $shop)
     {
         return view('admin.shop.item.property.index', [
             'breadcrumbs' => self::breadcrumbs(),
             'properties' => ShopItemProperty::get(),
             'types' => ShopItemProperty::types(),
+            'shop' => $shop,
 
         ]);
     }
@@ -30,28 +30,29 @@ class ShopItemPropertyController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Shop $shop)
     {
         return view('admin.shop.item.property.create', [
             "breadcrumbs" => self::breadcrumbs(true),
             'types' => ShopItemProperty::types(),
             'lists' => ShopItemList::get(),
             'groups' => ShopGroup::get(),
+            'shop' => $shop,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Shop $shop)
     {
-        return $this->saveShopItemProperty($request);
+        return $this->saveShopItemProperty($request, $shop);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ShopItemProperty $shopItemProperty)
+    public function edit(Shop $shop, ShopItemProperty $shopItemProperty)
     {
 
         $ShopItemPropertyForGroup = new ShopItemPropertyForGroup();
@@ -63,29 +64,30 @@ class ShopItemPropertyController extends Controller
             'lists' => ShopItemList::get(),
             'groups' => ShopGroup::get(),
             'properties_for_groups' => $ShopItemPropertyForGroup->getGroupsForProperty($shopItemProperty),
+            'shop' => $shop,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ShopItemProperty $shopItemProperty)
+    public function update(Request $request, Shop $shop, ShopItemProperty $shopItemProperty)
     {
 
-        return $this->saveShopItemProperty($request, $shopItemProperty);
+        return $this->saveShopItemProperty($request, $shop, $shopItemProperty);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ShopItemProperty $shopItemProperty)
+    public function destroy(Shop $shop, ShopItemProperty $shopItemProperty)
     {
         $shopItemProperty->delete();
 
         return redirect()->back()->withSuccess("Свойство было успешно удалено!");
     }
 
-    public function saveShopItemProperty(Request $request, $shopItemProperty = false)
+    public function saveShopItemProperty(Request $request, Shop $shop, $shopItemProperty = false)
     {
 
         if (!$shopItemProperty) {
@@ -95,9 +97,9 @@ class ShopItemPropertyController extends Controller
         $shopItemProperty->name = $request->name;
         $shopItemProperty->type = $request->type;
         $shopItemProperty->destination = $request->destination;
-        $shopItemProperty->multiple = $request->multiple == 'on' ? 1 : 0;
-        $shopItemProperty->show_in_item = $request->show_in_item == 'on' ? 1 : 0;
-        $shopItemProperty->show_in_filter = $request->show_in_filter == 'on' ? 1 : 0;
+        $shopItemProperty->multiple = $request->multiple ?? 0;
+        $shopItemProperty->show_in_item = $request->show_in_item ?? 0;
+        $shopItemProperty->show_in_filter = $request->show_in_filter ?? 0;
         $shopItemProperty->shop_item_list_id = $request->type == 4 ? ($request->shop_item_list_id ?? 0) : 0;
         $shopItemProperty->sorting = $request->sorting ?? 0;
         $shopItemProperty->save();
@@ -118,7 +120,7 @@ class ShopItemPropertyController extends Controller
         $message = "Свойство было успешно сохранено!";
 
         if ($request->apply) {
-            return redirect()->to(self::$path)->withSuccess($message);
+            return redirect()->to(route('shop.shop-item-property.index', ['shop' => $shop->id]))->withSuccess($message);
         } else {
            return redirect()->back()->withSuccess($message);
         }
@@ -127,9 +129,12 @@ class ShopItemPropertyController extends Controller
 
     public static function breadcrumbs($lastItemIsLink = false)
     {
+
+        $shop = Shop::get();
+
         $aResult[1]["name"] = 'Свойства товаров';
         if ($lastItemIsLink) {
-            $aResult[1]["url"] = self::$path;
+            $aResult[1]["url"] = route('shop.shop-item-property.index', ['shop' => $shop->id]);
         }
 
         return ShopController::breadcrumbs() + $aResult;

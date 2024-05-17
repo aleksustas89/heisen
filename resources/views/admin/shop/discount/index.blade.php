@@ -31,8 +31,18 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <a href="{{ route("shopDiscount.create") }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                <div class="card-header button-items">
+                    <a href="{{ route("shop.shop-discount.create", ['shop' => $shop->id]) }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                
+                    <div>
+                        <form>
+                            <div class="mb-1 mt-1 position-relative">
+                                <input type="text" value="{{ request()->global_search }}" name="global_search" class="form-control" placeholder="Поиск">
+                                @if (!empty(request()->global_search))<a class="clean-input" href="javascript:void(0)" onclick="$('[name=\'global_search\']').val(''); $(this).parents('form').submit()"><i class="las la-times-circle"></i></a>@endif
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-bordered">
@@ -40,10 +50,10 @@
                             <tr>
                                 <th style="width: 1%">№</th>
                                 <th>Название</th>
-                                <th class="d-none d-lg-inline-block"></th>
+                                <th class="d-none d-lg-inline-block" style="width: 250px">&nbsp;</th>
                                 <th class="d-none d-lg-inline-block" style="width: 170px">Действует от</th>
                                 <th class="d-none d-lg-inline-block" style="width: 170px">Действует до</th>
-                                <th class="d-none d-lg-inline-block" class="text-center" style="width: 100px">Активность</th>
+                                <th class="d-none d-lg-inline-block text-center" style="width: 40px"><i class="lar la-lightbulb font-20"></i></th>
                                 <th style="width: 100px">Величина</th>
                                 <th class="td-actions"></th>
                             </tr>
@@ -54,19 +64,19 @@
 
                                 @php
                                     $isActive = $discount->active == 1 ? false : true;
-                                    $outOfDate = !$discount->check() ? false : true;
+                                    $outOfDate = $discount->check() ? false : true;
                                 @endphp
 
                                 <tr @class([
                                     'off' => $isActive,
-                                    'outOfDate' => !$outOfDate,
+                                    'outOfDate' => $outOfDate,
                                 ])>
                                     <td>{{ $discount->id }}</td>
                                     <td class="td_editable">
                                         <span class="line-through-if-off" id="apply_check_shopDiscount_name_{{ $discount->id }}" class="editable">{{ $discount->name }}</span>
-                                        @if(!$outOfDate)<i class="las la-hourglass-end"></i>@endif
+                                        @if($outOfDate)<i class="las la-hourglass-end"></i>@endif
                                     </td>
-                                    <td class="d-none d-lg-inline-block">
+                                    <td class="d-none d-lg-inline-block" style="width: 250px">
                                         @php
                                         $ShopItemDiscounts = $discount->ShopItemDiscounts;
                                         $count = !is_null($ShopItemDiscounts) ? $ShopItemDiscounts->count() : 0;
@@ -75,9 +85,9 @@
                                             Кол-во товаров со скидкой <span class="badge bg-light text-dark">{{ $count }}</span>
                                         </button>
                                     </td>
-                                    <td class="d-none d-lg-inline-block">{{ \App\Services\Helpers\Str::datetime($discount->start_datetime) }}</td>
-                                    <td class="d-none d-lg-inline-block">{{ \App\Services\Helpers\Str::datetime($discount->end_datetime) }}</td>
-                                    <td class="text-center d-none d-lg-inline-block">
+                                    <td class="d-none d-lg-inline-block" style="width: 170px">{{ \App\Services\Helpers\Str::datetime($discount->start_datetime) }}</td>
+                                    <td class="d-none d-lg-inline-block" style="width: 170px">{{ \App\Services\Helpers\Str::datetime($discount->end_datetime) }}</td>
+                                    <td class="text-center d-none d-lg-inline-block" style="width: 40px">
                                         <span onclick="toggle.init($(this))" @class([
                                             'pointer',
                                             'ico-inactive' => $isActive,
@@ -86,10 +96,10 @@
                                             <i class="lar la-lightbulb font-20"></i>
                                         </span>
                                     </td>
-                                    <td class="td_editable"><span id="apply_check_shopDiscount_value_{{ $discount->id }}" class="editable">{{ $discount->value }}</span> {{ isset($types[$discount->type]) ? $types[$discount->type] : ''  }}</td>
+                                    <td class="td_editable" style="width: 100px"><span id="apply_check_shopDiscount_value_{{ $discount->id }}" class="editable">{{ $discount->value }}</span> {{ isset($types[$discount->type]) ? $types[$discount->type] : ''  }}</td>
                                     <td class="td-actions">
-                                        <a href="{{ route('shopDiscount.edit', $discount->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                        <form action="{{ route('shopDiscount.destroy', $discount->id) }}" method="POST" class="d-inline">
+                                        <a href="{{ route('shop.shop-discount.edit', ['shop' => $shop->id, 'shop_discount' => $discount->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                        <form action="{{ route('shop.shop-discount.destroy', ['shop' => $shop->id, 'shop_discount' => $discount->id]) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">

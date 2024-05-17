@@ -98,18 +98,32 @@
                             <div class="row mb-3">
                                 <div class="col-lg-4">
                                     <div class="form-check form-switch form-switch-success">
-                                        <input class="form-check-input" name="active" type="checkbox" id="active" checked="">
+                                        <input value="1" class="form-check-input" name="active" type="checkbox" id="active" checked="">
                                         <label class="form-check-label" for="active">Активность страницы</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-check form-switch form-switch-purple">
-                                        <input class="form-check-input" name="indexing" type="checkbox" id="indexing" checked="">
+                                        <input value="1" class="form-check-input" name="indexing" type="checkbox" id="indexing" checked="">
                                         <label class="form-check-label" for="indexing">Индексация</label>
                                     </div>
                                 </div>
                             </div>
 
+                   
+                            <ul class="nav btn-group button-items" role="tablist">
+                                <li class="nav-item">
+                                    <input type="radio" class="btn-check" name="type" id="type0" autocomplete="off" value="0" checked>
+                                    <label class="btn btn-success btn-sm" for="type0" data-bs-toggle="tab" href="#document" role="tab" aria-selected="false">Документ</label>
+                                </li>
+                                <li class="nav-item">
+                                    <input type="radio" class="btn-check" name="type" id="type1" autocomplete="off" value="1">
+                                    <label class="btn btn-warning btn-sm" for="type1" data-bs-toggle="tab" href="#redirect" role="tab" aria-selected="false">Ссылка</label>
+                                </li>                                                
+                            </ul>
+
+                            <div class="tab-content">
+                                <div @class(["tab-pane", "mt-3", "active"]) id="document" role="tabpanel">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <textarea style="visibility:hidden" class="editor" aria-hidden="true" name="text"></textarea>

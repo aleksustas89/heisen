@@ -34,7 +34,7 @@ var DiscountFilter = {
 
         if (shop_item_name.length > 1 || shop_group_id > 0 || (total_list_id > 0 && total_list_value > 0)) {
             $.ajax({
-                url: "/admin/shop/discount/filter",
+                url: shopDiscountFilter,
                 data: {"shop_item_name": shop_item_name, "shop_group_id": shop_group_id, "total_list_id": total_list_id, "total_list_value": total_list_value},
                 type: "GET",
                 dataType: "html",
@@ -71,7 +71,7 @@ $(function(){
     $("[name='total_list_id']").change(function() {
         let val = $(this).find('option:selected').data("list");
         $.ajax({
-            url: "/admin/list/values",
+            url: shopDiscountPropertyValues,
             data: {"total_list_id": val},
             type: "GET",
             dataType: "json",

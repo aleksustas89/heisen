@@ -32,7 +32,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="{{ route("shopDelivery.create") }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                    <a href="{{ route("shop.shop-delivery.create", ['shop' => $shop->id]) }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-bordered">
@@ -58,11 +58,11 @@
                                     <td class="d-mob-none" style="width: 40px"><span id="apply_check_delivery_color_{{ $delivery->id }}" class="editable">{{ $delivery->color }}</span></td>
                                     <td class="d-mob-none" style="width: 100px"><span id="apply_check_delivery_sorting_{{ $delivery->id }}" class="editable">{{ $delivery->sorting }}</span></td>
                                     <td class="text-center">
-                                        <a href="{{ route('shopDeliveryField.index') }}?shop_delivery_id={{ $delivery->id }}"><i data-feather="list"></i></a>
+                                        <a href="{{ route('shop.shop-delivery-field.index', ['shop' => $shop->id]) }}?shop_delivery_id={{ $delivery->id }}"><i data-feather="list"></i></a>
                                     </td>
                                     <td class="td-actions">
-                                        <a href="{{ route('shopDelivery.edit', $delivery->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                        <form action="{{ route('shopDelivery.destroy', $delivery->id) }}" method="POST" style="display:inline-block;">
+                                        <a href="{{ route('shop.shop-delivery.edit', ['shop' => $shop->id, 'shop_delivery' => $delivery->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                        <form action="{{ route('shop.shop-delivery.destroy', ['shop' => $shop->id, 'shop_delivery' => $delivery->id]) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" onclick="confirmDelete($(this).parents('form'))"class="td-list-delete-btn">
@@ -82,12 +82,4 @@
     </div>
 
     
-@endsection
-
-@section('css')
-
-@endsection
-
-@section('js')
-
 @endsection

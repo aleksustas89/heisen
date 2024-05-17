@@ -28,7 +28,7 @@ class ShopItemController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Shop $shop)
     {
         $parent = Arr::get($_REQUEST, 'parent_id', 0);
 
@@ -40,15 +40,16 @@ class ShopItemController extends Controller
             'currencies' => ShopCurrency::orderBy('sorting', 'asc')->get(),
             'properties' => $properties,
             'lists' => self::getListItems($properties),
+            'shop' => $shop,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Shop $shop)
     {
-        return $this->saveShopItem($request);
+        return $this->saveShopItem($request, $shop);
     }
 
     public function show()
@@ -72,7 +73,7 @@ class ShopItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ShopItem $shopItem)
+    public function edit(Shop $shop, ShopItem $shopItem)
     {
 
         $properties = self::getProperties($shopItem->shop_group_id);
@@ -103,6 +104,7 @@ class ShopItemController extends Controller
             'property_value_strings' => $aProperty_Value_String,
             'property_value_floats' => $aProperty_Value_Float,
             'lists' => self::getListItems($properties),
+            'shop' => $shop,
         ]);
     }
 
@@ -144,16 +146,16 @@ class ShopItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ShopItem $shopItem)
+    public function update(Request $request, Shop $shop, ShopItem $shopItem)
     {
 
-        return $this->saveShopItem($request, $shopItem);
+        return $this->saveShopItem($request, $shop, $shopItem);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, ShopItem $shopItem)
+    public function destroy(Request $request, Shop $shop, ShopItem $shopItem)
     {
 
         $shopItem->delete();
@@ -161,15 +163,13 @@ class ShopItemController extends Controller
         return redirect()->back()->withSuccess("Товар был успешно удален!");
     }
 
-    public function saveShopItem (Request $request, $shopItem = false) 
+    public function saveShopItem (Request $request, Shop $shop, $shopItem = false) 
     {
 
-        $oShop = Shop::get();
 
         if (!$shopItem) {
             $shopItem = new ShopItem();
         }
-
 
         //$request->validate([
             // 'name' => ['required', 'string', 'max:255'],
@@ -223,13 +223,13 @@ class ShopItemController extends Controller
 
                 //большое изображение
                 $image_large = Image::make($original);
-                if ($oShop->preserve_aspect_ratio == 1) {
-                    $image_large->resize($oShop->image_large_max_width, $oShop->image_large_max_height, function ($constraint) {
+                if ($shop->preserve_aspect_ratio == 1) {
+                    $image_large->resize($shop->image_large_max_width, $shop->image_large_max_height, function ($constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
                     });
                 } else {
-                    $image_large->fit($oShop->image_large_max_width, $oShop->image_large_max_height);
+                    $image_large->fit($shop->image_large_max_width, $shop->image_large_max_height);
                 }
                 $sImageLargeName = 'image_large'. $oShopItemImage->id .'.' . $fileInfo["extension"];
                 $image_large->save(Storage::path($shopItem->path()) . $sImageLargeName);
@@ -237,13 +237,13 @@ class ShopItemController extends Controller
 
                 //превью
                 $image_small = Image::make($original);
-                if ($oShop->preserve_aspect_ratio_small == 1) {
-                    $image_small->resize($oShop->image_small_max_width, $oShop->image_small_max_height, function ($constraint) {
+                if ($shop->preserve_aspect_ratio_small == 1) {
+                    $image_small->resize($shop->image_small_max_width, $shop->image_small_max_height, function ($constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
                     });
                 } else {
-                    $image_small->fit($oShop->image_small_max_width, $oShop->image_small_max_height);
+                    $image_small->fit($shop->image_small_max_width, $shop->image_small_max_height);
                 }
                 $sImageSmallName = 'image_small'. $oShopItemImage->id .'.' . $fileInfo["extension"];
                 $image_small->save(Storage::path($shopItem->path()) . $sImageSmallName);
@@ -341,15 +341,14 @@ class ShopItemController extends Controller
     }
 
 
-    public function deleteImage($id) 
+    public function deleteImage(ShopItem $shopItem, ShopItemImage $shopItemImage) 
     {
 
         $response = false;
 
-        $oShopItemImage = ShopItemImage::find($id);
-        if (!is_null($oShopItemImage)) {
+        if (!is_null($shopItemImage)) {
 
-            $oShopItemImage->delete();
+            $shopItemImage->delete();
 
             $response = true;
         }
@@ -357,14 +356,13 @@ class ShopItemController extends Controller
         return response()->json($response);
     }
 
-    public function deletePropertyValue($property, $id)
+    public function deletePropertyValue(ShopItem $shopItem, ShopItemProperty $shopItemProperty, $value_id)
     {
         $response = false;
 
-        $ShopItemProperty = ShopItemProperty::find($property);
-        if (!is_null($ShopItemProperty)) {
-            $oProperty_Value = ShopItemProperty::getObjectByType($ShopItemProperty->type); 
-            $oValue = $oProperty_Value->find($id);
+        if (!is_null($shopItemProperty)) {
+            $oProperty_Value = ShopItemProperty::getObjectByType($shopItemProperty->type); 
+            $oValue = $oProperty_Value->find($value_id);
             $oValue->delete();
             $response = true;
         }

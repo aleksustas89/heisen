@@ -39,7 +39,7 @@
 
             <div class="card" id="id_content">
     
-                <form action="{{ route('shopItemList.store') }} " method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-item-list.store', ['shop' => $shop->id]) }} " method="POST" id="formEdit" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
 

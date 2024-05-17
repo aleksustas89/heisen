@@ -38,10 +38,12 @@
     <div class="row" id="id_content">
         <div class="col-lg-12">
             
-            <form action="{{ route('structureMenu.update', $menu->id) }}" method="POST" id="formEdit">
+            <form action="{{ route('structure-menu.update', ['structure_menu' => $menu->id]) }}" method="POST" id="formEdit">
+
+                @csrf
+                @method('PUT')
 
                 <div class="card">
-                @csrf
 
                 <div class="p-2">
                     <ul class="nav nav-tabs" role="tablist">

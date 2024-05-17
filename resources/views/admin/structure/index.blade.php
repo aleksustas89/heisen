@@ -34,7 +34,7 @@
 
                 <div class="card-header">
                     <a href="{{ route('structure.create') }}{{ $parent > 0 ? '?parent_id=' . $parent : '' }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
-                    <a href="{{ route('structureMenu.index') }}" class="btn btn-info"><i class="fas fa-bars icon-separator"></i>Меню</a>
+                    <a href="{{ route('structure-menu.index') }}" class="btn btn-info"><i class="fas fa-bars icon-separator"></i>Меню</a>
                 </div>
 
                 <div class="card-body">
@@ -43,6 +43,7 @@
                             <thead>
                                 <tr>
                                     <th style="width: 1%">#ID</th>
+                                    <th style="width: 1%">-</th>
                                     <th>Название структуры</th>
                                     <th class="d-mob-none">Путь</th>
                                     <th class="d-mob-none" width="200px">Меню</th>
@@ -61,6 +62,11 @@
                                 <tr class="{{ $structure->active == 0 ? 'off' : '' }}">
                                     <td>
                                         {{ $structure->id }}
+                                    </td>
+                                    <td>
+                                        @if ($structure->type == 1)
+                                            <i class="fas-solid fas fa-link"></i>
+                                        @endif
                                     </td>
                                     <td>
                                         <div>

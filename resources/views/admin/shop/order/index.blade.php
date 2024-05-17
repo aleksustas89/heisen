@@ -32,7 +32,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="{{ route("shopOrder.create") }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                    <a href="{{ route("shop-order.create") }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-bordered">
@@ -188,8 +188,8 @@
                                         @endif
                                     </td>
                                     <td class="td-actions">
-                                        <a href="{{ route('shopOrder.edit', $order->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                        <form action="{{ route('shopOrder.destroy', $order->id) }}" method="POST" class="d-inline">
+                                        <a href="{{ route('shop-order.edit', $order->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                        <form action="{{ route('shop-order.destroy', $order->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">

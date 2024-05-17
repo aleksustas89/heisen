@@ -26,7 +26,7 @@
 
         <div class="card" id="id_content">
             
-            <form action="{{ route('shopCurrency.store') }}" method="POST" id="formEdit" enctype="multipart/form-data">
+            <form action="{{ route('shop.shop-currency.store', ['shop' => $shop->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
 
@@ -67,7 +67,7 @@
                                 <div class="col-6 col-xs-3 d-flex align-items-end mb-3">
                                     <div class="d-flex switch-col">
                                         <div class="form-check form-switch form-switch-success">
-                                            <input class="form-check-input" name="default" type="checkbox" id="default">
+                                            <input value="1" class="form-check-input" name="default" type="checkbox" id="default">
                                             <label for="default" class="form-check-label">
                                                 Базовая
                                             </label>

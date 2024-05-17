@@ -26,7 +26,7 @@
 
             <div class="card" id="id_content">
                 
-                <form action="{{ route('shopGroup.store') }}" method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-group.store', ['shop' => $shop->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
 
@@ -96,8 +96,9 @@
                                         <div class="col-lg-4">
                                             <label>&nbsp;</label>
                                             <div class="form-check field-check-center">
-                                                <div>
-                                                    <input class="form-check-input" name="active" type="checkbox" id="active" checked="">
+                                                <div class="form-check form-switch form-switch-success">
+                                                    
+                                                    <input value="1" checked class="form-check-input" name="active" type="checkbox" id="active" >
                                                     <label for="active">
                                                         Активность
                                                     </label>

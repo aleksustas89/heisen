@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class StructureMenuController extends Controller
 {
 
-    public static $path = '/admin/structureMenu/';
+
 
     /**
      * Display a listing of the resource.
@@ -83,7 +83,7 @@ class StructureMenuController extends Controller
         $message = 'Меню было успешно сохранено!';
 
         if ($request->apply) {
-            return redirect()->to(self::$path)->withSuccess($message);
+            return redirect()->to(route('structure-menu.index'))->withSuccess($message);
         } else {
            return redirect()->back()->withSuccess($message);
         }
@@ -94,7 +94,7 @@ class StructureMenuController extends Controller
     {
         $aResult[1]["name"] = 'Меню';
         if ($lastItemIsLink) {
-            $aResult[1]["url"] = self::$path;
+            $aResult[1]["url"] = route('structure-menu.index');
         }
 
         return StructureController::breadcrumbs(false, [], true) + $aResult;

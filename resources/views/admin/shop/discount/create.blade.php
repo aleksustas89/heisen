@@ -34,7 +34,7 @@
         <div class="col-12">
 
             <div class="card" id="id_content">
-                <form action="{{ route('shopDiscount.store') }}" method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-discount.store', ['shop' => $shop->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
              
                     @csrf
                     @method('POST')
@@ -52,11 +52,11 @@
 
                                 <div class="col-6 col-sm-3">
                                     <label class="mb-1">Действует от</label>
-                                    <input type="text" value="" name="start_datetime" class="form-control datepicker" placeholder="Действует от">
+                                    <input type="text" value="{{ date("d.m.Y H:i:s") }}" name="start_datetime" class="form-control datepicker" placeholder="Действует от">
                                 </div>
                                 <div class="col-6 col-sm-3">
                                     <label class="mb-1">Действует до</label>
-                                    <input type="text" value="" name="end_datetime" class="form-control datepicker" placeholder="Действует до">
+                                    <input type="text" value="{{ date("d.m.Y H:i:s", strtotime('+1 year')) }}" name="end_datetime" class="form-control datepicker" placeholder="Действует до">
                                 </div>
 
                             </div>
@@ -135,7 +135,7 @@
             
                                     </div>
                                     <div class="row mb-3">
-                                        <div class="col-2"></div>
+                                        <div class="col-4"></div>
                                         <div class="col-2 d-none">
                                             <select class="form-control" name="total_list_value">
                                             </select>
@@ -166,16 +166,33 @@
     
 @endsection
 
+
 @section("js")
-    <script src="/assets/js/pages/shopDiscount.js"></script>
     <script>
+        var shopDiscountFilter = '{{ route("shopDiscountFilter") }}',
+            shopDiscountPropertyValues = '{{ route("shopDiscountPropertyValues") }}';
+    </script>
+
+    <script src="/assets/js/jquery.datetimepicker.full.js"></script> 
+    <script>
+
+        $.datetimepicker.setLocale('ru');
+
         $(function() {
-            $( ".datepicker" ).datepicker();
+            $('.datetimepicker').datetimepicker({
+                format:'d.m.Y H:i:s',
+                dayOfWeekStart: 1
+            });
         });
     </script>
+
+    @php
+        App\Services\Helpers\File::js('/assets/js/pages/shopDiscount.js');
+    @endphp
 @endsection
 
 @section("css")
+    <link rel="stylesheet" type="text/css" href="/assets/css/jquery.datetimepicker.css"/>
     <style>
         .items-applied {
             max-height: 500px;

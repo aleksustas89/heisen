@@ -38,7 +38,7 @@
 
             <div class="card" id="id_content">
     
-                <form action="{{ route('shopItemListItem.store') }} " method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-item-list-item.store', ['shop' => $shop->id]) }} " method="POST" id="formEdit" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
 
@@ -85,7 +85,7 @@
                                         <div class="col-6 col-sm-2 d-flex align-items-end">
                                             <div class="form-check form-switch form-switch-success mb-2">
                                                 
-                                                <input class="form-check-input" name="active" type="checkbox" id="active" checked="">
+                                                <input  value="1" class="form-check-input" name="active" type="checkbox" id="active" checked="">
                                                 
                                                 <label class="form-check-label" for="active">Активность</label>
                                             </div>

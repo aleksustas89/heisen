@@ -8,7 +8,11 @@
     <div class="float-start">
         <ol class="breadcrumb">
             @foreach ($breadcrumbs as $breadcrumb)
-                <li class="breadcrumb-item"><a href="{{ $breadcrumb["url"] }}">{{ $breadcrumb["name"] }}</a></li>
+                @if (!empty($breadcrumb["url"]))
+                    <li class="breadcrumb-item"><a href="{{ $breadcrumb["url"] }}">{{ $breadcrumb["name"] }}</a></li>
+                @else 
+                    <li class="breadcrumb-item">{{ $breadcrumb["name"] }}</li>
+                @endif
             @endforeach
             <li class="breadcrumb-item">Редактирование структуры</li>
         </ol>
@@ -100,38 +104,52 @@
                             <div class="row mb-3">
                                 <div class="col-lg-4">
                                     <div class="form-check form-switch form-switch-success">
-                                        
-
-                                        @if ($structure->active == 1)
-                                            <input class="form-check-input" name="active" type="checkbox" id="active" checked="">
-                                        @else
-                                            <input class="form-check-input" name="active" type="checkbox" id="active">
-                                        @endif
-
+                                        <input value="1" @if ($structure->active == 1) checked="" @endif class="form-check-input" name="active" type="checkbox" id="active">
                                         <label class="form-check-label" for="active">Активность страницы</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-check form-switch form-switch-purple">
 
-                                        @if ($structure->indexing == 1)
-                                            <input class="form-check-input" type="checkbox" name="indexing" id="indexing" checked>
-                                        @else
-                                            <input class="form-check-input" type="checkbox" name="indexing" id="indexing">
-                                        @endif
-
+                                        <input value="1" @if ($structure->indexing == 1) checked="" @endif class="form-check-input" type="checkbox" name="indexing" id="indexing">
                                         <label class="form-check-label" for="indexing">Индексация</label>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-lg-12">
-                     
-                                    <textarea type="text" name="text" class="form-control editor" placeholder="Описание группы">{{ $structure->text }}</textarea>
-                                </div>
-                            </div>
+              
+                            <ul class="nav btn-group button-items" role="tablist">
+                                <li class="nav-item">
+                                    <input type="radio" class="btn-check" name="type" id="type0" autocomplete="off" value="0" @if($structure->type == 0) checked @endif>
+                                    <label class="btn btn-success btn-sm" for="type0" data-bs-toggle="tab" href="#document" role="tab" aria-selected="false">Документ</label>
+                                </li>
+                                <li class="nav-item">
+                                    <input type="radio" class="btn-check" name="type" id="type1" autocomplete="off" value="1" @if($structure->type == 1) checked @endif>
+                                    <label class="btn btn-warning btn-sm" for="type1" data-bs-toggle="tab" href="#redirect" role="tab" aria-selected="false">Ссылка</label>
+                                </li>                                                
+                            </ul>
 
+                            <div class="tab-content">
+                                <div @class(["tab-pane", "mt-3", "active" => $structure->type == 0 ? true : false]) id="document" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            
+                                            <textarea type="text" name="text" class="form-control editor" placeholder="Описание">{{ $structure->text }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div @class(["tab-pane", "mt-3", "active" => $structure->type == 1 ? true : false]) id="redirect" role="tabpanel">
+
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <div>
+                                                <input type="text" name="redirect" value="{{ $structure->redirect }}" class="form-control" placeholder="Ссылка">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>                                                
+                            </div>
                         </div>
 
                         <div class="tab-pane" id="seo">

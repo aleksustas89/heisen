@@ -38,7 +38,7 @@
 
         <div class="card" id="id_content">
             
-            <form action="{{ route('shopItem.store') }}" method="POST" id="formEdit" enctype="multipart/form-data">
+            <form action="{{ route('shop.shop-item.store', ['shop' => $shop->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
 
@@ -94,23 +94,12 @@
 
                                     <div class="d-flex">
 
-                                        <div class="form-check field-check-center">
-                                            <div>
-                                                <input class="form-check-input" name="active" type="checkbox" id="active" checked="">
-                                                <label for="active">
-                                                    Активность
-                                                </label>
-                                            </div>
+                                        <div class="form-check form-switch form-switch-success">
+                                            <input value="1" class="form-check-input" name="active" type="checkbox" id="active" checked="">
+                                            <label for="active">
+                                                Активность
+                                            </label>
                                         </div>
-                                        <div class="form-check field-check-center mx-3">
-                                            <div>
-                                                <input class="form-check-input" name="indexing" type="checkbox" id="indexing" checked="">
-                                                <label for="indexing">
-                                                    Индексирование
-                                                </label>
-                                            </div>
-                                        </div>  
-
                                     </div>
                                 </div>
                             </div>

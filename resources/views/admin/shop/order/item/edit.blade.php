@@ -13,7 +13,7 @@
                         <li class="breadcrumb-item">{{ $breadcrumb["name"] }}</li>
                     @endif
                 @endforeach
-                <li class="breadcrumb-item"><a href="{{ route('shopOrder.edit', $orderItem->shop_order_id) }}">Редактирование заказа № {{ $orderItem->shop_order_id }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('shop-order.edit', $orderItem->shop_order_id) }}">Редактирование заказа № {{ $orderItem->shop_order_id }}</a></li>
                 <li class="breadcrumb-item">Редактирование товара '{{ $orderItem->name }}'</li>
             </ol>
         </div>
@@ -26,7 +26,7 @@
         <div class="col-12">
 
             <div class="card" id="id_content">
-                <form action="{{ route('shopOrderItem.update', $orderItem->id) }}" method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop-order.shop-order-item.update', ['shop_order' => $orderItem->shop_order_id, 'shop_order_item' => $orderItem->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
              
                     @csrf
                     @method('PUT')

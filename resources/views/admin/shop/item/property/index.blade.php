@@ -40,9 +40,9 @@
         <div class="card">
 
             <div class="card-header">
-                <a href="{{ route('shopItemProperty.create') }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                <a href="{{ route('shop.shop-item-property.create', ['shop' => $shop->id]) }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
 
-                <a href="{{ route('shopItemList.index') }}" class="btn btn-primary"><i class="fas fa-list-ul icon-separator"></i>Списки</a>
+                <a href="{{ route('shop.shop-item-list.index', ['shop' => $shop->id]) }}" class="btn btn-primary"><i class="fas fa-list-ul icon-separator"></i>Списки</a>
             </div>
 
 
@@ -75,8 +75,8 @@
                             </td>
 
                             <td class="td-actions">
-                                <a href="{{ route('shopItemProperty.edit', $property->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                <form action="{{ route('shopItemProperty.destroy', $property->id) }}" method="POST" style="display:inline-block;">
+                                <a href="{{ route('shop.shop-item-property.edit', ['shop' => $shop->id, 'shop_item_property' => $property->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                <form action="{{ route('shop.shop-item-property.destroy', ['shop' => $shop->id, 'shop_item_property' => $property->id]) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">

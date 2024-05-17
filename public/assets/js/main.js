@@ -59,6 +59,60 @@ $(document).ready(function () {
         $form.on('keyup change paste blur', ':input[data-required]', function(e) { mainFieldChecker.check($(this)) });
     }
 
+	$(".admin-table").find(".check-all").click(function() {
+
+		let checker = $(this);
+
+		$(".admin-table").find("tbody").find(".check-item").each(function(){
+			if (checker.prop("checked")) {
+				$(this).prop("checked", true);
+			} else {
+				$(this).prop("checked", false);
+			}	
+		});
+	});
+
+	
+	$(".group-deleting").click(function() {
+		let form = $(this).parents("form");
+		Swal.fire({
+			title: "Вы уверенны, что хотите удалить?",
+			showCancelButton: true,
+			confirmButtonText: 'Да',
+			cancelButtonText: 'Отмена',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$(".admin-table").find("[name='group_delete']").val(1);
+				return form.submit();
+			} else if (result.isDenied) {
+				return false
+			}
+		})
+
+		return false;
+	});
+
+	$(".deleting").click(function() {
+		let form = $(this).parents("form"),
+			$this = $(this);
+		Swal.fire({
+			title: "Вы уверенны, что хотите удалить?",
+			showCancelButton: true,
+			confirmButtonText: 'Да',
+			cancelButtonText: 'Отмена',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$this.parents("tr").find(".check-item").prop("checked", true);
+				$(".admin-table").find("[name='group_delete']").val(1);
+				return form.submit();
+			} else if (result.isDenied) {
+				return false
+			}
+		})
+
+		return false;
+	});
+
 });
 
 function elFinderBrowser (callback, value, meta) {
@@ -98,6 +152,12 @@ function elFinderBrowser (callback, value, meta) {
             }
         }
     });
+}
+
+var Operation = {
+	set: function(value) {
+		$("[name='operation']").val(value);
+	}
 }
 
 var i18n = new Array();

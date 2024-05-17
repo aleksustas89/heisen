@@ -4,64 +4,65 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ShopItemList;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class ShopItemListController extends Controller
 {
 
-    public static $path = '/admin/shopItemList/'; 
-
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Shop $shop)
     {
         return view('admin.shop.item.list.index', [
             'breadcrumbs' => self::breadcrumbs(),
             'lists' => ShopItemList::get(),
-            'listItemPath' => ShopItemListItemController::$path
+            'shop' => $shop
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Shop $shop)
     {
         return view('admin.shop.item.list.create', [
             'breadcrumbs' => self::breadcrumbs(true),
+            'shop' => $shop
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Shop $shop)
     {
-        return $this->saveShopItemList($request);
+        return $this->saveShopItemList($request, $shop);
     }
 
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ShopItemList $shopItemList)
+    public function edit(Shop $shop, ShopItemList $shopItemList)
     {
         return view('admin.shop.item.list.edit', [
             'breadcrumbs' => self::breadcrumbs(true),
             'list' => $shopItemList,
+            'shop' => $shop
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ShopItemList $shopItemList)
+    public function update(Request $request, Shop $shop, ShopItemList $shopItemList)
     {
-        return $this->saveShopItemList($request, $shopItemList);
+        return $this->saveShopItemList($request, $shop, $shopItemList);
     }
 
-    public function saveShopItemList(Request $request, $shopItemList = false)
+    public function saveShopItemList(Request $request, Shop $shop, $shopItemList = false)
     {
         if (!$shopItemList) {
             $shopItemList = new ShopItemList();
@@ -74,7 +75,7 @@ class ShopItemListController extends Controller
         $message = "Список был успешно сохранен!";
 
         if ($request->apply) {
-            return redirect()->to(self::$path)->withSuccess($message);
+            return redirect()->to(route('shop.shop-item-list.index', ['shop' => $shop->id]))->withSuccess($message);
         } else {
            return redirect()->back()->withSuccess($message);
         }
@@ -83,7 +84,7 @@ class ShopItemListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ShopItemList $shopItemList)
+    public function destroy(Shop $shop, ShopItemList $shopItemList)
     {
 
         $shopItemList->delete();
@@ -93,9 +94,11 @@ class ShopItemListController extends Controller
 
     public static function breadcrumbs($lastItemIsLink = false)
     {
+        $shop = Shop::get();
+
         $aResult[2]["name"] = 'Списки';
         if ($lastItemIsLink) {
-            $aResult[2]["url"] = self::$path;
+            $aResult[2]["url"] = route('shop.shop-item-list.index', ['shop' => $shop->id]);
         }
 
         return ShopItemPropertyController::breadcrumbs(true) + $aResult;

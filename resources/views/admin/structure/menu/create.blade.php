@@ -38,11 +38,13 @@
     <div class="row" id="id_content">
         <div class="col-lg-12">
             
-            <form action="{{ route('structureMenu.store') }}" method="POST" id="formEdit">
+            <form action="{{ route('structure-menu.store') }}" method="POST" id="formEdit">
 
-                <div class="card">
+                @method('POST')
                 @csrf
 
+                <div class="card">
+                
                 <div class="p-2">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">

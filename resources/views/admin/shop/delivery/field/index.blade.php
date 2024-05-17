@@ -32,7 +32,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <a href="{{ route("shopDeliveryField.create") }}?shop_delivery_id={{ $shop_delivery_id }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                    <a href="{{ route("shop.shop-delivery-field.create", ['shop' => $shop->id]) }}?shop_delivery_id={{ $shop_delivery_id }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-bordered">
@@ -58,8 +58,8 @@
                                     <td style="width: 200px">{{ $types[$field->type] ?? $field->type }}</td>
                                     <td class="d-mob-none" style="width: 100px"><span id="apply_check_deliveryField_sorting_{{ $field->id }}" class="editable">{{ $field->sorting }}</span></td>
                                     <td class="td-actions">
-                                        <a href="{{ route('shopDeliveryField.edit', $field->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                        <form action="{{ route('shopDeliveryField.destroy', $field->id) }}" method="POST" class="d-inline">
+                                        <a href="{{ route('shop.shop-delivery-field.edit', ['shop' => $shop->id, 'shop_delivery_field' => $field->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                        <form action="{{ route('shop.shop-delivery-field.destroy', ['shop' => $shop->id, 'shop_delivery_field' => $field->id]) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">
@@ -79,12 +79,4 @@
     </div>
 
     
-@endsection
-
-@section('css')
-
-@endsection
-
-@section('js')
-
 @endsection

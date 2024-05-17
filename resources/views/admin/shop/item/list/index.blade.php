@@ -40,7 +40,7 @@
             <div class="card">
 
                 <div class="card-header">
-                    <a href="{{ route('shopItemList.create') }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                    <a href="{{ route('shop.shop-item-list.create', ['shop' => $shop->id]) }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
                 </div>
 
                 <div class="card-body p-0">
@@ -71,12 +71,12 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <a href="{{ $listItemPath }}?list_id={{ $list->id }}"><i data-feather="list"></i></a>
+                                        <a href="{{ route('shop.shop-item-list-item.index', ['shop' => $shop->id]) }}?list_id={{ $list->id }}"><i data-feather="list"></i></a>
                                     </td>
 
                                     <td class="td-actions">
-                                        <a href="{{ route('shopItemList.edit', $list->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                        <form action="{{ route('shopItemList.destroy', $list->id) }}" method="POST" style="display:inline-block;">
+                                        <a href="{{ route('shop.shop-item-list.edit', ['shop' => $shop->id, 'shop_item_list' => $list->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                        <form action="{{ route('shop.shop-item-list.destroy', ['shop' => $shop->id, 'shop_item_list' => $list->id]) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">

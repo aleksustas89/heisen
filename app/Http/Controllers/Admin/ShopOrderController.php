@@ -20,7 +20,7 @@ class ShopOrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         return view('admin.shop.order.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(),
@@ -152,9 +152,9 @@ class ShopOrderController extends Controller
 
 
         if ($request->apply) {
-            return redirect(route("shopOrder.index"))->withSuccess('Данные были успешно сохраненны!');
+            return redirect(route("shop-order.index"))->withSuccess('Данные были успешно сохраненны!');
         } else {
-            return redirect(route("shopOrder.edit", $shopOrder->id))->withSuccess('Данные были успешно сохраненны!');
+            return redirect(route("shop-order.edit", $shopOrder->id))->withSuccess('Данные были успешно сохраненны!');
         }
 
     }
@@ -163,7 +163,7 @@ class ShopOrderController extends Controller
     {
         $Result[1]["name"] = 'Заказы';
         if ($lastItemIsLink) {
-            $Result[1]["url"] = route("shopOrder.index");
+            $Result[1]["url"] = route("shop-order.index");
         }
         
         return $Result;

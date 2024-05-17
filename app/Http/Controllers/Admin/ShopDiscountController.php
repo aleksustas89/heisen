@@ -10,6 +10,8 @@ use App\Models\ShopItemProperty;
 use Illuminate\Http\Request;
 use App\Models\ShopItemListItem;
 use App\Models\ShopItem;
+use App\Models\Shop;
+use App\Http\Controllers\Admin\ShopItemDiscountController;
 
 class ShopDiscountController extends Controller
 {
@@ -24,40 +26,67 @@ class ShopDiscountController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Shop $shop, Request $request)
     {
+
+        $ShopDiscounts = ShopDiscount::orderBy("end_datetime", "Desc")->orderBy("id", "Desc");
+
+        if ($request->global_search) {
+
+            $ShopDiscounts->where("name", "LIKE", "%". trim($request->global_search) ."%");
+
+            $SearchByItemName = ShopItemDiscount::join("shop_items", "shop_items.id", "=", "shop_item_discounts.shop_item_id")
+                ->join("shop_item_language_entities", "shop_item_language_entities.shop_item_id", "=", "shop_items.modification_id")
+                ->join("language_value_strings", "language_value_strings.language_entity_id", "=", "shop_item_language_entities.language_entity_id")
+                ->where("language_value_strings.value", "LIKE", "%" . "Наом" . "%")
+                ->groupBy("shop_item_discounts.shop_discount_id")
+                ->get();
+
+            $ids = [];
+
+            foreach ($SearchByItemName as $ShopDiscount) {
+                $ids[] = $ShopDiscount->shop_discount_id;
+            }
+
+            if (count($ids) > 0) {
+                $ShopDiscounts->orWhereIn("id", $ids);
+            }
+        }
+
         return view('admin.shop.discount.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(),
-            'discounts' => ShopDiscount::paginate(self::$items_on_page),
+            'discounts' => $ShopDiscounts->paginate(self::$items_on_page),
             'types' => ShopDiscount::getTypes(),
+            'shop' => $shop,
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Shop $shop)
     {
         return view('admin.shop.discount.create', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'types' => ShopDiscount::getTypes(),
             'propertys' => $this->getShopItemPropertyLists(),
+            'shop' => $shop
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Shop $shop)
     {
-        return $this->saveDiscount($request);
+        return $this->saveDiscount($request, $shop);
     }
 
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ShopDiscount $shopDiscount)
+    public function edit(Shop $shop, ShopDiscount $shopDiscount)
     {
         return view('admin.shop.discount.edit', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
@@ -67,22 +96,23 @@ class ShopDiscountController extends Controller
             'ShopItems' => ShopItem::select("shop_items.*")
                             ->join("shop_item_discounts", "shop_item_discounts.shop_item_id", "=", "shop_items.id")
                             ->where("shop_item_discounts.shop_discount_id", $shopDiscount->id)
-                            ->get()
+                            ->get(),
+            'shop' => $shop
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ShopDiscount $shopDiscount)
+    public function update(Request $request, Shop $shop, ShopDiscount $shopDiscount)
     {
-        return $this->saveDiscount($request, $shopDiscount);
+        return $this->saveDiscount($request, $shop, $shopDiscount);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ShopDiscount $shopDiscount)
+    public function destroy(Shop $shop, ShopDiscount $shopDiscount)
     {
 
         foreach ($shopDiscount->ShopItemDiscounts as $ShopItemDiscount) {
@@ -94,7 +124,7 @@ class ShopDiscountController extends Controller
         return redirect()->back()->withSuccess("Скидка была успешно удалена!");
     }
 
-    public function saveDiscount(Request $request, $shopDiscount = false)
+    public function saveDiscount(Request $request, Shop $shop, $shopDiscount = false)
     {
         if (!$shopDiscount) {
             $shopDiscount = new shopDiscount();
@@ -141,7 +171,7 @@ class ShopDiscountController extends Controller
         $message = "Скидка была успешно сохранена!";
 
         if ($request->apply) {
-            return redirect()->to(route("shopDiscount.index"))->withSuccess($message);
+            return redirect()->to(route("shop.shop-discount.index", ['shop' => $shop->id]))->withSuccess($message);
         } else {
             return redirect()->back()->withSuccess($message);
         }
@@ -149,9 +179,12 @@ class ShopDiscountController extends Controller
 
     public static function breadcrumbs($lastItemIsLink = false)
     {
+
+        $shop = Shop::get();
+
         $Result[1]["name"] = 'Скидки';
         if ($lastItemIsLink) {
-            $Result[1]["url"] = route("shopDiscount.index");
+            $Result[1]["url"] = route("shop.shop-discount.index", ['shop' => $shop->id]);
         }
         
         return $Result;

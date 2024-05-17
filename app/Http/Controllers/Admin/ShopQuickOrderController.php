@@ -4,61 +4,66 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ShopQuickOrder;
+use App\Models\Shop;
 use Illuminate\Http\Request;
+
 
 class ShopQuickOrderController extends Controller
 {
-    public static $item_on_page = 15;
+    public static $item_on_page = 100;
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Shop $shop)
     {
         return view('admin.shop.quick.order.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(),
             'quick_orders' => ShopQuickOrder::orderBy("created_at", "Desc")->paginate(self::$item_on_page),
+            'shop' => $shop
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Shop $shop)
     {
         return view('admin.shop.quick.order.create', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
+            'shop' => $shop
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Shop $shop)
     {
-        return $this->saveQuickOrder($request);
+        return $this->saveQuickOrder($request, $shop);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ShopQuickOrder $shopQuickOrder)
+    public function edit(Shop $shop, ShopQuickOrder $shopQuickOrder)
     {
         return view('admin.shop.quick.order.edit', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'shopQuickOrder' => $shopQuickOrder,
+            'shop' => $shop
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ShopQuickOrder $shopQuickOrder)
+    public function update(Request $request, Shop $shop, ShopQuickOrder $shopQuickOrder)
     {
-        return $this->saveQuickOrder($request, $shopQuickOrder);
+        return $this->saveQuickOrder($request, $shop, $shopQuickOrder);
     }
 
-    public function saveQuickOrder(Request $request, $shopQuickOrder = false)
+    public function saveQuickOrder(Request $request, Shop $shop, $shopQuickOrder = false)
     {
         if (!$shopQuickOrder) {
             $shopQuickOrder = new shopQuickOrder();
@@ -70,16 +75,16 @@ class ShopQuickOrderController extends Controller
         $shopQuickOrder->save();
 
         if ($request->apply) {
-            return redirect(route("shopQuickOrder.index"))->withSuccess('Данные были успешно сохраненны!');
+            return redirect(route("shop.shop-quick-order.index", ['shop' => $shop->id]))->withSuccess('Данные были успешно сохраненны!');
         } else {
-            return redirect(route("shopQuickOrder.edit", $shopQuickOrder->id))->withSuccess('Данные были успешно сохраненны!');
+            return redirect(route("shop.shop-quick-order.edit", ['shop' => $shop->id, 'quick_order' => $shopQuickOrder->id]))->withSuccess('Данные были успешно сохраненны!');
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ShopQuickOrder $shopQuickOrder)
+    public function destroy(Shop $shop, ShopQuickOrder $shopQuickOrder)
     {
         $shopQuickOrder->delete();
 
@@ -90,7 +95,7 @@ class ShopQuickOrderController extends Controller
     {
         $Result[1]["name"] = 'Быстрые заказы';
         if ($lastItemIsLink) {
-            $Result[1]["url"] = route("shopQuickOrder.index");
+            $Result[1]["url"] = route("shop.shop-quick-order.index", ['shop' => Shop::get()->id]);
         }
         
         return $Result;

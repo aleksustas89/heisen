@@ -33,7 +33,7 @@
             <div class="card">
 
                 <div class="card-header">
-                    <a href="{{ route('structureMenu.create') }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+                    <a href="{{ route('structure-menu.create') }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
                 </div>
 
                 <div class="card-body">
@@ -59,8 +59,8 @@
                                         </td>
                                       
                                         <td class="td-actions">
-                                            <a href="{{ route('structureMenu.edit', $menu->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
-                                            <form action="{{ route('structureMenu.destroy', $menu->id) }}" method="POST" class="d-inline">
+                                            <a href="{{ route('structure-menu.edit', ['structure_menu' => $menu->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                            <form action="{{ route('structure-menu.destroy', ['structure_menu' => $menu->id]) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" onclick="if(confirm('Вы действительно хотите удалить?')){$(this).parents('form').submit()}" class="td-list-delete-btn">

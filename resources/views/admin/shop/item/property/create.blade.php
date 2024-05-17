@@ -43,7 +43,7 @@
 
             <div class="card" id="id_content">
     
-                <form action="{{ route('shopItemProperty.store') }} " method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-item-property.store', ['shop' => $shop->id]) }} " method="POST" id="formEdit" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
 
@@ -103,7 +103,7 @@
 
                                     <div class="mb-3" id="row_multiple">
                                         <div class="form-check form-switch form-switch-purple">
-                                            <input class="form-check-input" type="checkbox" name="multiple" id="multiple">
+                                            <input class="form-check-input" value="1" type="checkbox" name="multiple" id="multiple">
                                             <label class="form-check-label" for="multiple">Множественный</label>
                                         </div>
                                     </div>
@@ -116,13 +116,13 @@
                                     <div class="row mb-3">
                                         <div class="col-12 col-sm-4 mb-3">
                                             <div class="form-check form-switch form-switch-purple">
-                                                <input class="form-check-input" type="checkbox" name="show_in_item" id="show_in_item">
+                                                <input class="form-check-input" value="1" type="checkbox" name="show_in_item" id="show_in_item">
                                                 <label class="form-check-label" for="show_in_item">Показывать в товаре</label>
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-4 mb-3">
                                             <div class="form-check form-switch form-switch-purple">
-                                                <input class="form-check-input" type="checkbox" name="show_in_filter" id="show_in_filter">
+                                                <input class="form-check-input" value="1" type="checkbox" name="show_in_filter" id="show_in_filter">
                                                 <label class="form-check-label" for="show_in_filter">Показывать в фильтре</label>
                                             </div>
                                         </div>

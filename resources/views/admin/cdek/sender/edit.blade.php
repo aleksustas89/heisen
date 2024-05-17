@@ -41,7 +41,7 @@
                     </ul>
                 </div>
                 
-                <form action="{{ route('cdekSender.update', $CdekSender->id) }}" method="POST" id="formEdit">
+                <form action="{{ route('cdek-sender.update', $CdekSender->id) }}" method="POST" id="formEdit">
                     <div class="card card-primary">
                     @csrf
                     @method('PUT')

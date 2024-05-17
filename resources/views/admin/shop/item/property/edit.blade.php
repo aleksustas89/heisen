@@ -43,7 +43,7 @@
 
             <div class="card" id="id_content">
     
-                <form action="{{ route('shopItemProperty.update', $property->id) }} " method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-item-property.update', ['shop' => $shop->id, 'shop_item_property' => $property->id]) }} " method="POST" id="formEdit" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -126,7 +126,7 @@
                                             @php
                                                 $checked = $property->multiple == 1 ? 'checked=""' : ''
                                             @endphp
-                                            <input class="form-check-input" type="checkbox" name="multiple" id="multiple" {{ $checked }}>
+                                            <input class="form-check-input" value="1" type="checkbox" name="multiple" id="multiple" {{ $checked }}>
                                             <label class="form-check-label" for="multiple">Множественный</label>
                                         </div>
                                     </div>
@@ -143,7 +143,7 @@
                                                 @php
                                                     $checked = $property->show_in_item == 1 ? 'checked=""' : ''
                                                 @endphp
-                                                <input class="form-check-input" type="checkbox" name="show_in_item" id="show_in_item"  {{ $checked }}>
+                                                <input class="form-check-input" value="1" type="checkbox" name="show_in_item" id="show_in_item"  {{ $checked }}>
                                                 <label class="form-check-label" for="show_in_item">Показывать в товаре</label>
                                             </div>
                                         </div>
@@ -152,7 +152,7 @@
                                                 @php
                                                     $checked = $property->show_in_filter == 1 ? 'checked=""' : ''
                                                 @endphp
-                                                <input class="form-check-input" type="checkbox" name="show_in_filter" id="show_in_filter"  {{ $checked }}>
+                                                <input class="form-check-input" value="1" type="checkbox" name="show_in_filter" id="show_in_filter"  {{ $checked }}>
                                                 <label class="form-check-label" for="show_in_filter">Показывать в фильтре</label>
                                             </div>
                                         </div>

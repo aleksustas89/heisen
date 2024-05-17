@@ -32,7 +32,7 @@
 
             <div class="card" id="id_content">
                 
-                <form action="{{ route('shopCurrency.update', $currency->id) }}" method="POST" id="formEdit" enctype="multipart/form-data">
+                <form action="{{ route('shop.shop-currency.update', ['shop' => $shop->id, 'shop_currency' => $currency->id]) }}" method="POST" id="formEdit" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -74,11 +74,9 @@
                                     <div class="col-6 col-xs-3 d-flex align-items-end mb-3">
                                         <div class="d-flex switch-col">
                                             <div class="form-check form-switch form-switch-success">
-                                                @if ($currency->default == 1)
-                                                    <input class="form-check-input" name="default" type="checkbox" id="default" checked="checked">
-                                                @else
-                                                    <input class="form-check-input" name="default" type="checkbox" id="default">
-                                                @endif
+                                                
+                                                <input value="1" @if ($currency->default == 1) checked="checked" @endif class="form-check-input" name="default" type="checkbox" id="default" >
+
                                                 <label for="default" class="form-check-label">
                                                     Базовая
                                                 </label>

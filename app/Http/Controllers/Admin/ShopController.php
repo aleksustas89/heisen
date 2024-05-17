@@ -17,13 +17,47 @@ class ShopController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function deletion(Request $request)
+    {
+
+        $count = 0;
+
+        if ($request->shop_items) {
+            foreach ($request->shop_items as $shop_item_id => $on) {
+
+                if (!is_null($shopItem = ShopItem::find($shop_item_id))) {
+                    $shopItem->delete();
+                    $count++;
+                }
+            }
+        }
+
+        if ($request->shop_groups) {
+            foreach ($request->shop_groups as $shop_group_id => $on) {
+
+                if (!is_null($shopGroup = ShopGroup::find($shop_group_id))) {
+                    $shopGroup->delete();
+                    $count++;
+                }
+            }
+        }
+
+        if ($count > 0) {
+            return redirect()->back()->withSuccess("Успешно удалено элементов: ". $count ."!");
+        } else {
+            return redirect()->back()->withError("Элементы для удаления не были выбраны!");
+        }
+
+        
+    }
+
     public function index(Request $request)
     {
 
-        if ($request->test) {
-            $Controller = new \App\Http\Controllers\CdekController();
+        if ($request->operation == 'delete') {
 
-            $Controller->createOrder(\App\Models\ShopOrder::find(105), \App\Models\CdekSender::find(1));
+            return $this->deletion($request);
         }
 
         $oShop = Shop::find(Shop::$shop_id);
@@ -34,6 +68,7 @@ class ShopController extends Controller
             $aResult = [
                 'shop_path' => $oShop->path,
                 'parent' => $parent,
+                'shop' => $oShop,
                 'breadcrumbs' => ShopGroupController::breadcrumbs($parent > 0 ? ShopGroup::find($parent) : false, [], true),
                 'global_search' => $request->global_search
             ];
@@ -107,9 +142,6 @@ class ShopController extends Controller
         $shop->group_image_small_max_height = $request->group_image_small_max_height;
         $shop->preserve_aspect_ratio_group = $request->preserve_aspect_ratio_group;
         $shop->preserve_aspect_ratio_group_small = $request->preserve_aspect_ratio_group_small;
-
-        $shop->new_items = $request->new_items;
-        $shop->new_items_count = $request->new_items_count;
 
         $shop->save();
 
