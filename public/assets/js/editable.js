@@ -1,9 +1,13 @@
 var editable = {
     save: function(elem) {
+        console.log(editable_route + "?data=" + elem.attr("id") + "&value=" + elem.text())
         $.ajax({
-            url: "/admin/editable/?data=" + elem.attr("id") + "&value=" + elem.text(),
+            url: editable_route + "?data=" + elem.attr("id") + "&value=" + elem.text(),
             type: "POST",
             dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             success: function (data) {
                 elem.parents("form").removeAttr("data-form-has-been-changed-value")
             },
@@ -20,7 +24,7 @@ $(document).bind('dblclick touchend', function(e) {
 
     if ($this.hasClass("editable")) {
 
-        $editor = $('<input>').prop('type', 'text').val($this.text());
+        $editor = $('<input style="width:100%">').prop('type', 'text').val($this.text());
 
         $this.css("display", "none");
 

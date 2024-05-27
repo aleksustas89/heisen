@@ -108,8 +108,8 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         
    
         //editable-fields
-        Route::get('/editable', 'EditableController@query');
-        Route::get('/toggle', 'ToggleController@query')->name("adminToggle");
+        Route::post('/editable', 'EditableController@query')->name("adminEditable");
+        Route::post('/toggle', 'ToggleController@query')->name("adminToggle");
         Route::post('logout', 'LoginController@logout')->name('logout');
     });
 });

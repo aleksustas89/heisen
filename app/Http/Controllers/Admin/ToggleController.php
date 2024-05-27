@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\Helpers\Str;
 
 class ToggleController extends Controller
 {
@@ -16,24 +17,8 @@ class ToggleController extends Controller
 
             list($toggle, $model, $field, $id) = explode("_", $request->data);
 
-            $Model = false;
+            if ($Model = $this->getClass($model)) {
 
-            switch ($model) {
-                case "structure":
-                    $Model = new \App\Models\Structure();
-                    break;
-                case "shopItem":
-                    $Model = new \App\Models\shopItem();
-                    break;
-                case "shopDiscount":
-                    $Model = new \App\Models\shopDiscount();
-                    break;
-                case "comment":
-                    $Model = new \App\Models\Comment();
-                    break;
-            }
-
-            if ($Model) {
                 $object = $Model::find($id);
                 if (!is_null($object) && isset($object->$field)) {
                     $object->$field = $object->$field == 1 ? 0 : 1;
@@ -46,9 +31,19 @@ class ToggleController extends Controller
                     }
                 }
             }
-
         }
 
         return response()->json($response);
+    }
+
+    protected function getClass($className) 
+    {
+        $Class = false;
+
+        if (class_exists($Model = "\App\Models\\" . $className)) {
+            $Class = new $Model();
+        }
+
+        return $Class;
     }
 }

@@ -15,33 +15,7 @@ class EditableController extends Controller
 
             list($apply, $check, $model, $field, $id) = explode("_", $request->data);
 
-            $Model = false;
-
-            switch ($model) {
-                case "structure":
-                    $Model = new \App\Models\Structure();
-                    break;
-                case "shopOrderItem":
-                    $Model = new \App\Models\ShopOrderItem();
-                    break;
-                case "delivery":
-                    $Model = new \App\Models\ShopDelivery();
-                    break;
-                case "deliveryField":
-                    $Model = new \App\Models\ShopDeliveryField();
-                    break;
-                case "shopItem":
-                    $Model = new \App\Models\ShopItem();
-                    break;
-                case "shopGroup":
-                    $Model = new \App\Models\ShopGroup();
-                    break;
-                case "shopDiscount":
-                    $Model = new \App\Models\shopDiscount();
-                    break;
-            }
-
-            if ($Model) {
+            if ($Model = $this->getClass($model)) {
                 $object = $Model::find($id);
                 if (!is_null($object) && isset($object->$field)) {
                     $object->$field = $request->value;
@@ -54,5 +28,16 @@ class EditableController extends Controller
 
 
         return response()->json($response);
+    }
+
+    protected function getClass($className) 
+    {
+        $Class = false;
+
+        if (class_exists($Model = "\App\Models\\" . $className)) {
+            $Class = new $Model();
+        }
+
+        return $Class;
     }
 }

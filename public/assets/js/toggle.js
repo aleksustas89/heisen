@@ -1,9 +1,12 @@
 var toggle = {
     init: function(elem) {
         $.ajax({
-            url: "/admin/toggle/?data=" + elem.attr("id"),
+            url: toggle_route + "?data=" + elem.attr("id"),
             type: "POST",
             dataType: "json",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             success: function (data) {
                 if (parseInt(data.value) == 0) {
                     elem.addClass("ico-inactive");

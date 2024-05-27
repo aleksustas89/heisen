@@ -212,10 +212,20 @@
         <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
-        <script src="{{ asset('/assets/js/main.js') }}"></script>
-        <script src="{{ asset('/assets/js/editable.js') }}"></script>
-        <script src="{{ asset('/assets/js/toggle.js') }}"></script>
+        @php
+            App\Services\Helpers\File::js('/assets/js/main.js');
+            App\Services\Helpers\File::js('/assets/js/toggle.js');
+            App\Services\Helpers\File::js('/assets/js/editable.js');
+        @endphp
+
+
         <script src="/assets/plugins/sweet-alert2/sweetalert2.min.js"></script>
+
+        <script>
+            var toggle_route = '{{ route("adminToggle") }}',
+                editable_route = '{{ route("adminEditable") }}';
+            
+        </script>
 
         @yield('css')
         @yield('js')
