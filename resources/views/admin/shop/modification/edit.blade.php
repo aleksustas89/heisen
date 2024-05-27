@@ -7,7 +7,13 @@
         <div class="float-start">
             <ol class="breadcrumb">
                 @foreach ($breadcrumbs as $breadcrumb)
-                    <li class="breadcrumb-item"><a href="{{ $breadcrumb["url"] }}">{{ $breadcrumb["name"] }}</a></li>
+                
+                    @if (!empty($breadcrumb["url"]))
+                        <li class="breadcrumb-item"><a href="{{ $breadcrumb["url"] }}">{{ $breadcrumb["name"] }}</a></li>
+                    @else 
+                        <li class="breadcrumb-item">{{ $breadcrumb["name"] }}</li>
+                    @endif
+
                 @endforeach
                 <li class="breadcrumb-item">Редактирование модификации {{ $Modification->name }}</li>
             </ol>
@@ -57,9 +63,8 @@
                         <div class="tab-pane active" id="main">
                             <div class="row mb-3">
                                 <div class="col-12">
-                                    <label class="mb-1">Название модификации</label>
-                                    <input type="text" name="name" value="{{ $Modification->name }}" class="form-control form-control-lg" placeholder="Название модификации" data-min="2"  data-max="255" data-required="1">
-                                    <div id="name_error" class="fieldcheck-error"></div>
+                                    <h2 class="mb-1"><b>Модификация товара - {{ $shopItem->name }}</b></h2>
+                                    <h6>{{ $modificationName["params"] }}</h6>
                                 </div>
                             </div>
 

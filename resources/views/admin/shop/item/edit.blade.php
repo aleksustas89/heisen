@@ -51,6 +51,7 @@
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#images" data-bs-toggle="tab" role="tab">Изображения</a></li>
                         <li class="nav-item"><a class="nav-link" href="#description" data-bs-toggle="tab" role="tab">Описание</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#modifications" data-bs-toggle="tab" role="tab">Модификации</a></li>
                         <li class="nav-item"><a class="nav-link" href="#seo" data-bs-toggle="tab" role="tab">SEO</a></li>
 
                         @if (count($properties) > 0)
@@ -253,6 +254,29 @@
                                 <label class="mb-1">Ключевые слова [Seo Keywords]</label>
                                 <input type="text" name="seo_keywords" value="{{ $shopItem->seo_keywords }}" class="form-control" placeholder="Ключевые слова [Seo Keywords]">
                             </div>
+                        </div>
+
+                        <div class="tab-pane" id="modifications">
+
+                            <div class="card">
+
+                                <div class="card-header">
+                                 
+                                    <button type="button" onclick="adminModification.chooseProperties('{{ route('modification.create') }}?shop_item_id={{ $shopItem->id }}')" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-modifications">
+                                        <i class="fas fa-plus icon-separator"></i>Создать модификации
+                                    </button>
+                                
+                                </div>
+                                <div id="modifications-content">
+                                    @if (count($mShopItems) > 0)
+                                        @include("admin.shop.modification.index", ["shopItems" => $mShopItems, "oShopItem" => $shopItem])
+                                    @endif
+                                </div>
+
+                            </div>
+
+
+
                         </div>
 
                         @if (count($properties) > 0)
@@ -491,6 +515,31 @@
                 </div>
                 
             </form>
+
+            <div class="modal fade" id="modal-modifications" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h6 class="modal-title m-0">Создать модификации</h6>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <div class="spinner-grow thumb-md text-secondary" role="status"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-de-secondary btn-sm close" data-bs-dismiss="modal">Закрыть</button>
+                            @php
+                                $route = route('modification.create') . "?window=1";
+                            @endphp
+
+                            <button type="button" class="btn btn-primary btn-sm" onclick="adminModification.createWindow('{{ $route }}')">Создать модификации</button>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
             
         </div>
     </div>
@@ -544,4 +593,8 @@
             });  
         });
     </script>
+
+    @php
+    App\Services\Helpers\File::js('/assets/js/pages/modifications.js');
+    @endphp
 @endsection

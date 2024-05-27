@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ShopItem;
+use App\Models\Shop;
 use App\Models\PropertyValueInt;
 use Illuminate\Http\Request;
 use App\Models\ShopItemProperty;
 use App\Models\ShopItemListItem;
 use App\Models\ShopModificationImage;
+use App\Http\Controllers\ShopItemDiscountController;
 
 
 class ModificationController extends Controller
 {
-
-    public static $items_on_page = 15;
 
     /**
      * Display a listing of the resource.
@@ -23,13 +23,8 @@ class ModificationController extends Controller
     {
         if (!is_null($ShopItem = ShopItem::find($request->shop_item_id))) {
 
-            $breadcrumbs = ShopGroupController::breadcrumbs($ShopItem->shop_group_id > 0 ? $ShopItem->ShopGroup : false, [], false);
-
-            $breadcrumbs[] = self::breadcrumbs($ShopItem);
-
             return view('admin.shop.modification.index', [
-                'breadcrumbs' => $breadcrumbs,
-                'shopItems' => ShopItem::where("modification_id", $request->shop_item_id)->paginate(self::$items_on_page),
+                'shopItems' => ShopItem::where("modification_id", $request->shop_item_id)->get(),
                 'oShopItem' => $ShopItem,
             ]);
         }
@@ -46,14 +41,9 @@ class ModificationController extends Controller
         } else {
             $shopItem = ShopItem::find($request->shop_item_id);
 
-            $properties = ShopItemController::getProperties($shopItem->shop_group_id);
+            $properties = ShopItemController::getProperties($shopItem->shop_group_id, 4, false, 0, 1);
 
-            $breadcrumbs = ShopGroupController::breadcrumbs($shopItem->shop_group_id > 0 ? $shopItem->ShopGroup : false, [], true);
-
-            $breadcrumbs[] = self::breadcrumbs($shopItem, true);
-    
             return view('admin.shop.modification.create', [
-                'breadcrumbs' => $breadcrumbs,
                 'properties' => $properties,
                 'lists' => ShopItemController::getListItems($properties),
                 'shop_item_id' => $shopItem->id,
@@ -69,7 +59,7 @@ class ModificationController extends Controller
 
         if ($request->shop_item_id && !is_null($oShopItem = \App\Models\ShopItem::find($request->shop_item_id))) {
 
-            $properties = ShopItemController::getProperties($oShopItem->shop_group_id, 4);
+            $properties = ShopItemController::getProperties($oShopItem->shop_group_id, 4, false, 0, 1);
 
             $aMatrix = [];
     
@@ -97,7 +87,7 @@ class ModificationController extends Controller
                         $oShopItemListItem = \App\Models\ShopItemListItem::find($Value);
     
                         $aResult[$id]["properties"][$oShopItemProperty->id] = $Value;
-                        $aResult[$id]["name"] = $oShopItem->name . ", ". $oShopItemProperty->name .": " . $oShopItemListItem->value;
+                        $aResult[$id]["name"] = $oShopItemProperty->name .": " . $oShopItemListItem->value;
                     }
             
                 }
@@ -123,7 +113,7 @@ class ModificationController extends Controller
     
                                 $aResult[$id]["properties"][$oFirstProperty->id] = $aFirstValue;
                                 $aResult[$id]["properties"][$oShopItemProperty->id] = $Value;
-                                $aResult[$id]["name"] = $oShopItem->name . ", ". $oFirstProperty->name . ": " . $oFirstListItem->value . ", " . $oShopItemProperty->name .": " . $oShopItemListItem->value;
+                                $aResult[$id]["name"] = $oFirstProperty->name . ": " . $oFirstListItem->value . ", " . $oShopItemProperty->name .": " . $oShopItemListItem->value;
                             }
                         }
                     }
@@ -170,12 +160,11 @@ class ModificationController extends Controller
             foreach ($aItems as $aItem) {
                 $ShopItem = new ShopItem();
                 $ShopItem->modification_id = $oShopItem->id;
-                $ShopItem->name = $aItem["name"];
                 $ShopItem->price = $aItem["price"];
+                $ShopItem->name = $aItem["name"];
                 $ShopItem->shop_currency_id = $oShopItem->shop_currency_id;
                 $ShopItem->guid = \App\Services\Helpers\Guid::get();
                 $ShopItem->path = \App\Services\Helpers\Str::transliteration(self::generateUrl($aItem["properties"]));
-
                 $ShopItem->save();
 
                 if (!empty($aItem["image"])) {
@@ -194,11 +183,11 @@ class ModificationController extends Controller
                 }
             }
 
-            return redirect()->to(route("modification.index") ."?shop_item_id=". $oShopItem->id)->withSuccess("Модификации были успешно созданы!");
-
-        } else {
-            return redirect()->back()->withErrors("Ошибка, id товара не было передано!");
-        }
+            return response()->view('admin.shop.modification.index', [
+                'shopItems' => ShopItem::where("modification_id", $request->shop_item_id)->get(),
+                'oShopItem' => $oShopItem,
+            ]);
+        } 
     }
 
     public static function generateUrl($aPropertiesValues) : string
@@ -229,15 +218,16 @@ class ModificationController extends Controller
             $aProperty_Value_Int[$oProperty_Value_Int->property_id][$oProperty_Value_Int->id] = $oProperty_Value_Int->value;
         }
 
-        $breadcrumbs = ShopGroupController::breadcrumbs($oShopItem->shop_group_id > 0 ? $oShopItem->ShopGroup : false, [], true);
+        $breadcrumbs = ShopGroupController::breadcrumbs($oShopItem->shop_group_id > 0 ? $oShopItem->ShopGroup : false, [], false);
 
         $breadcrumbs[] = self::breadcrumbs($oShopItem, true);
 
         return view('admin.shop.modification.edit', [
             'breadcrumbs' => $breadcrumbs,
             'Modification' => $Modification,
+            'modificationName' => $Modification->modificationName(),
             'shopItem' => $oShopItem,
-            'properties' => ShopItemController::getProperties($oShopItem->shop_group_id, 4),
+            'properties' => $properties,
             'property_value_ints' => $aProperty_Value_Int,
             'lists' => ShopItemController::getListItems($properties),
         ]);
@@ -249,7 +239,9 @@ class ModificationController extends Controller
      */
     public function update(Request $request, ShopItem $Modification)
     {
-        $Modification->name = $request->name;
+
+        $shop = Shop::get();
+
         $Modification->price = $request->price;
 
         $Modification->save();
@@ -279,7 +271,7 @@ class ModificationController extends Controller
 
         $message = "Модификация была успешно изменена!";
         if ($request->apply) {
-            return redirect()->to(route("modification.index") . '?shop_item_id=' . $Modification->modification_id)->withSuccess($message);
+            return redirect()->to(route("shop.shop-item.edit", ['shop' => $shop->id, 'shop_item' => $Modification->modification_id]))->withSuccess($message);
         } else {
             return redirect()->back()->withSuccess($message);
         }
@@ -294,36 +286,37 @@ class ModificationController extends Controller
 
         $Modification->delete();
 
-        return redirect()->back()->withSuccess("Модификация была успешно удалена!");
+        return response()->json(true);
+
     }
 
     public static function breadcrumbs($ShopItem, $lastItemIsLink = false)
     {
+
+        $shop = Shop::get();
+
         $aResult["name"] = 'Модификации товара - ' . $ShopItem->name;
         if ($lastItemIsLink) {
-            $aResult["url"] = route("modification.index") . "?shop_item_id=" . $ShopItem->id;
+            $aResult["url"] = route("shop.shop-item.edit", ['shop' => $shop->id, 'shop_item' => $ShopItem->id]);
         }
         
         return $aResult;
     }
 
-    public function defaultModification(Request $Request)
+    public function defaultModification(ShopItem $shopItem)
     {
 
-        $response = false;
+        foreach (ShopItem::where("modification_id", $shopItem->modification_id)->get() as $oShopItem) {
 
-        if ($Request->shop_item_id && $Request->modification_id) {
-            foreach (ShopItem::where("modification_id", $Request->shop_item_id)->get() as $ShopItem) {
-                if ($ShopItem->id == $Request->modification_id) {
-                    $ShopItem->default_modification = 1;
-                } else {
-                    $ShopItem->default_modification = 0;
-                }
-
-                $ShopItem->save();
+            if ($oShopItem->id == $shopItem->id) {
+                $oShopItem->default_modification = 1;
+            } else {
+                $oShopItem->default_modification = 0;
             }
+
+            $oShopItem->save();
         }
 
-        return response()->json($response);
+        return response()->json(true);
     }
 }

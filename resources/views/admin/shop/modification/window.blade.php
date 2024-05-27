@@ -2,8 +2,8 @@
     $success = count($aResult) > 0 && $ShopItem ? true : false;
 @endphp
 
-<div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="Modal" aria-hidden="true">
-    <form action="{{ route('modification.store') }}" method="POST" id="formEdit" enctype="multipart/form-data">
+<div class="modal fade" id="create_modifications" tabindex="-1" aria-labelledby="Modal" aria-hidden="true">
+    <form action="{{ route('modification.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')
         <div class="modal-dialog modal-fullscreen-lg-down">
@@ -82,9 +82,9 @@
         </div>
         <div class="modal-footer">
             <input type="hidden" name="shop_item_id" value="{{ $ShopItem->id }}" />
-            <button type="button" class="btn btn-de-secondary" data-bs-dismiss="modal">Закрыть</button>
+            <button type="button" class="btn btn-de-secondary" onclick="adminModification.backToChooseProperties()">Назад</button>
             @if ($success)
-                <button type="submit" class="btn btn-primary">Создать</button>
+                <button type="button" class="btn btn-primary" onclick="adminModification.createModifications($(this).parents('form'))">Создать</button>
             @endif
         </div>
     </form>
