@@ -12,6 +12,9 @@ class Shop extends Model
     /**
      * dir where to upload images
     */
+
+    public static $storage = 'shop';
+
     public static $store_path = '/shop/';
 
     public static $shop_id = 1;

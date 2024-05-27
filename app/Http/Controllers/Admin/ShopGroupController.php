@@ -110,7 +110,7 @@ class ShopGroupController extends Controller
         $shopGroup->name = $request->name;
         $shopGroup->description = $request->description;
         $shopGroup->text = $request->text;
-        $shopGroup->active = $request->active ?? 1;
+        $shopGroup->active = $request->active ?? 0;
         $shopGroup->parent_id = $request->parent_id ?? 0;
         $shopGroup->sorting = $request->sorting ?? 0;
         $shopGroup->path = !empty(trim($request->path)) ? $request->path : Str::transliteration($request->name);

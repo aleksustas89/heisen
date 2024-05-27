@@ -90,9 +90,6 @@
                                         <th  class="d-mob-none" width="200px">Цена</th>
         
                                         <th class="d-mob-none" width="40px"><i class="fa fa-lightbulb-o" title="Активность"></i></th>
-                                        <th class="d-mob-none" width="40px">
-                                            <i class="lab la-buromobelexperte font-20" title="Модификации"></i>
-                                        </th>
                                         <th class="d-mob-none" width="60px"><i class="fas fa-sort-amount-down" title="—"></i></th>
                                         <th class="controll-td"></th>
                                     </tr>
@@ -141,7 +138,6 @@
                                                         <i class="fa fa-lightbulb-o fa-inactive" title="Активность"></i>
                                                     @endif
                                                 </td>
-                                                <td class="d-mob-none" width="40px">&nbsp;</td>
                                                 <td width="60px" class="td_editable d-mob-none"><span id="apply_check_shopGroup_sorting_{{ $shopGroup->id }}" class="editable">{{ $shopGroup->sorting }}</span></td>
 
                                                 <td class="td-actions">
@@ -260,18 +256,6 @@
                                                     <i class="lar la-lightbulb font-20"></i>
                                                 </span>
 
-                                            </td>
-                                            <td class="d-mob-none" width="40px">
-                                                <a href="{{route('modification.index')}}?shop_item_id={{ $shopItem->id }}">
-                                                    @php
-                                                        $count = $shopItem->getModificationCount();
-                                                    @endphp
-                                                    
-                                                    <i class="lab la-buromobelexperte font-20"></i>
-                                                    @if($count > 0)
-                                                        <span class="badge-count position-absolute badge-count-abs btn-danger">{{ $count }}</span>
-                                                    @endif
-                                                </a>
                                             </td>
                                             <td class="d-mob-none" width="60px" class="td_editable"><span id="apply_check_shopItem_sorting_{{ $shopItem->id }}" class="editable">{{ $shopItem->sorting }}</span></td>
 

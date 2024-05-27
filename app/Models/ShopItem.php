@@ -160,46 +160,125 @@ class ShopItem extends Model
         return "/" . Shop::path() . ($object->shop_group_id > 0 ? $object->ShopGroup->path() . "/" : '') . $object->path;
     }
 
+    public function changeImagesDirFrom($path)
+    {
+
+        $this->createDir();
+
+        foreach ($this->ShopItemImages()->where("image_small", "!=", '')->orderBy("sorting", "asc")->get() as $k => $ShopItemImage) {
+
+            if (!empty($ShopItemImage->image_large) && Storage::disk(Shop::$storage)->exists($path . $ShopItemImage->image_large)) {
+       
+                Storage::disk(Shop::$storage)->move($path . $ShopItemImage->image_large, $this->shortPath() . $ShopItemImage->image_large);
+
+                $eExt = explode(".", $ShopItemImage->image_large);
+
+                $fileJpg = $eExt[0] .'.jpg';
+
+                if (Storage::disk(Shop::$storage)->exists($path . $fileJpg)) {
+                    Storage::disk(Shop::$storage)->move($path . $fileJpg, $this->shortPath() . $fileJpg);
+                }
+            }
+
+            if (!empty($ShopItemImage->image_small) && Storage::disk(Shop::$storage)->exists($path . $ShopItemImage->image_small)) {
+       
+                Storage::disk(Shop::$storage)->move($path . $ShopItemImage->image_small, $this->shortPath() . $ShopItemImage->image_small);
+
+                $eExt = explode(".", $ShopItemImage->image_small);
+
+                $fileJpg = $eExt[0] .'.jpg';
+
+                if (Storage::disk(Shop::$storage)->exists($path . $fileJpg)) {
+                    Storage::disk(Shop::$storage)->move($path . $fileJpg, $this->shortPath() . $fileJpg);
+                }
+            }
+        }
+
+
+        $fullStoragePath = Shop::fullStoragePath();
+
+        $Filesystem = new Filesystem();
+
+        $Filesystem->deleteDirectory($fullStoragePath . '/' . Shop::$storage . '/' . $path);
+   
+    }
+
     public function delete()
     {
-        /*модификации*/
-        foreach (ShopItem::where("modification_id", $this->id)->get() as $Modification) {
+
+        $ShopGroup = $this->ShopGroup;
+
+        if ($this->modification_id > 0) {
 
             //картинки
-            if (!is_null($ShopModificationImage = $Modification->ShopModificationImage)) {
+            if (!is_null($ShopModificationImage = $this->ShopModificationImage)) {
                 $ShopModificationImage->delete();
             }
 
-            $Modification->delete();
+            foreach ($this->ShopItemDiscounts as $ShopItemDiscount) {
+                $ShopItemDiscount->delete();
+            }
+
+            foreach ($this->PropertyValueInts as $PropertyValueInt) {
+                $PropertyValueInt->delete();
+            }
+
+            foreach ($this->PropertyValueStrings as $PropertyValueString) {
+                $PropertyValueString->delete();
+            }
+
+            foreach ($this->PropertyValueFloats as $PropertyValueFloat) {
+                $PropertyValueFloat->delete();
+            }
+
+            parent::delete();
+
+        } else {
+            /*модификации*/
+            foreach (ShopItem::where("modification_id", $this->id)->get() as $Modification) {
+
+                //картинки
+                if (!is_null($ShopModificationImage = $Modification->ShopModificationImage)) {
+                    $ShopModificationImage->delete();
+                }
+
+                $Modification->delete();
+            }
+
+            /*скидки*/
+            foreach ($this->ShopItemDiscounts as $ShopItemDiscount) {
+                $ShopItemDiscount->delete();
+            }
+
+            foreach ($this->ShopItemImages as $ShopItemImage) {
+                $ShopItemImage->delete();
+            }
+
+            if (!is_null($SearchPage = $this->SearchPage)) {
+                $SearchPage->delete();
+            }
+
+            foreach ($this->PropertyValueInts as $PropertyValueInt) {
+                $PropertyValueInt->delete();
+            }
+
+            foreach ($this->PropertyValueStrings as $PropertyValueString) {
+                $PropertyValueString->delete();
+            }
+
+            foreach ($this->PropertyValueFloats as $PropertyValueFloat) {
+                $PropertyValueFloat->delete();
+            }
+
+
+            $this->deleteDir();
+
+            parent::delete();
+
+            if (!is_null($ShopGroup)) {
+                $ShopGroup->setSubCount();
+            }
         }
-
-        /*скидки*/
-        foreach ($this->ShopItemDiscounts as $ShopItemDiscount) {
-            $ShopItemDiscount->delete();
-        }
-
-        foreach ($this->ShopItemImages as $ShopItemImage) {
-            $ShopItemImage->delete();
-        }
-
-        if (!is_null($SearchPage = $this->SearchPage)) {
-            $SearchPage->delete();
-        }
-
-        foreach ($this->PropertyValueInts as $PropertyValueInt) {
-            $PropertyValueInt->delete();
-        }
-
-        foreach ($this->PropertyValueStrings as $PropertyValueString) {
-            $PropertyValueString->delete();
-        }
-
-        foreach ($this->PropertyValueFloats as $PropertyValueFloat) {
-            $PropertyValueFloat->delete();
-        }
-
-
-        parent::delete();
     }
 
     public function getProperties() : array

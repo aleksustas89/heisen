@@ -111,4 +111,20 @@ class Str
 	{
 		return preg_replace('/[^ A-Za-zА-Яа-я\\n\d.]/ui', '', $str);
 	}
+
+	public static function lastWithDelimiter($str, $delimiter)
+	{
+		$explode = explode($delimiter, $str);
+		return $explode[count($explode) - 1];
+	}
+
+	public static function onlyDigits($str)
+	{
+		return preg_replace("/[^0-9]/", '', $str);
+	}
+
+	public static function escapeQuotes($str)
+	{
+		return preg_replace('/"([^"]*)"/', "«$1»", $str);
+	}
 }

@@ -105,6 +105,7 @@ class ShopItemController extends Controller
             'property_value_floats' => $aProperty_Value_Float,
             'lists' => self::getListItems($properties),
             'shop' => $shop,
+            "mShopItems" => ShopItem::where("modification_id", $shopItem->id)->get(),
         ]);
     }
 
@@ -166,9 +167,15 @@ class ShopItemController extends Controller
     public function saveShopItem (Request $request, Shop $shop, $shopItem = false) 
     {
 
+        $transfer_images_from = false;
 
         if (!$shopItem) {
             $shopItem = new ShopItem();
+        } else {
+
+            if ($request->shop_group_id != $shopItem->shop_group_id) {
+                $transfer_images_from = $shopItem->shortPath();
+            }
         }
 
         //$request->validate([
@@ -183,8 +190,8 @@ class ShopItemController extends Controller
         $shopItem->name = $request->name;
         $shopItem->description = $request->description ?? '';
         $shopItem->text = $request->text ?? '';
-        $shopItem->active = $request->active == 'on' ? 1 : 0;
-        $shopItem->indexing = $request->indexing == 'on' ? 1 : 0;
+        $shopItem->active = $request->active ?? 0;
+        $shopItem->indexing = $request->indexing ?? 0;
         $shopItem->shop_group_id = $request->shop_group_id ?? 0;
         $shopItem->sorting = $request->sorting ?? 0;
         $shopItem->marking = $request->marking;
@@ -254,6 +261,10 @@ class ShopItemController extends Controller
                 $oShopItemImage->save();
 
             }
+        }
+
+        if ($transfer_images_from) {
+            $shopItem->changeImagesDirFrom($transfer_images_from);
         }
 
         $this->saveItemProperties($request, $shopItem);
