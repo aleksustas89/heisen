@@ -9,16 +9,16 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    #RewriteCond %{HTTP_HOST} ^www\.heisen\.ru$ [NC]
-    #RewriteRule ^(.*)$ https://heisen.ru/$1 [R=301,L]
+    RewriteCond %{HTTP_HOST} ^www\.heisen\.ru$ [NC]
+    RewriteRule ^(.*)$ https://heisen.ru/$1 [R=301,L]
     
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    #RewriteCond expr "%{tolower:%{REQUEST_URI}} =~ /(.*)/"
-    #RewriteRule [A-Z] %1 [R=301,L]
+    RewriteCond expr "%{tolower:%{REQUEST_URI}} =~ /(.*)/"
+    RewriteRule [A-Z] %1 [R=301,L]
 
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
