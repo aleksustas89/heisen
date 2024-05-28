@@ -195,6 +195,10 @@
                                                 <br>
 
                                                 <span class="text-muted font-13 fw-semibold">{{ $shopItem->marking }} </span> 
+
+                                                @if ($linkWrong)
+                                                    <div class="font-13 fw-semibold" style="color: #8f2e34;">WRONG URL</div> 
+                                                @endif
                                                 
                                             </td>
                                             <td width="200px" class="td_editable d-mob-none">
