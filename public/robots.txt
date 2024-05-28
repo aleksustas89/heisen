@@ -1,2 +1,5 @@
 User-agent: *
-Disallow:
+
+Disallow: *?page=10*
+Disallow: *?sorting=new&page=*
+Disallow: /search*
