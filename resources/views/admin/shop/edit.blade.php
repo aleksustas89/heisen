@@ -169,20 +169,71 @@
 
                         <div class="tab-pane" id="seo">
 
-                            <div class="mb-3">
-                                <label class="mb-1">Заголовок страницы [Seo Title]</label>
-                                <input type="text" name="seo_title" value="{{ $shop['seo_title'] }}" class="form-control" placeholder="Заголовок страницы [Seo title]">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">                      
+                                            <h4 class="card-title">Шаблоны группы</h4>                  
+                                        </div>                                                                         
+                                    </div>                            
+                                </div>
+                                <div class="card-body">    
+                                    <div class="row">
+                                        <div class="col-12">
+
+                                            <div class="mb-3">
+                                                <label class="mb-1">Шаблон title</label>
+                                                <input type="text" name="seo_group_title_template" value="{{ $shop['seo_group_title_template'] }}" class="form-control" placeholder="Шаблон title">
+                                            </div>
+                
+                                            <div class="mb-3">
+                                                <label class="mb-1">Шаблон description</label>
+                                                <textarea name="seo_group_description_template" class="form-control" placeholder="Шаблон description">{{ $shop['seo_group_description_template'] }}</textarea>
+                                            </div>
+                
+                                            <div class="mb-3">
+                                                <label class="mb-1">Шаблон keywords</label>
+                                                <input type="text" name="seo_group_keywords_template" value="{{ $shop['seo_group_keywords_template'] }}" class="form-control" placeholder="Шаблон keywords">
+                                            </div>
+                                
+                                        </div>
+                                    </div>
+                                </div>                               
                             </div>
 
-                            <div class="mb-3">
-                                <label class="mb-1">Описание страницы [Seo Description]</label>
-                                <textarea name="seo_description" class="form-control" placeholder="Описание страницы [Seo description]">{{ $shop['seo_description'] }}</textarea>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">                      
+                                            <h4 class="card-title">Шаблоны товаров</h4>                  
+                                        </div>                                                                         
+                                    </div>                            
+                                </div>
+                                <div class="card-body">    
+                                    <div class="row">
+                                        <div class="col-12">
+
+                                            <div class="mb-3">
+                                                <label class="mb-1">Шаблон title</label>
+                                                <input type="text" name="seo_item_title_template" value="{{ $shop['seo_item_title_template'] }}" class="form-control" placeholder="Шаблон title">
+                                            </div>
+                
+                                            <div class="mb-3">
+                                                <label class="mb-1">Шаблон description</label>
+                                                <textarea name="seo_item_description_template" class="form-control" placeholder="Шаблон description">{{ $shop['seo_item_description_template'] }}</textarea>
+                                            </div>
+                
+                                            <div class="mb-3">
+                                                <label class="mb-1">Шаблон keywords</label>
+                                                <input type="text" name="seo_item_keywords_template" value="{{ $shop['seo_item_keywords_template'] }}" class="form-control" placeholder="Шаблон keywords">
+                                            </div>
+                                
+                                        </div>
+                                    </div>
+                                </div>                               
                             </div>
 
-                            <div class="mb-3">
-                                <label class="mb-1">Ключевые слова [Seo Keywords]</label>
-                                <input type="text" name="seo_keywords" value="{{ $shop['seo_keywords'] }}" class="form-control" placeholder="Ключевые слова [Seo Keywords]">
-                            </div>
+
 
                         </div>
 

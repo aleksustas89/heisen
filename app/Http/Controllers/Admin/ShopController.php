@@ -126,9 +126,13 @@ class ShopController extends Controller
         $shop->active = $request->active;
         $shop->path = $request->path;
         $shop->items_on_page = $request->items_on_page;
-        $shop->seo_title = $request->seo_title;
-        $shop->seo_description = $request->seo_description;
-        $shop->seo_keywords = $request->seo_keywords;
+
+        $shop->seo_group_title_template = $request->seo_group_title_template;
+        $shop->seo_group_description_template = $request->seo_group_description_template;
+        $shop->seo_group_keywords_template = $request->seo_group_keywords_template;
+        $shop->seo_item_title_template = $request->seo_item_title_template;
+        $shop->seo_item_description_template = $request->seo_item_description_template;
+        $shop->seo_item_keywords_template = $request->seo_item_keywords_template;
 
         $shop->image_large_max_width = $request->image_large_max_width;
         $shop->image_large_max_height = $request->image_large_max_height;

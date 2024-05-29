@@ -1,7 +1,7 @@
 @extends('main')
 
-@section('seo_title', !empty($group->seo_title) ? $group->seo_title : $group->name)
-@section('seo_description', $group->seo_description)
+@section('seo_title'){{ \App\Http\Controllers\SeoController::showGroupTitle($shop, $group) }}@endsection
+@section('seo_description'){{ \App\Http\Controllers\SeoController::showGroupDescription($shop, $group) }}@endsection
 @section('seo_keywords', $group->seo_keywords)
 
 @section('canonical')

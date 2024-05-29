@@ -96,6 +96,7 @@ class ShopGroupController extends Controller
         $oShopItems = self::prepareItems($shopGroup);
         
         Route::view($path, 'shop/group', [
+            'shop' => $oShop,
             'group' => $shopGroup,
             'SubGroups' => ShopGroup::where("parent_id", $shopGroup->id)->where("active", 1)->get(),
             'items' => $oShopItems->paginate($oShop->items_on_page),

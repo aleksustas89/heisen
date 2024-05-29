@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ShopDiscountController;
 use App\Models\Comment;
 use App\Models\CommentShopItem;
+use App\Models\Shop;
 
 class ShopItemController extends Controller
 {
@@ -91,6 +92,7 @@ class ShopItemController extends Controller
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
             'Comments' => $Comments,
             'Dimensions' => $aDimensions,
+            'shop' => Shop::get()
         ];
 
         switch ($shopItem::$priceView) {

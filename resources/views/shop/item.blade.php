@@ -1,7 +1,7 @@
 @extends('main')
 
-@section('seo_title', !empty($item->seo_title) ? $item->seo_title : $item->name)
-@section('seo_description', $item->seo_description)
+@section('seo_title'){{ \App\Http\Controllers\SeoController::showItemTitle($shop, $item) }}@endsection
+@section('seo_description'){{ \App\Http\Controllers\SeoController::showItemDescription($shop, $item) }}@endsection
 @section('seo_keywords', $item->seo_keywords)
 
 @section('canonical')
