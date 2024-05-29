@@ -44,7 +44,6 @@
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#seo" data-bs-toggle="tab" role="tab">SEO</a></li>
                         <li class="nav-item"><a class="nav-link" href="#images" data-bs-toggle="tab" role="tab">Изображения</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#index" data-bs-toggle="tab" role="tab">Главная</a></li>
                     </ul>
                 </div>
 
@@ -56,55 +55,116 @@
                     <div class="card-body tab-content">
 
                         <div class="tab-pane active" id="main">
-                            <div class="mb-3">
-                                <label class="mb-1">Название интернет-магазина</label>
-                                <input type="text" name="name" value="{{ $shop['name'] }}" class="form-control form-control-lg" placeholder="Название интернет-магазина" data-min="2"  data-max="255" data-required="1">
-                                <div id="name_error" class="fieldcheck-error"></div>
+
+                            <div class="card">
+                                
+                                <div class="card-body">  
+
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-sm-6">
+                                            <label class="mb-1">Название интернет-магазина</label>
+                                            <input type="text" name="name" value="{{ $shop['name'] }}" class="form-control" placeholder="Название интернет-магазина" data-min="2"  data-max="255" data-required="1">
+                                            <div id="name_error" class="fieldcheck-error"></div>
+                                        </div>
+                                        <div class="col-12 col-sm-3">
+                                            <label class="mb-1">Путь</label>
+                                            <input type="text" name="path" value="{{ $shop['path'] }}" class="form-control" placeholder="Путь" data-min="2"  data-max="255" data-required="1">
+                                        </div>
+                                        <div class="col-12 col-sm-3 align-items-end d-flex">
+                                            <div class="form-check form-switch form-switch-success">
+                                                <input {{ $shop->active == 1 ? 'checked' : '' }} value="1" class="form-check-input" name="active" type="checkbox" id="active">
+                                                <label class="form-check-label" for="active">Активность</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-sm-3">
+                                            <label class="mb-1">Кол-во элементов на странице</label>
+                                            <input type="text" name="items_on_page" value="{{ $shop['items_on_page'] }}" class="form-control" placeholder="Кол-во элементов на странице">
+                                        </div>
+                                        
+                                        <div class="col-12 col-sm-3">
+                                            <label class="mb-1">Валюта магазина</label>
+                                            <select id="currency_id" name="currency_id"  class="form-control">  
+                                                <option value="0">...</option>  
+        
+                                                @foreach ($currencies as $currency)
+                                                    <option {{ $currency->id == $shop["currency_id"]  ? 'selected="selected"' : '' }} value="{{ $currency->id }}">{{ $currency->name }}</option>  
+                                                @endforeach                                    
+                                            </select> 
+                                        </div>
+
+                                        <div class="col-12 col-sm-3">
+                                            <label class="mb-1">E-mail</label>
+                                            <input type="text" name="email" value="{{ $shop['email'] }}" class="form-control input-lg" placeholder="E-mail">
+                                        </div>
+                                        
+        
+                                    </div>
+
+                                </div>                                
+                            </div>
+
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">                      
+                                            <h4 class="card-title">Цены</h4>                 
+                                        </div>                                                                         
+                                    </div>                            
+                                </div>
+                                <div class="card-body">    
+                                    <div class="row">
+                                        <div class="col-12 ">
+
+                                            <div class="form-check form-switch form-switch-success">
+                                                <input {{ $shop->apply_items_price_to_modifications == 1 ? 'checked' : '' }} value="1" class="form-check-input" name="apply_items_price_to_modifications" type="checkbox" id="apply_items_price_to_modifications">
+                                                <label class="form-check-label" for="apply_items_price_to_modifications">Применять цену товара модификациям</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                               
+                            </div>
+
+                            
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">                      
+                                            <h4 class="card-title">Главная страница</h4>                  
+                                        </div>                                                                         
+                                    </div>                            
+                                </div>
+                                <div class="card-body">    
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6">
+        
+                                            <label class="mb-1">Тип вывода новинок на главной</label>
+                                            <select name="new_items"  class="form-control">  
+                                                <option value="0">...</option>  
+        
+                                                <option @if($shop['new_items'] == 1) selected @endif value="1">Показывать рамдомно товары со всего магазина</option>
+                                                <option @if($shop['new_items'] == 2) selected @endif value="2">Показывать последние добавленные товары</option>                                   
+                                            </select> 
+                           
+                                        </div>
+                                        <div class="col-12 col-sm-6">
+        
+                                            <label class="mb-1">Количество товаров</label>
+                                            <input type="text" name="new_items_count" value="{{ $shop['new_items_count'] }}" class="form-control" placeholder="Количество товаров">
+        
+                                        </div>
+                                    </div>
+                                </div>                               
                             </div>
 
                             <div class="mb-3">
                                 <label class="mb-1">Описание интернет-магазина</label>
                                 <textarea type="text" name="description" class="form-control editor" placeholder="Описание интернет-магазина">{{ $shop['description'] }}</textarea>
                             </div>
-
-                            <div class="mb-3">
-                                <label class="mb-1">E-mail</label>
-                                <input type="text" name="email" value="{{ $shop['email'] }}" class="form-control input-lg" placeholder="E-mail">
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-12 col-sm-3">
-                                    <label class="mb-1">Кол-во элементов на странице</label>
-                                    <input type="text" name="items_on_page" value="{{ $shop['items_on_page'] }}" class="form-control" placeholder="Кол-во элементов на странице">
-                                </div>
-                                <div class="col-12 col-sm-3">
-                                    <label class="mb-1">Путь</label>
-                                    <input type="text" name="path" value="{{ $shop['path'] }}" class="form-control" placeholder="Путь" data-min="2"  data-max="255" data-required="1">
-                                </div>
-                                <div class="col-12 col-sm-3">
-                                    <label class="mb-1">Валюта магазина</label>
-                                    <select id="currency_id" name="currency_id"  class="form-control">  
-                                        <option value="0">...</option>  
-
-                                        @foreach ($currencies as $currency)
-                                            <option {{ $currency->id == $shop["currency_id"]  ? 'selected="selected"' : '' }} value="{{ $currency->id }}">{{ $currency->name }}</option>  
-                                        @endforeach                                    
-                                    </select> 
-                                </div>
-                                <div class="col-12 col-sm-3">
-                                    <label>&nbsp;</label>
-                                    <div class="form-check field-check-center">
-
-                                        <div class="form-check form-switch form-switch-success">
-                                            <input {{ $shop->active == 1 ? 'checked' : '' }} value="1" class="form-check-input" name="active" type="checkbox" id="active">
-                                            <label class="form-check-label" for="active">Активность</label>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-
                         </div>
 
                         <div class="tab-pane" id="seo">
@@ -169,9 +229,6 @@
                                 </div>
                             </div>
 
-
-
-
                             <div class="row mb-3">
                                 <div class="col-12 col-sm-6">
                                     <label class="mb-1">Максимальная ширина большого изображения группы</label>
@@ -209,39 +266,10 @@
                                         <input {{ $shop->preserve_aspect_ratio_group_small == 1 ? 'checked' : '' }} value="1" class="form-check-input" name="preserve_aspect_ratio_group_small" type="checkbox" id="preserve_aspect_ratio_group_small">
                                         <label class="form-check-label" for="preserve_aspect_ratio_group_small">Сохранять пропорции изображения группы</label>
                                     </div>
-
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div class="tab-pane" id="index">
-
-                            <div class="row mb-3">
-                                <div class="col-12 col-sm-6">
-
-                                    <label class="mb-1">Тип вывода новинок на главной</label>
-                                    <select name="new_items"  class="form-control">  
-                                        <option value="0">...</option>  
-
-                                        <option @if($shop['new_items'] == 1) selected @endif value="1">Показывать рамдомно товары со всего магазина</option>
-                                        <option @if($shop['new_items'] == 2) selected @endif value="2">Показывать последние добавленные товары</option>                                   
-                                    </select> 
-                   
-                                </div>
-                                <div class="col-12 col-sm-6">
-
-                                    <label class="mb-1">Количество товаров</label>
-                                    <input type="text" name="new_items_count" value="{{ $shop['new_items_count'] }}" class="form-control" placeholder="Количество товаров">
-
                                 </div>
                             </div>
 
                         </div>
-
-
-
                     </div>
                     <div class="card-footer">
                         <button type="submit" name="save" value="0" class="btn btn-primary">Сохранить</button>

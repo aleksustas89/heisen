@@ -127,10 +127,10 @@
                                             
                                             <div class="row form-group">
                     
-                                                <div class="col-lg-2 mb-2">
+                                                <div class="col-2 mb-2">
                                                     <input type="text" value="{{ $shopItem->price }}" name="price" class="form-control" placeholder="Цена" >
                                                 </div>
-                                                <div class="col-lg-2 mb-2">
+                                                <div class="col-2 mb-2">
                                                     @if ($currencies)
                                                         <select name="shop_currency_id" class="form-select">
                                                             @foreach ($currencies as $currency)
@@ -142,6 +142,16 @@
                                                             @endforeach
                                                         </select>
                                                     @endif
+                                                </div>
+                                                <div class="col-3 mb-2 d-flex align-items-end">
+                                                    <div class="d-flex">
+                                                        <div class="form-check form-switch form-switch-purple mx-3">
+                                                            <input value="1" @if($shop->apply_items_price_to_modifications == 1) checked @endif class="form-check-input" name="apply_price_to_modifications" type="checkbox" id="apply_price_to_modifications">
+                                                            <label for="apply_price_to_modifications">
+                                                                Применить цену к модификациям
+                                                            </label>
+                                                        </div>  
+                                                    </div>
                                                 </div>
                                             </div>
 

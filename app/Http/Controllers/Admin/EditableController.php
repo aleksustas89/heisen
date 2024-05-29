@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Shop;
 
 class EditableController extends Controller
 {
@@ -20,6 +21,13 @@ class EditableController extends Controller
                 if (!is_null($object) && isset($object->$field)) {
                     $object->$field = $request->value;
                     $object->save();
+
+                    if ($model == 'ShopItem' && !is_null($Shop = Shop::get()) && $Shop->apply_items_price_to_modifications == 1) {
+                        foreach ($Model::where("modification_id", $object->id)->get() as $mShopItem) {
+                            $mShopItem->price = $object->price;
+                            $mShopItem->save();
+                        }
+                    }
 
                     $response = true;
                 }

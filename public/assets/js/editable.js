@@ -1,6 +1,5 @@
 var editable = {
     save: function(elem) {
-        console.log(editable_route + "?data=" + elem.attr("id") + "&value=" + elem.text())
         $.ajax({
             url: editable_route + "?data=" + elem.attr("id") + "&value=" + elem.text(),
             type: "POST",
@@ -24,9 +23,11 @@ $(document).bind('dblclick touchend', function(e) {
 
     if ($this.hasClass("editable")) {
 
-        $editor = $('<input style="width:100%">').prop('type', 'text').val($this.text());
+        $editor = $('<input style="width:80%">').prop('type', 'text').val($this.text());
 
         $this.css("display", "none");
+
+        value = $this.hasAttr("data-value") ? $this.attr("data-value") : $this.text();
 
         $editor.on('blur', function() {
             var $editor = $(this);
@@ -46,6 +47,6 @@ $(document).bind('dblclick touchend', function(e) {
                 $editor.remove();
             }
         })
-        .insertAfter($this).focus().val($this.text());
+        .insertAfter($this).focus().val(value);
     }
 });

@@ -142,6 +142,7 @@ class ShopController extends Controller
         $shop->group_image_small_max_height = $request->group_image_small_max_height;
         $shop->preserve_aspect_ratio_group = $request->preserve_aspect_ratio_group;
         $shop->preserve_aspect_ratio_group_small = $request->preserve_aspect_ratio_group_small;
+        $shop->apply_items_price_to_modifications = $request->apply_items_price_to_modifications ?? 0;
 
         $shop->save();
 

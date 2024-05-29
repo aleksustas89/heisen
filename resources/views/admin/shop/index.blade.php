@@ -87,7 +87,7 @@
                                         <th style="width: 1%">#ID</th>
                                         <th style="width: 40px"  class="px-0 text-center"><i class="fa fa-bars" title="—"></i></th>
                                         <th>Название</th>
-                                        <th  class="d-mob-none" width="200px">Цена</th>
+                                        <th  class="d-mob-none" width="100px">Цена</th>
         
                                         <th class="d-mob-none" width="40px"><i class="fa fa-lightbulb-o" title="Активность"></i></th>
                                         <th class="d-mob-none" width="60px"><i class="fas fa-sort-amount-down" title="—"></i></th>
@@ -129,7 +129,7 @@
                                                         </a> 
                                                     
                                                 </td>
-                                                <td class="d-mob-none" width="200px">&nbsp;</td>
+                                                <td class="d-mob-none" width="100px">&nbsp;</td>
                                             
                                                 <td class="d-mob-none" width="40px">
                                                     @if ($shopGroup->active == 1)
@@ -201,51 +201,36 @@
                                                 @endif
                                                 
                                             </td>
-                                            <td width="200px" class="td_editable d-mob-none">
+                                            <td width="100px" class="td_editable d-mob-none">
                                                 <div class="d-flex">
 
-                                                    @if ($shopItem::$priceView == 0)
-
-                                                        @php
-                                                            $prices = App\Http\Controllers\ShopDiscountController::getModificationsPricesWithDiscounts($shopItem);
-                                                        @endphp
+                                                    @php
+                                                    $defaultModification = $shopItem->defaultModification();
+                                                    $Object = $defaultModification ? $defaultModification : $shopItem;
+                                                    $oldPrice = $Object->oldPrice();
+                                                    $price = (int)$shopItem->price;
                                     
-                                                        @if (count($prices) > 1)
-                                                            {{ App\Services\Helpers\Str::price(min($prices)) }} - {{ App\Services\Helpers\Str::price(max($prices)) }}
-                                                            <span class="item-old-price" id="item-old-price">
-                                                                @if (!in_array($shopItem->price, $prices))
-                                                                    {{ App\Services\Helpers\Str::price($shopItem->price) }}
-                                                                @endif
-                                                            </span>
-                                                        @else 
-                                                            {{ App\Services\Helpers\Str::price($shopItem->price()) }} 
-                                                            <span>{{ !empty($shopItem->oldPrice()) ? App\Services\Helpers\Str::price($shopItem->oldPrice()) : '' }}</span>
-                                                        @endif
-                                                    @elseif($shopItem::$priceView == 1)
+                                                    @endphp
+                                                    <span 
+                                                        data-value="{{ $price }}" 
+                                                        id="apply_check_ShopItem_price_{{ $shopItem->id }}"
+                                                        class="editable mx-1" id="item-price">{{ App\Services\Helpers\Str::price($price) }}
+                                                    </span> 
+
+                                                    @if ($oldPrice)<span class="item-old-price mx-1" id="item-old-price">{{ $oldPrice }}</span>@endif
+
+                                                    <span class="mx-1">{{ $shopItem->shop_currency_id > 0 && $shopItem->ShopCurrency ? $shopItem->ShopCurrency->name : ''}}</span>
+                                                    
+                                                    @if ($oldPrice)
                                                         @php
-                                                        $defaultModification = $shopItem->defaultModification();
-                                                        $Object = $defaultModification ? $defaultModification : $shopItem;
-                                                        $oldPrice = $Object->oldPrice();
-                                        
+                                                            $discounts = \App\Http\Controllers\ShopDiscountController::getDiscountsForItemAndModifications($Object);
+                                                            $aDiscountTitles = [];
+                                                            foreach ($discounts as $discount) {
+                                                                $aDiscountTitles[] = $discount->name;
+                                                            }
                                                         @endphp
-                                                        <span class=" mx-1" id="item-price">{{ App\Services\Helpers\Str::price($Object->price()) }}</span> 
-                                                        @if ($oldPrice)<span class="item-old-price mx-1" id="item-old-price">{{ $oldPrice }}</span>@endif
-
-                                                        <span class="mx-1">{{ $shopItem->shop_currency_id > 0 && $shopItem->ShopCurrency ? $shopItem->ShopCurrency->name : ''}}</span>
-                                                        
-                                                        @if ($oldPrice)
-                                                            @php
-                                                                $discounts = \App\Http\Controllers\ShopDiscountController::getDiscountsForItemAndModifications($Object);
-                                                                $aDiscountTitles = [];
-                                                                foreach ($discounts as $discount) {
-                                                                    $aDiscountTitles[] = $discount->name;
-                                                                }
-                                                            @endphp
-                                                            <i class="las la-tags font-20 palegreen mx-1" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="{{ implode(',', $aDiscountTitles) }}"></i>
-                                                        @endif
-
+                                                        <i class="las la-tags font-20 palegreen mx-1" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="{{ implode(',', $aDiscountTitles) }}"></i>
                                                     @endif
-
 
                                                 </div>
                                             </td>

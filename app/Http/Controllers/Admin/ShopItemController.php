@@ -273,6 +273,13 @@ class ShopItemController extends Controller
 
         $this->saveItemProperties($request, $shopItem);
 
+        if ($request->apply_price_to_modifications) {
+            foreach (ShopItem::where("modification_id", $shopItem->id)->get() as $mShopItem) {
+                $mShopItem->price = $shopItem->price;
+                $mShopItem->save();
+            }
+        }
+
         //скидка
         $ShopItemDiscountController = new ShopItemDiscountController();
         foreach ($shopItem->ShopItemDiscounts as $ShopItemDiscount) {
