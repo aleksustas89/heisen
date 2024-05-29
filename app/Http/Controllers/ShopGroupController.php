@@ -176,10 +176,13 @@ class ShopGroupController extends Controller
         }
     }
 
-    public static function showTreeGroupsAsOptions()
+    public static function showTreeGroupsAsOptions($current = 0)
     {
 
-        echo view("admin.shop.group-options", ["groups" => ShopGroup::getGroupTree()]);
+        echo view("admin.shop.group-options", [
+            "groups" => ShopGroup::getGroupTree(),
+            "current" => $current
+        ]);
     }
 
     public function filter(Request $request)

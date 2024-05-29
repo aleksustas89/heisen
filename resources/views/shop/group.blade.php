@@ -4,6 +4,12 @@
 @section('seo_description', $group->seo_description)
 @section('seo_keywords', $group->seo_keywords)
 
+@section('canonical')
+
+    <link rel="canonical" href="https://{{ request()->getHost() }}{{ $group->url }}" />
+
+@endsection
+
 @section('content')
 
     <div class="uk-section-xsmall tm-tovar">

@@ -74,7 +74,12 @@
 
                             <div  class="mb-3">
                                 <label class="mb-1">Группа</label>
-                                <input type="text" value="{{ $shopItem->shop_group_id }}" name="shop_group_id" class="form-control" placeholder="Группа">
+                                <select name="shop_group_id" class="form-control">
+                                    <option value="0">...</option>
+                                    @php
+                                        \App\Http\Controllers\ShopGroupController::showTreeGroupsAsOptions($shopItem->shop_group_id);
+                                    @endphp
+                                </select>
                             </div>
 
                             <div class="row mb-3">
@@ -240,20 +245,57 @@
                         </div>
 
                         <div class="tab-pane" id="seo">
-                            <div class="mb-3">
-                                <label class="mb-1">Заголовок [Seo Title]</label>
-                                <input type="text" name="seo_title" value="{{ $shopItem->seo_title }}" class="form-control" placeholder="Заголовок страницы [Seo title]">
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title text-uppercase">Seo заголовки</h3>
+                                </div>
+                                <div class="card-body" style="display: block;">
+                                    
+                                    <div class="form-group">
+            
+                                        <div class="mb-3">
+                                            <label class="mb-1">Заголовок [Seo Title]</label>
+                                            <input type="text" name="seo_title" value="{{ $shopItem->seo_title }}" class="form-control" placeholder="Заголовок страницы [Seo title]">
+                                        </div>
+            
+                                        <div class="mb-3">
+                                            <label class="mb-1">Описание [Seo Description]</label>
+                                            <textarea name="seo_description" class="form-control" placeholder="Описание страницы [Seo description]">{{ $shopItem->seo_description }}</textarea>
+                                        </div>
+            
+                                        <div class="mb-3">
+                                            <label class="mb-1">Ключевые слова [Seo Keywords]</label>
+                                            <input type="text" name="seo_keywords" value="{{ $shopItem->seo_keywords }}" class="form-control" placeholder="Ключевые слова [Seo Keywords]">
+                                        </div>
+                                      
+                                    </div>
+
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="mb-1">Описание [Seo Description]</label>
-                                <textarea name="seo_description" class="form-control" placeholder="Описание страницы [Seo description]">{{ $shopItem->seo_description }}</textarea>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title text-uppercase">Каноникал</h3>
+                                </div>
+                                <div class="card-body" style="display: block;">
+                                    
+                                    <div class="form-group">
+                                        @if ($shopItem->canonical > 0)
+                                            <span class="canonical_value badge rounded-pill bg-primary"> 
+                                                {{ $canonicalName }}
+                                                <a href="javascript:void(0)" onclick="Canonical.delete()" class="mdi mdi-close"></a>
+                                            </span>
+                                        @endif
+
+                                        <input @if($shopItem->canonical > 0) style="display:none;" @endif type="text" class="form-control" name="canonical_name" value="" />
+                                        
+                                        <input type="hidden" name="canonical" value="{{ $shopItem->canonical }}" />
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="mb-1">Ключевые слова [Seo Keywords]</label>
-                                <input type="text" name="seo_keywords" value="{{ $shopItem->seo_keywords }}" class="form-control" placeholder="Ключевые слова [Seo Keywords]">
-                            </div>
+                            
                         </div>
 
                         <div class="tab-pane" id="modifications">
@@ -549,8 +591,8 @@
 
 @section("css")
     <link href="/assets/plugins/tobii/tobii.min.css" rel="stylesheet" type="text/css" />
-    
-    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/themes/sunny/jquery-ui.css">
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
     <style type="text/css">
         div.sortable {float: left;}
@@ -560,12 +602,16 @@
 
 @section("js")
     <script src="/assets/image.js"></script>
-    <script src="/assets/js/pages/shopItem.js"></script>
     <script src="/assets/pages/file-upload.init.js"></script>
     <script src="/assets/plugins/tobii/tobii.min.js"></script>
-    <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    @php
+    App\Services\Helpers\File::js('/assets/js/pages/shopItem.js');
+    @endphp
     <script>
-        const tobii = new Tobii()
+        const tobii = new Tobii();
+
+        var routeSearchCanonical = '{{ route("SearchCanonical", $shopItem->id) }}';
         
         $(function() {
             $('#sortContainer').sortable({

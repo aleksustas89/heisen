@@ -48,3 +48,26 @@ var adminProperty = {
     }
 
 }
+
+var Canonical = {
+    delete: function() {
+        $(".canonical_value").remove();
+        $('[name="canonical_name"]').val('').show();
+        $('[name="canonical"]').val('');
+    }
+}
+
+$(function() {
+
+    if ($('[name="canonical_name"]').length) {
+        $('[name="canonical_name"]').autocomplete({
+            source: routeSearchCanonical,
+            minLength: 2,
+            select: function( event, ui ) {
+                $('[name="canonical"]').val(ui.item.data);
+                $('[name="canonical_name"]').after('<span class="canonical_value badge rounded-pill bg-primary">'+ ui.item.value +'<a href="javascript:void(0)" onclick="Canonical.delete()" class="mdi mdi-close"></a></span>');
+                $('[name="canonical_name"]').hide();
+            }, 
+        });
+    }
+});

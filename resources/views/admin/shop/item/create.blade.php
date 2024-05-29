@@ -71,7 +71,12 @@
 
                             <div  class="mb-3">
                                 <label class="mb-1">Группа</label>
-                                <input type="text" value="{{ $parent_id }}" name="shop_group_id" class="form-control" placeholder="Группа">
+                                <select name="shop_group_id" class="form-control">
+                                    <option value="0">...</option>
+                                    @php
+                                        \App\Http\Controllers\ShopGroupController::showTreeGroupsAsOptions($parent_id);
+                                    @endphp
+                                </select>
                             </div>
 
                             <div class="row mb-3">
@@ -209,20 +214,35 @@
                         </div>
 
                         <div class="tab-pane" id="seo">
-                            <div class="mb-3">
-                                <label class="mb-1">Заголовок [Seo Title]</label>
-                                <input type="text" name="seo_title" value="" class="form-control" placeholder="Заголовок страницы [Seo title]">
+
+                            <div class="card card-warning">
+                                <div class="card-header">
+                                    <h3 class="card-title text-uppercase">Seo заголовки</h3>
+                                </div>
+                                <div class="card-body" style="display: block;">
+                                    
+                                    <div class="form-group">
+            
+                                        <div class="mb-3">
+                                            <label class="mb-1">Заголовок [Seo Title]</label>
+                                            <input type="text" name="seo_title" value="" class="form-control" placeholder="Заголовок страницы [Seo title]">
+                                        </div>
+            
+                                        <div class="mb-3">
+                                            <label class="mb-1">Описание [Seo Description]</label>
+                                            <textarea name="seo_description" class="form-control" placeholder="Описание страницы [Seo description]"></textarea>
+                                        </div>
+            
+                                        <div class="mb-3">
+                                            <label class="mb-1">Ключевые слова [Seo Keywords]</label>
+                                            <input type="text" name="seo_keywords" value="" class="form-control" placeholder="Ключевые слова [Seo Keywords]">
+                                        </div>
+                                      
+                                    </div>
+
+                                </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="mb-1">Описание [Seo Description]</label>
-                                <textarea name="seo_description" class="form-control" placeholder="Описание страницы [Seo description]"></textarea>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="mb-1">Ключевые слова [Seo Keywords]</label>
-                                <input type="text" name="seo_keywords" value="" class="form-control" placeholder="Ключевые слова [Seo Keywords]">
-                            </div>
                         </div>
 
                         @if (count($properties) > 0)

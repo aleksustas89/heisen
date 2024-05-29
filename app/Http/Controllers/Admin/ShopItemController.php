@@ -93,6 +93,8 @@ class ShopItemController extends Controller
             $aProperty_Value_Float[$oProperty_Value_Float->property_id][$oProperty_Value_Float->id] = $oProperty_Value_Float->value;
         }
 
+        $canonicalShopItem = ShopItem::find($shopItem->canonical);
+        
         return view('admin.shop.item.edit', [
             'shopItem' => $shopItem,
             'images' => $shopItem->getImages(),
@@ -106,6 +108,7 @@ class ShopItemController extends Controller
             'lists' => self::getListItems($properties),
             'shop' => $shop,
             "mShopItems" => ShopItem::where("modification_id", $shopItem->id)->get(),
+            "canonicalName" => !is_null($canonicalShopItem) ? $canonicalShopItem->name ." [". $canonicalShopItem->id ."] / ". $canonicalShopItem->ShopGroup->name : ''
         ]);
     }
 
@@ -205,6 +208,7 @@ class ShopItemController extends Controller
         $shopItem->seo_keywords = $request->seo_keywords ?? '';
         $shopItem->price = $request->price ?? 0;
         $shopItem->shop_currency_id = $request->shop_currency_id ?? 0;
+        $shopItem->canonical = $request->canonical ?? 0;
 
         $shopItem->save();
 
@@ -285,6 +289,27 @@ class ShopItemController extends Controller
         } else {
            return redirect()->back()->withSuccess($message);
         }
+    }
+
+    public function searchCanonical(Request $request, ShopItem $shopItem)
+    {
+        $aResult = [];
+
+        if (!empty($term = $request->input('term'))) {
+
+            $ShopItems = ShopItem::where('modification_id', 0)
+                ->where(function($query) use ($term) {
+                    $query->orWhere('name', "LIKE", "%" . $term ."%")
+                            ->orWhere("id", $term)
+                            ->orWhere("marking", "LIKE", "LIKE", "%" . $term ."%");
+                })->get();
+
+            foreach ($ShopItems as $shopItem) {
+                $aResult[] = ["value" => $shopItem->name ." [". $shopItem->id ."] / ". $shopItem->ShopGroup->name, "data" => $shopItem->id];
+            }
+        }
+
+        return response()->json($aResult);
     }
 
     public function setUrl(ShopItem $shopItem)

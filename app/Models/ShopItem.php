@@ -423,9 +423,6 @@ class ShopItem extends Model
                 $nShopModificationImage->shop_item_image_id = $imagesHistory[$ShopModificationImage->shop_item_image_id] ?? $ShopModificationImage->shop_item_image_id;
                 $nShopModificationImage->save();
             }
-        } else {
-            $nShopItem->copied_shop_item_id = $this->id;
-            $nShopItem->save();
         }
 
 

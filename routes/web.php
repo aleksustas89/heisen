@@ -81,6 +81,8 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
                     Route::prefix("shortcut")->group(function() {
                         Route::get('/delete/{shopGroup}', 'ShopItemController@deleteShortcutGroup')->name("deleteShortcutGroup");
                     });
+
+                    Route::get('/canonical', 'ShopItemController@searchCanonical')->name("SearchCanonical");
                 });
 
                 Route::prefix("shortcut")->group(function() {

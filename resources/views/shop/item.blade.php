@@ -4,6 +4,15 @@
 @section('seo_description', $item->seo_description)
 @section('seo_keywords', $item->seo_keywords)
 
+@section('canonical')
+
+    @if ($item->canonical > 0 && !is_null($Canonical = \App\Models\ShopItem::find($item->canonical)))
+        <link rel="canonical" href="https://{{ request()->getHost() }}{{ $Canonical->url }}" />
+    @else
+        <link rel="canonical" href="https://{{ request()->getHost() }}{{ $item->url }}" />
+    @endif
+@endsection
+
 @section('content')
 
     @php
