@@ -106,6 +106,10 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
                     Route::get('print/{CdekOrder}', [App\Http\Controllers\CdekController::class, 'print'])->name("printCdekOrder");
                 });
             });
+
+            Route::prefix("price")->controller('ShopPriceController')->group(function() {
+                Route::get('/filter', 'filter')->name("shopPriceFilter");
+            });
         });
         
    

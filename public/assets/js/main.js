@@ -59,8 +59,8 @@ $(document).ready(function () {
         $form.on('keyup change paste blur', ':input[data-required]', function(e) { mainFieldChecker.check($(this)) });
     }
 
-	$(".admin-table").find(".check-all").click(function() {
 
+	$("body").on("click", ".admin-table .check-all", function(){
 		let checker = $(this);
 
 		$(".admin-table").find("tbody").find(".check-item").each(function(){
