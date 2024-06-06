@@ -111,6 +111,10 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
                 Route::get('/filter', 'filter')->name("shopPriceFilter");
             });
         });
+
+        Route::prefix("sitemap")->controller('SitemapController')->group(function() {
+            Route::get('/', 'index')->name("adminSitemap");
+        });
         
    
         //editable-fields
@@ -123,6 +127,8 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
 Route::get('/admin/login', [App\Http\Controllers\Admin\LoginController::class, 'index'])->name('admin_login_form');
 Route::post('/admin/login', [App\Http\Controllers\Admin\LoginController::class, 'login'])->name('admin_login_action');
 
+Route::get('sitemap', [App\Http\Controllers\Admin\SitemapController::class, 'getSitemap'])->name("getSitemap");
+Route::get('imagemap', [App\Http\Controllers\Admin\SitemapController::class, 'getImagemap'])->name("getImagemap");
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

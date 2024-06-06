@@ -118,6 +118,7 @@ class ShopGroupController extends Controller
         $shopGroup->seo_description = $request->seo_description;
         $shopGroup->seo_keywords = $request->seo_keywords;
         $shopGroup->path = $aPath[0];
+        $shopGroup->updated_at = date("Y-m-d H:i:s");
 
         $shopGroup->save();
 

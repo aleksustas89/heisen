@@ -172,6 +172,7 @@ class StructureController extends Controller
                 $structure->indexing = $request->indexing == 'on' ? 1 : 0;
                 $structure->text = $request->text;
                 $structure->parent_id = $request->parent_id ?? 0;
+                $structure->updated_at = date("Y-m-d H:i:s");
         
                 $structure->save();
 

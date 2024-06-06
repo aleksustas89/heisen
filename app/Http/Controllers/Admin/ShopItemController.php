@@ -209,6 +209,7 @@ class ShopItemController extends Controller
         $shopItem->price = $request->price ?? 0;
         $shopItem->shop_currency_id = $request->shop_currency_id ?? 0;
         $shopItem->canonical = $request->canonical ?? 0;
+        $shopItem->updated_at = date("Y-m-d H:i:s");
 
         $shopItem->save();
 

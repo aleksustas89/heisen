@@ -104,7 +104,7 @@ class ShopItem extends Model
     {
         $aReturn = [];
 
-        foreach ($this->ShopItemImages()->orderBy("sorting", "asc")->get() as $k => $ShopItemImage) {
+        foreach ($this->ShopItemImages()->where("image_large", "!=", "")->where("image_small", "!=", "")->orderBy("sorting", "asc")->get() as $k => $ShopItemImage) {
 
             if ($all === false && $k > 0) {
                 break;
