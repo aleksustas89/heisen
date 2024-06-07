@@ -295,7 +295,7 @@
                     <hr />       
                     <div class="tm-grid-expand uk-grid-row-large uk-grid-margin-large uk-grid" uk-grid="">
                         <div class="uk-width-1-2@s uk-width-1-4@m uk-first-column">  
-                            <h3 class="uk-h4 uk-margin">Время работы</h3>
+                            <div class="uk-h4 uk-margin">Время работы</div>
                             <div class="uk-panel uk-margin">
                                 <b>пн-пт:</b> 9-20,<br><b>сб:</b> 10-16,<br><b>вс:</b> выходной
                             </div>
@@ -305,7 +305,7 @@
                         <div class="uk-width-1-2@s uk-width-1-4@m">
 
                             @if (isset($ShopGroups) && count($ShopGroups) > 0)
-                                <h3 class="uk-h4 uk-margin">Каталог</h3>
+                                <div class="uk-h4 uk-margin">Каталог</div>
                                 <ul class="uk-list">
                                     @foreach ($ShopGroups as $ShopGroup) 
                                         <li><a class="el-link uk-link-text uk-margin-remove-last-child" href="{{ $ShopGroup["url"] }}">{{ $ShopGroup["name"] }}</a></li>
@@ -316,7 +316,7 @@
                         </div>
 
                         <div class="uk-width-1-2@s uk-width-1-4@m">
-                            <h3 class="uk-h4 uk-margin">Документы</h3>
+                            <div class="uk-h4 uk-margin">Документы</div>
  
                             <ul class="uk-list">
                                 @php

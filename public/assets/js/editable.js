@@ -27,7 +27,7 @@ $(document).bind('dblclick touchend', function(e) {
 
         $this.css("display", "none");
 
-        value = $this.hasAttr("data-value") ? $this.attr("data-value") : $this.text();
+        let value = $this.hasAttr("data-value") ? $this.attr("data-value") : $this.text();
 
         $editor.on('blur', function() {
             var $editor = $(this);
@@ -35,6 +35,9 @@ $(document).bind('dblclick touchend', function(e) {
             $this.text($editor.val()).css('display', '');
             $editor.remove();
             editable.save($this);
+            if ($this.hasAttr("data-value")) {
+                $this.attr("data-value", $editor.val());
+            }
         }).on('keydown', function(e) {
             if (e.keyCode == 13) { // Enter
                 e.preventDefault();

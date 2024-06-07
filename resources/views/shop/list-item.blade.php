@@ -61,7 +61,7 @@ $url = $item->url;
 
         </div>
         <div class="uk-card-body uk-padding-remove-left uk-padding-remove-right">
-            <h3 class="uk-card-title uk-margin-small-bottom"><a href="{{ $url }}">{{ $item->name }}</a></h3>
+            <div class="uk-h3 uk-card-title uk-margin-small-bottom"><a href="{{ $url }}">{{ $item->name }}</a></div>
             <p class="uk-margin-remove-top tm-price">
                
                 @if ($item::$priceView == 0)
