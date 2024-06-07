@@ -29,7 +29,11 @@
                             <ul class="uk-slideshow-items" uk-lightbox="animation: scale">
                                 @foreach ($images as $k => $image)
                                     @if (isset($image['image_large']))
-                                        <li id="uk-slide-{{$k}}"><a href="{{ $image['image_large'] }}"><img uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" alt="" uk-cover></a></li>
+                                        <li id="uk-slide-{{$k}}">
+                                            <a href="{{ $image['image_large'] }}">
+                                                <img alt="{{ $item->name }}" title="{{ $imageMask }}" uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" alt="" uk-cover>
+                                            </a>
+                                        </li>
                                     @endif
                                 @endforeach
                             </ul>
@@ -116,7 +120,6 @@
 
                     @php
                         $choose_properties_tooltip = [];
-                        
                     @endphp
 
                     @foreach ($aModProperties as $property)
@@ -129,25 +132,20 @@
                         <div class="uk-margin-small">
 
 
-                            @php
-                                $Shop_Item_List_Items = $property->shopItemList->listItems->whereIn("id", $aModValues);
-                            @endphp
-
                             @if ($property->destination == 1 && $property->type == 4 && !is_null($property->shopItemList))
                                 <ul class="uk-grid uk-grid-xsmall tm-color-switcher" uk-grid="">
 
-
-                                    @foreach ($Shop_Item_List_Items as $Shop_Item_List_Item)
-                                        <li @class(["active" => isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)])><a onclick="Modification.choose($(this))" data-id="{{ $Shop_Item_List_Item->id }}" uk-tooltip="{{ $Shop_Item_List_Item->value }}" class="uk-border-circle" data-src="{{ $Shop_Item_List_Item->description }}" uk-img=""></a></li>
-                                    @endforeach
+                                    @if (isset($aPropertyListItems[$property->id]))
+                                        @foreach ($aPropertyListItems[$property->id] as $key => $Shop_Item_List_Item)
+                                            <li @class(["active" => isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)])><a onclick="Modification.choose($(this))" data-id="{{ $Shop_Item_List_Item->id }}" uk-tooltip="{{ $Shop_Item_List_Item->value }}" class="uk-border-circle" data-src="{{ $Shop_Item_List_Item->description }}" uk-img=""></a></li>
+                                        @endforeach
+                                    @endif
 
                                 </ul>
-                            @elseif($property->destination == 0 && $property->type == 4 && !is_null($property->shopItemList))
-                                <ul class="uk-grid uk-grid-xsmall tm-other-switcher" uk-grid="">
-                                    @foreach ($Shop_Item_List_Items as $Shop_Item_List_Item)
-                                        @php
-
-                                        @endphp
+                            @elseif($property->destination == 0 && $property->type == 4 && !is_null($property->shopItemList) && isset($aPropertyListItems[$property->id]))
+                                <ul class="uk-grid uk-grid-xsmall tm-other-switcher" uk-grid="">            
+                                    @foreach ($aPropertyListItems[$property->id] as $key => $Shop_Item_List_Item)
+                                        
                                         <li @class(["active" => isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)])><a onclick="Modification.choose($(this))" data-id="{{ $Shop_Item_List_Item->id }}" uk-tooltip="{{ $Shop_Item_List_Item->value }}">{{ $Shop_Item_List_Item->value }}</a></li>
                                     @endforeach
                                 </ul>

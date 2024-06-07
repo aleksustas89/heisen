@@ -84,15 +84,48 @@ class ShopItemController extends Controller
             $k++;
         }
 
+        $aProperties = [];
+        foreach ($ShopItemProperties as $ShopItemProperty) {
+            $aProperties[$ShopItemProperty->id] = [];
+            $Shop_Item_List_Items = $ShopItemProperty->shopItemList->listItems->whereIn("id", $modListValues);
+            foreach ($Shop_Item_List_Items as $Shop_Item_List_Item) {
+                $aProperties[$ShopItemProperty->id][] = $Shop_Item_List_Item;
+            }
+        }
+
+        //маска для изображений
+        $imageMask[] = $shopItem->name; 
+        foreach ($ShopItemProperties as $ShopItemProperty) {
+
+            if (isset($aProperties[$ShopItemProperty->id]) && count($aProperties[$ShopItemProperty->id]) > 0) {
+                $aValues = [];
+                foreach ($aProperties[$ShopItemProperty->id] as $Shop_Item_List_Item) {
+                    $aValues[] = $Shop_Item_List_Item->value;
+                }
+                
+                switch ($ShopItemProperty->id) {
+                    case 60:
+                        $imageMask[] = "Цвета: " . implode(", ", $aValues);
+                    break;
+                    case 61:
+                        $imageMask[] = "Размеры: " . implode(", ", $aValues);
+                    break;
+                    default:
+                    $imageMask[] = $ShopItemProperty->name . ": " . implode(", ", $aValues);
+                }
+            }
+        }
+
         $Return = [
             'aModProperties' => $ShopItemProperties,
-            'aModValues' => $modListValues,
+            'aPropertyListItems' => $aProperties,
             'item' => $shopItem,
             'images' => $shopItem->getImages(),
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
             'Comments' => $Comments,
             'Dimensions' => $aDimensions,
-            'shop' => Shop::get()
+            'shop' => Shop::get(),
+            'imageMask' => implode(", ", $imageMask)
         ];
 
         switch ($shopItem::$priceView) {
