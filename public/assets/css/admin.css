@@ -384,3 +384,7 @@
         padding: 0.9689rem 0.5rem;
     }
 }
+
+.auth-page .card {
+    opacity: 0.9;
+}

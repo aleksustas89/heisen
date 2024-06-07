@@ -26,7 +26,7 @@
 
 </head>
 
-<body id="body" class="auth-page" style="background-image: url('/assets/images/p-1.png'); background-size: cover; background-position: center center;">
+<body id="body" class="auth-page" style="background-image: url('/assets/images/admin-bg.jpg'); background-size: cover; background-position: center center;">
    <!-- Log In page -->
     <div class="container-md">
         <div class="row vh-100 d-flex justify-content-center">
