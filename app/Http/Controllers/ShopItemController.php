@@ -93,29 +93,6 @@ class ShopItemController extends Controller
             }
         }
 
-        //маска для изображений
-        $imageMask[] = $shopItem->name; 
-        foreach ($ShopItemProperties as $ShopItemProperty) {
-
-            if (isset($aProperties[$ShopItemProperty->id]) && count($aProperties[$ShopItemProperty->id]) > 0) {
-                $aValues = [];
-                foreach ($aProperties[$ShopItemProperty->id] as $Shop_Item_List_Item) {
-                    $aValues[] = $Shop_Item_List_Item->value;
-                }
-                
-                switch ($ShopItemProperty->id) {
-                    case 60:
-                        $imageMask[] = "Цвета: " . implode(", ", $aValues);
-                    break;
-                    case 61:
-                        $imageMask[] = "Размеры: " . implode(", ", $aValues);
-                    break;
-                    default:
-                    $imageMask[] = $ShopItemProperty->name . ": " . implode(", ", $aValues);
-                }
-            }
-        }
-
         $Return = [
             'aModProperties' => $ShopItemProperties,
             'aPropertyListItems' => $aProperties,
@@ -125,7 +102,7 @@ class ShopItemController extends Controller
             'Comments' => $Comments,
             'Dimensions' => $aDimensions,
             'shop' => Shop::get(),
-            'imageMask' => implode(", ", $imageMask)
+            'imageMask' => $shopItem->name . ", цвет: черный, коричневый, синий, серый, зеленый, бежевый"
         ];
 
         switch ($shopItem::$priceView) {
