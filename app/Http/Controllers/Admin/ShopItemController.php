@@ -21,6 +21,8 @@ use App\Models\PropertyValueFloat;
 use Illuminate\Filesystem\Filesystem;
 use App\Http\Controllers\Admin\SearchController;
 use App\Services\Helpers\File;
+use App\Models\ShopItemAssociatedGroup;
+use App\Models\ShopItemAssociatedItem;
 
 
 class ShopItemController extends Controller
@@ -35,7 +37,7 @@ class ShopItemController extends Controller
         $properties = self::getProperties($parent);
 
         return view('admin.shop.item.create', [
-            'breadcrumbs' => ShopGroupController::breadcrumbs($parent > 0 ? ShopGroup::find($parent) : false, [], true),
+            'breadcrumbs' => ShopGroupController::breadcrumbs($parent > 0 ? ShopGroup::find($parent) : false, [], false),
             'parent_id' => $parent,
             'currencies' => ShopCurrency::orderBy('sorting', 'asc')->get(),
             'properties' => $properties,
@@ -289,6 +291,10 @@ class ShopItemController extends Controller
 
         $SearchController = new SearchController();
         $SearchController->indexingShopItem($shopItem, true);
+
+        if (!is_null($shopGroup = $shopItem->shopGroup)) {
+            $shopGroup->setSubCount();
+        }
         
         $message = "Товар был успешно сохранен!";
 
@@ -425,6 +431,108 @@ class ShopItemController extends Controller
         }
 
         return response()->json(true);
+    }
+
+    
+    public function addAssociated(Request $request, shopItem $shopItem)
+    {
+
+        $ShopItemAssociatedGroups = [];
+        foreach (ShopItemAssociatedGroup::select("shop_group_associated_id")->where("shop_item_id", $shopItem->id)->get() as $ShopItemAssociatedGroup) {
+            $ShopItemAssociatedGroups[] = $ShopItemAssociatedGroup->shop_group_associated_id;
+        }
+
+        $ShopItemAssociatedItems = [];
+        foreach (ShopItemAssociatedItem::select("shop_item_associated_id")->where("shop_item_id", $shopItem->id)->get() as $ShopItemAssociatedItem) {
+            $ShopItemAssociatedItems[] = $ShopItemAssociatedItem->shop_item_associated_id;
+        }
+
+        return response()->view("admin.shop.item.associated.window", [
+            "aShopGroups" => ShopGroup::where("parent_id", $request->shop_group_id ?? 0)->where("active", 1)->get(),
+            "aShopItems" => ShopItem::where("shop_group_id", $request->shop_group_id ?? 0)->where("modification_id", 0)->where("active", 1)->get(),
+            "aShopItem" => ShopItem::find($shopItem->id),
+
+            "ShopItemAssociatedGroups" => $ShopItemAssociatedGroups,
+            "ShopItemAssociatedItems" => $this->shopItemAssociatedItems($shopItem)
+        ]);
+    }
+
+    public function shopItemAssociatedItems(shopItem $shopItem)
+    {
+        $ShopItemAssociatedItems = [];
+        foreach (ShopItemAssociatedItem::select("shop_item_associated_id")->where("shop_item_id", $shopItem->id)->get() as $ShopItemAssociatedItem) {
+            $ShopItemAssociatedItems[] = $ShopItemAssociatedItem->shop_item_associated_id;
+        }
+
+        return $ShopItemAssociatedItems;
+    }
+
+    public function saveAssociated(Request $request, shopItem $shopItem)
+    {
+
+        if (isset($request->associated_groups) && count($request->associated_groups) > 0) {
+            foreach ($request->associated_groups as $group_id) {
+                if (is_null(ShopItemAssociatedGroup::where("shop_item_id", $shopItem->id)->where("shop_group_associated_id", $group_id)->first())) {
+                    $ShopItemAssociatedGroup = new ShopItemAssociatedGroup();
+                    $ShopItemAssociatedGroup->shop_item_id = $shopItem->id;
+                    $ShopItemAssociatedGroup->shop_group_associated_id = $group_id;
+                    $ShopItemAssociatedGroup->save();
+                }
+            }
+        }
+
+        if(isset($request->associated_items) && count($request->associated_items) > 0) {
+            foreach ($request->associated_items as $item_id) {
+                if (is_null(ShopItemAssociatedItem::where("shop_item_id", $shopItem->id)->where("shop_item_associated_id", $item_id)->first())) {
+                    $ShopItemAssociatedItem = new ShopItemAssociatedItem();
+                    $ShopItemAssociatedItem->shop_item_id = $shopItem->id;
+                    $ShopItemAssociatedItem->shop_item_associated_id  = $item_id;
+                    $ShopItemAssociatedItem->save();
+                }
+            }
+        }
+
+        return response()->view("admin.shop.item.associated.list", ["shopItem" => $shopItem]);
+    }
+
+    public function deleteShopItemAssociatedGroup(Request $request, shopItem $shopItem, shopItemAssociatedGroup $shopItemAssociatedGroup)
+    {
+
+        $shopItemAssociatedGroup->delete();
+
+        return response()->view("admin.shop.item.associated.list", ["shopItem" => $shopItem]);
+    }
+
+    public function deleteShopItemAssociatedItem(Request $request, shopItem $shopItem, shopItemAssociatedItem $shopItemAssociatedItem)
+    {
+
+       $shopItemAssociatedItem->delete();
+
+        return response()->view("admin.shop.item.associated.list", ["shopItem" => $shopItem]);
+    }
+
+    public function searchShopItemFromAssosiated(Request $request, shopItem $shopItem) {
+
+        $ShopItems = [];
+
+        if (!empty($term = $request->input('term'))) {
+            $ShopItems = ShopItem::select("shop_items.*")
+                ->where("shop_items.modification_id", 0)
+                ->where(function($query) use ($term) {
+                    $query
+                        ->where("shop_items.name", "LIKE", "%" . $term. "%")
+                        ->orWhere("shop_items.marking", "LIKE", "%" . $term . "%");
+
+                })
+                ->groupBy("shop_items.id")
+                ->get();
+        }
+
+        return response()->view("admin.shop.item.associated.search", [
+            "ShopItems" => $ShopItems,
+            "aShopItem" => $shopItem,
+            "ShopItemAssociatedItems" => $this->shopItemAssociatedItems($shopItem)
+        ]);
     }
 
 }

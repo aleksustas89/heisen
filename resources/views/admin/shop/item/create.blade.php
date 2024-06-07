@@ -51,6 +51,8 @@
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#images" data-bs-toggle="tab" role="tab">Изображения</a></li>
                         <li class="nav-item"><a class="nav-link" href="#description" data-bs-toggle="tab" role="tab">Описание</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#associated" data-bs-toggle="tab" role="tab">Сопутствующие</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#modifications" data-bs-toggle="tab" role="tab">Модификации</a></li>
                         <li class="nav-item"><a class="nav-link" href="#seo" data-bs-toggle="tab" role="tab">SEO</a></li>
                         @if (count($properties) > 0)
                             <li class="nav-item"><a class="nav-link" href="#properties" data-bs-toggle="tab" role="tab">Свойства</a></li>
@@ -211,6 +213,20 @@
                                 <textarea type="text" name="text" class="form-control editor" placeholder="Описание группы"></textarea>
                             </div>
 
+                        </div>
+
+                        <div class="tab-pane" id="associated">
+
+                            <div class="mb-3">
+                                Сохраните товар, чтобы добавлять сопутствующие!
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="modifications">
+
+                            <div class="mb-3">
+                                Сохраните товар, чтобы добавлять модификации!
+                            </div>
                         </div>
 
                         <div class="tab-pane" id="seo">

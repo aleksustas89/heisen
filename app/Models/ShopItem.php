@@ -77,6 +77,16 @@ class ShopItem extends Model
         return $this->hasOne(SearchPage::class);
     }
 
+    public function ShopItemAssociatedGroups()
+    {
+        return $this->hasMany(ShopItemAssociatedGroup::class);
+    }
+
+    public function ShopItemAssociatedItems()
+    {
+        return $this->hasMany(ShopItemAssociatedItem::class);
+    }
+
     public function defaultModification()
     {
 
@@ -270,6 +280,13 @@ class ShopItem extends Model
                 $PropertyValueFloat->delete();
             }
 
+            foreach ($this->ShopItemAssociatedGroups as $ShopItemAssociatedGroup) {
+                $ShopItemAssociatedGroup->delete();
+            }
+
+            foreach ($this->ShopItemAssociatedItems as $ShopItemAssociatedItem) {
+                $ShopItemAssociatedItem->delete();
+            }
 
             $this->deleteDir();
 

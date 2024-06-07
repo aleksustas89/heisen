@@ -170,9 +170,10 @@ class ShopGroupController extends Controller
                 $shopGroup->image_small = $sImageSmallName;
             }
 
-                    
             $shopGroup->save();
         }
+
+        $shopGroup->setSubCount();
 
         $message = "Группа была успешно сохранена!";
 

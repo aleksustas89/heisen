@@ -51,6 +51,7 @@
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#images" data-bs-toggle="tab" role="tab">Изображения</a></li>
                         <li class="nav-item"><a class="nav-link" href="#description" data-bs-toggle="tab" role="tab">Описание</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#associated" data-bs-toggle="tab" role="tab">Сопутствующие</a></li>
                         <li class="nav-item"><a class="nav-link" href="#modifications" data-bs-toggle="tab" role="tab">Модификации</a></li>
                         <li class="nav-item"><a class="nav-link" href="#seo" data-bs-toggle="tab" role="tab">SEO</a></li>
 
@@ -193,6 +194,26 @@
                                         </div>
                                     </div>
 
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane" id="associated">
+
+                            <div class="card">
+
+                                <div class="card-header">
+                                    <button type="button" onclick="Associated.showTab(0, {{ $shopItem->id }})" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-associated">
+                                        <i class="fas fa-plus icon-separator"></i>Добавить сопутствующие
+                                    </button>
+                                </div>
+
+                                <div class="card-body p-0">
+
+                                    <div id="associated-content">
+                                        @include("admin.shop.item.associated.list", ["shopItem" => $shopItem])
+                                    </div>
                                 </div>
                             </div>
 
@@ -597,6 +618,42 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-associated" tabindex="-1" role="dialog" aria-hidden="true">
+    <form class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0">Добавить сопутствующие товары</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div>
+                    <input class="form-control" name="search_associated_by_name" placeholder="Поиск по наванию, id, артикулу" />
+                    <hr>
+
+                    <div>
+                        <div class="text-center spinner-row d-none">
+                            <div class="spinner-border thumb-md text-primary spinner-small" role="status"></div>
+                        </div>
+                        <div id="search_associated_by_name"></div>
+                    </div>
+                </div>
+
+                <div id="modal-associated-result">
+                    <div class="text-center">
+                        <div class="spinner-border thumb-md text-primary spinner-small" role="status"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-de-secondary btn-sm close" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="Associated.saveChanges()">Сохранить изменения</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 @endsection
 
 @section("css")
@@ -611,6 +668,14 @@
 @endsection
 
 @section("js")
+
+    <script>
+        var routeAddAssociated = '{{ route("addAssociated", $shopItem->id) }}',
+            routeSaveAssociated = '{{ route("saveAssociated", $shopItem->id) }}',
+            routeSearchShopItemFromAssosiated = '{{ route("searchShopItemFromAssosiated", $shopItem->id) }}';
+
+    </script>
+
     <script src="/assets/image.js"></script>
     <script src="/assets/pages/file-upload.init.js"></script>
     <script src="/assets/plugins/tobii/tobii.min.js"></script>
@@ -651,6 +716,7 @@
     </script>
 
     @php
+    App\Services\Helpers\File::js('/assets/js/pages/associated.js');
     App\Services\Helpers\File::js('/assets/js/pages/modifications.js');
     @endphp
 @endsection

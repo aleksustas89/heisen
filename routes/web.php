@@ -77,7 +77,9 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
     
                         Route::post('delete/group/{shopItemAssociatedGroup}', 'deleteShopItemAssociatedGroup')->name("deleteShopItemAssociatedGroup");
                         Route::post('delete/item/{shopItemAssociatedItem}', 'deleteShopItemAssociatedItem')->name("deleteShopItemAssociatedItem");
+                        Route::post('search', 'searchShopItemFromAssosiated')->name("searchShopItemFromAssosiated");
                     });
+
                     Route::prefix("shortcut")->group(function() {
                         Route::get('/delete/{shopGroup}', 'ShopItemController@deleteShortcutGroup')->name("deleteShortcutGroup");
                     });

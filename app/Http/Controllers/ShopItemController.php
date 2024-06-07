@@ -12,6 +12,7 @@ use App\Http\Controllers\ShopDiscountController;
 use App\Models\Comment;
 use App\Models\CommentShopItem;
 use App\Models\Shop;
+use App\Models\ShopItemAssociatedItem;
 
 class ShopItemController extends Controller
 {
@@ -102,7 +103,8 @@ class ShopItemController extends Controller
             'Comments' => $Comments,
             'Dimensions' => $aDimensions,
             'shop' => Shop::get(),
-            'imageMask' => $shopItem->name . ", цвет: черный, коричневый, синий, серый, зеленый, бежевый"
+            'imageMask' => $shopItem->name . ", цвет: черный, коричневый, синий, серый, зеленый, бежевый",
+            'ShopItemAssociatedItems' => ShopItem::whereIn("shop_items.id", ShopItemAssociatedItem::select("shop_item_associated_id")->where("shop_item_id", $shopItem->id))->where("active", 1)->get(),
         ];
 
         switch ($shopItem::$priceView) {

@@ -110,14 +110,12 @@
                                                 <td>
                                                 
                                                         <a href="?parent_id={{ $shopGroup->id }}">{{ $shopGroup->name }}</a>
-                                                        @php
-                                                            $subCount = $shopGroup->getChildCount();
-                                                        @endphp
-                                                        @if ($subCount["groupsCount"] > 0)
-                                                            <span class="badge-count btn-primary">{{ $subCount["groupsCount"] }}</span>
+                                                        
+                                                        @if ($shopGroup->subgroups_count > 0)
+                                                            <span class="badge-count btn-primary">{{ $shopGroup->subgroups_count }}</span>
                                                         @endif
-                                                        @if ($subCount["itemsCount"] > 0)
-                                                            <span class="badge-count btn-success">{{ $subCount["itemsCount"] }}</span>
+                                                        @if ($shopGroup->subitems_count > 0)
+                                                            <span class="badge-count btn-success">{{ $shopGroup->subitems_count }}</span>
                                                         @endif
 
                                                         @php

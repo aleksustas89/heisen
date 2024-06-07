@@ -18,6 +18,7 @@
     @php
 
     $client = Auth::guard('client')->user();
+    $clientFavorites = !is_null($client) ? $client->getClientFavorites() : [];
     @endphp
 
 	<div class="uk-section-xsmall uk-padding-remove-top">
@@ -295,102 +296,115 @@
                         </div>
                     </li>
 
-                    
-                    @if ($Comments && count($Comments) > 0)
-                        <li>
-                            <a class="uk-accordion-title">Отзывы <span class="uk-badge">{{ count($Comments) }}</span></a>
-                            <div class="uk-accordion-content">
-
+                    <li>
+                        <a class="uk-accordion-title">Отзывы <span class="uk-badge">{{ count($Comments) }}</span></a>
+                        <div class="uk-accordion-content">
+                            @if ($Comments && count($Comments) > 0)
                                 @foreach ($Comments as $Comment)
-
                                     @include('comment.comment', [
                                         'Comment' => $Comment,
                                         'shopItem' => true,
                                     ])
-                            
                                 @endforeach
-                                                            
-                            </div>
-                        </li>
-                    @endif
+                            @endif
+
+                            <form action="{{ route('saveComment') }}" method="POST" enctype="multipart/form-data">
+
+                                @csrf
+            
+                                <div class="uk-card uk-card-default uk-card-body uk-card-small uk-margin-large-top">
+                                    <div class="uk-h2">Добавить отзыв к товару</div>
+                                    <hr>
+            
+                                    <div class="uk-flex uk-flex-around grade-stars">
+                                        <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                            <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                            плохо
+                                        </span>
+                                        <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                            <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                            так себе
+                                        </span>
+                                        <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                            <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                            нормально
+                                        </span>
+                                        <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                            <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                            хорошо
+                                        </span>
+                                        <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
+                                            <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
+                                            отлично
+                                        </span>
+                                        <input type="hidden" name="grade" value="" />
+                                    </div>
+                                    
+                            
+                                    <div class="uk-margin">
+                                        <label class="uk-form-label" for="form-stacked-text">Тема</label>
+                                        <div class="uk-form-controls">
+                                            <input value="" class="uk-input " name="subject" required="" id="form-stacked-text" type="text" placeholder="Тема">
+                                        </div>
+                                    </div>
+                                                 
+                                    <div class="uk-margin">
+                                        <div class="uk-form-label">Комментарий</div>   
+                                        <textarea required="" name="text" class="uk-textarea" rows="5" placeholder="Комментарий" aria-label="Textarea"></textarea>
+                                    </div>
+            
+                                    <div class="uk-margin">
+                                        <label class="uk-form-label" for="form-stacked-text">Имя, Фамилия</label>
+                                        <div class="uk-form-controls">
+                                            <input required="" value="{{ !is_null($client) ? implode(" ", [$client->name, $client->surname]) : '' }}" class="uk-input" name="author" id="form-stacked-text" type="text" placeholder="Имя, Фамилия">
+                                        </div>
+                                    </div>
+                                    <div class="uk-margin">
+                                        <label class="uk-form-label" for="form-stacked-text">Телефон</label>
+                                        <div class="uk-form-controls">
+                                            <input value="{{ $client->phone ?? '' }}" class="uk-input " name="phone" id="form-stacked-text" type="text" placeholder="Введите телефон...">
+                                        </div>
+                                    </div>
+                                    <div class="uk-margin">
+                                        <label class="uk-form-label" for="form-stacked-text">E-mail</label>
+                                        <div class="uk-form-controls">
+                                            <input value="{{ $client->email ?? '' }}" class="uk-input " name="email" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
+                                        </div>
+                                    </div>
+                                
+                                    <input type="hidden" name="shop_item_id" value="{{ $item->id }}" />
+                                    <div class="uk-text-center uk-margin">
+                                        <button class="uk-button uk-button-primary uk-width-1-1">Оставить отзыв</button>
+                                    </div>  
+                        
+                                </div>
+            
+                            </form>
+
+                        </div>
+                    </li>
 
                 </ul>
 
-                <form action="{{ route('saveComment') }}" method="POST" enctype="multipart/form-data">
 
-                    @csrf
-
-                    <div class="uk-card uk-card-default uk-card-body uk-card-small uk-margin-xlarge-top">
-                        <div class="uk-h2">Добавить отзыв к товару</div>
-                        <hr>
-
-                        <div class="uk-flex uk-flex-around grade-stars">
-                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
-                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
-                                плохо
-                            </span>
-                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
-                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
-                                так себе
-                            </span>
-                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
-                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
-                                нормально
-                            </span>
-                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
-                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
-                                хорошо
-                            </span>
-                            <span class="uk-flex uk-flex-column uk-flex-middle grade-star cursor-pointer">
-                                <span class="uk-icon" uk-icon="icon: star; ratio: 3.5"></span>
-                                отлично
-                            </span>
-                            <input type="hidden" name="grade" value="" />
-                        </div>
-                        
-                
-                        <div class="uk-margin">
-                            <label class="uk-form-label" for="form-stacked-text">Тема</label>
-                            <div class="uk-form-controls">
-                                <input value="" class="uk-input " name="subject" required="" id="form-stacked-text" type="text" placeholder="Тема">
-                            </div>
-                        </div>
-                         	    	
-                        <div class="uk-margin">
-                            <div class="uk-form-label">Комментарий</div>   
-                            <textarea required="" name="text" class="uk-textarea" rows="5" placeholder="Комментарий" aria-label="Textarea"></textarea>
-                        </div>
-
-                        <div class="uk-margin">
-                            <label class="uk-form-label" for="form-stacked-text">Имя, Фамилия</label>
-                            <div class="uk-form-controls">
-                                <input required="" value="{{ !is_null($client) ? implode(" ", [$client->name, $client->surname]) : '' }}" class="uk-input" name="author" id="form-stacked-text" type="text" placeholder="Имя, Фамилия">
-                            </div>
-                        </div>
-                        <div class="uk-margin">
-                            <label class="uk-form-label" for="form-stacked-text">Телефон</label>
-                            <div class="uk-form-controls">
-                                <input value="{{ $client->phone ?? '' }}" class="uk-input " name="phone" id="form-stacked-text" type="text" placeholder="Введите телефон...">
-                            </div>
-                        </div>
-                        <div class="uk-margin">
-                            <label class="uk-form-label" for="form-stacked-text">E-mail</label>
-                            <div class="uk-form-controls">
-                                <input value="{{ $client->email ?? '' }}" class="uk-input " name="email" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
-                            </div>
-                        </div>
-                    
-                        <input type="hidden" name="shop_item_id" value="{{ $item->id }}" />
-                        <div class="uk-text-center uk-margin">
-                            <button class="uk-button uk-button-primary uk-width-1-1">Оставить отзыв</button>
-                        </div>  
-            
-                    </div>
-
-                </form>
 
             </div>
         </div>
+
+        @if (isset($ShopItemAssociatedItems) && count($ShopItemAssociatedItems)>0)
+
+        <h2 class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Сопутствующие товары</h2>
+        <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid=""> 
+            @foreach ($ShopItemAssociatedItems as $ShopItemAssociatedItem)
+                @include('shop.list-item', [
+                    'item' => $ShopItemAssociatedItem,
+                    'client' => $client,
+                    'clientFavorites' => $clientFavorites,
+                ])
+            @endforeach   
+        </div>
+    @endif
+
     </div>
 
 @endsection
