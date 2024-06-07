@@ -28,6 +28,13 @@
         
             <!--сам каталог-->
             <div class="uk-width-expand@m">
+
+                <div>
+                    {!! $group->description !!}
+                </div>
+                <div class="group-text-top uk-hidden">
+                    {!! $group->text !!}
+                </div>
             
                 <div class="uk-h3 uk-text-bold">
                     <div class="uk-inline-block">{{ $group->name }}</div>
@@ -173,9 +180,7 @@
                 @endif
                 <!--пагинация-->
 
-                <div>
-                    {!! $group->text !!}
-                </div>
+                <div class="group-text"></div>
             
             </div>
             <!--сам каталог-->
