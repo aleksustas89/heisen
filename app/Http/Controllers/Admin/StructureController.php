@@ -8,6 +8,7 @@ use App\Models\StructureMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+use App\Models\Page;
 
 class StructureController extends Controller
 {
@@ -157,6 +158,12 @@ class StructureController extends Controller
     {
         if (!$structure) {
             $structure = new Structure();
+            $structure->save();
+
+            $Page = new Page();
+            $Page->type = 0;
+            $Page->entity_id = $structure->id;
+            $Page->save();
         }
 
         if (!empty($request->path)) {

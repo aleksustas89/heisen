@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Route;
 use App\Models\Structure;
 
 class StructureController extends Controller
 {
 
-    static public function show($path, $structure)
+    static public function show($Structure)
     {
 
-        Route::view($path, 'structure', [
-            'structure' => $structure,
-            'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($structure)) 
+        return view('structure', [
+            'structure' => $Structure,
+            'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($Structure)),
         ]);
     }
 

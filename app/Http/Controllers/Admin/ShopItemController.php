@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\SearchController;
 use App\Services\Helpers\File;
 use App\Models\ShopItemAssociatedGroup;
 use App\Models\ShopItemAssociatedItem;
+use App\Models\Page;
 
 
 class ShopItemController extends Controller
@@ -176,6 +177,13 @@ class ShopItemController extends Controller
 
         if (!$shopItem) {
             $shopItem = new ShopItem();
+            $shopItem->save();
+
+            $Page = new Page();
+            $Page->type = 2;
+            $Page->entity_id = $shopItem->id;
+            $Page->save();
+
         } else {
 
             if ($request->shop_group_id != $shopItem->shop_group_id) {

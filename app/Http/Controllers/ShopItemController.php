@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Route;
 use App\Models\ShopItemProperty;
 use App\Models\PropertyValueInt;
 use Illuminate\Http\Request;
@@ -30,7 +29,7 @@ class ShopItemController extends Controller
         }
     }
 
-    static public function show($path, $shopItem)
+    static public function show($shopItem)
     {
         $ShopItemProperties = ShopItemProperty::select("shop_item_properties.*")
                                     ->join("property_value_ints", "property_value_ints.property_id", "=", "shop_item_properties.id")
@@ -130,7 +129,7 @@ class ShopItemController extends Controller
             break;
         }
 
-        Route::view($path, 'shop/item', $Return);
+        return view('shop/item', $Return);
     }
 
     static public function shopItemValues($shopItem) : array

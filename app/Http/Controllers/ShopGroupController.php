@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Route;
 use App\Models\ShopGroup;
 use App\Models\ShopItem;
 use App\Models\Shop;
@@ -75,7 +74,7 @@ class ShopGroupController extends Controller
 
     }
 
-    static public function show($path, $shopGroup)
+    static public function show($shopGroup)
     {
 
         $oShop = Shop::get();
@@ -95,13 +94,13 @@ class ShopGroupController extends Controller
 
         $oShopItems = self::prepareItems($shopGroup);
         
-        Route::view($path, 'shop/group', [
+        return view('shop/group', [
             'shop' => $oShop,
             'group' => $shopGroup,
             'SubGroups' => ShopGroup::where("parent_id", $shopGroup->id)->where("active", 1)->get(),
             'items' => $oShopItems->paginate($oShop->items_on_page),
             'properties' => ShopItemController::getProperties($shopGroup->id, 4, true),
-            'path' => "/" . $path,
+            'path' => $shopGroup->url,
             'filterProperties' => $aProperties,
             'sorting' => $sorting,
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopGroup, [], false))
