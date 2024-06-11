@@ -163,7 +163,7 @@
 
         <h2 class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Новинки</h2>
 
-        <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
+        <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="" itemscope itemtype="https://schema.org/OfferCatalog">
 
             @foreach ($newItems as $item)
                 @include('shop.list-item', ['item' => $item])

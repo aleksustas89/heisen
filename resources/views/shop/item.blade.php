@@ -21,7 +21,7 @@
     $clientFavorites = !is_null($client) ? $client->getClientFavorites() : [];
     @endphp
 
-	<div class="uk-section-xsmall uk-padding-remove-top">
+	<div class="uk-section-xsmall uk-padding-remove-top" itemscope itemtype="http://schema.org/Product">
         <div uk-grid>
             @if (count($images) > 0)
                 <div class="uk-width-1-2@m">
@@ -32,7 +32,7 @@
                                     @if (isset($image['image_large']))
                                         <li id="uk-slide-{{$k}}">
                                             <a href="{{ $image['image_large'] }}">
-                                                <img alt="{{ $item->name }}" title="{{ $imageMask }}" uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" alt="" uk-cover>
+                                                <img itemprop="image" alt="{{ $item->name }}" title="{{ $imageMask }}" uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" alt="" uk-cover>
                                             </a>
                                         </li>
                                     @endif
@@ -81,17 +81,20 @@
                 <div class="uk-margin">
                     <a class="el-content uk-link-text" href="{{ $item->ShopGroup->url }}">{{ $item->ShopGroup->name }}</a>   
                 </div>
-                @if (isset($Modification))
-                    <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical">{{ $Modification->name }}</h1>
-                @else
-                    <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical">{{ $item->name }}</h1>
-                @endif
+
+                <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical" itemprop="name">
+                    @if (isset($Modification))
+                        {{ $Modification->name }}
+                    @else
+                        {{ $item->name }}
+                    @endif
+                </h1>
                 
 
-                <div class="uk-h3 uk-margin uk-margin-top"> 
+                <div class="uk-h3 uk-margin uk-margin-top" itemprop="offers" itemscope itemtype="http://schema.org/Offer"> 
 
                     @if (isset($prices) && count($prices) > 1)
-                        <span id="item-price">
+                        <span itemprop="price" id="item-price">
                             {{ App\Services\Helpers\Str::price(min($prices)) }} - {{ App\Services\Helpers\Str::price(max($prices)) }}
                         </span>
                         <span class="item-old-price" id="item-old-price">
@@ -100,10 +103,10 @@
                             @endif
                         </span>
                     @elseif(isset($Modification))
-                        <span id="item-price">{{ App\Services\Helpers\Str::price($Modification->price()) }}</span> 
+                        <span itemprop="price" id="item-price">{{ App\Services\Helpers\Str::price($Modification->price()) }}</span> 
                         <span class="item-old-price" id="item-old-price">{{ App\Services\Helpers\Str::price($Modification->oldPrice()) }}</span>
                     @else 
-                        <span id="item-price">{{ App\Services\Helpers\Str::price($item->price()) }}</span> 
+                        <span itemprop="price" id="item-price">{{ App\Services\Helpers\Str::price($item->price()) }}</span> 
                         <span class="item-old-price" id="item-old-price">{{ App\Services\Helpers\Str::price($item->oldPrice()) }}</span>
                     @endif
 
@@ -111,7 +114,8 @@
                         $oCurrency = $item->ShopCurrency;
                     @endphp
 
-                    {{ !is_null($oCurrency) ? $oCurrency->code : '' }}
+                    <span itemprop="priceCurrency">{{ !is_null($oCurrency) ? $oCurrency->code : '' }}</span>
+
                 </div>
     
                 <form id="add_to_cart">   
@@ -227,7 +231,7 @@
                     @if (!empty($item->description))
                         <li>
                             <a class="uk-accordion-title">Описание</a>
-                            <div class="uk-accordion-content">
+                            <div class="uk-accordion-content" itemprop="description">
                                 {!! $item->description !!}
                             </div>
                         </li>
@@ -393,17 +397,17 @@
 
         @if (isset($ShopItemAssociatedItems) && count($ShopItemAssociatedItems)>0)
 
-        <h2 class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Сопутствующие товары</h2>
-        <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid=""> 
-            @foreach ($ShopItemAssociatedItems as $ShopItemAssociatedItem)
-                @include('shop.list-item', [
-                    'item' => $ShopItemAssociatedItem,
-                    'client' => $client,
-                    'clientFavorites' => $clientFavorites,
-                ])
-            @endforeach   
-        </div>
-    @endif
+            <h2 class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Сопутствующие товары</h2>
+            <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="" itemscope itemtype="https://schema.org/OfferCatalog"> 
+                @foreach ($ShopItemAssociatedItems as $ShopItemAssociatedItem)
+                    @include('shop.list-item', [
+                        'item' => $ShopItemAssociatedItem,
+                        'client' => $client,
+                        'clientFavorites' => $clientFavorites,
+                    ])
+                @endforeach   
+            </div>
+        @endif
 
     </div>
 

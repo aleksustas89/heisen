@@ -27,13 +27,12 @@
             @endphp
         
             <!--сам каталог-->
-            <div class="uk-width-expand@m">
+            <div class="uk-width-expand@m" itemscope itemtype="https://schema.org/OfferCatalog">
 
                 <div>
                     {!! $group->description !!}
                 </div>
-                <div class="group-text-top uk-hidden">
-                    
+                <div class="group-text-top uk-hidden" itemprop="description">
                     @if ($shopFilter)
                         {!! $shopFilter->text !!}
                     @else 
@@ -42,7 +41,7 @@
                 </div>
             
                 <div class="uk-h3 uk-text-bold">
-                    <div class="uk-inline-block">{{ $group->name }}</div>
+                    <div class="uk-inline-block" itemprop="name">{{ $group->name }}</div>
                     @if (count($properties) > 0)
                         <button class="uk-button uk-button-default filter-btn" type="button" uk-toggle="target: #filter">
                             Фильтрация@if (isset($filterProperties) && $countProperties > 0):
@@ -160,8 +159,6 @@
                 @endif
                 
                 <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
-
- 
 
                     @php
                         $client = Auth::guard('client')->user();

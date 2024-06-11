@@ -17,7 +17,7 @@
             
                 <div class="uk-h3 uk-text-bold">Товары с скидками</div>
             
-                <div class="uk-child-width-1-5@s uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="">
+                <div class="uk-child-width-1-5@s uk-child-width-1-2 uk-grid-small uk-grid items" uk-grid="" itemscope itemtype="https://schema.org/OfferCatalog">
 
                     @php
                         $client = Auth::guard('client')->user();

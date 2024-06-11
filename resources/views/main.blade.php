@@ -270,12 +270,22 @@
                 @if (isset($breadcrumbs) && count($breadcrumbs) > 0)
                     <div class="uk-section-small uk-padding-remove-bottom">
                         <nav aria-label="Breadcrumb">
-                            <ul class="uk-breadcrumb">
-                                @foreach ($breadcrumbs as $breadcrumb)
+                            <ul class="uk-breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+                                @foreach ($breadcrumbs as $key => $breadcrumb)
                                     @if (!empty($breadcrumb["url"]))
-                                        <li><a href="{{ $breadcrumb["url"] }}">{{ $breadcrumb["name"] }}</a></li>
+                                        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                                            <a itemprop="item" href="{{ $breadcrumb["url"] }}">
+                                                <span itemprop="name">{{ $breadcrumb["name"] }}</span>
+                                            </a>
+                                            <meta itemprop="position" content="{{ $key + 1 }}" />
+                                        </li>
                                     @else 
-                                        <li><span>{{ $breadcrumb["name"] }}</span></li>
+                                        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                                            <span itemprop="item">
+                                                <span itemprop="name">{{ $breadcrumb["name"] }}</span>
+                                            </span>
+                                            <meta itemprop="position" content="{{ $key + 1 }}" />
+                                        </li>
                                     @endif
                                 @endforeach
                             </ul>

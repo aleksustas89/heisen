@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: https://ogp.me/ns/article#">
     <head>
         <title>@yield('seo_title')</title>
         <meta name="keywords" content="@yield('seo_keywords')">

@@ -16,7 +16,7 @@
 
             @if ($shopItems)
 
-                <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
+                <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="" itemscope itemtype="https://schema.org/OfferCatalog">
                     @foreach ($shopItems as $item)
                         @include('shop.list-item', [
                             'item' => $item,
