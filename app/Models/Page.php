@@ -24,7 +24,7 @@ class Page extends Model
      * 3: informationsystem
      * 4: informationsystem_group
      * 5: informationsystem_item
-     * 6: shop filters
+     * 6: shop_filters
     */
 
     public function ShopItem()
@@ -50,6 +50,11 @@ class Page extends Model
     public function Structure()
     {
         return $this->belongsTo(Structure::class, 'entity_id');
+    }
+
+    public function ShopFilter()
+    {
+        return $this->belongsTo(ShopFilter::class, 'entity_id');
     }
 
 }

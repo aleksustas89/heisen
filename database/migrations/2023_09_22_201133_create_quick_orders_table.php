@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop_quick_orders', function (Blueprint $table) {
-            $table->id();
-            $table->string("name")->nullable();
-            $table->string("phone")->nullable();
-            $table->integer('shop_item_id')->default(0);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('shop_quick_orders')) {
+            Schema::create('shop_quick_orders', function (Blueprint $table) {
+                $table->id();
+                $table->string("name")->nullable();
+                $table->string("phone")->nullable();
+                $table->integer('shop_item_id')->default(0);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cdek_cities', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->integer('cdek_region_id')->index();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('cdek_cities')) {
+            Schema::create('cdek_cities', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->integer('cdek_region_id')->index();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

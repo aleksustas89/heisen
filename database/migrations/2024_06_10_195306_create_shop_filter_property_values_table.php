@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('ukassas')) {
-            Schema::create('ukassas', function (Blueprint $table) {
-                $table->id();
-                $table->integer("shop_id");
-                $table->string("token", 255);
-                $table->timestamps();
-            });
-        }
+        Schema::create('shop_filter_property_values', function (Blueprint $table) {
+            $table->id();
+            $table->integer('property_id')->index();
+            $table->integer('shop_group_id')->index();
+            $table->integer('value')->index();
+        });
     }
 
     /**
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ukassas');
+        Schema::dropIfExists('shop_filter_property_values');
     }
 };

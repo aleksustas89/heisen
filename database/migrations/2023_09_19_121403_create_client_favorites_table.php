@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('client_favorites', function (Blueprint $table) {
-            $table->id();
-            $table->integer("client_id");
-            $table->integer("shop_item_id");
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('client_favorites')) {
+            Schema::create('client_favorites', function (Blueprint $table) {
+                $table->id();
+                $table->integer("client_id");
+                $table->integer("shop_item_id");
+                $table->timestamps();
+            });
+        }
     }
 
     /**

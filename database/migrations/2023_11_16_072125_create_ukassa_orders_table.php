@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ukassa_orders', function (Blueprint $table) {
-            $table->id();
-            $table->integer("shop_order_id")->index()->unique();
-            $table->string("ukassa_result_uuid", 255);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('ukassa_orders')) {
+            Schema::create('ukassa_orders', function (Blueprint $table) {
+                $table->id();
+                $table->integer("shop_order_id")->index()->unique();
+                $table->string("ukassa_result_uuid", 255);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

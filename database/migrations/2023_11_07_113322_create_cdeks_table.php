@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cdeks', function (Blueprint $table) {
-            $table->id();
-            $table->string("client_id", 255);
-            $table->string("client_secret", 255);
-            $table->text("token");
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('cdeks')) {
+            Schema::create('cdeks', function (Blueprint $table) {
+                $table->id();
+                $table->string("client_id", 255);
+                $table->string("client_secret", 255);
+                $table->text("token");
+                $table->timestamps();
+            });
+        }
     }
 
     /**

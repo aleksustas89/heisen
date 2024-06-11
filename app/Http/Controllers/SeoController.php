@@ -6,12 +6,14 @@ namespace App\Http\Controllers;
 class SeoController extends Controller
 {
 
-    public static function showGroupTitle($shop, $ShopGroup)
+    public static function showGroupTitle($shop, $ShopGroup, $shopFilter = false)
     {
 
         $result = '';
 
-        if (!empty($ShopGroup->seo_title)) {
+        if ($shopFilter) {
+            $result = $shopFilter->seo_title;
+        } else if (!empty($ShopGroup->seo_title)) {
             $result = $ShopGroup->seo_title;
         } else if (!empty($shop->seo_group_title_template)) {
             $result = self::replace($shop->seo_group_title_template, ["{group.name}"], [$ShopGroup->name]);
@@ -22,16 +24,30 @@ class SeoController extends Controller
         echo $result;
     }
 
-    public static function showGroupDescription($shop, $ShopGroup)
+    public static function showGroupDescription($shop, $ShopGroup, $shopFilter = false)
     {
 
         $result = '';
-
-        if (!empty($ShopGroup->seo_description)) {
+        if ($shopFilter) {
+            $result = $shopFilter->seo_description;
+        } else if (!empty($ShopGroup->seo_description)) {
             $result = $ShopGroup->seo_description;
         } else if (!empty($shop->seo_group_description_template)) {
             $result = self::replace($shop->seo_group_description_template, ["{group.name}"], [$ShopGroup->name]);
         } 
+
+        echo $result;
+    }
+
+    public static function showGroupKeywords($shop, $ShopGroup, $shopFilter = false)
+    {
+
+        $result = '';
+        if ($shopFilter) {
+            $result = $shopFilter->seo_keywords;
+        } else if (!empty($ShopGroup->seo_keywords)) {
+            $result = $ShopGroup->seo_keywords;
+        }
 
         echo $result;
     }

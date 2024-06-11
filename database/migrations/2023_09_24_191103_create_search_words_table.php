@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('search_words', function (Blueprint $table) {
-            $table->id();
-            $table->integer('hash')->index('hash')->default(0);
-            $table->integer('search_page_id')->index('search_page_id')->default(0);
-            $table->float('weight')->default(0); 
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('search_words')) {
+            Schema::create('search_words', function (Blueprint $table) {
+                $table->id();
+                $table->integer('hash')->index('hash')->default(0);
+                $table->integer('search_page_id')->index('search_page_id')->default(0);
+                $table->float('weight')->default(0); 
+                $table->timestamps();
+            });
+        }
     }
 
     /**

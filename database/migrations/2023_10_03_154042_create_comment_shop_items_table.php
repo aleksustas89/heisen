@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comment_shop_items', function (Blueprint $table) {
-            $table->id();
-            $table->integer('comment_id')->index();
-            $table->integer('shop_item_id')->index();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('comment_shop_items')) {
+            Schema::create('comment_shop_items', function (Blueprint $table) {
+                $table->id();
+                $table->integer('comment_id')->index();
+                $table->integer('shop_item_id')->index();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cdek_orders', function (Blueprint $table) {
-            $table->id();
-            $table->integer("shop_order_id")->index();
-            $table->string("uuid", 100);
-            $table->string("receipt_uuid", 100);
-            $table->string("url", 255);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('cdek_orders')) {
+            Schema::create('cdek_orders', function (Blueprint $table) {
+                $table->id();
+                $table->integer("shop_order_id")->index();
+                $table->string("uuid", 100);
+                $table->string("receipt_uuid", 100);
+                $table->string("url", 255);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

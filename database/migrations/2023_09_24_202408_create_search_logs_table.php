@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('search_logs', function (Blueprint $table) {
-            $table->id();
-            $table->string('query')->nullable(); 
-            $table->string('ip', 46); 
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('search_logs')) {
+            Schema::create('search_logs', function (Blueprint $table) {
+                $table->id();
+                $table->string('query')->nullable(); 
+                $table->string('ip', 46); 
+                $table->timestamps();
+            });
+        }
+
     }
 
     /**

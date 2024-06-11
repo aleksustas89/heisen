@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cdek_tariff_codes', function (Blueprint $table) {
-            $table->id();
-            $table->string("name", 255);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('cdek_tariff_codes')) {
+            Schema::create('cdek_tariff_codes', function (Blueprint $table) {
+                $table->id();
+                $table->string("name", 255);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

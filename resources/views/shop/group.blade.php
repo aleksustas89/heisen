@@ -1,8 +1,8 @@
 @extends('main')
 
-@section('seo_title'){{ \App\Http\Controllers\SeoController::showGroupTitle($shop, $group) }}@endsection
-@section('seo_description'){{ \App\Http\Controllers\SeoController::showGroupDescription($shop, $group) }}@endsection
-@section('seo_keywords', $group->seo_keywords)
+@section('seo_title'){{ \App\Http\Controllers\SeoController::showGroupTitle($shop, $group, $shopFilter) }}@endsection
+@section('seo_description'){{ \App\Http\Controllers\SeoController::showGroupDescription($shop, $group, $shopFilter) }}@endsection
+@section('seo_keywords'){{ \App\Http\Controllers\SeoController::showGroupKeywords($shop, $group, $shopFilter) }}@endsection
 
 @section('canonical')
 
@@ -33,7 +33,12 @@
                     {!! $group->description !!}
                 </div>
                 <div class="group-text-top uk-hidden">
-                    {!! $group->text !!}
+                    
+                    @if ($shopFilter)
+                        {!! $shopFilter->text !!}
+                    @else 
+                        {!! $group->text !!}
+                    @endif
                 </div>
             
                 <div class="uk-h3 uk-text-bold">

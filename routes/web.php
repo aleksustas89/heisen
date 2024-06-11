@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Schema;
 */
 
 
-/* админка */
 Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' => 'App\Http\Controllers\Admin'], function() {
     
     Route::middleware(['role:admin'])->prefix("admin")->group(function() {
@@ -45,6 +44,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
             'language' => 'LanguageController',
             'shop.shop-payment-system' => 'ShopPaymentSystemController',
             'cdek-sender' => 'CdekSenderController',
+            'shop.shop-filter' => 'ShopFilterController',
         ]);
 
         Route::resource('shop.shop-price', App\Http\Controllers\Admin\ShopPriceController::class)->only(['index', 'update']);
@@ -125,7 +125,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::post('logout', 'LoginController@logout')->name('logout');
     });
 });
-/*если админ не авторизован*/
+
 Route::get('/admin/login', [App\Http\Controllers\Admin\LoginController::class, 'index'])->name('admin_login_form');
 Route::post('/admin/login', [App\Http\Controllers\Admin\LoginController::class, 'login'])->name('admin_login_action');
 
@@ -148,8 +148,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
     });
 });
 
-
-$sCurrentPath = request()->path();
 
 if (Schema::hasTable('shops')) {
  

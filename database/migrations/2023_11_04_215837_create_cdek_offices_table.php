@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cdek_offices', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 16);
-            $table->string('name');
-            $table->string('uuid', 100);
-            $table->string('work_time');
-            $table->integer('cdek_region_id')->index();
-            $table->integer('cdek_city_id')->index();
-            $table->float('longitude')->default(0);
-            $table->float('latitude')->default(0);
-            $table->float('weight_min')->default(0);
-            $table->float('weight_max')->default(0);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('cdek_offices')) {
+            Schema::create('cdek_offices', function (Blueprint $table) {
+                $table->id();
+                $table->string('code', 16);
+                $table->string('name');
+                $table->string('uuid', 100);
+                $table->string('work_time');
+                $table->integer('cdek_region_id')->index();
+                $table->integer('cdek_city_id')->index();
+                $table->float('longitude')->default(0);
+                $table->float('latitude')->default(0);
+                $table->float('weight_min')->default(0);
+                $table->float('weight_max')->default(0);
+                $table->timestamps();
+            });
+        }
     }
 
     /**

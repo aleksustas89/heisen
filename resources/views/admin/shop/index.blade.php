@@ -61,6 +61,7 @@
                             <a class="dropdown-item" href="{{ route('shop.shop-delivery.index', ['shop' => $shop->id]) }}">Доставка</a>
                             <a class="dropdown-item" href="{{ route('shop.shop-payment-system.index', ['shop' => $shop->id]) }}">Платежные системы</a>
                             <a class="dropdown-item" href="{{ route('cdek-sender.edit', 1) }}">Cdek</a>
+                            <a class="dropdown-item" href="{{ route('shop.shop-filter.index', ['shop' => $shop->id]) }}">Статические фильтры</a>
                         </div>
 
                         <div>

@@ -14,7 +14,7 @@ use App\Services\Helpers\Str;
 class ShopGroupController extends Controller
 {
 
-    static public function prepareItems($shopGroup)
+    static public function prepareItems($shopGroup, $ShopFilter = false)
     {
 
         if($groups = self::getChildGroups($shopGroup->id)) {
@@ -22,7 +22,8 @@ class ShopGroupController extends Controller
         }  else {
             $groups = [$shopGroup->id];
         }
-        $aProperties = self::getProperties();
+
+        $aProperties = self::getProperties($ShopFilter);
 
         $aShopItems = ShopItem::select('shop_items.*')->whereIn("shop_items.shop_group_id", $groups)->where("active", 1);
 
@@ -44,16 +45,12 @@ class ShopGroupController extends Controller
 
         }
 
-        $sorting = Arr::get($_REQUEST, 'sorting', 0);
-
-        switch ($sorting) {
-            case 'old':
+        switch ($ShopFilter ? $ShopFilter->sorting : Arr::get($_REQUEST, 'sorting', 0)) {
+            case 1:
                 $aShopItems->orderBy('created_at', 'ASC');
-                $sorting = 'old';
             break;
             default:
                 $aShopItems->orderBy('created_at', 'DESC');
-                $sorting = 'new';
             break;
         }
 
@@ -74,7 +71,7 @@ class ShopGroupController extends Controller
 
     }
 
-    static public function show($shopGroup)
+    static public function show($shopGroup, $ShopFilter = false)
     {
 
         $oShop = Shop::get();
@@ -90,9 +87,9 @@ class ShopGroupController extends Controller
             break;
         }
 
-        $aProperties = self::getProperties();
+        $aProperties = self::getProperties($ShopFilter);
 
-        $oShopItems = self::prepareItems($shopGroup);
+        $oShopItems = self::prepareItems($shopGroup, $ShopFilter);
         
         return view('shop/group', [
             'shop' => $oShop,
@@ -103,22 +100,33 @@ class ShopGroupController extends Controller
             'path' => $shopGroup->url,
             'filterProperties' => $aProperties,
             'sorting' => $sorting,
-            'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopGroup, [], false))
+            'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopGroup, [], false)),
+            'shopFilter' => $ShopFilter
         ]);
         
         
     }
 
-    public static function getProperties()
+    public static function getProperties($ShopFilter = false)
     {
         $aProperties = [];
-        foreach ($_REQUEST as $k => $value) {
-            if (substr($k, 0, 8) == 'property') {
-                $e = explode("_", $k);
-                $aProperties[$e[1]][] = $e[2];
+
+        if (!$ShopFilter) {
+            foreach ($_REQUEST as $k => $value) {
+                if (substr($k, 0, 8) == 'property') {
+                    $e = explode("_", $k);
+                    $aProperties[$e[1]][] = $e[2];
+                }
+            }
+        } else {
+
+            foreach ($ShopFilter->ShopFilterPropertyValues as $ShopFilterPropertyValue) {
+                $aProperties[$ShopFilterPropertyValue->property_id][] = $ShopFilterPropertyValue->value;
             }
         }
 
+        
+        
         return $aProperties;
     }
 

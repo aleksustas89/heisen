@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('search_pages', function (Blueprint $table) {
-            $table->id();
-            $table->integer('shop_item_id')->index("shop_item_id"); 
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('search_pages')) {
+            Schema::create('search_pages', function (Blueprint $table) {
+                $table->id();
+                $table->integer('shop_item_id')->index("shop_item_id"); 
+                $table->timestamps();
+            });
+        }
     }
 
     /**

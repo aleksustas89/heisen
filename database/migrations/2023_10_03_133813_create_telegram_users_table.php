@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('telegram_users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->integer('telegram_chat_id')->index();
-            $table->integer('user_id')->index();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('telegram_users')) {
+            Schema::create('telegram_users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->integer('telegram_chat_id')->index();
+                $table->integer('user_id')->index();
+                $table->timestamps();
+            });
+        }
+
     }
 
     /**

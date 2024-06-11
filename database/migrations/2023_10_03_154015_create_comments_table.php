@@ -11,21 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
-            $table->id();
-            $table->integer('parent_id');
-            $table->string('subject')->nullable();
-            $table->mediumText('text')->nullable();
-            $table->string('author')->nullable();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->tinyInteger('grade')->default(0)->nullable();
-            $table->integer('client_id')->default(0)->nullable();
-            $table->integer('user_id')->default(0)->nullable();
-            $table->tinyInteger('active')->default(0);
-             
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('comments')) {
+            Schema::create('comments', function (Blueprint $table) {
+                $table->id();
+                $table->integer('parent_id');
+                $table->string('subject')->nullable();
+                $table->mediumText('text')->nullable();
+                $table->string('author')->nullable();
+                $table->string('email')->nullable();
+                $table->string('phone')->nullable();
+                $table->tinyInteger('grade')->default(0)->nullable();
+                $table->integer('client_id')->default(0)->nullable();
+                $table->integer('user_id')->default(0)->nullable();
+                $table->tinyInteger('active')->default(0);
+                
+                $table->timestamps();
+            });
+        }
     }
 
     /**

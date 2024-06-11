@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('telegrams', function (Blueprint $table) {
-            $table->id();
-            $table->string('name'); 
-            $table->string('token', 255); 
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('telegrams')) {
+            Schema::create('telegrams', function (Blueprint $table) {
+                $table->id();
+                $table->string('name'); 
+                $table->string('token', 255); 
+                $table->timestamps();
+            });
+        }
     }
 
     /**

@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cdek_dimensions', function (Blueprint $table) {
-            $table->id();
-            $table->decimal("weight", 12, 2);
-            $table->decimal("length", 12, 2);
-            $table->decimal("width", 12, 2);
-            $table->decimal("height", 12, 2);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('cdek_dimensions')) {
+            Schema::create('cdek_dimensions', function (Blueprint $table) {
+                $table->id();
+                $table->decimal("weight", 12, 2);
+                $table->decimal("length", 12, 2);
+                $table->decimal("width", 12, 2);
+                $table->decimal("height", 12, 2);
+                $table->timestamps();
+            });
+        }
     }
 
     /**
