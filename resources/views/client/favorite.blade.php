@@ -4,6 +4,10 @@
 @section('seo_description', '')
 @section('seo_keywords', '')
 
+@section('robots')
+    {{ \App\Http\Controllers\SeoController::robots(['nofollow', 'noindex']) }}
+@endsection
+
 @section('content')
 
 <div class="uk-section-default uk-section uk-section-small">

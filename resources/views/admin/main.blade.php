@@ -14,6 +14,7 @@
         <link href="{{ asset('/assets/css/admin.css') }}" rel="stylesheet" type="text/css" />
         <script src="{{ asset('/assets/plugins/jquery/jquery.min.js') }}"></script>
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="robots" content="nofollow, noindex" />
     </head>
 
     <body id="body" class="dark-sidebar">

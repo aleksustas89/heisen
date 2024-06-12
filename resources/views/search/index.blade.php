@@ -2,6 +2,10 @@
 
 @section('seo_title', "Поиск по сайту")
 
+@section('robots')
+    {{ \App\Http\Controllers\SeoController::robots(['follow', 'noindex']) }}
+@endsection
+
 @section('content')
 
     <div class="uk-section-xsmall tm-tovar">

@@ -10,6 +10,11 @@
 
 @endsection
 
+@section('robots')
+
+    {{ \App\Http\Controllers\SeoController::robots(request()->sorting ? ['nofollow', 'noindex'] : ['follow', 'index']) }}
+@endsection
+
 @section('content')
 
     <div class="uk-section-xsmall tm-tovar">

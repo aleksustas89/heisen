@@ -110,4 +110,14 @@ class SeoController extends Controller
     {
         return str_replace($search, $replace, $str);
     }
+
+    public static function robots($aResult)
+    {
+
+        if (count($aResult) > 0) {
+            echo '<meta name="robots" content="' . implode(", ", $aResult) . '" />';
+        }
+
+        echo '';
+    }
 }

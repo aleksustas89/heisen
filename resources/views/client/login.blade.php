@@ -4,6 +4,10 @@
 @section('seo_description', '')
 @section('seo_keywords', '')
 
+@section('robots')
+    {{ \App\Http\Controllers\SeoController::robots(['follow', 'index']) }}
+@endsection
+
 @section('content')
 
 <div class="uk-section-default uk-section uk-section-small">

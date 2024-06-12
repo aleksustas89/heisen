@@ -63,6 +63,8 @@
 
         @yield('canonical')
 
+        @yield('robots')
+
     </head>
     <body>
     

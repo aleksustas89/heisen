@@ -13,6 +13,10 @@
     @endif
 @endsection
 
+@section('robots')
+    {{ \App\Http\Controllers\SeoController::robots(['follow', 'index']) }}
+@endsection
+
 @section('content')
 
     @php
