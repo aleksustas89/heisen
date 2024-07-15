@@ -83,6 +83,15 @@
                                 </select>
                             </div>
 
+                            <div class="mb-5">
+                                <label class="mb-1">Дополнительные группы</label>
+                                <input type="text" name="shortcut_group_id" class="form-control" placeholder="Пожалуйста, введите еще хотя бы 2 символа">
+                                <div class="shortcut_groups position-absolute">
+
+                                    @include("admin.shop.shortcuts", ["shopItem" => $shopItem])
+                                </div>
+                            </div>
+
                             <div class="row mb-3">
                                 <div class="col-4">
                                     <label class="mb-1">Сортировка</label>
@@ -90,7 +99,8 @@
                                 </div>
                                 <div class="col-4">
                                     <label class="mb-1">Артикул</label>
-                                    <input type="text" value="{{ $shopItem->marking }}" name="marking" class="form-control" placeholder="Артикул">
+                                    <input id="marking" value="{{ $shopItem->marking }}" type="text" name="marking" class="form-control" placeholder="Артикул" data-min="1"  data-max="255" data-required="1">
+                                    <div id="marking_error" class="fieldcheck-error"></div>
                                 </div>
                                 <div class="col-4">
                                     <label class="mb-1">Путь</label>
@@ -224,9 +234,9 @@
                             <div class="file-box-content mb-3 d-flex flex-wrap" id="sortContainer">
 
                                 @foreach ($images as $k => $image)
-                                    <div class="file-box d-flex align-items-center justify-content-center sortable" id="{{ $k }}">
+                                    <div class="file-box d-flex align-items-center justify-content-center sortable" id="admin_image_{{ $k }}">
 
-                                        <a href="javascript:void(0)" onclick="if(confirm('Вы действительно хотите удалить изображение?')) {adminImage.remove({{ $k }})}">
+                                        <a href="javascript:void(0)" onclick="if(confirm('Вы действительно хотите удалить изображение?')) {adminImage.remove('{{ route('deleteShopItemImage', ['shopItem' => $shopItem->id, 'shopItemImage'=> $k]) }}', {{ $k }})}">
                                             <i class="las la-times file-close-icon"></i>
                                         </a>
 
@@ -686,7 +696,10 @@
     <script>
         const tobii = new Tobii();
 
-        var routeSearchCanonical = '{{ route("SearchCanonical", $shopItem->id) }}';
+        var routeSearchCanonical = '{{ route("SearchCanonical", $shopItem->id) }}',
+            routeGroupShortcut = '{{ route("getShortcutGroup") }}' + '?shop_group_id=' + {{ $shopItem->shop_group_id }},
+            BadgeClasses = [@foreach($BadgeClasses as $k => $BadgeClasse)'{{$BadgeClasse}}'@if($k < count($BadgeClasses)-1),@endif @endforeach];
+
         
         $(function() {
             $('#sortContainer').sortable({
@@ -716,6 +729,7 @@
     </script>
 
     @php
+    App\Services\Helpers\File::js('/assets/js/shortcut.js');
     App\Services\Helpers\File::js('/assets/js/pages/associated.js');
     App\Services\Helpers\File::js('/assets/js/pages/modifications.js');
     @endphp

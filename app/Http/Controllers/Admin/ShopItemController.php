@@ -24,6 +24,8 @@ use App\Services\Helpers\File;
 use App\Models\ShopItemAssociatedGroup;
 use App\Models\ShopItemAssociatedItem;
 use App\Models\Page;
+use App\Models\ShopItemShortcut;
+use App\Http\Controllers\Admin\ModificationController;
 
 
 class ShopItemController extends Controller
@@ -44,6 +46,7 @@ class ShopItemController extends Controller
             'properties' => $properties,
             'lists' => self::getListItems($properties),
             'shop' => $shop,
+            "BadgeClasses" => \App\Models\ShopItemShortcut::$BadgeClasses
         ]);
     }
 
@@ -111,7 +114,8 @@ class ShopItemController extends Controller
             'lists' => self::getListItems($properties),
             'shop' => $shop,
             "mShopItems" => ShopItem::where("modification_id", $shopItem->id)->get(),
-            "canonicalName" => !is_null($canonicalShopItem) ? $canonicalShopItem->name ." [". $canonicalShopItem->id ."] / ". $canonicalShopItem->ShopGroup->name : ''
+            "canonicalName" => !is_null($canonicalShopItem) ? $canonicalShopItem->name ." [". $canonicalShopItem->id ."] / ". $canonicalShopItem->ShopGroup->name : '',
+            "BadgeClasses" => \App\Models\ShopItemShortcut::$BadgeClasses
         ]);
     }
 
@@ -198,7 +202,7 @@ class ShopItemController extends Controller
             // 'path' => ['required', 'string', 'max:255'],
         //]);
 
-        
+
 
         $shopItem->name = $request->name;
         $shopItem->description = $request->description ?? '';
@@ -212,7 +216,7 @@ class ShopItemController extends Controller
         $shopItem->width = $request->width;
         $shopItem->height = $request->height;
         $shopItem->length = $request->length;
-        $shopItem->path = !empty(trim($request->path)) ? $request->path : Str::transliteration($request->name);
+        $shopItem->path = !empty(trim($request->path)) ? $request->path : Str::transliteration($request->name) . (!empty($request->marking) ? "-" . mb_strtolower(str_replace("_", "-", $request->marking)) : '');
         $shopItem->seo_title = $request->seo_title ?? '';
         $shopItem->seo_description = $request->seo_description ?? '';
         $shopItem->seo_keywords = $request->seo_keywords ?? '';
@@ -221,9 +225,14 @@ class ShopItemController extends Controller
         $shopItem->canonical = $request->canonical ?? 0;
         $shopItem->updated_at = date("Y-m-d H:i:s");
 
-        $shopItem->save();
+        $shopItem->url = (!is_null($ShopGroup = $shopItem->ShopGroup) ? $ShopGroup->url . "/" : "") . $shopItem->path;
 
-        $this->setUrl($shopItem);
+        if (!is_null(ShopItem::where("url", $shopItem->url)->whereNot("id", $shopItem->id)->first())) {
+            return redirect()->to(route("shop.shop-item.edit", ["shop" => $shop->id, "shop_item" => $shopItem]))->withError("Товар с таким url уже существует - измените название или артикул");
+        } 
+
+
+        $shopItem->save();
 
         if (isset($request->image)) {
 
@@ -284,17 +293,37 @@ class ShopItemController extends Controller
 
         $this->saveItemProperties($request, $shopItem);
 
-        if ($request->apply_price_to_modifications) {
-            foreach (ShopItem::where("modification_id", $shopItem->id)->get() as $mShopItem) {
+        $ModificationController = new ModificationController();
+        
+        foreach (ShopItem::where("modification_id", $shopItem->id)->get() as $mShopItem) {
+
+            if ($request->apply_price_to_modifications) {
                 $mShopItem->price = $shopItem->price;
-                $mShopItem->save();
             }
+
+            $mShopItem->url = $shopItem->url . "/" . $mShopItem->path;
+            $mShopItem->updated_at = date("Y-m-d H:i:s");
+
+            $ModificationController->saveStaticModificaitonFields($mShopItem, $shopItem);
+
         }
+        
 
         //скидка
         $ShopItemDiscountController = new ShopItemDiscountController();
         foreach ($shopItem->ShopItemDiscounts as $ShopItemDiscount) {
             $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount, $ShopItemDiscount->ShopDiscount, $shopItem);
+        }
+
+        if ($request->shortcut_groups && count($request->shortcut_groups) > 0) {
+            foreach ($request->shortcut_groups as $shortcut_group_id) {
+                if (is_null($shopItemShortcut = ShopItemShortcut::where("shop_item_id", $shopItem->id)->where("shop_group_id", $shortcut_group_id)->first())) {
+                    $shopItemShortcut = new ShopItemShortcut();
+                    $shopItemShortcut->shop_item_id = $shopItem->id;
+                    $shopItemShortcut->shop_group_id = $shortcut_group_id;
+                    $shopItemShortcut->save();
+                }
+            }
         }
 
         $SearchController = new SearchController();
@@ -307,9 +336,9 @@ class ShopItemController extends Controller
         $message = "Товар был успешно сохранен!";
 
         if ($request->apply) {
-            return redirect()->to(route("shop.index") . ($shopItem->shop_group_id > 0 ? '?parent_id=' . $shopItem->shop_group_id : ''))->withSuccess($message);
+            return redirect()->to(route("shop.index", ["shop" => $shop->id]) . ($shopItem->shop_group_id > 0 ? '&parent_id=' . $shopItem->shop_group_id : ''))->withSuccess($message);
         } else {
-           return redirect()->back()->withSuccess($message);
+            return redirect()->to(route("shop.shop-item.edit", ["shop" => $shop->id, "shop_item" => $shopItem]))->withSuccess($message);
         }
     }
 
@@ -541,6 +570,46 @@ class ShopItemController extends Controller
             "aShopItem" => $shopItem,
             "ShopItemAssociatedItems" => $this->shopItemAssociatedItems($shopItem)
         ]);
+    }
+
+    public function getShortcutGroup(Request $request)
+    {
+
+        $aResult = [];
+
+        if (!empty($term = $request->input('term'))) {
+
+            foreach (ShopGroup::where("name", "LIKE", "%" . $term . "%")->get() as $ShopGroup) {
+                if ($ShopGroup->shop_group_id != $request->shop_group_id) {
+
+                    $value = $ShopGroup->name . " [" . $ShopGroup->id . "]";
+
+                    if ($ShopGroup->parent_id > 0) {
+                        if (!is_null($pShopGroup = ShopGroup::find($ShopGroup->parent_id))) {
+                            $value = $pShopGroup->name . " / " . $value; 
+                        }
+                    }
+                    
+                    $aResult[] = ["value" => $value, "data" => $ShopGroup->id];
+                }
+            }
+        }
+
+        return response()->json($aResult);
+    }
+
+    public function deleteShortcutGroup(Request $request, shopItem $shopItem, shopGroup $shopGroup)
+    {
+
+        $aResult["responce"] = false;
+
+        $deleted = ShopItemShortcut::where("shop_item_id", $shopItem->id)->where("shop_group_id", $shopGroup->id)->delete();
+
+        if ($deleted > 0) {
+            $aResult["responce"] = true;
+        }
+
+        return response()->json($aResult);
     }
 
 }

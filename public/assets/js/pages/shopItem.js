@@ -70,4 +70,24 @@ $(function() {
             }, 
         });
     }
+
+    if ($('[name="shortcut_group_id"]').length) {
+        $('[name="shortcut_group_id"]').autocomplete({
+            source: routeGroupShortcut,
+            minLength: 2,
+            select: function( event, ui ) {
+    
+                var getRandomBadgeClass = Math.floor( (Math.random() * BadgeClasses.length) + 0);
+    
+                if (!$("#shortcut_group_" + ui.item.data).length) {
+                    $(".shortcut_groups")
+                        .append('<span id="shortcut_group_' + ui.item.data + '" class="badge badge-soft-'+ BadgeClasses[getRandomBadgeClass] +'">'+ ui.item.label +'<a href="javascript:void(0)" onclick="Shortcut.delete($(this))" class="mdi mdi-close"></a><input type="hidden" name="shortcut_groups[]" value="'+ ui.item.data +'"></span>');
+                }
+            }, 
+    
+            close: function() {
+                $(this).val("");
+            }
+        });
+    }
 });

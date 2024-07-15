@@ -17,10 +17,10 @@ var adminImage = {
         
     },
 
-    remove: function (id) {
+    remove: function (route, id) {
 
         $.ajax({
-            url: "/admin/deleteShopItemImage/" + id,
+            url: route,
             type: "GET",
             dataType: "json",
             success: function (data) {

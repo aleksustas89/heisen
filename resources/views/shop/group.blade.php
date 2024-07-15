@@ -6,13 +6,20 @@
 
 @section('canonical')
 
-    <link rel="canonical" href="https://{{ request()->getHost() }}{{ $group->url }}" />
+    <link rel="canonical" href="https://{{ request()->getHost() }}{{ $shopFilter ? $shopFilter->url : $group->url }}" />
 
 @endsection
 
 @section('robots')
 
-    {{ \App\Http\Controllers\SeoController::robots(request()->sorting ? ['nofollow', 'noindex'] : ['follow', 'index']) }}
+    @if (isset($filterProperties) && count($filterProperties) > 0)
+        {{ \App\Http\Controllers\SeoController::robots(['nofollow', 'noindex']) }}
+    @elseif (request()->sorting)
+        {{ \App\Http\Controllers\SeoController::robots(['follow', 'noindex']) }}
+    @else
+        {{ \App\Http\Controllers\SeoController::robots(['follow', 'index']) }}
+    @endif
+
 @endsection
 
 @section('content')
@@ -46,7 +53,7 @@
                 </div>
             
                 <div class="uk-h3 uk-text-bold">
-                    <div class="uk-inline-block" itemprop="name">{{ $group->name }}</div>
+                    <h1 class="uk-inline-block uk-h3 uk-text-bolder uk-margin-remove" itemprop="name">{{ $group->name }}</h1>
                     @if (count($properties) > 0)
                         <button class="uk-button uk-button-default filter-btn" type="button" uk-toggle="target: #filter">
                             Фильтрация@if (isset($filterProperties) && $countProperties > 0):

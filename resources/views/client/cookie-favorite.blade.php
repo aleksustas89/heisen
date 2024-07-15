@@ -16,7 +16,7 @@
 
         <div class="uk-width-expand@s">
         
-            <h2>Ваши избранные товары</h2>
+            <h1 class="uk-h2">Ваши избранные товары</h1>
 
             @if ($shopItems)
 

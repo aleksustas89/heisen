@@ -49,12 +49,12 @@
                     </td>
                     <td>
 
-                        @foreach ($shopItem->PropertyValueInts as $propertyValueInt)
-                            @if ($propertyValueInt->ShopItemListItem)
-                                <div>{{ $propertyValueInt->ShopItemProperty->name }}: {{ $propertyValueInt->ShopItemListItem->value }}</div>
-                            @endif
-                            
-                        @endforeach 
+                        {{ $shopItem->name }}
+
+                        <a href="{{ $shopItem->url }}" target="_blank">
+                            <i class="las la-external-link-alt"></i>
+                        </a>
+
                     </td>
                     <td width="200px" class="td_editable">
                         

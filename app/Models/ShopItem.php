@@ -87,6 +87,16 @@ class ShopItem extends Model
         return $this->hasMany(ShopItemAssociatedItem::class);
     }
 
+    public function ShopItemShortcuts()
+    {
+        return $this->hasMany(ShopItemShortcut::class);
+    }
+
+    public function Page()
+    {
+        return $this->hasOne(Page::class, 'entity_id');
+    }
+
     public function defaultModification()
     {
 
@@ -114,20 +124,23 @@ class ShopItem extends Model
     {
         $aReturn = [];
 
-        foreach ($this->ShopItemImages()->where("image_large", "!=", "")->where("image_small", "!=", "")->orderBy("sorting", "asc")->get() as $k => $ShopItemImage) {
+        $path = $this->shortPath();
+        
+        foreach ($this->ShopItemImages()->where("image_small", "!=", '')->orderBy("sorting", "asc")->get() as $k => $ShopItemImage) {
 
-            if ($all === false && $k > 0) {
-                break;
-            }
-
-            $path = $this->shortPath();
-
-            if (!empty($ShopItemImage->image_small) && Storage::disk('shop')->exists($path . $ShopItemImage->image_small)) {
-                $aReturn[$ShopItemImage->id]["image_small"] = Shop::$store_path . $path . $ShopItemImage->image_small;
-
-                if (!empty($ShopItemImage->image_large) && Storage::disk('shop')->exists($path . $ShopItemImage->image_large)) {
-                    $aReturn[$ShopItemImage->id]["image_large"] = Shop::$store_path . $path . $ShopItemImage->image_large;
+            if (!empty($ShopItemImage->image_large) && Storage::disk(Shop::$storage)->exists($path . $ShopItemImage->image_large)) {
+                
+                if ($all === false && $k > 0) {
+                    break;
                 }
+                
+                $aReturn[$ShopItemImage->id]["image_large"] = Shop::$store_path . $path . $ShopItemImage->image_large;
+                
+                if (!empty($ShopItemImage->image_small) && Storage::disk(Shop::$storage)->exists($path . $ShopItemImage->image_small)) {
+                    $aReturn[$ShopItemImage->id]["image_small"] = Shop::$store_path . $path . $ShopItemImage->image_small;
+                }
+            } else {
+                $ShopItemImage->delete();
             }
         }
 
@@ -167,7 +180,7 @@ class ShopItem extends Model
 
         $object = $this->parentItemIfModification();
 
-        return "/" . Shop::path() . ($object->shop_group_id > 0 ? $object->ShopGroup->path() . "/" : '') . $object->path;
+        return ($object->shop_group_id > 0 ? $object->ShopGroup->url . "/" : '') . $object->path;
     }
 
     public function changeImagesDirFrom($path)
@@ -241,6 +254,10 @@ class ShopItem extends Model
                 $PropertyValueFloat->delete();
             }
 
+            if (!is_null($Page = $this->Page)) {
+                $Page->delete();
+            }
+
             parent::delete();
 
         } else {
@@ -290,11 +307,27 @@ class ShopItem extends Model
 
             $this->deleteDir();
 
+            if (!is_null($Page = $this->Page)) {
+                $Page->delete();
+            }
+
             parent::delete();
 
             if (!is_null($ShopGroup)) {
                 $ShopGroup->setSubCount();
             }
+        }
+    }
+
+    public function deleteDir()
+    {
+
+        $fullStoragePath = Shop::fullStoragePath();
+
+        if ($this->path() && file_exists($fullStoragePath . $this->path())) {
+            $Filesystem = new Filesystem();
+
+            $Filesystem->deleteDirectory($fullStoragePath . $this->path());
         }
     }
 
@@ -430,6 +463,11 @@ class ShopItem extends Model
         ]);
 
         $nShopItem->push();
+
+        $Page = new Page();
+        $Page->entity_id = $nShopItem->id;
+        $Page->type = 2;
+        $Page->save();
 
         if ($this->modification_id > 0) {
 

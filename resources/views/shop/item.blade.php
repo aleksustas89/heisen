@@ -36,7 +36,7 @@
                                     @if (isset($image['image_large']))
                                         <li id="uk-slide-{{$k}}">
                                             <a href="{{ $image['image_large'] }}">
-                                                <img itemprop="image" alt="{{ $item->name }}" title="{{ $imageMask }}" uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" alt="" uk-cover>
+                                                <img itemprop="image" alt="{{ $imageMask }}" title="{{ $imageMask }}" uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" alt="" uk-cover>
                                             </a>
                                         </li>
                                     @endif
@@ -83,11 +83,11 @@
                 @endif
 
                 <div class="uk-margin">
-                    <a class="el-content uk-link-text" href="{{ $item->ShopGroup->url }}">{{ $item->ShopGroup->name }}</a>   
+                    <a class="el-content uk-link-text" href="{{ $item->parentItemIfModification()->ShopGroup->url }}">{{ $item->parentItemIfModification()->ShopGroup->name }}</a>   
                 </div>
 
                 <h1 id="item-name" class="uk-h2 uk-margin-remove-vertical" itemprop="name">
-                    @if (isset($Modification))
+                    @if ($Modification)
                         {{ $Modification->name }}
                     @else
                         {{ $item->name }}
@@ -106,7 +106,7 @@
                                 {{ App\Services\Helpers\Str::price($item->price) }}
                             @endif
                         </span>
-                    @elseif(isset($Modification))
+                    @elseif($Modification)
                         <span itemprop="price" id="item-price">{{ App\Services\Helpers\Str::price($Modification->price()) }}</span> 
                         <span class="item-old-price" id="item-old-price">{{ App\Services\Helpers\Str::price($Modification->oldPrice()) }}</span>
                     @else 
@@ -135,6 +135,7 @@
 
                         @php
                             $choose_properties_tooltip[] = $property->name;
+                            $defaultValue = '';
                         @endphp
                         
                         <label class="uk-form-label" data-property-id="{{ $property->id }}" data-name="{{ $property->name }}">{{ $property->name }}</label>
@@ -146,21 +147,40 @@
 
                                     @if (isset($aPropertyListItems[$property->id]))
                                         @foreach ($aPropertyListItems[$property->id] as $key => $Shop_Item_List_Item)
+                                            
+                                            @php
+                                                if (isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)) {
+                                                    $defaultValue = $Shop_Item_List_Item->id;
+                                                }
+                                            @endphp
+                                        
                                             <li @class(["active" => isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)])><a onclick="Modification.choose($(this))" data-id="{{ $Shop_Item_List_Item->id }}" uk-tooltip="{{ $Shop_Item_List_Item->value }}" class="uk-border-circle" data-src="{{ $Shop_Item_List_Item->description }}" uk-img=""></a></li>
                                         @endforeach
                                     @endif
 
                                 </ul>
+
+                                <input type="hidden" name="property_{{ $property->id }}" value="{{ $defaultValue }}" />
+
                             @elseif($property->destination == 0 && $property->type == 4 && !is_null($property->shopItemList) && isset($aPropertyListItems[$property->id]))
                                 <ul class="uk-grid uk-grid-xsmall tm-other-switcher" uk-grid="">            
                                     @foreach ($aPropertyListItems[$property->id] as $key => $Shop_Item_List_Item)
+
+                                        @php
+                                            if (isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)) {
+                                                $defaultValue = $Shop_Item_List_Item->id;
+                                            }
+                                        @endphp
                                         
                                         <li @class(["active" => isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)])><a onclick="Modification.choose($(this))" data-id="{{ $Shop_Item_List_Item->id }}" uk-tooltip="{{ $Shop_Item_List_Item->value }}">{{ $Shop_Item_List_Item->value }}</a></li>
                                     @endforeach
                                 </ul>
+
+                                <input type="hidden" name="property_{{ $property->id }}" value="{{ $defaultValue }}" />
+
                             @endif
 
-                            <input type="hidden" name="property_{{ $property->id }}" />
+                            
 
                         </div>
 
@@ -172,8 +192,8 @@
                     <div uk-form-custom="target: true" class="uk-visible@s">
                         <input type="number" class="uk-input uk-form-width-xsmall" name="quantity" value="1" title="Qty" size="4" min="1" max="" step="1" placeholder="" inputmode="numeric" autocomplete="off">
                     </div>
-                    <button type="button" id="cart_add" data-route="{{ route('cartAdd') }}" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" @if(isset($Modification)) onclick="Cart.add('{{ route('cartAdd') }}', {{ $Modification->id }}, $('[name=\'quantity\']').val())" @else disabled @endif  class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ <span uk-icon="icon: cart"></span></button>
-                    <button uk-toggle="target: #quick-order" type="button" id="fast_order" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" @if(!isset($Modification)) disabled @endif class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ В ОДИН КЛИК</button>
+                    <button type="button" id="cart_add" data-route="{{ route('cartAdd') }}" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" @if($Modification) onclick="Cart.add('{{ route('cartAdd') }}', {{ $Modification->id }}, $('[name=\'quantity\']').val())" @else disabled @endif  class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ <span uk-icon="icon: cart"></span></button>
+                    <button uk-toggle="target: #quick-order" type="button" id="fast_order" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" @if(!$Modification) disabled @endif class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ В ОДИН КЛИК</button>
                     <div id="quick-order" uk-modal>
                         <div class="uk-modal-dialog uk-modal-body">
                             <h2 class="uk-modal-title">Быстрый заказ</h2>
@@ -229,6 +249,17 @@
         
 
                 </div>
+
+                @if (!is_null($shopItemShortcuts) && count($shopItemShortcuts))
+                    <hr />
+
+                    <p><span uk-icon="icon: tag" class="uk-margin-small-right"></span>Теги:</p>
+
+                    @foreach ($shopItemShortcuts as $shopItemShortcut)
+                        <a class="btn-shortcut" href="{{ $shopItemShortcut->ShopGroup->url }}">#{{ $shopItemShortcut->ShopGroup->name }}</a>
+                    @endforeach
+
+                @endif
 
                 <hr />
                 <ul uk-accordion="collapsible: false" class="uk-list uk-list-divider">
@@ -440,6 +471,11 @@
             .grade-star svg{ 
                 width: 30px;
             }
+        }
+        .btn-shortcut {
+            font-size: 20px;
+            border-radius: 0 !important;
+            text-transform: uppercase;
         }
     </style>
 @endsection

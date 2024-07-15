@@ -13,7 +13,6 @@ use App\Http\Controllers\ShopItemDiscountController;
 
 class HomeController extends Controller
 {
-
     public static function index()
     {
 

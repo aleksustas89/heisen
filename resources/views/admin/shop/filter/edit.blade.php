@@ -77,10 +77,11 @@
                             </div>
 
                             <div class="form-group mb-3">
-
+                                <label class="mb-1">Сортировка</label>
                                 <select name="sorting" class="form-select">  
-                                    <option @if($shopFilter->sorting == 0) selected @endif value="0">Сортировка - новые</option>
-                                    <option @if($shopFilter->sorting == 1) selected @endif value="1">Сортировка - старые</option> 
+                                    <option value="0">...</option>
+                                    <option @if($shopFilter->sorting == 1) selected @endif value="1">Сортировка - новые</option>
+                                    <option @if($shopFilter->sorting == 2) selected @endif value="2">Сортировка - старые</option> 
                                 </select>
                             </div>
 

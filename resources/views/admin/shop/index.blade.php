@@ -90,7 +90,8 @@
                                         <th>Название</th>
                                         <th  class="d-mob-none" width="100px">Цена</th>
         
-                                        <th class="d-mob-none" width="40px"><i class="fa fa-lightbulb-o" title="Активность"></i></th>
+                                        <th class="d-mob-none" width="40px"></th>
+                                        <th class="d-mob-none" width="40px"></th>
                                         <th class="d-mob-none" width="60px"><i class="fas fa-sort-amount-down" title="—"></i></th>
                                         <th class="controll-td"></th>
                                     </tr>
@@ -98,6 +99,12 @@
                                 <tbody>
                                     @if (isset($shopGroups))
                                         @foreach ($shopGroups as $shopGroup)
+
+                                            @php
+                                                $isActive = $shopGroup->active == 1 ? false : true;
+                                                $isHidden = $shopGroup->hidden == 1 ? true : false;
+                                            @endphp
+
                                             <tr>
                                                 <td>
                                                     <label>
@@ -119,23 +126,33 @@
                                                             <span class="badge-count btn-success">{{ $shopGroup->subitems_count }}</span>
                                                         @endif
 
-                                                        @php
-                                                        $url = '/' . $shop_path . '/' . $shopGroup->path();
-                                                        @endphp
-
-                                                        <a href="{{ $url }}" target="_blank">
+                                                        <a href="{{ $shopGroup->url }}" target="_blank">
                                                             <i class="las la-external-link-alt"></i>
                                                         </a> 
                                                     
                                                 </td>
                                                 <td class="d-mob-none" width="100px">&nbsp;</td>
                                             
+                                                <td class="d-mob-none">
+
+                                                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="активен/не активен " onclick="toggle.init($(this))" onclick="toggle.init($(this))" @class([
+                                                        'pointer',
+                                                        'ico-inactive' => $isActive,
+                                                    ]) id="toggle_ShopGroup_active_{{ $shopGroup->id }}">
+                                            
+                                                        <i class="lar la-lightbulb font-20"></i>
+                                                    </span>
+    
+                                                </td>
                                                 <td class="d-mob-none" width="40px">
-                                                    @if ($shopGroup->active == 1)
-                                                        <i class="fa fa-lightbulb-o" title="Активность"></i>
-                                                    @else
-                                                        <i class="fa fa-lightbulb-o fa-inactive" title="Активность"></i>
-                                                    @endif
+    
+                                                    <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="скрыт/показ." onclick="toggle.init($(this))" @class([
+                                                        'pointer',
+                                                        'ico-inactive' => $isHidden,
+                                                    ]) id="toggle_ShopGroup_hidden_{{ $shopGroup->id }}">
+                                            
+                                                        <i class="lar la-lightbulb font-20"></i>
+                                                    </span>
                                                 </td>
                                                 <td width="60px" class="td_editable d-mob-none"><span id="apply_check_shopGroup_sorting_{{ $shopGroup->id }}" class="editable">{{ $shopGroup->sorting }}</span></td>
 
@@ -151,6 +168,7 @@
 
                                         @php
                                             $isActive = $shopItem->active == 1 ? false : true;
+                                            $isHidden = $shopItem->hidden == 1 ? true : false;
                                             $linkWrong = strripos($shopItem->url, 'copy');
                                         @endphp
 
@@ -195,6 +213,10 @@
 
                                                 <span class="text-muted font-13 fw-semibold">{{ $shopItem->marking }} </span> 
 
+                                                <div>
+                                                    @include("admin.shop.shortcuts", ["shopItem" => $shopItem])
+                                                </div>
+
                                                 @if ($linkWrong)
                                                     <div class="font-13 fw-semibold" style="color: #8f2e34;">WRONG URL</div> 
                                                 @endif
@@ -233,17 +255,27 @@
 
                                                 </div>
                                             </td>
-                    
                                             <td class="d-mob-none">
 
-                                                <span onclick="toggle.init($(this))" @class([
+                                                
+                                                <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="активен/не активен " onclick="toggle.init($(this))" onclick="toggle.init($(this))" @class([
                                                     'pointer',
                                                     'ico-inactive' => $isActive,
-                                                ]) id="toggle_shopItem_active_{{ $shopItem->id }}">
+                                                ]) id="toggle_ShopItem_active_{{ $shopItem->id }}">
                                         
                                                     <i class="lar la-lightbulb font-20"></i>
                                                 </span>
 
+                                            </td>
+                                            <td class="d-mob-none" width="40px">
+
+                                                <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="скрыт/показ." onclick="toggle.init($(this))" @class([
+                                                    'pointer',
+                                                    'ico-inactive' => $isHidden,
+                                                ]) id="toggle_ShopItem_hidden_{{ $shopItem->id }}">
+                                        
+                                                    <i class="lar la-lightbulb font-20"></i>
+                                                </span>
                                             </td>
                                             <td class="d-mob-none" width="60px" class="td_editable"><span id="apply_check_shopItem_sorting_{{ $shopItem->id }}" class="editable">{{ $shopItem->sorting }}</span></td>
 
@@ -277,4 +309,10 @@
 @endsection
 
 
+@section("js")
 
+    @php
+        App\Services\Helpers\File::js('/assets/js/shortcut.js');
+    @endphp
+
+@endsection

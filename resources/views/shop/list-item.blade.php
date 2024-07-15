@@ -1,11 +1,12 @@
 @php
 $discountPercent = 0;
 $Discount = App\Http\Controllers\ShopDiscountController::getMaxDiscount($item);
-$url = $item->url;
+$defaultModification = $item->defaultModification();
+$url = $defaultModification ? $defaultModification->url : $item->url;
 @endphp
 
 
-<div class="uk-card tm-tovar" itemprop="itemListElement" itemscope itemtype="https://schema.org/Offer">
+<div class="uk-card tm-tovar" data-d="{{ $item->id }}" itemprop="itemListElement" itemscope itemtype="https://schema.org/Offer">
     
     <div class="uk-position-top-right add-to-favorite uk-position-xsmall uk-text-xsmall">
         @if (\App\Models\ClientFavorite::$Type == 0)
@@ -67,7 +68,7 @@ $url = $item->url;
         </div>
         <p class="uk-margin-remove-top tm-price">
             @php
-                $defaultModification = $item->defaultModification();
+                
                 $Object   = $defaultModification ? $defaultModification : $item;
                 $price    = $Object->getPriceApplyCurrency($Currency);
                 $oldPrice = $Object->getOldPriceApplyCurrency($Currency);

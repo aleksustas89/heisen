@@ -135,7 +135,7 @@
                                             $popover .= "</div>";
 
                                             $popover .= "<div class='card-body'><div class='table-responsive'>
-                                                            <table class='table table-striped table-sm' style='min-width:700px'>
+                                                             <table class='table table-striped table-sm' style='min-width:700px'>
                                                                 <thead class='bordered-palegreen'>
                                                                     <tr>
                                                                         <th>№</th>
@@ -150,7 +150,7 @@
                                                     $popover .= "
                                                                     <tr>
                                                                         <td>" . $orderItem->id . "</td>
-                                                                        <td>" . $orderItem->name . "</td>
+                                                                        <td>" . (str_replace('"', "", $orderItem->name)) . "</td>
                                                                         <td>" . $orderItem->price . "</td>
                                                                         <td>" . $orderItem->quantity . "</td>
                                                                         <td>" . App\Models\Str::price($orderItem->price * $orderItem->quantity) . "</td>

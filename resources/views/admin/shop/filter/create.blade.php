@@ -86,10 +86,11 @@
                             </div>
 
                             <div class="form-group mb-3">
-
+                                <label class="mb-1">Сортировка</label>
                                 <select name="sorting" class="form-select">  
-                                    <option value="0">Сортировка - новые</option>
-                                    <option value="1">Сортировка - старые</option> 
+                                    <option value="0">...</option>
+                                    <option value="1">Сортировка - новые</option>
+                                    <option value="2">Сортировка - старые</option> 
                                 </select>
                             </div>
 

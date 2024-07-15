@@ -8,6 +8,7 @@ use App\Models\ShopGroup;
 use App\Models\ShopItem;
 use App\Models\ShopCurrency;
 use Illuminate\Http\Request;
+use App\Models\ShopItemShortcut;
 
 class ShopController extends Controller
 {
@@ -70,7 +71,8 @@ class ShopController extends Controller
                 'parent' => $parent,
                 'shop' => $oShop,
                 'breadcrumbs' => ShopGroupController::breadcrumbs($parent > 0 ? ShopGroup::find($parent) : false, [], true),
-                'global_search' => $request->global_search
+                'global_search' => $request->global_search,
+                "BadgeClasses" => \App\Models\ShopItemShortcut::$BadgeClasses
             ];
 
             if ($request->global_search) {
@@ -80,17 +82,24 @@ class ShopController extends Controller
                                                         ->orWhere("name", "LIKE", "%" . $request->global_search . "%");
                                                 })
                                                 ->orderBy("sorting", "asc")
-                                                ->orderBy("id")
+                                                ->orderBy("id", "desc")
                                                 ->paginate(self::$items_on_page);
                 
                                                 
 
             } else {
-                $aResult['shopItems'] = ShopItem::where('shop_group_id', $parent)
-                                                ->where("modification_id", "=", 0)
-                                                ->orderBy("sorting", "asc")
-                                                ->orderBy("id")
-                                                ->paginate(self::$items_on_page);
+                                                
+                $aResult['shopItems'] = ShopItem::where(function($query) use ($parent) {
+                        $query
+                            ->where("modification_id", "=", 0)
+                            ->where("shop_group_id", $parent);
+                    })
+                    ->orWhereIn("id", ShopItemShortcut::select('shop_item_id')->where('shop_group_id', $parent))
+                    ->orderBy("sorting", "asc")
+                    ->orderBy("id", "desc")
+                    ->paginate(self::$items_on_page);
+                                        
+
                 $aResult['shopGroups'] = ShopGroup::where('parent_id', $parent)->orderBy('sorting', 'desc')->orderBy("id")->get();
             }
 

@@ -121,13 +121,24 @@ class ShopFilterController extends Controller
             $shopFilter->url = $url;
             $shopFilter->sorting = $request->sorting;
             $shopFilter->shop_group_id = $request->shop_group_id ?? 0;
+            $shopFilter->updated_at = date("Y-m-d H:i:s");
     
             $shopFilter->save();
 
-            $shopFilter->ShopFilterPropertyValues()->delete();
-    
             foreach ($this->getShopItemProperties() as $property) {
-            
+
+                //старые
+                foreach (ShopFilterPropertyValue::where("property_id", $property->id)->where("shop_filter_id", $shopFilter->id)->get() as $Value) {
+                    $property_id = 'property_' . $property->id . '_' . $Value->id;
+
+                    if (isset($request->$property_id)) {
+                        $Value->value = $request->$property_id;
+                        $Value->save();
+                    } else {
+                        $Value->delete();
+                    }
+                }
+
                 $property_id = 'property_' . $property->id;
     
                 if (isset($request->$property_id) && is_array($request->$property_id)) {
@@ -143,16 +154,6 @@ class ShopFilterController extends Controller
                             $ShopFilterPropertyValue->save();
                         }
                     }
-                }
-
-                //старые
-                foreach (ShopFilterPropertyValue::where("property_id", $property->id)->where("shop_filter_id", $shopFilter->id)->get() as $Value) {
-                    $property_id = 'property_' . $property->id . '_' . $Value->id;
-                 
-                    if (isset($request->$property_id)) {
-                        $Value->value = $request->$property_id;
-                        $Value->save();
-                    } 
                 }
             }
     
@@ -235,7 +236,11 @@ class ShopFilterController extends Controller
                 }
             }
 
-            $Result = $ShopGroup->url . "/" . $Result . (!empty($Result) ? "-" : "") . (request()->sorting == 0 ? "v-nachale-novie" : "v-nachale-starie");
+            $Result = $ShopGroup->url . "/" . $Result;
+
+            if (request()->sorting > 0) {
+                $Result .= (request()->sorting == 1 ? "/v-nachale-novie" : "/v-nachale-starie");
+            } 
         }
 
         return $Result;

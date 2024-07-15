@@ -11,8 +11,6 @@ use App\Models\ShopFilter;
 use App\Http\Controllers\ShopItemController;
 use App\Http\Controllers\ShopGroupController;
 use App\Http\Controllers\StructureController;
-use App\Http\Controllers\InformationsystemController;
-use App\Http\Controllers\InformationsystemItemController;
 
 class PageController extends Controller
 {
@@ -21,17 +19,38 @@ class PageController extends Controller
 
         $url = "/" . $path;
 
-        $Page = Page::where("entity_id",   ShopItem::select("id")->where("url", $url)->where("active", 1)->limit(1))
-                    ->orWhere("entity_id", ShopGroup::select("id")->where("url", $url)->where("active", 1)->limit(1))
-                    ->orWhere("entity_id", Structure::select("id")->where("url", $url)->where("active", 1)->limit(1))
-                    ->orWhere("entity_id", ShopFilter::select("id")->where("url", $url)->limit(1))
-                    // ->orWhere("entity_id", Informationsystem::select("id")->where("path", $path)->where("active", 1)->limit(1))
-                    // ->orWhere("entity_id", InformationsystemItem::select("id")->where("url", $url)->where("active", 1)->limit(1))
+        $ShopItem = ShopItem::select("id")->where("url", $url)->where("active", 1)->limit(1);
+        $ShopGroup = ShopGroup::select("id")->where("url", $url)->where("active", 1)->limit(1);
+        $Structure = Structure::select("id")->where("url", $url)->where("active", 1)->limit(1);
+        $ShopFilter = ShopFilter::select("id")->where("url", $url)->limit(1);
+
+        $Page = Page::where(function($query) use ($ShopItem) {
+                        $query->where('entity_id', $ShopItem)
+                            ->where('type', '=', 2);
+                    })
+
+                    ->orWhere(function($query) use ($ShopGroup) {
+                        $query->where('entity_id', $ShopGroup)
+                              ->where('type', '=', 1);
+                    })
+
+                    ->orWhere(function($query) use ($Structure) {
+                        $query->where('entity_id', $Structure)
+                              ->where('type', '=', 0);
+                    })
+
+                    ->orWhere(function($query) use ($ShopFilter) {
+                        $query->where('entity_id', $ShopFilter)
+                              ->where('type', '=', 6);
+                    })
+
                     ->first();
 
         if (!is_null($Page) && (
             !is_null($Page->Structure) || !is_null($Page->ShopGroup) || !is_null($Page->ShopItem) || !is_null($Page->ShopFilter))
         ) {
+
+            
 
             switch ($Page->type) {
                 case 0: 
@@ -53,14 +72,6 @@ class PageController extends Controller
                     }
                 break;
 
-                // case 3:
-                //     return InformationsystemController::show($Page->Informationsystem);
-                // break;
-
-                // case 5:
-                //     echo 123;
-                //     return InformationsystemItemController::show($Page->InformationsystemItem);
-                // break;
             }
 
         } else {

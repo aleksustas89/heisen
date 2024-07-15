@@ -9,8 +9,6 @@ class ShopFilter extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     public function ShopGroup()
     {
         return $this->belongsTo(ShopGroup::class);

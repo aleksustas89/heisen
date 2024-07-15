@@ -52,6 +52,17 @@
                     </small>
                 @endif
             </div>                                                        
+        </div>  
+        <div class="file-box">
+            <div class="text-center">
+                <a target="_blank" href="{{ route('getYml') }}"><i class="lar la-file-pdf text-black ico"></i></a>
+                <h6 class="text-truncate">Yml</h6>
+                @if (!empty($ymlInfo["date"]))
+                    <small class="text-muted">
+                        {{ $ymlInfo["date"] }} / {{ $ymlInfo["filesize"] }}
+                    </small>
+                @endif
+            </div>                                                        
         </div>                                             
     </div> 
 
@@ -61,6 +72,7 @@
 
     <style>
         .file-box-content .file-box i.ico {font-size: 100px}
+        .file-box-content .file-box {width: 200px}
     </style>
 
 @endsection

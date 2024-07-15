@@ -31,28 +31,34 @@ class ShopItemController extends Controller
 
     static public function show($shopItem)
     {
+
+        $ParentItem = $shopItem->parentItemIfModification();
+
         $ShopItemProperties = ShopItemProperty::select("shop_item_properties.*")
                                     ->join("property_value_ints", "property_value_ints.property_id", "=", "shop_item_properties.id")
-                                    ->whereIn("property_value_ints.entity_id", function ($query) use ($shopItem) {
-                                        $query->select('id')->from('shop_items')->where("modification_id", $shopItem->id);
+                                    ->whereIn("property_value_ints.entity_id", function ($query) use ($ParentItem) {
+                                        $query->select('id')->from('shop_items')->where("modification_id", $ParentItem->id);
                                     })
                                     ->groupBy("property_value_ints.property_id")
                                     ->whereNot("property_value_ints.value", 0)
                                     ->get();
 
                                     
-        $aModValues = PropertyValueInt::select("property_value_ints.value")->whereIn("property_value_ints.entity_id", function ($query) use ($shopItem) {
-            $query->select('id')->from('shop_items')->where("modification_id", $shopItem->id);
+        $aModValues = PropertyValueInt::select("property_value_ints.value")->whereIn("property_value_ints.entity_id", function ($query) use ($ParentItem) {
+            $query->select('id')->from('shop_items')->where("modification_id", $ParentItem->id);
         })->whereNot("value", 0)->get()->toArray();
 
         $modListValues = [];
         foreach ($aModValues as $aModValue) {
-            $modListValues[] = $aModValue["value"];
+            
+            if (!array_search($aModValue["value"], $modListValues)) {
+                $modListValues[] = $aModValue["value"];
+            }
         }
 
         $Comments = Comment::select("comments.*")
             ->join("comment_shop_items", "comments.id", "=", "comment_shop_items.comment_id")
-            ->where("comment_shop_items.shop_item_id", $shopItem->id)
+            ->where("comment_shop_items.shop_item_id", $ParentItem->id)
             ->where("comments.active", 1)
             ->get();
 
@@ -67,19 +73,19 @@ class ShopItemController extends Controller
         // }
         if ($shopItem->width > 0) {
             $aDimensions[$k]["name"] = "Ширина";
-            $aDimensions[$k]["value"] = $shopItem->width / 10;
+            $aDimensions[$k]["value"] = $ParentItem->width / 10;
             $aDimensions[$k]["measure"] = "см";
             $k++;
         }
         if ($shopItem->height > 0) {
             $aDimensions[$k]["name"] = "Высота";
-            $aDimensions[$k]["value"] = $shopItem->height / 10;
+            $aDimensions[$k]["value"] = $ParentItem->height / 10;
             $aDimensions[$k]["measure"] = "см";
             $k++;
         }
         if ($shopItem->length > 0) {
             $aDimensions[$k]["name"] = "Глубина";
-            $aDimensions[$k]["value"] = $shopItem->length / 10;
+            $aDimensions[$k]["value"] = $ParentItem->length / 10;
             $aDimensions[$k]["measure"] = "см";
             $k++;
         }
@@ -96,38 +102,33 @@ class ShopItemController extends Controller
         $Return = [
             'aModProperties' => $ShopItemProperties,
             'aPropertyListItems' => $aProperties,
-            'item' => $shopItem,
-            'images' => $shopItem->getImages(),
+            'item' => $ParentItem,
+            'images' => $ParentItem->getImages(),
             'breadcrumbs' => BreadcrumbsController::breadcrumbs(self::breadcrumbs($shopItem)),
             'Comments' => $Comments,
             'Dimensions' => $aDimensions,
             'shop' => Shop::get(),
-            'imageMask' => $shopItem->name . ", цвет: черный, коричневый, синий, серый, зеленый, бежевый",
-            'ShopItemAssociatedItems' => ShopItem::whereIn("shop_items.id", ShopItemAssociatedItem::select("shop_item_associated_id")->where("shop_item_id", $shopItem->id))->where("active", 1)->get(),
+            'imageMask' => $shopItem->name . " из кожи, цвет: черный, коричневый, синий, серый, зеленый, бежевый",
+            'ShopItemAssociatedItems' => ShopItem::whereIn("shop_items.id", ShopItemAssociatedItem::select("shop_item_associated_id")->where("shop_item_id", $ParentItem->id))->where("active", 1)->get(),
+            'shopItemShortcuts' => $ParentItem->ShopItemShortcuts
         ];
 
-        switch ($shopItem::$priceView) {
-            case 0:
-                $Return["prices"] = ShopDiscountController::getModificationsPricesWithDiscounts($shopItem);
-            break;
-            case 1:
 
-                if ($Modification = $shopItem->defaultModification()) {
+        $Return["default_modification_price"] = $shopItem->price();
+        $Return["default_modification_old_price"] = $shopItem->oldPrice();
+        $Return["Modification"] = $shopItem->modification_id > 0 ? $shopItem : false;
 
-                    $Return["default_modification_price"] = $Modification->price();
-                    $Return["default_modification_old_price"] = $Modification->oldPrice();
-                    $Return["Modification"] = $Modification;
-
-                    $ListValues = [];
-                    foreach (PropertyValueInt::select("property_value_ints.value")->where("property_value_ints.entity_id", $Modification->id)->get() as $PropertyValueInt) {
-                        $ListValues[] = $PropertyValueInt->value;
-                    }
-
-                    $Return['aDefaultValues'] = $ListValues;
-                }
-                
-            break;
+        $ListValues = [];
+        foreach (PropertyValueInt::select("property_value_ints.value")->where("property_value_ints.entity_id", $shopItem->id)->where("value", ">", 0)->get() as $PropertyValueInt) {
+            if (!in_array($PropertyValueInt->value, $ListValues)) {
+                $ListValues[] = $PropertyValueInt->value;
+            }
         }
+
+        $Return['aDefaultValues'] = $ListValues;
+
+       //dd($Return);
+   
 
         return view('shop/item', $Return);
     }
@@ -150,7 +151,7 @@ class ShopItemController extends Controller
     public static function breadcrumbs($shopItem)
     {
 
-        $breadcrumbs = ShopGroupController::breadcrumbs($shopItem->ShopGroup, []);
+        $breadcrumbs = ShopGroupController::breadcrumbs($shopItem->parentItemIfModification()->ShopGroup, []);
 
         return $breadcrumbs + [count($breadcrumbs) => ["name" => $shopItem->name]];
     }
@@ -191,6 +192,7 @@ class ShopItemController extends Controller
             $response["item"]["price"] = \App\Services\Helpers\Str::price($aShopItem->price());
             $response["item"]["oldPrice"] = \App\Services\Helpers\Str::price($aShopItem->oldPrice());
             $response["item"]["image"] = $aShopItem->ShopModificationImage;
+            $response["item"]["url"] = "https://" . request()->getHost() .  $aShopItem->url;
 
         }
         

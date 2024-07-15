@@ -11,6 +11,7 @@ use App\Models\ShopItemProperty;
 use App\Models\ShopItemListItem;
 use App\Models\ShopModificationImage;
 use App\Http\Controllers\ShopItemDiscountController;
+use App\Models\Page;
 
 
 class ModificationController extends Controller
@@ -161,11 +162,15 @@ class ModificationController extends Controller
                 $ShopItem = new ShopItem();
                 $ShopItem->modification_id = $oShopItem->id;
                 $ShopItem->price = $aItem["price"];
-                $ShopItem->name = $aItem["name"];
                 $ShopItem->shop_currency_id = $oShopItem->shop_currency_id;
                 $ShopItem->guid = \App\Services\Helpers\Guid::get();
-                $ShopItem->path = \App\Services\Helpers\Str::transliteration(self::generateUrl($aItem["properties"]));
                 $ShopItem->save();
+
+                $Page = new Page();
+                $Page->entity_id = $ShopItem->id;
+                $Page->type = 2;
+                $Page->save();
+
 
                 if (!empty($aItem["image"])) {
                     $ShopModificationImage = new ShopModificationImage();
@@ -181,6 +186,8 @@ class ModificationController extends Controller
                     $PropertyValueInt->value = $value;
                     $PropertyValueInt->save();
                 }
+
+                $this->saveStaticModificaitonFields($ShopItem, $oShopItem);
             }
 
             return response()->view('admin.shop.modification.index', [
@@ -190,16 +197,24 @@ class ModificationController extends Controller
         } 
     }
 
-    public static function generateUrl($aPropertiesValues) : string
+    public function saveStaticModificaitonFields($Modification, $ShopItem)
     {
+
+        $aName = [];
         $aPath = [];
-        foreach ($aPropertiesValues as $property_id => $value) {
-            if (!is_null($Property = ShopItemProperty::find($property_id)) && !is_null($ShopItemListItem = ShopItemListItem::find($value))) {
-                $aPath[] = $Property->name . '-' . $ShopItemListItem->value;
+
+        foreach ($Modification->PropertyValueInts as $PropertyValueInt) {
+
+            if ($PropertyValueInt->value > 0) {
+                $aName[] = $PropertyValueInt->ShopItemProperty->name . ": " . $PropertyValueInt->ShopItemListItem->value;
+                $aPath[] = $PropertyValueInt->ShopItemListItem->value;
             }
         }
 
-        return implode("-", $aPath);
+        $Modification->path = \App\Services\Helpers\Str::transliteration(implode("-", $aPath));
+        $Modification->url = $ShopItem->url . "-" . $Modification->path;
+        $Modification->name = $ShopItem->name . ", " . implode(",", $aName);
+        $Modification->save();
     }
 
 
@@ -268,6 +283,8 @@ class ModificationController extends Controller
         foreach ($Modification->ShopItemDiscounts as $ShopItemDiscount) {
             $ShopItemDiscountController->saveShopItemDiscount($ShopItemDiscount, $ShopItemDiscount->ShopDiscount, $Modification);
         }
+
+        $this->saveStaticModificaitonFields($Modification, ShopItem::find($Modification->modification_id));
 
         $message = "Модификация была успешно изменена!";
         if ($request->apply) {

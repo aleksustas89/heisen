@@ -81,6 +81,12 @@
                                 </select>
                             </div>
 
+                            <div class="mb-5">
+                                <label class="mb-1">Дополнительные группы</label>
+                                <input type="text" name="shortcut_group_id" class="form-control" placeholder="Пожалуйста, введите еще хотя бы 2 символа">
+                                <div class="shortcut_groups position-absolute"></div>
+                            </div>
+
                             <div class="row mb-3">
                                 <div class="col-4">
                                     <label class="mb-1">Сортировка</label>
@@ -88,7 +94,8 @@
                                 </div>
                                 <div class="col-4">
                                     <label class="mb-1">Артикул</label>
-                                    <input type="text" name="marking" class="form-control" placeholder="Артикул">
+                                    <input id="marking" type="text" name="marking" class="form-control" placeholder="Артикул" data-min="1"  data-max="255" data-required="1">
+                                    <div id="marking_error" class="fieldcheck-error"></div>
                                 </div>
                                 <div class="col-4">
                                     <label class="mb-1">Путь</label>
@@ -393,8 +400,17 @@
     </div>
 </div>
 
-<script src="/assets/image.js"></script>
-<script src="/assets//js/pages/shopItem.js"></script>
-<script src="/assets/pages/file-upload.init.js"></script>
-    
+@endsection
+
+@section ("js")
+
+    <script>
+        var routeGroupShortcut = '{{ route("getShortcutGroup") }}' + '?shop_group_id=' + {{ $parent_id }},
+            BadgeClasses = [@foreach($BadgeClasses as $k => $BadgeClasse)'{{$BadgeClasse}}'@if($k < count($BadgeClasses)-1),@endif @endforeach];
+    </script>
+
+    <script src="/assets/image.js"></script>
+    <script src="/assets//js/pages/shopItem.js"></script>
+    <script src="/assets/pages/file-upload.init.js"></script>
+
 @endsection

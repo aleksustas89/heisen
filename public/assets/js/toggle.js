@@ -3,15 +3,14 @@ var toggle = {
         $.ajax({
             url: toggle_route + "?data=" + elem.attr("id"),
             type: "POST",
-            dataType: "json",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
+            dataType: "json",
             success: function (data) {
-                if (parseInt(data.value) == 0) {
-                    elem.addClass("ico-inactive");
-                } else {
-                    elem.removeClass("ico-inactive");
+
+                if (typeof data.class != "undefined") {
+                    elem.attr("class", data.class);
                 }
 
                 if (typeof data.trClass != "undefined") {

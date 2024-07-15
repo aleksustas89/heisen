@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Shop;
 use App\Models\ShopGroup;
 use App\Models\ShopItem;
 use App\Models\Structure;
+use App\Models\ShopFilter;
 use App\Models\ShopItemImage;
 use App\Services\Helpers\File;
 use App\Models\Sitemap;
@@ -22,14 +24,19 @@ class SitemapController extends Controller
 
     protected $imagemapFilename = 'imagemap.xml';
 
+    protected $yml = NULL;
+
+    protected $ymlFilename = 'yml.xml';
+
     protected $host = NULL;
 
     public function __construct()
     {
         $this->sitemap  = public_path() . '/' . $this->sitemapFilename;
         $this->imagemap = public_path() . '/' . $this->imagemapFilename;
+        $this->yml = public_path() . '/' . $this->ymlFilename;
 
-        $this->host = 'https://' . request()->getHost();
+        $this->host = 'https://' . env('APP_NAME');
     }
 
     public function index()
@@ -44,6 +51,10 @@ class SitemapController extends Controller
             "imagemapInfo" => [
                 "date" => file_exists($this->imagemap) && !is_null($Sitemap = Sitemap::whereTag("Imagemap")->first()) ? date("d.m.Y H:i", strtotime($Sitemap->updated_at)) : '',
                 "filesize" => file_exists($this->imagemap) ? File::convertBytes(filesize($this->imagemap)) : '',
+            ],
+            "ymlInfo" => [
+                "date" => file_exists($this->yml) && !is_null($Sitemap = Sitemap::whereTag("Yml")->first()) ? date("d.m.Y H:i", strtotime($Sitemap->updated_at)) : '',
+                "filesize" => file_exists($this->yml) ? File::convertBytes(filesize($this->yml)) : '',
             ]
         ]);
     }
@@ -55,6 +66,176 @@ class SitemapController extends Controller
 
         return $aResult;
     }
+
+    public function getYml()
+    {
+        if (!is_null($Sitemap = Sitemap::whereTag("Yml")->first())) {
+            if (file_exists($this->yml)) {
+
+                $LastChangedShopGroup = ShopGroup::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
+                $LastChangedShopItem  = ShopItem::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
+        
+                if (!is_null($LastChangedShopGroup) || !is_null($LastChangedShopItem)) {
+                    $this->setYml();
+                }
+            } else {
+                $this->setYml();
+            }
+
+            return response()->redirectTo("/" . $this->ymlFilename);
+        } else {
+            return response()->to(route("adminSitemap"))->withError("Объект не найден");
+        }
+    }
+
+    public function setYml()
+    {
+
+        if (!is_null($Sitemap = Sitemap::whereTag("Yml")->first())) { 
+
+            $oShop = Shop::get();
+
+            $domDocument = new \DOMDocument('1.0', 'utf-8');
+
+            $yml_catalog = $domDocument->createElement('yml_catalog');
+
+            $date = $domDocument->createAttribute('date');
+
+            $date->value = date("Y-m-d") . "T". date("H:i");
+
+            $yml_catalog->appendChild($date);
+
+            $shop = $domDocument->createElement('shop');
+
+            $shopName = $domDocument->createElement('name', $oShop->name);
+            $shop->appendChild($shopName);
+
+            $shopCompany = $domDocument->createElement('company', $oShop->name);
+            $shop->appendChild($shopCompany);
+
+            $shopUrl = $domDocument->createElement('url', $this->host);
+            $shop->appendChild($shopUrl);
+
+            $categories = $domDocument->createElement('categories');
+
+            foreach (ShopGroup::where("active", 1)->get() as $ShopGroup) {
+                $category = $domDocument->createElement('category', $ShopGroup->name);
+                $categoryId = $domDocument->createAttribute('id');
+                $categoryId->value = $ShopGroup->id;
+                $category->appendChild($categoryId);
+
+                if ($ShopGroup->parent_id > 0) {
+                    $categoryParentId = $domDocument->createAttribute('parentId');
+                    $categoryParentId->value = $ShopGroup->parent_id;
+                    $category->appendChild($categoryParentId);
+                }
+    
+                $categories->appendChild($category);
+            }
+
+            $shop->appendChild($categories);
+
+
+            $offers = $domDocument->createElement('offers');
+
+            foreach (ShopItem::where("active", 1)->get() as $ShopItem) {
+                $offer = $domDocument->createElement('offer');
+                $offerId = $domDocument->createAttribute('id');
+                $offerId->value = $ShopItem->id;
+                $offer->appendChild($offerId);
+
+                $offerName = $domDocument->createElement('name', $ShopItem->name);
+                $offer->appendChild($offerName);
+
+                $offerVendorCode = $domDocument->createElement('vendorCode', $ShopItem->marking);
+                $offer->appendChild($offerVendorCode);
+
+                $offerUrl = $domDocument->createElement('url', $this->host . $ShopItem->url);
+                $offer->appendChild($offerUrl);
+
+                $offerPrice = $domDocument->createElement('price', $ShopItem->price());
+                $offer->appendChild($offerPrice);
+
+                if ($oldPrice = $ShopItem->oldPrice()) {
+                    $offerOldPrice = $domDocument->createElement('oldprice', $oldPrice);
+                    $offer->appendChild($offerOldPrice);
+                }
+
+                $offerCurrency = $domDocument->createElement('currencyId', 'RUR');
+                $offer->appendChild($offerCurrency);
+
+                $offerCategoryId = $domDocument->createElement('categoryId', $ShopItem->shop_group_id);
+                $offer->appendChild($offerCategoryId);
+
+                foreach ($ShopItem->getImages() as $image) {
+
+                    $offerImage = $domDocument->createElement('picture', $this->host . $image["image_large"]);
+                    $offer->appendChild($offerImage);
+                }
+
+                if (!empty($ShopItem->description)) {
+
+                    $offerDescription = $domDocument->createElement('description', '<![CDATA[' . htmlspecialchars($ShopItem->description) . ']]>');
+                    $offer->appendChild($offerDescription);
+                }
+
+                $offerWarranty = $domDocument->createElement('manufacturer_warranty', 'true');
+                $offer->appendChild($offerWarranty);
+
+
+                $PropertyValueInts = \App\Models\PropertyValueInt::select("property_value_ints.*")->whereIn("property_value_ints.entity_id", function ($query) use ($ShopItem) {
+                    $query->select('id')->from('shop_items')->where("modification_id", $ShopItem->id);
+                })->whereNot("value", 0)->get();
+
+                foreach ($PropertyValueInts as $PropertyValueInt) {
+
+                    if (!is_null($PropertyValueInt->ShopItemProperty) && !is_null($PropertyValueInt->ShopItemListItem)) {
+                        $offerParam = $domDocument->createElement('param', $PropertyValueInt->ShopItemListItem->value);
+                        $offerParamName = $domDocument->createAttribute('name');
+                        $offerParamName->value = $PropertyValueInt->ShopItemProperty->name;
+                        $offerParam->appendChild($offerParamName);
+
+                        $offer->appendChild($offerParam);
+                    }
+                }
+
+
+                if ($ShopItem->weight > 0) {
+                    $offerWeight = $domDocument->createElement('weight', $ShopItem->weight / 1000);
+                    $offer->appendChild($offerWeight);
+                }
+
+                if ($ShopItem->width > 0 && $ShopItem->height > 0 && $ShopItem->length > 0) { 
+
+                    $width = $ShopItem->width / 10;
+                    $height = $ShopItem->height / 10;
+                    $length = $ShopItem->length / 10;
+
+                    $offerDimensions = $domDocument->createElement('dimensions', "$length/$width/$height");
+                    $offer->appendChild($offerDimensions);
+                }
+
+
+                $offers->appendChild($offer);
+
+            }
+
+            $shop->appendChild($offers);
+            
+
+            $yml_catalog->appendChild($shop);
+ 
+            $domDocument->appendChild($yml_catalog);
+
+            $domDocument->save($this->yml);
+
+            $Sitemap->updated_at = date("Y-m-d H:i:s");
+            $Sitemap->save();
+
+        } else {
+            return response()->to(route("adminSitemap"))->withError("Объект не найден");
+        }
+    }
     
     public function getSitemap()
     {
@@ -65,8 +246,9 @@ class SitemapController extends Controller
                 $LastChangedStructure = Structure::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
                 $LastChangedShopGroup = ShopGroup::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
                 $LastChangedShopItem  = ShopItem::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
+                $LastChangedShopFilter  = ShopFilter::where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
     
-                if (!is_null($LastChangedStructure) || !is_null($LastChangedShopGroup) || !is_null($LastChangedShopItem)) {
+                if (!is_null($LastChangedStructure) || !is_null($LastChangedShopGroup) || !is_null($LastChangedShopItem) || !is_null($LastChangedShopFilter)) {
                     $this->setSitemap();
                 }
             } else {
@@ -99,7 +281,7 @@ class SitemapController extends Controller
                 $url = $domDocument->createElement('url');
     
                 $loc = $domDocument->createElement('loc', $this->host . $Structure->url);
-                $changefreq = $domDocument->createElement('changefreq', 'daily');
+                $changefreq = $domDocument->createElement('lastmod', date("Y-m-d", strtotime($Structure->updated_at)));
                 $priority = $domDocument->createElement('priority', '0.5');
     
                 $url->appendChild($loc);
@@ -113,7 +295,7 @@ class SitemapController extends Controller
                 $url = $domDocument->createElement('url');
     
                 $loc = $domDocument->createElement('loc', $this->host . $ShopGroup->url);
-                $changefreq = $domDocument->createElement('changefreq', 'daily');
+                $changefreq = $domDocument->createElement('lastmod', date("Y-m-d", strtotime($ShopGroup->updated_at)));
                 $priority = $domDocument->createElement('priority', '0.5');
     
                 $url->appendChild($loc);
@@ -123,11 +305,25 @@ class SitemapController extends Controller
                 $urlset->appendChild($url);
             }
     
-            foreach (ShopItem::where("active", 1)->where("modification_id", 0)->get() as $ShopItem) {
+            foreach (ShopItem::where("active", 1)->get() as $ShopItem) {
                 $url = $domDocument->createElement('url');
     
                 $loc = $domDocument->createElement('loc', $this->host . $ShopItem->url);
-                $changefreq = $domDocument->createElement('changefreq', 'daily');
+                $changefreq = $domDocument->createElement('lastmod', date("Y-m-d", strtotime($ShopItem->updated_at)));
+                $priority = $domDocument->createElement('priority', '0.5');
+    
+                $url->appendChild($loc);
+                $url->appendChild($changefreq);
+                $url->appendChild($priority);
+    
+                $urlset->appendChild($url);
+            }
+
+            foreach (ShopFilter::get() as $ShopFilter) {
+                $url = $domDocument->createElement('url');
+    
+                $loc = $domDocument->createElement('loc', $this->host . $ShopFilter->url);
+                $changefreq = $domDocument->createElement('lastmod', date("Y-m-d", strtotime($ShopFilter->updated_at)));
                 $priority = $domDocument->createElement('priority', '0.5');
     
                 $url->appendChild($loc);
@@ -213,7 +409,7 @@ class SitemapController extends Controller
                 if ($Images = $ShopItem->getImages()) {
     
                     $url = $domDocument->createElement('url');
-                    $loc = $domDocument->createElement('loc', $ShopItem->url);
+                    $loc = $domDocument->createElement('loc', $this->host . $ShopItem->url);
     
                     $url->appendChild($loc);
            

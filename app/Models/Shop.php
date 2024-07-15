@@ -26,6 +26,11 @@ class Shop extends Model
         return $oShop->path . '/';
     }
 
+    public static function fullStoragePath()
+    {
+        return base_path() . "/storage/app";
+    }
+
     public static function get()
     {
         return self::find(self::$shop_id);

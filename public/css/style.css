@@ -91,6 +91,10 @@ h1,h2,h3,h4,h5,h6,.uk-h1,.uk-h2,.uk-h3,.uk-h4,.uk-h5,.uk-h6{font-family:"Haymake
     top: -4px;
 }
 
+.tm-other-switcher .active a {
+    border: 2px solid #1b8b1b;
+}
+
 .tm-color-switcher  a.tm-active1{
     border: 0px solid #8b6a1b;
 }

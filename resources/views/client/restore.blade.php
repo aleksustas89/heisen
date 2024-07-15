@@ -16,7 +16,7 @@
        
         <div>
         
-            <h2>Восстановить пароль</h2>
+            <h1 class="uk-h2">Восстановить пароль</h1>
 
             @if (session('error'))
                 <div class="uk-alert-danger uk-margin-remove-top" uk-alert>

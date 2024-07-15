@@ -9,26 +9,32 @@ use App\Http\Controllers\Admin\ShopItemController;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Services\Helpers\Str;
+use App\Models\ShopItemShortcut;
 
 
 class ShopGroupController extends Controller
 {
 
-    static public function prepareItems($shopGroup, $ShopFilter = false)
+    static public function prepareItems($shopGroup)
     {
 
-        if($groups = self::getChildGroups($shopGroup->id)) {
-            $groups = self::ArrayMerge($groups);
-        }  else {
-            $groups = [$shopGroup->id];
+        $aGroups = ShopGroupController::ArrayMerge(ShopGroupController::getChildGroups($shopGroup->id));
+        if (!$aGroups) {
+            $aGroups = [$shopGroup->id];
         }
 
-        $aProperties = self::getProperties($ShopFilter);
+        $aProperties = self::getProperties();
 
-        $aShopItems = ShopItem::select('shop_items.*')->whereIn("shop_items.shop_group_id", $groups)->where("active", 1);
+        $shopItems = ShopItem::select("shop_items.id")->where("shop_items.active", 1)->where("shop_items.hidden", 0)->whereIn("shop_items.shop_group_id", $aGroups);
+        $ShopItemShortcuts = ShopItemShortcut::select("shop_item_shortcuts.shop_item_id")->join("shop_items", "shop_items.id", "=", "shop_item_shortcuts.shop_item_id")->where("shop_items.active", 1)->where("shop_items.hidden", 0)->whereIn("shop_item_shortcuts.shop_group_id", $aGroups);
+
+        $Modifications = ShopItem::select("shop_items.modification_id")->distinct()->where(function($query) use ($shopItems, $ShopItemShortcuts) {
+                $query->whereIn("shop_items.modification_id", $shopItems)
+                      ->orWhereIn("shop_items.modification_id", $ShopItemShortcuts);
+        });
 
         if (count($aProperties) > 0) {
-            $aShopItems
+            $Modifications
                 ->join('property_value_ints', 'property_value_ints.entity_id', '=', 'shop_items.id')
                 ->where(function($query) use ($aProperties) {
 
@@ -41,16 +47,22 @@ class ShopGroupController extends Controller
                 })
                 ->havingRaw('COUNT(property_value_ints.property_id) = ' . count($aProperties));
 
-            $aShopItems->groupBy('shop_items.id');
+            $Modifications->groupBy('shop_items.id');
 
         }
 
-        switch ($ShopFilter ? $ShopFilter->sorting : Arr::get($_REQUEST, 'sorting', 0)) {
-            case 1:
+        $aShopItems = ShopItem::select('shop_items.*')->whereIn("shop_items.id", $Modifications)->distinct();
+
+        $sorting = Arr::get($_REQUEST, 'sorting', 0);
+
+        switch ($sorting) {
+            case 'old':
                 $aShopItems->orderBy('created_at', 'ASC');
+                $sorting = 'old';
             break;
             default:
                 $aShopItems->orderBy('created_at', 'DESC');
+                $sorting = 'new';
             break;
         }
 
