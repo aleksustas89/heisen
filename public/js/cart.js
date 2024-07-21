@@ -148,4 +148,8 @@ var Cart = {
         }, 100);
         
     },
+
+    chooseBoxberry: function() {
+        UIkit.modal("#boxberry-modal").show();
+    },
 }

@@ -25,6 +25,7 @@ use YooKassa\Client;
 use App\Services\Helpers\Guid;
 use App\Models\ShopCartItem;
 use App\Http\Controllers\Shop\Payment\Handler\ShopPaymentHandlerController;
+use App\Models\BoxberryOrder;
 
 class CartController extends Controller
 {
@@ -227,6 +228,10 @@ class CartController extends Controller
                 } else if ($request->delivery_7_delivery_type == 15) {
                     $Fields['delivery_7_courier'] = 'required';
                 }
+            }
+
+            if ($request->shop_delivery_id == 8) {
+                $Fields['delivery_8_city'] = 'required';
             }
     
             if ($request->shop_delivery_id == 1) {

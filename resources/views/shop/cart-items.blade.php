@@ -58,7 +58,7 @@ $Cart =  App\Http\Controllers\CartController::getCart();
                                         <span class="cart-item-old-price item-old-price uk-margin-small-left uk-margin-small-right">{{ App\Services\Helpers\Str::price($row->attributes["oldPrice"]) }}</span>
                                     @endif --}}
                                     
-                                    {{$Currency->code}}
+                                    {{$Currency->name}}
                                 </li>
                             </ul>
                             {{-- @if (isset($row->attributes["priceChanged"]))
@@ -75,13 +75,13 @@ $Cart =  App\Http\Controllers\CartController::getCart();
             @endforeach
 
             <div class="uk-grid-small little_cart_summ" uk-grid>
-                <div class="uk-width-auto">Сумма заказа:</div><div class="uk-width-expand uk-text-right">{{ App\Services\Helpers\Str::price($totalPrice) }} {{$Currency->code}}</div>
+                <div class="uk-width-auto">Сумма заказа:</div><div class="uk-width-expand uk-text-right">{{ App\Services\Helpers\Str::price($totalPrice) }} {{$Currency->name}}</div>
             </div>
 
             @if ($totalDiscount > 0)
                 <div class="uk-grid-small" uk-grid>
                     <div class="uk-width-auto">Скидка:</div>
-                    <div class="uk-width-expand uk-text-right">-{{ App\Services\Helpers\Str::price($totalDiscount) }} {{$Currency->code}}</div>
+                    <div class="uk-width-expand uk-text-right">-{{ App\Services\Helpers\Str::price($totalDiscount) }} {{$Currency->name}}</div>
                 </div>
             @endif
 

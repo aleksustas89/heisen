@@ -178,7 +178,8 @@
                                                                 $checked = 'checked';
                                                             }
                                                         @endphp
-                                                        <input {{ $checked }} id="delivery-{{ $ShopDelivery->id }}" onclick="radioTab.click($(this))" value="{{ $ShopDelivery->id }}" type="radio" class="btn-check" name="shop_delivery_id" autocomplete="off">
+                                                        <input {{ $checked }} id="delivery-{{ $ShopDelivery->id }}" onclick="radioTab.click($(this))" 
+                                                            value="{{ $ShopDelivery->id }}" type="radio" class="btn-check" name="shop_delivery_id" autocomplete="off">
                                                         <label class="btn btn-outline-{{ $ShopDelivery->color }} btn-sm" for="delivery-{{ $ShopDelivery->id }}">{{ $ShopDelivery->name }}</label>
                                                     @endforeach
 
@@ -324,6 +325,26 @@
                                                                 <div id="cdek-errors"></div>
                                                             </div>
                                                             
+
+                                                        </div>
+
+                                                        <div @class([
+                                                            "tab-pane", "p-3", "active" => $order->shop_delivery_id == 8 ? true : false
+                                                        ]) id="tab-delivery-8" role="tabpanel">
+
+                                                            <div id="boxberry_result">
+                                                                <p>Адрес: {{ $aDeliveryValues[19] ?? '' }}</p>
+                                                            </div>
+                                                            <input type="hidden" class="form-control" value="{{ $aDeliveryValues[18] ?? '' }}" name="delivery_8_city">
+                                                            <input type="hidden" class="form-control" value="{{ $aDeliveryValues[19] ?? '' }}" name="delivery_8_address">
+
+                                                            <div class="row form-group my-1">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <p><a class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#boxberryModal" href="javascript:void(0)">Выбрать</a></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
                                                         </div>
 
@@ -526,6 +547,21 @@
         </div>
     </div>
 
+    <div class="modal" tabindex="-1" id="boxberryModal">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-4">Выберите отделение</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+            <div class="uk-modal-dialog uk-width-auto uk-modal-body p-3"  id="boxberry_map"></div>
+            <div class="modal-footer">
+                <button type="button" id="boxberryModalClose" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+              </div>
+          </div>
+        </div>
+      </div>
+
     
 @endsection
 
@@ -535,6 +571,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script> 
     <script src="/js/jquery.autocomplete.min.js"></script>
+    <script type="text/javascript" src="//points.boxberry.ru/js/boxberry.js"> </script>
+    <script>
+        boxberry.openOnPage('boxberry_map');
+        var boxberryCity = '{{ $aDeliveryValues[18] ?? '' }}';
+        boxberry.open(boxberry_callback,'1$GNJNxE86JGcEUE8cGtMjlX39n3II0isW',boxberryCity,'', 1000, 500, 0, 50, 50, 50);
+   
+        function boxberry_callback(result) {
+
+            $("[name='delivery_8_city']").val(result.name);
+            $("[name='delivery_8_address']").val(result.address);
+
+            $("#boxberry_result").html('<p>Адрес: ' + result.address + '</p>');
+
+            $("#boxberryModalClose").click();
+
+        }
+        </script>
     
     <script>
         var create_order_route = '{{ route("createCdekOrder") }}';
@@ -560,6 +613,11 @@
         }
         .btn-success {
             color: #fff !important;
+        }
+        @media (min-width: 1600px) {
+            .modal-xl {
+                max-width: 1460px;
+            }
         }
     </style>    
 @endsection

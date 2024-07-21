@@ -101,6 +101,13 @@
                 </div>
             @enderror
 
+            @error('delivery_8_city')
+                <div class="uk-alert-danger uk-margin-remove-top" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>Заполните поле Отделение Boxberry</p>
+                </div>
+            @enderror
+
 
 
             <div class="uk-grid" uk-grid class="cart-block">
@@ -117,7 +124,13 @@
 
                                 <ul class="uk-subnav uk-subnav-pill" uk-switcher>
                                     @foreach ($shopDeliveries as $k => $ShopDelivery) 
-                                        <li @if(old('shop_delivery_id') == $ShopDelivery->id) class="uk-active" @endif><a data-hidden="shop_delivery_id" data-id="{{ $ShopDelivery->id }}" href="javascript::void(0)" onclick="Cart.chooseDelivery($(this))">{{ $ShopDelivery->name }}</a></li>
+                                        <li @if(old('shop_delivery_id') == $ShopDelivery->id) class="uk-active" @endif>
+                                            @if ($ShopDelivery->id == 8)
+                                                <a data-hidden="shop_delivery_id" data-id="{{ $ShopDelivery->id }}" href="javascript::void(0)" onclick="Cart.chooseDelivery($(this)); Cart.chooseBoxberry()">{{ $ShopDelivery->name }}</a>
+                                            @else
+                                                <a data-hidden="shop_delivery_id" data-id="{{ $ShopDelivery->id }}" href="javascript::void(0)" onclick="Cart.chooseDelivery($(this))">{{ $ShopDelivery->name }}</a>
+                                            @endif
+                                        </li>
                                     @endforeach
                                 </ul>
 
@@ -180,6 +193,19 @@
                                             </div>
                                         </div>
                                                                                         
+                                    </li>
+
+                                    <li>
+                                        <input type="hidden" name="delivery_8_city" />
+                                        <input type="hidden" name="delivery_8_address" />
+                                        
+                                        <div id="boxberry_result" style=""></div>
+
+                                        <div id="boxberry-modal" style="" uk-modal>
+                                            <div class="uk-modal-dialog uk-width-auto uk-modal-body"  id="boxberry_map">
+                                                <button class="uk-modal-close-outside" type="button" uk-close></button>
+                                            </div>
+                                        </div>
                                     </li>
                                 </ul>
                             @endif
@@ -265,6 +291,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
     <script src="/js/jquery.autocomplete.min.js"></script>
 
+    <script type="text/javascript" src="//points.boxberry.ru/js/boxberry.js"> </script>
+
     @php
         App\Services\Helpers\File::js('/js/cart.js');
     @endphp
@@ -342,6 +370,27 @@
             $('[name="phone"]').mask("+7 (999) 999-9999", {autoclear: false});
         });
     </script>
+
+    <script>
+        boxberry.openOnPage('boxberry_map');
+        boxberry.open(boxberry_callback,'1$GNJNxE86JGcEUE8cGtMjlX39n3II0isW','Санкт-Петербург','', 1000, 500, 0, 50, 50, 50);
+   
+        function boxberry_callback(result) {
+
+            let boxResult = '';
+
+            boxResult += '<p>Адрес доставки: ' + result.address + '</p>';
+            boxResult += '<p>Цена: ' + result.price + ' ₽</p>';
+            boxResult += '<p><a href="javascript:void(0)" onclick="Cart.chooseBoxberry()">Изменить</a></p>';
+
+            $("[name='delivery_8_city']").val(result.name);
+            $("[name='delivery_8_address']").val(result.address);
+
+            $("#boxberry_result").html(boxResult);
+
+            UIkit.modal("#boxberry-modal").hide();
+        }
+        </script>
 @endsection
 
 @section("css")
@@ -353,6 +402,9 @@
         .cancel-chosen-city {margin: 0 5px; font-weight: bold;border-bottom: 1px dashed;}
         .input-spiner{font-size: 10px; position: absolute; display: none;}
         .input-spiner span{width: 10px; height: 10px;}
+        .uk-modal-full.uk-open{display: flex!important}
+        #boxberry_result {font-weight: 500}
+        #boxberry_result a {border-bottom: 1px dashed;}
 
         @media (max-width: 640px) { 
             .cart-block-user-data {
