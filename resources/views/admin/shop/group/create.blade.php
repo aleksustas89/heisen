@@ -71,7 +71,12 @@
 
                                     <div class="mb-3">
                                         <label class="mb-1">Родительская группа</label>
-                                        <input type="text" name="parent_id" class="form-control" placeholder="Родительская группа">
+                                        <select name="parent_id" class="form-control">
+                                            <option value="0">...</option>
+                                            @php
+                                                \App\Http\Controllers\ShopGroupController::showTreeGroupsAsOptions(0);
+                                            @endphp
+                                        </select>
                                     </div>
 
                                     <div class="row mb-3">
