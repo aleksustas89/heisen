@@ -25,7 +25,7 @@ use YooKassa\Client;
 use App\Services\Helpers\Guid;
 use App\Models\ShopCartItem;
 use App\Http\Controllers\Shop\Payment\Handler\ShopPaymentHandlerController;
-use App\Models\BoxberryOrder;
+use App\Models\Boxberry;
 
 class CartController extends Controller
 {
@@ -43,6 +43,7 @@ class CartController extends Controller
             "Payments" => ShopPaymentSystem::where("deleted", 0)->orderBy("sorting", "ASC")->get(),
             'shopDeliveries' => ShopDelivery::where("deleted", 0)->orderBy("sorting", "ASC")->get(),
             "client" => $client,
+            "Boxberry" => Boxberry::find(1)
         ]);
     }
 

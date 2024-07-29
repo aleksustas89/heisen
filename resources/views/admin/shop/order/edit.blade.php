@@ -573,9 +573,10 @@
     <script src="/js/jquery.autocomplete.min.js"></script>
     <script type="text/javascript" src="//points.boxberry.ru/js/boxberry.js"> </script>
     <script>
+        var BoxberryToken = '{{ $Boxberry->token }}';
         boxberry.openOnPage('boxberry_map');
         var boxberryCity = '{{ $aDeliveryValues[18] ?? '' }}';
-        boxberry.open(boxberry_callback,'1$GNJNxE86JGcEUE8cGtMjlX39n3II0isW',boxberryCity,'', 1000, 500, 0, 50, 50, 50);
+        boxberry.open(boxberry_callback,BoxberryToken,boxberryCity,'', 1000, 500, 0, 50, 50, 50);
    
         function boxberry_callback(result) {
 
@@ -587,7 +588,7 @@
             $("#boxberryModalClose").click();
 
         }
-        </script>
+    </script>
     
     <script>
         var create_order_route = '{{ route("createCdekOrder") }}';

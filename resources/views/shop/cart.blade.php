@@ -258,7 +258,7 @@
                             </div>
                             <div class="uk-form-label">Комментарий к заказу (не обязательно)</div>    	    	
                             <div class="uk-margin">
-                                <textarea name="description" class="uk-textarea" rows="5" placeholder="Textarea" aria-label="Textarea">{{ old('description') }}</textarea>
+                                <textarea name="description" class="uk-textarea" rows="5" placeholder="Комментарий к заказу (не обязательно)" aria-label="Textarea">{{ old('description') }}</textarea>
                             </div>
                             <label class="uk-form-label"><input value="{{ old('not_call') ?? 1 }}" @if (old('not_call') == 1) checked @endif name="not_call" class="uk-checkbox" type="checkbox"> Не звоните мне для подтверждения заказа</label>
                             <div class="uk-text-center uk-margin">
@@ -355,6 +355,27 @@
                     }, 1000);
                 }
             });
+
+            var BoxberryToken = '{{ isset($Boxberry) ? $Boxberry->token : '' }}';
+            boxberry.openOnPage('boxberry_map');
+            boxberry.open(boxberry_callback, BoxberryToken,'','', 1000, 500, 0, 50, 50, 50);
+    
+            function boxberry_callback(result) {
+
+                let boxResult = '';
+
+                boxResult += '<p>Адрес доставки: ' + result.address + '</p>';
+                boxResult += '<p>Цена: ' + result.price + ' ₽</p>';
+                boxResult += '<p><a href="javascript:void(0)" onclick="Cart.chooseBoxberry()">Изменить</a></p>';
+
+                $("[name='delivery_8_city']").val(result.name);
+                $("[name='delivery_8_address']").val(result.address);
+
+                $("#boxberry_result").html(boxResult);
+
+                UIkit.modal("#boxberry-modal").hide();
+            }
+
         }
 
         var delay = (function(){
@@ -371,26 +392,6 @@
         });
     </script>
 
-    <script>
-        boxberry.openOnPage('boxberry_map');
-        boxberry.open(boxberry_callback,'1$GNJNxE86JGcEUE8cGtMjlX39n3II0isW','Санкт-Петербург','', 1000, 500, 0, 50, 50, 50);
-   
-        function boxberry_callback(result) {
-
-            let boxResult = '';
-
-            boxResult += '<p>Адрес доставки: ' + result.address + '</p>';
-            boxResult += '<p>Цена: ' + result.price + ' ₽</p>';
-            boxResult += '<p><a href="javascript:void(0)" onclick="Cart.chooseBoxberry()">Изменить</a></p>';
-
-            $("[name='delivery_8_city']").val(result.name);
-            $("[name='delivery_8_address']").val(result.address);
-
-            $("#boxberry_result").html(boxResult);
-
-            UIkit.modal("#boxberry-modal").hide();
-        }
-        </script>
 @endsection
 
 @section("css")

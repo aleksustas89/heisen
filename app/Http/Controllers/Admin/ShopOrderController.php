@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\CdekSender;
 use App\Models\CdekOrder;
 use App\Models\CdekDimension;
+use App\Models\Boxberry;
 
 
 class ShopOrderController extends Controller
@@ -37,7 +38,8 @@ class ShopOrderController extends Controller
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
             'shopDeliveries' => ShopDelivery::where("deleted", 0)->orderBy("sorting", "ASC")->get(),
             'cdekSender' => CdekSender::find(1),
-            'CdekDimensions' => CdekDimension::orderBy("sorting", "ASC")->get()
+            'CdekDimensions' => CdekDimension::orderBy("sorting", "ASC")->get(),
+            "Boxberry" => Boxberry::find(1)
         ]);
     }
 
@@ -72,7 +74,8 @@ class ShopOrderController extends Controller
             'aDeliveryValues' => $aDeliveryValues,
             'cdekSender' => CdekSender::find(1),
             'CdekOrder' => CdekOrder::where("shop_order_id", $shopOrder->id)->first(),
-            'CdekDimensions' => CdekDimension::orderBy("sorting", "ASC")->get()
+            'CdekDimensions' => CdekDimension::orderBy("sorting", "ASC")->get(),
+            "Boxberry" => Boxberry::find(1)
         ]);
     }
 

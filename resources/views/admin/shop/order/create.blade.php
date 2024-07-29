@@ -154,9 +154,7 @@
                                                     @endforeach
 
                                                     <div class="tab-content">        
-                                                        <div @class([
-                                                            "tab-pane", "p-3"
-                                                        ]) id="tab-delivery-7" role="tabpanel">
+                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-7" role="tabpanel">
                                                             <div class="row">  
                                                                 
                                                                 <div class="form-group">
@@ -211,9 +209,7 @@
 
                                                         </div>
 
-                                                        <div @class([
-                                                            "tab-pane", "p-3",
-                                                        ]) id="tab-delivery-1" role="tabpanel">
+                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-1" role="tabpanel">
                                                             <div class="row">                                 
                                                                 <div class="form-group">
                                                                     <label class="label my-2">Город </label>
@@ -224,7 +220,26 @@
                                                                     <input type="text" class="form-control" value="" name="delivery_1_office">
                                                                 </div>                                                                            
                                                             </div>
-                                                        </div>       
+                                                        </div>  
+                                                        
+                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-8" role="tabpanel">
+
+                                                            <div id="boxberry_result">
+                                                            </div>
+                                                            <input type="hidden" class="form-control" value="" name="delivery_8_city">
+                                                            <input type="hidden" class="form-control" value="" name="delivery_8_address">
+
+                                                            <div class="row form-group my-1">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <p><a class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#boxberryModal" href="javascript:void(0)">Выбрать</a></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        
+
                                                     </div>
 
                                                 </div>
@@ -324,6 +339,21 @@
         </div>
     </div>
 
+    <div class="modal" tabindex="-1" id="boxberryModal">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-4">Выберите отделение</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+            <div class="uk-modal-dialog uk-width-auto uk-modal-body p-3"  id="boxberry_map"></div>
+            <div class="modal-footer">
+                <button type="button" id="boxberryModalClose" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+              </div>
+          </div>
+        </div>
+    </div>
+
     
 @endsection
 
@@ -338,6 +368,26 @@
         new Selectr('#cdek_dimension_id');
         new Selectr('#client_id');
     </script>
+    
+    <script type="text/javascript" src="//points.boxberry.ru/js/boxberry.js"> </script>
+    <script>
+        var BoxberryToken = '{{ $Boxberry->token }}';
+        boxberry.openOnPage('boxberry_map');
+        var boxberryCity = '{{ $aDeliveryValues[18] ?? '' }}';
+        boxberry.open(boxberry_callback,BoxberryToken,boxberryCity,'', 1000, 500, 0, 50, 50, 50);
+
+        function boxberry_callback(result) {
+
+            $("[name='delivery_8_city']").val(result.name);
+            $("[name='delivery_8_address']").val(result.address);
+
+            $("#boxberry_result").html('<p>Адрес: ' + result.address + '</p>');
+
+            $("#boxberryModalClose").click();
+
+        }
+    </script>
+
     @php
         App\Services\Helpers\File::js('/assets/js/pages/shopOrder.js');
     @endphp
