@@ -23,7 +23,7 @@ class CommentController extends Controller
 
         return view('admin.comment.index', [
             'breadcrumbs' => self::breadcrumbs($parent > 0 ? Comment::find($parent) : false),
-            'comments' => Comment::where("parent_id", $request->parent_id ?? 0)->orderBy("id", "Desc")->paginate(self::$items_on_page),
+            'comments' => Comment::where("parent_id", $request->parent_id ?? 0)->where("deleted", 0)->orderBy("id", "Desc")->paginate(self::$items_on_page),
             'parent_id' => $request->parent_id ?? 0,
         ]);
     }
@@ -116,9 +116,10 @@ class CommentController extends Controller
     public function destroy(Comment $comment)
     {
 
-        $this->remove($comment);
+        $comment->deleted = 1;
+        $comment->save();
 
-        return redirect()->back()->withSuccess("Комментарий был успешно удален!");
+        return redirect()->back()->withSuccess("Комментарий был успешно перемещен в корзину!");
     }
 
     public function remove(Comment $comment)

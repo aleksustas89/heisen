@@ -23,7 +23,7 @@ class ShopItemListItemController extends Controller
         if ($list_id > 0) {
             return view('admin.shop.item.list.item.index', [
                 'breadcrumbs' => self::breadcrumbs(false, $list_id),
-                'items' => ShopItemListItem::where("shop_item_list_id", $list_id)->get(),
+                'items' => ShopItemListItem::where("shop_item_list_id", $list_id)->where("deleted", 0)->get(),
                 'list_id' => $list_id,
                 'shop' => $shop,
             ]);
@@ -85,9 +85,10 @@ class ShopItemListItemController extends Controller
      */
     public function destroy(Shop $shop, ShopItemListItem $shopItemListItem)
     {
-        $shopItemListItem->delete();
+        $shopItemListItem->deleted = 1;
+        $shopItemListItem->save();
 
-        return redirect()->back()->withSuccess("Элемент списка был успешно удален!");
+        return redirect()->back()->withSuccess("Элемент списка был успешно перемещен в корзину!");
     }
 
     public function saveShopItemListItem(Request $request, Shop $shop, $shopItemListItem = false)

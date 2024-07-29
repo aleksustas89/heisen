@@ -13,4 +13,14 @@ class ShopDelivery extends Model
     {
         return $this->hasMany(ShopDeliveryField::class);
     }
+
+    public function delete()
+    {
+
+        foreach ($this->ShopDeliveryFields as $ShopDeliveryField) {
+            $ShopDeliveryField->delete();
+        }
+
+        parent::delete();
+    }
 }

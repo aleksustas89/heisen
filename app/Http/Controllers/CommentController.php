@@ -10,7 +10,7 @@ class CommentController extends Controller
     public function index()
     {
         return view('comment.index', [
-            'Comments' => Comment::where("active", 1)->where("parent_id", 0)->orderBy("id", "DESC")->paginate(),
+            'Comments' => Comment::where("active", 1)->where("deleted", 0)->where("parent_id", 0)->orderBy("id", "DESC")->paginate(),
         ]);
     }
 }

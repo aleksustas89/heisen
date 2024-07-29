@@ -32,7 +32,7 @@ class UpdateOrderPaymentStatus extends Command
     {
         $Shop = Shop::get();
 
-        foreach (ShopOrder::where("created_at", ">", date("Y-m-d H:i:s", strtotime("-5 minutes", strtotime(date("Y-m-d H:i:s")))))->where("paid", 0)->get() as $ShopOrder) {
+        foreach (ShopOrder::where("created_at", ">", date("Y-m-d H:i:s", strtotime("-5 minutes", strtotime(date("Y-m-d H:i:s")))))->where("paid", 0)->where("deleted", 0)->get() as $ShopOrder) {
             if (!is_null($ShopOrder->UkassaOrder)) {
                 $CartController = new CartController();
                 $payment = $CartController->getPaymentInfo($ShopOrder->UkassaOrder->ukassa_result_uuid);

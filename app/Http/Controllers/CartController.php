@@ -40,8 +40,8 @@ class CartController extends Controller
         return view('shop.cart', [
             "Cart" => self::getCart(),
             "Cities" => ShopCountryLocationCity::get(),
-            "Payments" => ShopPaymentSystem::orderBy("sorting", "ASC")->get(),
-            'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
+            "Payments" => ShopPaymentSystem::where("deleted", 0)->orderBy("sorting", "ASC")->get(),
+            'shopDeliveries' => ShopDelivery::where("deleted", 0)->orderBy("sorting", "ASC")->get(),
             "client" => $client,
         ]);
     }
@@ -127,7 +127,12 @@ class CartController extends Controller
 
         if ($cart_id = self::isSetCart()) {
 
-            $ShopCartItems = ShopCartItem::where("cart_id", $cart_id)->get();
+            $ShopCartItems = ShopCartItem::select("shop_cart_items.*")
+                        ->join("shop_items", "shop_cart_items.shop_item_id", "=", "shop_items.id")
+                        ->where("shop_cart_items.cart_id", $cart_id)
+                        ->where("shop_items.active", 1)
+                        ->where("shop_items.deleted", 0)
+                        ->get();
 
             $aResult["items"] = $ShopCartItems;
 

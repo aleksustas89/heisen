@@ -18,7 +18,7 @@ class ClientController extends Controller
     {
 
         return view('admin.client.index', [
-             'clients' => Client::paginate(self::$items_on_page),
+             'clients' => Client::where("deleted", 0)->orderBy("id", "DESC")->paginate(self::$items_on_page),
              'breadcrumbs' => self::breadcrumbs(),
         ]);
     }
@@ -69,9 +69,10 @@ class ClientController extends Controller
     public function destroy(Client $client)
     {
 
-        $client->delete();
+        $client->deleted = 1;
+        $client->save();
 
-        return redirect()->back()->withSuccess('Клиент был успешно удален!');
+        return redirect()->back()->withSuccess('Клиент был успешно перемещен в корзину!');
     }
 
     public function saveClient(Request $request, $client = false)

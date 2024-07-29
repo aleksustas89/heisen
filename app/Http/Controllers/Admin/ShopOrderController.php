@@ -24,7 +24,7 @@ class ShopOrderController extends Controller
     {
         return view('admin.shop.order.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(),
-            'orders' => ShopOrder::orderBy("created_at", "Desc")->paginate(self::$item_on_page),
+            'orders' => ShopOrder::orderBy("created_at", "Desc")->where("deleted", 0)->paginate(self::$item_on_page),
         ]);
     }
 
@@ -35,7 +35,7 @@ class ShopOrderController extends Controller
     {
         return view('admin.shop.order.create', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(true),
-            'shopDeliveries' => ShopDelivery::orderBy("sorting", "ASC")->get(),
+            'shopDeliveries' => ShopDelivery::where("deleted", 0)->orderBy("sorting", "ASC")->get(),
             'cdekSender' => CdekSender::find(1),
             'CdekDimensions' => CdekDimension::orderBy("sorting", "ASC")->get()
         ]);
@@ -81,7 +81,6 @@ class ShopOrderController extends Controller
      */
     public function update(Request $request, ShopOrder $shopOrder)
     {
-       // dd($request);
         return self::saveOrder($request, $shopOrder);
     }
 
@@ -91,11 +90,8 @@ class ShopOrderController extends Controller
     public function destroy(ShopOrder $shopOrder)
     {
 
-        foreach ($shopOrder->shopOrderItems as $shopOrderItem) {
-            $shopOrderItem->delete();
-        }
-
-        $shopOrder->delete();
+        $shopOrder->deleted = 1;
+        $shopOrder->save();
 
         return redirect()->back()->withSuccess('Заказ был успешно удален!');
     }

@@ -14,7 +14,7 @@ class ShopCurrencyController extends Controller
 
         $aShopCurrencies = [];
 
-        foreach (ShopCurrency::get() as $ShopCurrency) {
+        foreach (ShopCurrency::where("deleted", 0)->get() as $ShopCurrency) {
             $aShopCurrencies[] = $ShopCurrency->id;
         }
 

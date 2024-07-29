@@ -520,7 +520,7 @@
                             </thead>
                             <tbody>
 
-                                @foreach ($order->ShopOrderItems as $orderItem) 
+                                @foreach ($order->ShopOrderItems()->where("deleted", 0)->get() as $orderItem) 
                                     <tr>
                                         <td class="td_editable">{{ $orderItem->name }}</td>
                                         <td class="td_editable">{{ $orderItem->quantity }}</td>
@@ -560,7 +560,7 @@
               </div>
           </div>
         </div>
-      </div>
+    </div>
 
     
 @endsection

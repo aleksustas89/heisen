@@ -52,12 +52,12 @@ class ShopController extends Controller
     public static function buildGroupTree()
     {
         $aResult = [];
-        foreach (ShopGroup::where("parent_id", 0)->where("active", 1)->where("hidden", 0)->orderBy("sorting", "ASC")->get() as $ShopGroup) {
+        foreach (ShopGroup::where("parent_id", 0)->where("active", 1)->where("hidden", 0)->where("deleted", 0)->orderBy("sorting", "ASC")->get() as $ShopGroup) {
             $aResult[$ShopGroup->id]["id"] = $ShopGroup->id;
             $aResult[$ShopGroup->id]["name"] = $ShopGroup->name;
             $aResult[$ShopGroup->id]["url"] = $ShopGroup->url;
             $aResult[$ShopGroup->id]["sub"] = [];
-            foreach (ShopGroup::where("parent_id", $ShopGroup->id)->where("active", 1)->where("hidden", 0)->orderBy("sorting", "ASC")->get() as $sShopGroup) {
+            foreach (ShopGroup::where("parent_id", $ShopGroup->id)->where("active", 1)->where("hidden", 0)->where("deleted", 0)->orderBy("sorting", "ASC")->get() as $sShopGroup) {
 
                 $aResult[$ShopGroup->id]["sub"][$sShopGroup->id]["id"] = $sShopGroup->id;
                 $aResult[$ShopGroup->id]["sub"][$sShopGroup->id]["name"] = $sShopGroup->name;

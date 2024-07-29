@@ -39,6 +39,7 @@ class ShopItemController extends Controller
                                     ->whereIn("property_value_ints.entity_id", function ($query) use ($ParentItem) {
                                         $query->select('id')->from('shop_items')->where("modification_id", $ParentItem->id);
                                     })
+                                    ->where('shop_item_properties.deleted', 0)
                                     ->groupBy("property_value_ints.property_id")
                                     ->whereNot("property_value_ints.value", 0)
                                     ->get();
@@ -60,6 +61,7 @@ class ShopItemController extends Controller
             ->join("comment_shop_items", "comments.id", "=", "comment_shop_items.comment_id")
             ->where("comment_shop_items.shop_item_id", $ParentItem->id)
             ->where("comments.active", 1)
+            ->where("comments.deleted", 0)
             ->get();
 
         //габариты
@@ -175,6 +177,7 @@ class ShopItemController extends Controller
             $ShopItem
                 ->join("property_value_ints", "property_value_ints.entity_id", "=", "shop_items.id")
                 ->where("shop_items.modification_id", $request->shop_item_id)
+                ->where("shop_items.deleted", 0)
                 ->where(function($query) use ($aProperties) {
                     foreach ($aProperties as $k => $aProperty) {
                         $query->orWhere(function($query) use ($k, $aProperty) {

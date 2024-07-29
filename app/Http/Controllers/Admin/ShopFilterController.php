@@ -21,7 +21,7 @@ class ShopFilterController extends Controller
     public function index()
     {
         return view("admin.shop.filter.index", [
-            "shopFilters" => ShopFilter::paginate(),
+            "shopFilters" => ShopFilter::where("deleted", 0)->paginate(),
             "breadcrumbs" => $this->breadcrumbs(),
             "shop" => Shop::get()
         ]);
@@ -29,7 +29,7 @@ class ShopFilterController extends Controller
 
     public function getShopItemProperties()
     {
-        return ShopItemProperty::where("show_in_filter", 1)->get();
+        return ShopItemProperty::where("show_in_filter", 1)->where("deleted", 0)->get();
     }
 
     /**
@@ -87,7 +87,8 @@ class ShopFilterController extends Controller
      */
     public function destroy(Request $request, Shop $shop, ShopFilter $shopFilter)
     {
-        $shopFilter->delete();
+        $shopFilter->deleted = 1;
+        $shopFilter->save();
 
         return redirect()->back()->withSuccess("Фильтр был успешно удален!");
     }

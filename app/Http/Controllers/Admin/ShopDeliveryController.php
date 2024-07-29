@@ -19,7 +19,7 @@ class ShopDeliveryController extends Controller
     {
         return view('admin.shop.delivery.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(),
-            'deliveries' => ShopDelivery::paginate(self::$items_on_page),
+            'deliveries' => ShopDelivery::where("deleted", 0)->paginate(self::$items_on_page),
             'shop' => $shop
         ]);
     }
@@ -70,13 +70,10 @@ class ShopDeliveryController extends Controller
     public function destroy(Shop $shop, ShopDelivery $shopDelivery)
     {
 
-        foreach ($shopDelivery->ShopDeliveryFields as $ShopDeliveryField) {
-            $ShopDeliveryField->delete();
-        }
+        $shopDelivery->deleted = 1;
+        $shopDelivery->save();
 
-        $shopDelivery->delete();
-
-        return redirect()->back()->withSuccess("Доставка была успешно удалена!");
+        return redirect()->back()->withSuccess("Доставка была успешно перемещена в корзину!");
     }
 
     public function saveDelivery(Request $request, $shop, $shopDelivery = false)

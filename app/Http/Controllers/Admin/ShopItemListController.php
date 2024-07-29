@@ -17,7 +17,7 @@ class ShopItemListController extends Controller
     {
         return view('admin.shop.item.list.index', [
             'breadcrumbs' => self::breadcrumbs(),
-            'lists' => ShopItemList::get(),
+            'lists' => ShopItemList::where("deleted", 0)->get(),
             'shop' => $shop
         ]);
     }
@@ -87,9 +87,10 @@ class ShopItemListController extends Controller
     public function destroy(Shop $shop, ShopItemList $shopItemList)
     {
 
-        $shopItemList->delete();
+        $shopItemList->deleted = 1;
+        $shopItemList->save();
 
-        return redirect()->back()->withSuccess("Свойство было успешно удалено!");
+        return redirect()->back()->withSuccess("Свойство было успешно перемещено в корзину!");
     }
 
     public static function breadcrumbs($lastItemIsLink = false)

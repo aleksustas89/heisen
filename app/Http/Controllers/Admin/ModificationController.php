@@ -301,7 +301,8 @@ class ModificationController extends Controller
     public function destroy(ShopItem $Modification)
     {
 
-        $Modification->delete();
+        $Modification->deleted = 1;
+        $Modification->save();
 
         return response()->json(true);
 

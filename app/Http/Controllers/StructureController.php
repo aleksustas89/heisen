@@ -20,7 +20,7 @@ class StructureController extends Controller
     {
         
         if ($structure->parent_id > 0) {
-            $oStructure = Structure::where("id", $structure->parent_id)->where('active', 1)->first();
+            $oStructure = Structure::where("id", $structure->parent_id)->where('active', 1)->where('deleted', 0)->first();
             if (!is_null($oStructure)) {
                 
                 $Result["name"] = $structure->name;
@@ -66,7 +66,7 @@ class StructureController extends Controller
     {    
 
         if (isset($aUrls[$level])) {
-            $Structure = Structure::where("active", 1)->where("path", $aUrls[$level])->where("parent_id", $parent)->first();
+            $Structure = Structure::where("active", 1)->where("path", $aUrls[$level])->where("parent_id", $parent)->where('deleted', 0)->first();
             if (!is_null($Structure) && $level < count($aUrls) - 1) {
                 $level++;
                 return self::getChildStructure($aUrls, $Structure->id, $level);
@@ -82,7 +82,7 @@ class StructureController extends Controller
     {
         $aResult = [];
 
-        $Structure = Structure::where("parent_id", 0)->where("active", 1)->orderBy("sorting", "ASC");
+        $Structure = Structure::where("parent_id", 0)->where("active", 1)->where('deleted', 0)->orderBy("sorting", "ASC");
 
         if ($menu) {
             $Structure->where("structure_menu_id", $menu);
@@ -93,7 +93,7 @@ class StructureController extends Controller
             $aResult[$Structure->id]["name"] = $Structure->name;
             $aResult[$Structure->id]["url"] = $Structure->url;
             $aResult[$Structure->id]["sub"] = [];
-            foreach (Structure::where("parent_id", $Structure->id)->where("active", 1)->orderBy("sorting", "ASC")->get() as $sStructure) {
+            foreach (Structure::where("parent_id", $Structure->id)->where("active", 1)->where('deleted', 0)->orderBy("sorting", "ASC")->get() as $sStructure) {
 
                 $aResult[$Structure->id]["sub"][$sStructure->id]["id"] = $sStructure->id;
                 $aResult[$Structure->id]["sub"][$sStructure->id]["name"] = $sStructure->name;

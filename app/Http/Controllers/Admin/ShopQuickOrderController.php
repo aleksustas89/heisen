@@ -19,7 +19,7 @@ class ShopQuickOrderController extends Controller
     {
         return view('admin.shop.quick.order.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(),
-            'quick_orders' => ShopQuickOrder::orderBy("created_at", "Desc")->paginate(self::$item_on_page),
+            'quick_orders' => ShopQuickOrder::where("deleted", 0)->orderBy("created_at", "Desc")->paginate(self::$item_on_page),
             'shop' => $shop
         ]);
     }
@@ -86,9 +86,10 @@ class ShopQuickOrderController extends Controller
      */
     public function destroy(Shop $shop, ShopQuickOrder $shopQuickOrder)
     {
-        $shopQuickOrder->delete();
+        $shopQuickOrder->deleted = 1;
+        $shopQuickOrder->save();
 
-        return redirect()->back()->withSuccess('Заказ был успешно удален!');
+        return redirect()->back()->withSuccess('Заказ был успешно перемещен в корзину!');
     }
 
     public static function breadcrumbs($lastItemIsLink = false)

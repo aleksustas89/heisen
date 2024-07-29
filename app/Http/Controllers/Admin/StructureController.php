@@ -24,7 +24,7 @@ class StructureController extends Controller
     {
         $parent = Arr::get($_REQUEST, 'parent_id', 0);
 
-        $aStructures = Structure::where('parent_id', $parent)->orderBy('sorting', 'desc')->paginate(self::$item_on_page);
+        $aStructures = Structure::where('parent_id', $parent)->where("deleted", 0)->orderBy('sorting', 'desc')->paginate(self::$item_on_page);
 
         return view('admin.structure.index', [
             'structures' => $aStructures,
@@ -84,9 +84,10 @@ class StructureController extends Controller
      */
     public function destroy(Structure $structure)
     {
-        $structure->delete();
+        $structure->deleted = 1;
+        $structure->save();
 
-        return redirect()->back()->withSuccess('Структура был успешно удалена!');
+        return redirect()->back()->withSuccess('Структура был успешно перемещена в корзину!');
     }
 
     /**

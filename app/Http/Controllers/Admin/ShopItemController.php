@@ -123,6 +123,7 @@ class ShopItemController extends Controller
     {
         $properties = ShopItemProperty::join('shop_item_property_for_groups', 'shop_item_properties.id', '=', 'shop_item_property_for_groups.shop_item_property_id')
                         ->select('shop_item_properties.*')
+                        ->where("shop_item_properties.deleted", 0)
                         ->where('shop_item_property_for_groups.shop_group_id', $shop_group_id)    
                         ->orderBy("shop_item_properties.sorting", "ASC")
                         ;
@@ -147,7 +148,7 @@ class ShopItemController extends Controller
         }
 
         $aLists = [];
-        foreach(ShopItemListItem::whereIn("shop_item_list_id", $lists)->get() as  $oShopItemList) {
+        foreach(ShopItemListItem::whereIn("shop_item_list_id", $lists)->where("deleted", 0)->get() as  $oShopItemList) {
             $aLists[$oShopItemList->shop_item_list_id][$oShopItemList->id] = $oShopItemList->value;
         }
 
@@ -169,7 +170,8 @@ class ShopItemController extends Controller
     public function destroy(Request $request, Shop $shop, ShopItem $shopItem)
     {
 
-        $shopItem->delete();
+        $shopItem->deleted = 1;
+        $shopItem->save();
 
         return redirect()->back()->withSuccess("Товар был успешно удален!");
     }
@@ -349,6 +351,7 @@ class ShopItemController extends Controller
         if (!empty($term = $request->input('term'))) {
 
             $ShopItems = ShopItem::where('modification_id', 0)
+                ->where("deleted", 0)
                 ->where(function($query) use ($term) {
                     $query->orWhere('name', "LIKE", "%" . $term ."%")
                             ->orWhere("id", $term)

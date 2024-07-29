@@ -64,9 +64,12 @@ class ShopGroupController extends Controller
      */
     public function destroy(Shop $shop, ShopGroup $shopGroup)
     {
-        $shopGroup->delete();
+        //$shopGroup->delete();
 
-        return redirect()->back()->withSuccess("Группа была успешно удалена!");
+        $shopGroup->deleted = 1;
+        $shopGroup->save();
+
+        return redirect()->back()->withSuccess("Группа была успешно перемещенна в корзину!");
     }
 
     

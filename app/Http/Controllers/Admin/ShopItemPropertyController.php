@@ -20,7 +20,7 @@ class ShopItemPropertyController extends Controller
     {
         return view('admin.shop.item.property.index', [
             'breadcrumbs' => self::breadcrumbs(),
-            'properties' => ShopItemProperty::get(),
+            'properties' => ShopItemProperty::where("deleted", 0)->get(),
             'types' => ShopItemProperty::types(),
             'shop' => $shop,
 
@@ -82,9 +82,10 @@ class ShopItemPropertyController extends Controller
      */
     public function destroy(Shop $shop, ShopItemProperty $shopItemProperty)
     {
-        $shopItemProperty->delete();
+        $shopItemProperty->deleted = 1;
+        $shopItemProperty->save();
 
-        return redirect()->back()->withSuccess("Свойство было успешно удалено!");
+        return redirect()->back()->withSuccess("Свойство было успешно перемещено в корзину!");
     }
 
     public function saveShopItemProperty(Request $request, Shop $shop, $shopItemProperty = false)

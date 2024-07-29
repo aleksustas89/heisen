@@ -45,6 +45,7 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
             'shop.shop-payment-system' => 'ShopPaymentSystemController',
             'cdek-sender' => 'CdekSenderController',
             'shop.shop-filter' => 'ShopFilterController',
+            'trash' => 'TrashController',
         ]);
 
         Route::resource('shop.shop-price', App\Http\Controllers\Admin\ShopPriceController::class)->only(['index', 'update']);

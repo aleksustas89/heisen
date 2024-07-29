@@ -58,7 +58,7 @@ class ShopOrder extends Model
     public function getSum()
     {
         $sum = 0;
-        foreach ($this->ShopOrderItems as $orderItem) {
+        foreach ($this->ShopOrderItems()->where("deleted", 0)->get() as $orderItem) {
             if ($orderItem->shop_item_id > 0 && $orderItem->price > 0) {
                 $sum += ($orderItem->price * $orderItem->quantity);
             }

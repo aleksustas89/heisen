@@ -44,7 +44,9 @@ class ShopItemDiscountController extends Controller
                                 ->where("shop_discounts.start_datetime", "<=", date("Y-m-d H:i:s"))
                                 ->where("shop_discounts.end_datetime", ">=", date("Y-m-d H:i:s"))
                                 ->where("shop_items.active", 1)
-                                ->where("shop_discounts.active", 1);
+                                ->where("shop_discounts.active", 1)
+                                ->where("shop_discounts.deleted", 0)
+                                ->where("shop_items.deleted", 0);
                         });
     }
 

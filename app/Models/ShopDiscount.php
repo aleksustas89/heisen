@@ -37,4 +37,14 @@ class ShopDiscount extends Model
 
         return false;
     }
+
+    public function delete()
+    {
+
+        foreach ($this->ShopItemDiscounts as $ShopItemDiscount) {
+            $ShopItemDiscount->delete();
+        }
+
+        parent::delete();
+    }
 }

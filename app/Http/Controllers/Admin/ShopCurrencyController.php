@@ -17,7 +17,7 @@ class ShopCurrencyController extends Controller
     {
         return view('admin.shop.currency.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(false),
-            'currencies' => ShopCurrency::orderBy('sorting', 'asc')->get(),
+            'currencies' => ShopCurrency::where("deleted", 0)->orderBy('sorting', 'asc')->get(),
             'shop' => $shop
         ]);
     }
@@ -101,9 +101,10 @@ class ShopCurrencyController extends Controller
      */
     public function destroy(Shop $shop, ShopCurrency $shopCurrency)
     {
-        $shopCurrency->delete();
+        $shopCurrency->deleted = 1;
+        $shopCurrency->save();
 
-        return redirect()->back()->withSuccess('Валюта была успешно удалена!');
+        return redirect()->back()->withSuccess('Валюта была успешно перемещена в корзину!');
     }
 
     public static function breadcrumbs($link = true)

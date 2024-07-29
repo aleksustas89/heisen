@@ -19,7 +19,7 @@ class UserController extends Controller
     {
 
         return view('admin.user.index', [
-             'users' => User::paginate(self::$items_on_page),
+             'users' => User::where("deleted", 0)->paginate(self::$items_on_page),
              'breadcrumbs' => self::getBreadcrumbs(),
         ]);
     }
@@ -72,9 +72,10 @@ class UserController extends Controller
 
         DB::delete('delete from model_has_roles where model_id=' . $user->id);
 
-        $user->delete();
+        $user->deleted = 1;
+        $user->save();
 
-        return redirect()->back()->withSuccess("Сотрудник был успешно удален!");
+        return redirect()->back()->withSuccess("Сотрудник был успешно перемещен в корзину!");
     }
 
     public static function getBreadcrumbs()

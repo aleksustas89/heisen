@@ -25,7 +25,7 @@ class ShopGroupController extends Controller
 
         $aProperties = self::getProperties();
 
-        $shopItems = ShopItem::select("shop_items.id")->where("shop_items.active", 1)->where("shop_items.hidden", 0)->whereIn("shop_items.shop_group_id", $aGroups);
+        $shopItems = ShopItem::select("shop_items.id")->where("shop_items.active", 1)->where("shop_items.deleted", 0)->where("shop_items.hidden", 0)->whereIn("shop_items.shop_group_id", $aGroups);
         $ShopItemShortcuts = ShopItemShortcut::select("shop_item_shortcuts.shop_item_id")->join("shop_items", "shop_items.id", "=", "shop_item_shortcuts.shop_item_id")->where("shop_items.active", 1)->where("shop_items.hidden", 0)->whereIn("shop_item_shortcuts.shop_group_id", $aGroups);
 
         $Modifications = ShopItem::select("shop_items.modification_id")->distinct()->where(function($query) use ($shopItems, $ShopItemShortcuts) {
@@ -106,7 +106,7 @@ class ShopGroupController extends Controller
         return view('shop/group', [
             'shop' => $oShop,
             'group' => $shopGroup,
-            'SubGroups' => ShopGroup::where("parent_id", $shopGroup->id)->where("active", 1)->get(),
+            'SubGroups' => ShopGroup::where("parent_id", $shopGroup->id)->where("active", 1)->where("deleted", 0)->get(),
             'items' => $oShopItems->paginate($oShop->items_on_page),
             'properties' => ShopItemController::getProperties($shopGroup->id, 4, true),
             'path' => $shopGroup->url,
@@ -146,7 +146,7 @@ class ShopGroupController extends Controller
     {
 
         $result = [];
-        $select = ShopGroup::where("parent_id", $group_id)->where('active', 1)->get();
+        $select = ShopGroup::where("parent_id", $group_id)->where('active', 1)->where('deleted', 0)->get();
         if (count($select) > 0) {
             foreach ($select as $oShopGroup) {
                 $count = count($result);

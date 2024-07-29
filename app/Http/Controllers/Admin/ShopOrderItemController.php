@@ -56,9 +56,10 @@ class ShopOrderItemController extends Controller
      */
     public function destroy(ShopOrder $shopOrder, ShopOrderItem $shopOrderItem)
     {
-        $shopOrderItem->delete();
+        $shopOrderItem->deleted = 1;
+        $shopOrderItem->save();
 
-        return redirect()->back()->withSuccess('Элемент заказа был успешно удален!');
+        return redirect()->back()->withSuccess('Элемент заказа был успешно перемещен в корзину!');
     }
 
     public static function saveShopItem($request, ShopOrder $shopOrder, $shopOrderItem = false)

@@ -72,8 +72,8 @@ class SitemapController extends Controller
         if (!is_null($Sitemap = Sitemap::whereTag("Yml")->first())) {
             if (file_exists($this->yml)) {
 
-                $LastChangedShopGroup = ShopGroup::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
-                $LastChangedShopItem  = ShopItem::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
+                $LastChangedShopGroup = ShopGroup::where("active", 1)->where("deleted", 0)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
+                $LastChangedShopItem  = ShopItem::where("active", 1)->where("deleted", 0)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
         
                 if (!is_null($LastChangedShopGroup) || !is_null($LastChangedShopItem)) {
                     $this->setYml();
@@ -184,7 +184,7 @@ class SitemapController extends Controller
 
 
                 $PropertyValueInts = \App\Models\PropertyValueInt::select("property_value_ints.*")->whereIn("property_value_ints.entity_id", function ($query) use ($ShopItem) {
-                    $query->select('id')->from('shop_items')->where("modification_id", $ShopItem->id);
+                    $query->select('id')->from('shop_items')->where("modification_id", $ShopItem->id)->where("deleted", 0);
                 })->whereNot("value", 0)->get();
 
                 foreach ($PropertyValueInts as $PropertyValueInt) {
@@ -243,10 +243,10 @@ class SitemapController extends Controller
         if (!is_null($Sitemap = Sitemap::whereTag("Sitemap")->first())) {
             if (file_exists($this->sitemap)) {
 
-                $LastChangedStructure = Structure::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
-                $LastChangedShopGroup = ShopGroup::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
-                $LastChangedShopItem  = ShopItem::where("active", 1)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
-                $LastChangedShopFilter  = ShopFilter::where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
+                $LastChangedStructure = Structure::where("active", 1)->where("deleted", 0)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
+                $LastChangedShopGroup = ShopGroup::where("active", 1)->where("deleted", 0)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
+                $LastChangedShopItem  = ShopItem::where("active", 1)->where("deleted", 0)->where("updated_at", ">", $Sitemap->updated_at)->orderBy("updated_at", "DESC")->first();
+                $LastChangedShopFilter  = ShopFilter::where("updated_at", ">", $Sitemap->updated_at)->where("deleted", 0)->orderBy("updated_at", "DESC")->first();
     
                 if (!is_null($LastChangedStructure) || !is_null($LastChangedShopGroup) || !is_null($LastChangedShopItem) || !is_null($LastChangedShopFilter)) {
                     $this->setSitemap();
@@ -385,7 +385,7 @@ class SitemapController extends Controller
             $urlset->appendChild($xmlns);
             $urlset->appendChild($xmlns_image);
     
-            foreach (ShopGroup::where("active", 1)->get() as $ShopGroup) {
+            foreach (ShopGroup::where("active", 1)->where("deleted", 0)->get() as $ShopGroup) {
     
                 if (file_exists(public_path() . $ShopGroup->dir() . $ShopGroup->image_large)) {
     
@@ -404,7 +404,7 @@ class SitemapController extends Controller
                 }
             }
     
-            foreach (ShopItem::where("active", 1)->where("modification_id", 0)->get() as $ShopItem) {
+            foreach (ShopItem::where("active", 1)->where("deleted", 0)->where("modification_id", 0)->get() as $ShopItem) {
     
                 if ($Images = $ShopItem->getImages()) {
     

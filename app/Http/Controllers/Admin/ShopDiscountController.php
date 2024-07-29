@@ -29,7 +29,7 @@ class ShopDiscountController extends Controller
     public function index(Shop $shop, Request $request)
     {
 
-        $ShopDiscounts = ShopDiscount::orderBy("end_datetime", "Desc")->orderBy("id", "Desc");
+        $ShopDiscounts = ShopDiscount::where("deleted", 0)->orderBy("end_datetime", "Desc")->orderBy("id", "Desc");
 
         if ($request->global_search) {
 
@@ -38,8 +38,9 @@ class ShopDiscountController extends Controller
             $SearchByItemName = ShopItemDiscount::join("shop_items", "shop_items.id", "=", "shop_item_discounts.shop_item_id")
                 ->join("shop_item_language_entities", "shop_item_language_entities.shop_item_id", "=", "shop_items.modification_id")
                 ->join("language_value_strings", "language_value_strings.language_entity_id", "=", "shop_item_language_entities.language_entity_id")
-                ->where("language_value_strings.value", "LIKE", "%" . "Наом" . "%")
+                ->where("language_value_strings.value", "LIKE", "%" . trim($request->global_search) . "%")
                 ->groupBy("shop_item_discounts.shop_discount_id")
+                ->where("shop_item_discounts.deleted", 0)
                 ->get();
 
             $ids = [];
@@ -115,13 +116,10 @@ class ShopDiscountController extends Controller
     public function destroy(Shop $shop, ShopDiscount $shopDiscount)
     {
 
-        foreach ($shopDiscount->ShopItemDiscounts as $ShopItemDiscount) {
-            $ShopItemDiscount->delete();
-        }
+        $shopDiscount->deleted = 1;
+        $shopDiscount->save();
 
-        $shopDiscount->delete();
-
-        return redirect()->back()->withSuccess("Скидка была успешно удалена!");
+        return redirect()->back()->withSuccess("Скидка была успешно перемещена в корзину!");
     }
 
     public function saveDiscount(Request $request, Shop $shop, $shopDiscount = false)

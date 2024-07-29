@@ -146,7 +146,7 @@
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>";
-                                                foreach ($order->ShopOrderItems as $orderItem) {
+                                                foreach ($order->ShopOrderItems()->where("deleted", 0)->get()  as $orderItem) {
                                                     $popover .= "
                                                                     <tr>
                                                                         <td>" . $orderItem->id . "</td>

@@ -28,7 +28,8 @@ class ShopController extends Controller
             foreach ($request->shop_items as $shop_item_id => $on) {
 
                 if (!is_null($shopItem = ShopItem::find($shop_item_id))) {
-                    $shopItem->delete();
+                    $shopItem->deleted = 1;
+                    $shopItem->save();
                     $count++;
                 }
             }
@@ -38,14 +39,15 @@ class ShopController extends Controller
             foreach ($request->shop_groups as $shop_group_id => $on) {
 
                 if (!is_null($shopGroup = ShopGroup::find($shop_group_id))) {
-                    $shopGroup->delete();
+                    $shopGroup->deleted = 1;
+                    $shopGroup->save();
                     $count++;
                 }
             }
         }
 
         if ($count > 0) {
-            return redirect()->back()->withSuccess("Успешно удалено элементов: ". $count ."!");
+            return redirect()->back()->withSuccess("Успешно перемещено в корзину: ". $count ."!");
         } else {
             return redirect()->back()->withError("Элементы для удаления не были выбраны!");
         }
@@ -83,6 +85,7 @@ class ShopController extends Controller
                                                 })
                                                 ->orderBy("sorting", "asc")
                                                 ->orderBy("id", "desc")
+                                                ->where("deleted", 0)
                                                 ->paginate(self::$items_on_page);
                 
                                                 
@@ -92,7 +95,8 @@ class ShopController extends Controller
                 $aResult['shopItems'] = ShopItem::where(function($query) use ($parent) {
                         $query
                             ->where("modification_id", "=", 0)
-                            ->where("shop_group_id", $parent);
+                            ->where("shop_group_id", $parent)
+                            ->where("deleted", 0);
                     })
                     ->orWhereIn("id", ShopItemShortcut::select('shop_item_id')->where('shop_group_id', $parent))
                     ->orderBy("sorting", "asc")
@@ -100,7 +104,11 @@ class ShopController extends Controller
                     ->paginate(self::$items_on_page);
                                         
 
-                $aResult['shopGroups'] = ShopGroup::where('parent_id', $parent)->orderBy('sorting', 'desc')->orderBy("id")->get();
+                $aResult['shopGroups'] = ShopGroup::where('parent_id', $parent)
+                                            ->where("deleted", 0)
+                                            ->orderBy('sorting', 'desc')
+                                            ->orderBy("id")
+                                            ->get();
             }
 
             return view('admin.shop.index', $aResult);

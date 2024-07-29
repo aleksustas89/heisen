@@ -62,7 +62,7 @@ class ShopDiscountController extends Controller
         $aResult = false;
 
         $ShopItemDiscounts = ShopItemDiscount::where("shop_item_id", $ShopItem->id)->orWhereIn("shop_item_id", function ($query) use ($ShopItem) {
-            $query->selectRaw('shop_items.id')->from('shop_items')->where("modification_id", $ShopItem->id);
+            $query->selectRaw('shop_items.id')->from('shop_items')->where("modification_id", $ShopItem->id)->where("deleted", 0);
         })->get();
 
         foreach ($ShopItemDiscounts as $ShopItemDiscount) {

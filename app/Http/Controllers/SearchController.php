@@ -26,6 +26,7 @@ class SearchController extends Controller
 
         $ShopItems = ShopItem::where('shop_items.name', 'LIKE', '%' . $query . '%')
                                 ->where('shop_items.modification_id', 0)
+                                ->where("shop_items.deleted", 0)
                                 ->limit(100)
                                 ->get();
 

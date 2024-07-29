@@ -114,6 +114,12 @@
                                     <span>Sitemap</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('trash.index') }}" class="nav-link">
+                                    <i class="ti ti-trash menu-icon"></i>
+                                    <span>Корзина</span>
+                                </a>
+                            </li>
                             
                         </ul>
                     </div>

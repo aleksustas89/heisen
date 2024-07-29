@@ -20,7 +20,7 @@ class ShopPaymentSystemController extends Controller
     {
         return view('admin.shop.payment.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(),
-            'PaymentSystems' => ShopPaymentSystem::paginate(self::$items_on_page),
+            'PaymentSystems' => ShopPaymentSystem::where("deleted", 0)->paginate(self::$items_on_page),
             'shop' => $shop
         ]);
     }
@@ -105,9 +105,10 @@ class ShopPaymentSystemController extends Controller
      */
     public function destroy(Shop $shop, ShopPaymentSystem $shopPaymentSystem)
     {
-        $shopPaymentSystem->delete();
+        $shopPaymentSystem->deleted = 1;
+        $shopPaymentSystem->save();
 
-        return redirect()->back()->withSuccess("Платежная система была успешно удалена!");
+        return redirect()->back()->withSuccess("Платежная система была успешно перемещена в корзину!");
     }
 
     public static function breadcrumbs($lastItemIsLink = false)

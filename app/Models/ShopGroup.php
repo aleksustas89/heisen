@@ -112,7 +112,7 @@ class ShopGroup extends Model
 
     public static function getGroupTree($parent_id = 0, $aResult = [])
     {
-        foreach (ShopGroup::where("parent_id", $parent_id)->orderBy("name", "ASC")->get() as $key => $ShopGroup) {
+        foreach (ShopGroup::where("parent_id", $parent_id)->where("deleted", 0)->orderBy("name", "ASC")->get() as $key => $ShopGroup) {
             $aResult[$key]["group"] = $ShopGroup;
             $aResult[$key]["group"]["children"] = self::getGroupTree($ShopGroup->id);
         }
