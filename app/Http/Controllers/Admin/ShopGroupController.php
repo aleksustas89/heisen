@@ -118,6 +118,7 @@ class ShopGroupController extends Controller
         $aPath[] = $shopGroup->id;
 
         $shopGroup->name = $request->name;
+        $shopGroup->h1 = $request->h1;
         $shopGroup->description = $request->description;
         $shopGroup->text = $request->text;
         $shopGroup->active = $request->active ?? 0;

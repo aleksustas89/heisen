@@ -55,6 +55,11 @@
                                     </div>
 
                                     <div class="mb-3">
+                                        <label class="mb-1">Заголовок h1</label>
+                                        <input type="text" name="h1" class="form-control" placeholder="Заголовок h1">
+                                    </div>
+
+                                    <div class="mb-3">
                                         <label class="mb-1">Краткое описание</label>
                                         <textarea type="text" name="description" class="form-control editor" placeholder="Описание группы"></textarea>
                                     </div>

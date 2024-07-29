@@ -53,7 +53,7 @@
                 </div>
             
                 <div class="uk-h3 uk-text-bold">
-                    <h1 class="uk-inline-block uk-h3 uk-text-bolder uk-margin-remove" itemprop="name">{{ $group->name }}</h1>
+                    <h1 class="uk-inline-block uk-h3 uk-text-bolder uk-margin-remove" itemprop="name">{{ !empty($group->h1) ? $group->h1 : $group->name }}</h1>
                     @if (count($properties) > 0)
                         <button class="uk-button uk-button-default filter-btn" type="button" uk-toggle="target: #filter">
                             Фильтрация@if (isset($filterProperties) && $countProperties > 0):

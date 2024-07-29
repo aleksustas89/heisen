@@ -66,6 +66,11 @@
                                     </div>
 
                                     <div class="mb-3">
+                                        <label class="mb-1">Заголовок h1</label>
+                                        <input type="text"  value="{{ $shopGroup['h1'] }}" name="h1" class="form-control" placeholder="Заголовок h1">
+                                    </div>
+
+                                    <div class="mb-3">
                                         <label class="mb-1">Краткое описание</label>
                                         <textarea type="text" value="{{ $shopGroup['description'] }}" name="description" class="form-control editor" placeholder="Краткое описание">{{ $shopGroup['description'] }}</textarea>
                                     </div>
