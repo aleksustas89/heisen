@@ -95,12 +95,12 @@
                         <span onclick="toggle.init($(this))" @class([
                             'pointer',
                             'ico-inactive' => $isActive,
-                        ]) id="toggle_shopItem_active_{{ $shopItem->id }}">
+                        ]) id="toggle_ShopItem_active_{{ $shopItem->id }}">
                 
                             <i class="lar la-lightbulb font-20"></i>
                         </span>
                     </td>
-                    <td width="60px" class="td_editable"><span id="apply_check_shopItem_sorting_{{ $shopItem->id }}" class="editable">{{ $shopItem->sorting }}</span></td>
+                    <td width="60px" class="td_editable"><span id="apply_check_ShopItem_sorting_{{ $shopItem->id }}" class="editable">{{ $shopItem->sorting }}</span></td>
                     <td class="td-actions-large">
 
                         <a href="{{ route('modification.edit', $shopItem->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>

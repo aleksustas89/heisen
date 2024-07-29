@@ -49,8 +49,10 @@
                         <tbody>
                             @foreach ($quick_orders as $quick_order)
 
+                            @if (!is_null($ShopItem = $quick_order->ShopItem))
+
                                 @php
-                                $ShopItem = $quick_order->ShopItem->parentItemIfModification();
+                                $ShopItem = $ShopItem->parentItemIfModification();
 
                                 @endphp
 
@@ -86,6 +88,8 @@
                                         </form>
                                     </td>
                                 </tr>
+
+                            @endif
 
                             @endforeach
                         </tbody>
