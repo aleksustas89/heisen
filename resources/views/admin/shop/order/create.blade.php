@@ -84,7 +84,7 @@
                                         <div class="row mb-3">
                                             <div class="col-12 col-sm-4"> 
                                                 <div class="d-inline-block order-col-sum">
-                                                    <label class="mb-1 my-2">Сумма заказа</label>
+                                                    <label class="mb-1 my-2">Сумма</label>
                                                     <input type="text" disabled name="sum" value="" class="form-control" placeholder="Сумма заказа">
                                                 </div>
                                                 <div class="d-inline-block">
@@ -115,19 +115,19 @@
                                     <div class="activity-info-text">
                                         <div class="row mb-3">
                                             <div class="col-6 col-sm-4"> 
-                                                <label class="mb-1 my-2">Вес</label>
+                                                <label class="mb-1 my-2">Вес (гр.)</label>
                                                 <input type="text" name="weight" class="form-control" placeholder="Вес заказа">
                                             </div>
                                             <div class="col-6 col-sm-4"> 
-                                                <label class="mb-1 my-2">Ширина</label>
+                                                <label class="mb-1 my-2">Ширина (см.)</label>
                                                 <input type="text" name="width" class="form-control" placeholder="Ширина">
                                             </div>
                                             <div class="col-6 col-sm-4"> 
-                                                <label class="mb-1 my-2">Высота</label>
+                                                <label class="mb-1 my-2">Высота (см.)</label>
                                                 <input type="text" name="height" class="form-control" placeholder="Высота">
                                             </div>
                                             <div class="col-6 col-sm-4"> 
-                                                <label class="mb-1 my-2">Глубина</label>
+                                                <label class="mb-1 my-2">Глубина (см.)</label>
                                                 <input type="text" name="length" class="form-control" placeholder="Глубина">
                                             </div>
 
@@ -154,74 +154,40 @@
                                                     @endforeach
 
                                                     <div class="tab-content">        
-                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-7" role="tabpanel">
+                                                        <div @class(["tab-pane", "py-3"]) id="tab-delivery-7" role="tabpanel">
                                                             <div class="row">  
                                                                 
-                                                                <div class="form-group">
-                                                                    <label class="label my-2">Коробка</label>
-                                                                    <select id="cdek_dimension_id" name="cdek_dimension_id">
-                                                                        <option value="0">Без коробки</option>
-                                                                        @foreach ($CdekDimensions as $CdekDimension)
-                                                                            <option value="{{ $CdekDimension->id }}">{{ intval($CdekDimension->length) }}x{{ intval($CdekDimension->width) }}x{{ intval($CdekDimension->height) }}, до {{$CdekDimension->weight / 1000}} кг</option>
-                                                                        @endforeach
-                                                                    </select>                                                       
-                                                                </div> 
-                                                                
-                                                                <div class="form-group">
-                                                                    <label class="label my-2">Город </label>
-                                                    
-                                                                    <input type="text" class="form-control" name="delivery_7_city">
-                                                                    <input type="hidden" name="delivery_7_city_id">
+                                                                <div class="mb-3">
+                                                               
+                                                                    <a data-bs-toggle="tooltip" data-bs-html="true" title="{{ $sCdekSender }}" class="text-decoration-underline" target="_blank" href="{{ route('cdek-sender.edit', 1) }}">
+                                                                        Данные отправителя 
+                                                                    </a>
                                                                 </div>
-                                                                            
-                                                                <input type="hidden" name="delivery_7_delivery_type">
+    
 
-                                                                <div class="form-group my-3">
-                                                                    <input data-id="11" id="delivery-11" data-hidden="delivery_7_delivery_type" onclick="radioTab.click($(this))" value="11" type="radio" class="btn-check" name="delivery_field_14" autocomplete="off">
-                                                                    <label class="btn btn-outline-cdek btn-sm" for="delivery-11">Отделение</label>
-
-                                                                    <input data-id="15" id="delivery-15" data-hidden="delivery_7_delivery_type" onclick="radioTab.click($(this))" value="15" type="radio" class="btn-check" name="delivery_field_14" autocomplete="off">
-                                                                    <label class="btn btn-outline-cdek btn-sm" for="delivery-15">Курьер</label>
-
-                                                                    <div class="tab-content">
-                                                                                                                                                                            
-                                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-11" role="tabpanel">
-                                                                            <div class="row">
-                                                                                <div class="form-group">
-                                                                                    <label class="label my-2">Отделение </label>
-                                                                                    <input type="text" class="form-control" name="delivery_7_office">
-                                                                                    <input type="hidden" value="" name="delivery_7_office_id">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                                                                                                                                                                                                                          
-                                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-15" role="tabpanel">
-                                                                            <div class="row">
-                                                                                <div class="form-group">
-                                                                                    <label class="label my-2">Курьер </label>
-                                                                                    <input type="text" class="form-control" value="" name="delivery_7_courier">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                                                                <div class="row my-1">
+                                                                    <div class="col-12">
+                                                                        <a class="btn btn-outline-cdek active btn-sm" onclick="window.widget.open()" href="javascript:void(0)">Выбрать</a>
                                                                     </div>
-                                                                </div>                                                                                  
-                                                            </div>
+                                                                </div>
+    
+                                                                <input type="hidden" name="delivery_7_delivery_type" value="">                                 
+                                                                <input type="hidden" name="delivery_7_office_id" value="">
+                                                                <input type="hidden" name="delivery_7_postal_code" value=""> 
+                                                                <input type="hidden" name="delivery_7_city" value=""> 
+                                                                <input type="hidden" name="delivery_7_office" value=""> 
+                                                                <input type="hidden" name="delivery_7_courier" value=""> 
+                                                                
+                                                                <div class="my-3">
+    
+                                                                    <button type="button" id="create_cdek_order_btn" class="btn btn-outline-cdek active">Сохраните заказ, чтобы создать накладную</button>
 
+                                                                    <div id="cdek-errors"></div>
+                                                                </div>
+                                                                                                                                                 
+                                                            </div>
                                                         </div>
 
-                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-1" role="tabpanel">
-                                                            <div class="row">                                 
-                                                                <div class="form-group">
-                                                                    <label class="label my-2">Город </label>
-                                                                    <input type="text" class="form-control" value="" name="delivery_1_city">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label class="label my-2">Отделение </label>
-                                                                    <input type="text" class="form-control" value="" name="delivery_1_office">
-                                                                </div>                                                                            
-                                                            </div>
-                                                        </div>  
-                                                        
                                                         <div @class(["tab-pane", "p-3"]) id="tab-delivery-8" role="tabpanel">
 
                                                             <div id="boxberry_result">
@@ -238,8 +204,11 @@
                                                             </div>
 
                                                         </div>
-                                                        
 
+                                                        <div @class(["tab-pane", "p-3"]) id="tab-delivery-1" role="tabpanel">
+                                                            <div id="prResult" class="mt-2"></div>
+                                                        </div>  
+                                                        
                                                     </div>
 
                                                 </div>
@@ -365,7 +334,6 @@
     <script src="/js/jquery.autocomplete.min.js"></script>
     <script>
         var create_order_route = '{{ route("createCdekOrder") }}';
-        new Selectr('#cdek_dimension_id');
         new Selectr('#client_id');
     </script>
     
@@ -388,6 +356,77 @@
         }
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@cdek-it/widget@3" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.widget = new window.CDEKWidget({
+                apiKey: '616a9f13-3554-476b-98c2-1bda1c2eddf4',
+                popup: true,
+                defaultLocation: 'Москва',
+                from: 'Санкт-Петербург',
+                goods: [
+                    { length: 20, width: 20, height: 20, weight: 0.5 },
+                ],
+                onCalculate: function(wat, address, rr) {
+
+                },
+                onChoose: function(_type, tariff, address) {
+                    
+                    let typeId,
+                        html = '';
+
+                    html += '<p>Город: '+ address.city +'</p>';
+
+                    switch (_type) {
+                        case 'door':
+                            typeId = 15;
+
+                            $("[name='delivery_7_courier']").val(address.name);
+
+                            $("[name='delivery_7_office']").val("");
+                            $("[name='delivery_7_office_id']").val("");
+
+                            html += '<p>Доставка по адресу: '+ address.name +'</p>';
+                        break;
+
+                        case 'office':
+                            typeId = 11;
+
+                            $("[name='delivery_7_courier']").val("");
+
+                            $("[name='delivery_7_office']").val(address.name);
+                            $("[name='delivery_7_office_id']").val(address.code);
+
+                            html += '<p>Отделение: '+ address.code + ", " + address.address +'</p>';
+                            
+                        break;
+                    }
+
+                    html += '<p>Ориентировочная цена: '+ tariff.delivery_sum +' ₽</p>';
+
+                    $("[name='delivery_7_delivery_type']").val(typeId);
+                    $("[name='delivery_7_city']").val(address.city);
+                    $("[name='delivery_7_postal_code']").val(address.postal_code);
+                    $("[name='delivery_7_price']").val(tariff.delivery_sum);
+
+                    $("#cdekResult").html(html);
+
+                    $("#create_cdek_order_btn").text("Данные изменены - сохраните заказ");
+                    $("#create_cdek_order_btn").attr("disabled", "disabled");
+
+                    this.close(); 
+                },
+                onReady() {
+                    console.log('ready');
+                },
+            });
+        });
+
+    </script>
+
     @php
         App\Services\Helpers\File::js('/assets/js/pages/shopOrder.js');
     @endphp
@@ -403,5 +442,7 @@
         .badge {
             color: #fff !important;
         }
+        .tooltip-inner {text-align: start}
+        .tooltip-inner {max-width: none;}
     </style>    
 @endsection

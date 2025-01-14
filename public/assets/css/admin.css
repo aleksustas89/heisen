@@ -349,18 +349,35 @@
     text-decoration: line-through;
     color: gray;
 }
+
 .btn-outline-cdek {
     color: #1ab248;
     border-color: #1ab248;
 }
-.btn-outline-cdek {
-    color: #1ab248;
-    border-color: #1ab248;
-}
-.btn-check:checked+.btn-outline-cdek {
-    color: #fff;
+.btn-check:checked+.btn-outline-cdek, .btn-outline-cdek.active {
+    color: #fff !important;
     background-color: #1ab248;
     border-color: #1ab248;
+}
+
+.btn-outline-boxberry {
+    color: #ed1651;
+    border-color: #ed1651;
+}
+.btn-check:checked+.btn-outline-boxberry, .btn-outline-boxberry.active {
+    color: #fff !important;
+    background-color: #ed1651;
+    border-color: #ed1651;
+}
+
+.btn-outline-pochta {
+    color: #337ab7;
+    border-color: #337ab7;
+}
+.btn-check:checked+.btn-outline-pochta, .btn-outline-pochta.active {
+    color: #fff !important;
+    background-color: #337ab7;
+    border-color: #337ab7;
 }
 .autocomplete-suggestions {     background: #ffffff;overflow: auto;box-shadow: 0 5px 15px rgba(0,0,0,.08); }
 .autocomplete-suggestion { padding: 7px 10px; white-space: nowrap; overflow: hidden; cursor: pointer }
@@ -369,8 +386,48 @@
 .autocomplete-group { padding: 2px 5px; }
 .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 .clean-input {position: absolute;top: 8px;right: 10px;}
-.file-box-content .file-box {position: relative;}
+.file-box-content .file-box {position: relative;width: 300px;}
 .enlarge-menu .developer-text{display: none !important;}
+
+.dropzone {
+    min-height: 200px !important;
+    border: 2px dashed #557ef8 !important;
+    position: relative;
+}
+
+.dropzone.dz-clickable:not(.dz-started)::before{
+    width: 50px;
+    height: 2px;
+    content: '';
+    background: #2275d7;
+    position: absolute;
+    top: calc(50% - 1px);
+    left: calc(50% - 25px);
+} 
+
+.dropzone.dz-clickable:not(.dz-started)::after{
+    width: 50px;
+    height: 2px;
+    content: '';
+    background: #2275d7;
+    position: absolute;
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    top: calc(50% - 1px);
+    left: calc(50% - 25px);
+} 
+
+.dz-default.dz-message {
+    display: none;
+}
+
+.dropzone .dz-preview .dz-progress .dz-upload {
+    background: #2275d7 !important;
+    background: linear-gradient(to bottom, #4399ff, #2275d7) !important;
+}
 
 
 @media (max-width:768px) {
@@ -387,4 +444,10 @@
 
 .auth-page .card {
     opacity: 0.9;
+}
+.v-hidden {
+    visibility: hidden;
+}
+.ui-front {
+    z-index: 10000 !important;
 }

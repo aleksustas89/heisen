@@ -12,6 +12,7 @@ use App\Models\ShopFilter;
 use App\Models\ShopItemImage;
 use App\Services\Helpers\File;
 use App\Models\Sitemap;
+use App\Models\SitemapField;
 
 class SitemapController extends Controller
 {
@@ -47,22 +48,58 @@ class SitemapController extends Controller
             "sitemapInfo" => [
                 "date" => file_exists($this->sitemap) && !is_null($Sitemap = Sitemap::whereTag("Sitemap")->first()) ? date("d.m.Y H:i", strtotime($Sitemap->updated_at)) : '',
                 "filesize" => file_exists($this->sitemap) ? File::convertBytes(filesize($this->sitemap)) : '',
+                "edit" => false
             ],
             "imagemapInfo" => [
                 "date" => file_exists($this->imagemap) && !is_null($Sitemap = Sitemap::whereTag("Imagemap")->first()) ? date("d.m.Y H:i", strtotime($Sitemap->updated_at)) : '',
                 "filesize" => file_exists($this->imagemap) ? File::convertBytes(filesize($this->imagemap)) : '',
+                "edit" => false
             ],
             "ymlInfo" => [
                 "date" => file_exists($this->yml) && !is_null($Sitemap = Sitemap::whereTag("Yml")->first()) ? date("d.m.Y H:i", strtotime($Sitemap->updated_at)) : '',
                 "filesize" => file_exists($this->yml) ? File::convertBytes(filesize($this->yml)) : '',
+                "edit" => true
             ]
         ]);
+    }
+
+    public function edit(Sitemap $sitemap)
+    {
+
+        $breadcrumbs[1]["name"] = $sitemap->tag;
+
+        return view('admin.sitemap.edit', [
+            "breadcrumbs" => $this->breadcrumbs() + $breadcrumbs,
+            'sitemap' => $sitemap,
+            'sitemapFields' => SitemapField::where("sitemap_id", $sitemap->id)->get()
+        ]);
+    }
+
+    public function update(Request $request, Sitemap $sitemap)
+    {
+        
+        foreach (SitemapField::where("sitemap_id", $sitemap->id)->get() as $sitemapField) {
+
+            $field = $sitemapField->field;
+
+            $sitemapField->value = $request->$field ?? '';
+            $sitemapField->save();
+            
+        }
+
+        if ($request->apply) {
+            return redirect(route("sitemap.index"))->withSuccess('Данные были успешно сохраненны!');
+        } else {
+            return redirect(route("sitemap.edit", $sitemap->id))->withSuccess('Данные были успешно сохраненны!');
+        }
+
+
     }
 
     public function breadcrumbs()
     {
         $aResult[0]["name"] = 'Sitemap';
-        $aResult[0]["url"] = route("adminSitemap");
+        $aResult[0]["url"] = route("sitemap.index");
 
         return $aResult;
     }
@@ -116,6 +153,46 @@ class SitemapController extends Controller
             $shopUrl = $domDocument->createElement('url', $this->host);
             $shop->appendChild($shopUrl);
 
+            $deliveryOptionsCost = '';
+            $deliveryOptionsDays = '';
+            $deliveryOptionsOrderBefore = '';
+
+            foreach (SitemapField::where("sitemap_id", 3)->get() as $SitemapField) {
+                if ($SitemapField->field == 'delivery-options-cost' && trim($SitemapField->value) !='') {
+                    $deliveryOptionsCost = $SitemapField->value;
+                }
+                if ($SitemapField->field == 'delivery-options-days' && trim($SitemapField->value) !='') {
+                    $deliveryOptionsDays = $SitemapField->value;
+                }
+                if ($SitemapField->field == 'delivery-options-order-before' && trim($SitemapField->value) !='') {
+                    $deliveryOptionsOrderBefore = $SitemapField->value;
+                }
+            }
+
+            if ($deliveryOptionsCost !='' && $deliveryOptionsDays !='') {
+
+                $delivery_options = $domDocument->createElement('delivery-options');
+
+                $delivery_option = $domDocument->createElement('option');
+                $cost = $domDocument->createAttribute('cost');
+                $cost->value = $deliveryOptionsCost;
+                $days = $domDocument->createAttribute('days');
+                $days->value = $deliveryOptionsDays;
+
+                $delivery_option->appendChild($cost);
+                $delivery_option->appendChild($days);
+
+                if ($deliveryOptionsOrderBefore) {
+                    $order_before = $domDocument->createAttribute('order-before');
+                    $order_before->value = 18;
+                    $delivery_option->appendChild($order_before);
+                }
+    
+                $delivery_options->appendChild($delivery_option);
+    
+                $shop->appendChild($delivery_options);
+            }
+
             $categories = $domDocument->createElement('categories');
 
             foreach (ShopGroup::where("active", 1)->get() as $ShopGroup) {
@@ -164,7 +241,14 @@ class SitemapController extends Controller
                 $offerCurrency = $domDocument->createElement('currencyId', 'RUR');
                 $offer->appendChild($offerCurrency);
 
-                $offerCategoryId = $domDocument->createElement('categoryId', $ShopItem->shop_group_id);
+                $categoryId = $ShopItem->shop_group_id;
+
+                if ($ShopItem->modification_id > 0) {
+                    $oShopItem = $ShopItem->parentItemIfModification();
+                    $categoryId = $oShopItem->shop_group_id;
+                }
+
+                $offerCategoryId = $domDocument->createElement('categoryId', $categoryId);
                 $offer->appendChild($offerCategoryId);
 
                 foreach ($ShopItem->getImages() as $image) {

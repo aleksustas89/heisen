@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title>Админ-панель - @yield('title')</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <link rel="shortcut icon" href="/assets/images/favicon.ico">
         <link href="{{ asset('/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
@@ -11,7 +11,11 @@
         <link href="{{ asset('/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('/assets/plugins/sweet-alert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ asset('/assets/plugins/animate/animate.min.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ asset('/assets/css/admin.css') }}" rel="stylesheet" type="text/css" />
+
+        @php
+            App\Services\Helpers\File::css('/assets/css/admin.css');
+        @endphp
+
         <script src="{{ asset('/assets/plugins/jquery/jquery.min.js') }}"></script>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="robots" content="nofollow, noindex" />
@@ -109,7 +113,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('adminSitemap') }}" class="nav-link">
+                                <a href="{{ route('sitemap.index') }}" class="nav-link">
                                     <i class="ti ti-messages menu-icon"></i>
                                     <span>Sitemap</span>
                                 </a>
@@ -178,8 +182,7 @@
         <script src="{{ asset('/assets/js/app.js') }}"></script>
         <script src="{{ asset('/assets/plugins/wysiwyg/jquery.tinymce.min.js') }}"></script>
 
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
 
         @php
             App\Services\Helpers\File::js('/assets/js/main.js');

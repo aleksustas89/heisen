@@ -102,7 +102,13 @@ class ShopFilterController extends Controller
 
         $oShop = Shop::get();
 
-        $checkShopFilter = $this->checkUrl($url = $this->getUrl($shopFilter), $shopFilter);
+        if ($request->static_url_checker > 0 && !empty($request->static_url)) {
+            $url = $request->static_url;
+        } else {
+            $url = $this->getUrl($shopFilter);
+        }
+
+        $checkShopFilter = $this->checkUrl($url, $shopFilter);
 
         if ($checkShopFilter === true) {
             if (!$shopFilter) {
@@ -119,10 +125,16 @@ class ShopFilterController extends Controller
             $shopFilter->seo_description = $request->seo_description;
             $shopFilter->seo_keywords = $request->seo_keywords;
             $shopFilter->text = $request->text;
-            $shopFilter->url = $url;
+            $shopFilter->h1 = $request->h1;
+            $shopFilter->seo_h1 = $request->seo_h1;
+            $shopFilter->seo_text = $request->seo_text;
+            
+            //$shopFilter->url = $url;
+            $shopFilter->indexing = $request->indexing;
             $shopFilter->sorting = $request->sorting;
             $shopFilter->shop_group_id = $request->shop_group_id ?? 0;
             $shopFilter->updated_at = date("Y-m-d H:i:s");
+            $shopFilter->static_url = $request->static_url_checker > 0 ? 1 : 0;
     
             $shopFilter->save();
 
@@ -158,7 +170,7 @@ class ShopFilterController extends Controller
                 }
             }
     
-            $shopFilter->url = $this->getUrl($shopFilter);
+            $shopFilter->url = $url;
     
             $shopFilter->save();
     
@@ -170,7 +182,7 @@ class ShopFilterController extends Controller
               return redirect()->to(route("shop.shop-filter.edit", ["shop" => $oShop->id, "shop_filter" => $shopFilter->id]))->withSuccess($message);
             }
         } else {
-            return redirect()->back()->withError("Такой фильтр уже существует^ #id " . $checkShopFilter->id . ", #url " . $checkShopFilter->url);
+            return redirect()->back()->withError("Такой фильтр уже существует #id " . $checkShopFilter->id . ", #url " . $checkShopFilter->url);
         }
     }
 
@@ -183,7 +195,7 @@ class ShopFilterController extends Controller
             $ShopFilter->where("id", "!=", $shopFilter->id);
         }
 
-        if (!is_null($ShopFilter->first())) {
+        if (!is_null($ShopFilter = $ShopFilter->first())) {
             return $ShopFilter;
         }
         return true;
@@ -208,7 +220,7 @@ class ShopFilterController extends Controller
     
                         if ($Value > 0 && !is_null($ShopItemListItem = ShopItemListItem::find($Value))) {
     
-                            $Url["values"][] = Str::transliteration($ShopItemListItem->value);
+                            $Url["values"][] = !empty($ShopItemListItem->static_filter_path) ? $ShopItemListItem->static_filter_path : Str::transliteration($ShopItemListItem->value);
                         }
                     }
                 }
@@ -218,7 +230,7 @@ class ShopFilterController extends Controller
                         $property_id = 'property_' . $property->id . '_' . $Value->id;
 
                         if (isset(request()->$property_id) && !is_null($ShopItemListItem = ShopItemListItem::find($Value->value))) {
-                            $Url["values"][] = Str::transliteration($ShopItemListItem->value);
+                            $Url["values"][] = !empty($ShopItemListItem->static_filter_path) ? $ShopItemListItem->static_filter_path : Str::transliteration($ShopItemListItem->value);
                         } 
                     }
                 }

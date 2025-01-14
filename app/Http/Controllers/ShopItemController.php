@@ -37,7 +37,7 @@ class ShopItemController extends Controller
         $ShopItemProperties = ShopItemProperty::select("shop_item_properties.*")
                                     ->join("property_value_ints", "property_value_ints.property_id", "=", "shop_item_properties.id")
                                     ->whereIn("property_value_ints.entity_id", function ($query) use ($ParentItem) {
-                                        $query->select('id')->from('shop_items')->where("modification_id", $ParentItem->id);
+                                        $query->select('id')->from('shop_items')->where("modification_id", $ParentItem->id)->where("active", 1)->where("deleted", 0);
                                     })
                                     ->where('shop_item_properties.deleted', 0)
                                     ->groupBy("property_value_ints.property_id")
@@ -73,21 +73,21 @@ class ShopItemController extends Controller
         //     $aDimensions[$k]["measure"] = "гр";
         //     $k++;
         // }
-        if ($shopItem->width > 0) {
+        if ($ParentItem->width > 0) {
             $aDimensions[$k]["name"] = "Ширина";
-            $aDimensions[$k]["value"] = $ParentItem->width / 10;
+            $aDimensions[$k]["value"] = (int)$ParentItem->width;
             $aDimensions[$k]["measure"] = "см";
             $k++;
         }
-        if ($shopItem->height > 0) {
+        if ($ParentItem->height > 0) {
             $aDimensions[$k]["name"] = "Высота";
-            $aDimensions[$k]["value"] = $ParentItem->height / 10;
+            $aDimensions[$k]["value"] = (int)$ParentItem->height;
             $aDimensions[$k]["measure"] = "см";
             $k++;
         }
-        if ($shopItem->length > 0) {
+        if ($ParentItem->length > 0) {
             $aDimensions[$k]["name"] = "Глубина";
-            $aDimensions[$k]["value"] = $ParentItem->length / 10;
+            $aDimensions[$k]["value"] = (int)$ParentItem->length;
             $aDimensions[$k]["measure"] = "см";
             $k++;
         }
@@ -101,7 +101,16 @@ class ShopItemController extends Controller
             }
         }
 
+        $ImgAltTitleColor = '';
+
+        if (!is_null($PropertyValueColor = PropertyValueInt::where("entity_id", $shopItem->id)->where("property_id", 60)->first()) && $PropertyValueColor->value > 0) {
+            $ImgAltTitleColor = ", " . mb_strtolower($PropertyValueColor->ShopItemListItem->value);
+        }
+
+        $ImgAltTitle = $ParentItem->name . " из натуральной кожи" . $ImgAltTitleColor . ". " . $ParentItem->ShopGroup->name;
+
         $Return = [
+            'defaultModification' => ShopItem::where("modification_id", $ParentItem->id)->where("default_modification", 1)->first(),
             'aModProperties' => $ShopItemProperties,
             'aPropertyListItems' => $aProperties,
             'item' => $ParentItem,
@@ -110,10 +119,11 @@ class ShopItemController extends Controller
             'Comments' => $Comments,
             'Dimensions' => $aDimensions,
             'shop' => Shop::get(),
-            'imageMask' => $shopItem->name . " из кожи, цвет: черный, коричневый, синий, серый, зеленый, бежевый",
+            'imageMask' => $ImgAltTitle,
             'ShopItemAssociatedItems' => ShopItem::whereIn("shop_items.id", ShopItemAssociatedItem::select("shop_item_associated_id")->where("shop_item_id", $ParentItem->id))->where("active", 1)->get(),
             'shopItemShortcuts' => $ParentItem->ShopItemShortcuts
         ];
+
 
 
         $Return["default_modification_price"] = $shopItem->price();
@@ -129,8 +139,6 @@ class ShopItemController extends Controller
 
         $Return['aDefaultValues'] = $ListValues;
 
-       //dd($Return);
-   
 
         return view('shop/item', $Return);
     }

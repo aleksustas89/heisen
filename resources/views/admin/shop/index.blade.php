@@ -60,7 +60,8 @@
                             <a class="dropdown-item" href="{{ route('shop.shop-item-list.index', ['shop' => $shop->id]) }}">Списки</a>
                             <a class="dropdown-item" href="{{ route('shop.shop-delivery.index', ['shop' => $shop->id]) }}">Доставка</a>
                             <a class="dropdown-item" href="{{ route('shop.shop-payment-system.index', ['shop' => $shop->id]) }}">Платежные системы</a>
-                            <a class="dropdown-item" href="{{ route('cdek-sender.edit', 1) }}">Cdek</a>
+                            <a class="dropdown-item" href="{{ route('cdek-sender.edit', 1) }}">Cdek отправитель</a>
+                            <a class="dropdown-item" href="{{ route('boxberry-sender.edit', 1) }}">Boxberry отправитель</a>
                             <a class="dropdown-item" href="{{ route('shop.shop-filter.index', ['shop' => $shop->id]) }}">Статические фильтры</a>
                         </div>
 
@@ -88,7 +89,7 @@
                                         <th style="width: 1%">#ID</th>
                                         <th style="width: 40px"  class="px-0 text-center"><i class="fa fa-bars" title="—"></i></th>
                                         <th>Название</th>
-                                        <th  class="d-mob-none" width="100px">Цена</th>
+                                        <th  class="d-mob-none" width="140px">Цена</th>
         
                                         <th class="d-mob-none" width="40px"></th>
                                         <th class="d-mob-none" width="40px"></th>
@@ -291,11 +292,18 @@
                             </table>
 
                             <div class="card-footer text-start">
-                                <input type="hidden" name="operation" />
-                                <button type="submit" class="btn btn-sm btn-danger group-deleting" onclick="Operation.set('delete')">
-                                    <i class="las la-trash-alt font-16"></i>
-                                    Удалить
-                                </button>
+                                <div class="card-footer-inner v-hidden">
+                                    <input type="hidden" name="operation" />
+                                    <button type="submit" class="btn btn-sm btn-danger group-deleting" onclick="Operation.set('delete')">
+                                        <i class="las la-trash-alt font-16"></i>
+                                        Удалить
+                                    </button>
+
+                                    <button type="button" class="btn btn-sm btn-warning" onclick="Shortcut.addFromGroup()">
+                                        <i class="las la-copy font-16"></i>
+                                        Добавить в группы
+                                    </button>
+                                </div>
                             </div>
                         </form>
 
@@ -308,11 +316,54 @@
     
 @endsection
 
+@section("css")
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+@endsection
 
 @section("js")
+
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script>
+        BadgeClasses = [@foreach($BadgeClasses as $k => $BadgeClasse)'{{$BadgeClasse}}'@if($k < count($BadgeClasses)-1),@endif @endforeach];
+
+        var routeSaveShortcutFromGroup = '{{ route("saveShortcutFromGroup") }}',
+            routeGetShortcutGroup = '{{ route("getShortcutGroup") }}',
+            routeAddShortcutFromGroup = '{{ route("addShortcutFromGroup") }}';
+
+    </script>
 
     @php
         App\Services\Helpers\File::js('/assets/js/shortcut.js');
     @endphp
+
+    <script>
+
+        $("body").on("submit", "#addShopItemsToGroups", function() {
+
+            $.ajax({
+                url: routeSaveShortcutFromGroup,
+                data: $("#addShopItemsToGroups").serialize(),
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: "json",
+                success: function (data) {
+
+                    if (data == true) {
+                        document.location.reload();
+                    } else {
+                        $(".modal-body").prepend('<div class="alert alert-danger border-0" role="alert">' + data + '</div>');
+                    }
+                }
+            });
+
+            return false;
+        });
+
+
+    </script>
 
 @endsection

@@ -121,7 +121,7 @@
                                         <span onclick="toggle.init($(this))" @class([
                                             'pointer',
                                             'ico-inactive' => $isActive,
-                                        ]) id="toggle_comment_active_{{ $comment->id }}">
+                                        ]) id="toggle_Comment_active_{{ $comment->id }}">
                                 
                                             <i class="lar la-lightbulb font-20"></i>
                                         </span>

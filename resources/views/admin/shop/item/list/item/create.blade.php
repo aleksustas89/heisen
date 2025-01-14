@@ -57,10 +57,21 @@
 
                                 <div class="tab-pane active" id="main">
 
+                                    <div class="row">
+                                        <div class="col-12 col-lg-6 mb-3">
+                                            <label class="mb-1">Значение</label>
+                                            <input id="value" type="text" name="value" class="form-control form-control-lg" placeholder="Значение" data-min="1"  data-max="255" data-required="1">
+                                            <div id="value_error" class="fieldcheck-error"></div>
+                                        </div>
+                                        <div class="col-12 col-lg-6 mb-3">
+                                            <label class="mb-1">Сео склонение</label>
+                                            <input id="declension" type="text" name="declension" class="form-control form-control-lg" placeholder="Сео склонение">
+                                        </div>
+                                    </div>
+
                                     <div class="mb-3">
-                                        <label class="mb-1">Значение</label>
-                                        <input id="value" type="text" name="value" class="form-control form-control-lg" placeholder="Значение" data-min="1"  data-max="255" data-required="1">
-                                        <div id="value_error" class="fieldcheck-error"></div>
+                                        <label class="mb-1">Путь для статического фильтра</label>
+                                        <input id="static_filter_path" type="text" value="" name="static_filter_path" class="form-control" placeholder="Название для статического фильтра">
                                     </div>
 
                                     <div class="mb-3">

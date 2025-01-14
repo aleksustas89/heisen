@@ -17,7 +17,7 @@ var adminImage = {
         
     },
 
-    remove: function (route, id) {
+    remove: function (route, elem) {
 
         $.ajax({
             url: route,
@@ -25,7 +25,7 @@ var adminImage = {
             dataType: "json",
             success: function (data) {
                 if (data == true) {
-                    $("#admin_image_" + id).remove();
+                    elem.remove();
                 }
             }
         });

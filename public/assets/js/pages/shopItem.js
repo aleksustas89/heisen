@@ -17,35 +17,29 @@ var adminProperty = {
 
     },
 
-    delete: function (elem) {
+    delete: function (elem, route = '') {
 
         let id = parseInt(elem.parents(".admin-item-property").attr("data-id"));
 
         if (id > 0) {
             if (confirm('Вы действительно хотите удалить значение?')) {
-                let property = parseInt(elem.parents(".admin-item-property").attr("data-property"));
-                adminProperty.remove(property, id);
+
+                $.ajax({
+                    url: route,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data == true) {
+                            elem.parents(".admin-item-property").remove();
+                        }
+                    }
+                });
             } 
         } else {
             elem.parents(".admin-item-property").remove();
         }
 
     },
-
-    remove: function (property, id) {
-
-        $.ajax({
-            url: "/admin/deleteShopItemPropertyValue/" + property + "/" + id + "/",
-            type: "GET",
-            dataType: "json",
-            success: function (data) {
-                if (data == true) {
-                    $("#admin-item-property-" + property + "-" + id).remove();
-                }
-            }
-        });
-
-    }
 
 }
 

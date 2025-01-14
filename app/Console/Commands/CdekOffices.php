@@ -42,38 +42,32 @@ class CdekOffices extends Command
             }
 
             foreach (CdekOffice::where("cdek_city_id", $CdekCity->id)->get() as $aOffice) {
-                //если в полученном массиве нет офиса - удаляем
+                //если в полученном массиве нет офиса - выключаем
                 if (!in_array($aOffice->code, $aIdsCdekOffices)) {
                     $aOffice->active = 0;
                     $aOffice->save();
                 } 
-
-                $key = array_search($aOffice->code, $aIdsCdekOffices);
-                if (isset($aIdsCdekOffices[$key])) {
-                    unset($aIdsCdekOffices[$key]);
-                }
             }
 
-            //добавляем те, которых нет
-            if (count($aIdsCdekOffices) > 0) {
-                foreach ($getOffices as $Office) {
-                    if (in_array($Office->code, $aIdsCdekOffices)) {
-                        $CdekOffice = new CdekOffice();
-                        $CdekOffice->code = $Office->code;
-                        $CdekOffice->name = $Office->name;
-                        $CdekOffice->address_comment = $Office->address_comment ?? $Office->note ?? '';
-                        $CdekOffice->uuid = $Office->uuid;
-                        $CdekOffice->work_time = $Office->work_time;
-                        $CdekOffice->cdek_region_id = $Office->location->region_code;
-                        $CdekOffice->cdek_city_id = $Office->location->city_code;
-                        $CdekOffice->longitude = $Office->location->longitude;
-                        $CdekOffice->latitude = $Office->location->latitude;
-                        $CdekOffice->weight_min = $Office->weight_min ?? 0;
-                        $CdekOffice->weight_max = $Office->weight_max ?? 0;
-        
-                        $CdekOffice->save();
-                    }
-                }
+            foreach ($getOffices as $Office) {
+
+                if (is_null($CdekOffice = CdekOffice::whereCode($Office->code)->first())) {
+                    $CdekOffice = new CdekOffice();
+                } 
+                
+                $CdekOffice->active = 1;
+                $CdekOffice->code = $Office->code;
+                $CdekOffice->name = $Office->name;
+                $CdekOffice->address_comment = $Office->address_comment ?? $Office->note ?? '';
+                $CdekOffice->uuid = $Office->uuid;
+                $CdekOffice->work_time = $Office->work_time;
+                $CdekOffice->cdek_region_id = $Office->location->region_code;
+                $CdekOffice->cdek_city_id = $Office->location->city_code;
+                $CdekOffice->longitude = $Office->location->longitude;
+                $CdekOffice->latitude = $Office->location->latitude;
+                $CdekOffice->weight_min = $Office->weight_min ?? 0;
+                $CdekOffice->weight_max = $Office->weight_max ?? 0;
+                $CdekOffice->save();
             }
 
             $CdekCity->updated_at = date("Y-m-d H:i:s");
@@ -83,3 +77,5 @@ class CdekOffices extends Command
 
     }
 }
+
+

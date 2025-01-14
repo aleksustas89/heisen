@@ -426,6 +426,15 @@ input[disabled="disabled"], input[disabled="disabled"] + span {
     background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2211%22%20viewBox%3D%220%200%2014%2011%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23fff%22%20points%3D%2212%201%205%207.5%202%205%201%205.5%205%2010%2013%201.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A")
 }
 .filter {z-index: 1100}
+.filter-footer {
+    position: sticky;
+    bottom: 0;
+    background: #222222;
+    padding: 0 0 30px 0;
+}
+.uk-offcanvas-bar { 
+    padding: 30px 30px 0;
+}
 .uk-icon path {
     stroke: currentcolor;
 }
@@ -433,4 +442,32 @@ input[disabled="disabled"], input[disabled="disabled"] + span {
 .item-price {
     font-size: 16px;
     color: #8b6a1b !important;
+}
+
+.tm-dropmess .uk-dropdown {
+    min-width: auto;    
+    background: none;
+    color: #666;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, .15);
+    --uk-position-offset: 0px;
+    --uk-position-viewport-offset:0px;
+}
+.tm-icon-nav .uk-icon-image {
+    width: 40px;
+    height: 40px;
+}
+.iconmess{
+    width: 30px;
+    height: 30px;
+}
+.messbtn{
+    background-color: #9d8661!important;
+    border-radius: 100%;
+    padding: 15px;
+    border: 0px;
+}
+.tm-icon-nav .uk-icon{margin:5px;}
+.tm-icon-nav{
+    background: #fff;
+    border-radius: 25px;
 }

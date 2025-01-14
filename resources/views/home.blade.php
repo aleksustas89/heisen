@@ -6,6 +6,10 @@
 
 @section('content')
 
+    @if (!empty($bottom_text))
+        <div class="uk-hidden" id="seo-text">{!! $bottom_text !!}</div>
+    @endif
+
     <!--слайдер-->
     <div class="uk-position-relative uk-visible-toggle" tabindex="-1" uk-slideshow="animation: push;ratio: 7:3">
 
@@ -18,7 +22,7 @@
                 
                 <div class="uk-position-center-right">
                     <div class="uk-padding-large uk-width-xlarge uk-margin-remove-first-child slideshow-item-text">
-                        <h2 class="uk-h1 uk-margin-top uk-margin-remove-bottom">Собственная мастерская</h2>
+                        <div class="uk-h1 uk-margin-top uk-margin-remove-bottom">Собственная мастерская</div>
                         <div class="el-content uk-panel uk-margin-top">
                             Это возможность предлагать не только продукцию нашего дизайна, но и отшивать модели по эскизам клиента, и вносить коррективы по желанию заказчика в имеющуюся модель.
                         </div>
@@ -33,7 +37,7 @@
                 <div class="uk-position-cover" uk-slideshow-parallax="opacity: 0,0,0.2; backgroundColor: #000,#000"></div>
                 <div class="uk-position-center-right">
                     <div class="uk-padding-large uk-width-xlarge uk-margin-remove-first-child slideshow-item-text">
-                        <h2 class="uk-h1 uk-margin-top uk-margin-remove-bottom">Лаконичный дизайн и высокое качество</h2>
+                        <div class="uk-h1 uk-margin-top uk-margin-remove-bottom">Лаконичный дизайн и высокое качество</div>
                         <div class="el-content uk-panel uk-margin-top">Для создания каждой вещи мы отбираем лучшие материалы: только добротную кожу и фурнитуру.</div>
                     </div>
                 </div>
@@ -45,7 +49,7 @@
                 <div class="uk-position-cover" uk-slideshow-parallax="opacity: 0,0,0.2; backgroundColor: #000,#000"></div>
                 <div class="uk-position-center-right">
                     <div class="uk-padding-large uk-width-xlarge uk-margin-remove-first-child slideshow-item-text">
-                        <h2 class="uk-h1 uk-margin-top uk-margin-remove-bottom">Неповторимая уникальность и изысканность</h2>
+                        <div class="uk-h1 uk-margin-top uk-margin-remove-bottom">Неповторимая уникальность и изысканность</div>
                         <div class="el-content uk-panel uk-margin-top">
                             Мы предлагаем аксессуары, в которых учтено всё, они очень долго служат хозяевам, сохраняют презентабельный вид, 
                             а в процессе носки приобретают неповторимую уникальность и изысканность. 
@@ -55,15 +59,15 @@
             </li>
         </ul>
 
-        <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
-        <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+        <a class="uk-position-center-left uk-position-small uk-hidden-hover" uk-slidenav-previous uk-slideshow-item="previous"></a>
+        <a class="uk-position-center-right uk-position-small uk-hidden-hover" uk-slidenav-next uk-slideshow-item="next"></a>
 
     </div>	
     <!--слайдер-->
 
 
 
-    <h2 class="uk-h1 uk-margin-xlarge uk-margin-remove-bottom uk-text-center">Насладись Аутентичностью Наших Изделий</h2>
+    <div class="uk-h1 uk-margin-xlarge uk-margin-remove-bottom uk-text-center">Насладись Аутентичностью Наших Изделий</div>
 	<div class="uk-margin uk-width-xlarge uk-margin-auto uk-text-center">
         Наши менеджеры всегда на связи и с радостью проконсультируют Вас по всем вопросам
     </div>
@@ -87,7 +91,7 @@
                     <div class="home-group-item">
                         <a href="{{ $first->url }}" class="uk-inline-block uk-background-cover" style="background-image: url({{ $first->dir() }}{{ $first->image_large }});">
                             <div class="uk-position-bottom-center uk-padding">
-                                <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $first->name }}</h3>
+                                <div class="uk-h5 uk-margin-top uk-margin-remove-bottom home-group-title">{{ $first->name }}</div>
                             </div>
                         </a>
                     </div>
@@ -96,7 +100,7 @@
                     <div class="home-group-item">
                         <a href="{{ $second->url }}" class="uk-inline-block uk-background-cover" style="background-image: url({{ $second->dir() }}{{ $second->image_large }});">
                             <div class="uk-position-bottom-center uk-padding">
-                                <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $second->name }}</h3>
+                                <div class="uk-h5 uk-margin-top uk-margin-remove-bottom home-group-title">{{ $second->name }}</div>
                             </div>
                         </a>
                     </div>
@@ -107,7 +111,7 @@
                 <div class="uk-child-width-1-1 uk-text-center uk-grid-small home-group-large home-group-item padding-left-small" uk-grid>
                     <a href="{{ $third->url }}" class="uk-inline-block uk-background-cover" style="background-image: url({{ $third->dir() }}{{ $third->image_large }});">
                         <div class="uk-position-bottom-center uk-padding">
-                            <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $third->name }}</h3>
+                            <div class="uk-h5 uk-margin-top uk-margin-remove-bottom home-group-title">{{ $third->name }}</div>
                         </div>
                     </a>
                 </div>
@@ -119,7 +123,7 @@
                     <div>
                         <a href="{{ $fourth->url }}" class="uk-inline-block uk-background-cover" style="background-image: url({{ $fourth->dir() }}{{ $fourth->image_large }});">
                             <div class="uk-position-bottom-center uk-padding">
-                                <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $fourth->name }}</h3>
+                                <div class="uk-h5 uk-margin-top uk-margin-remove-bottom home-group-title">{{ $fourth->name }}</div>
                             </div>
                         </a>
                     </div>
@@ -130,7 +134,7 @@
                     <div class="home-group-small home-group-item">
                         <a href="{{ $fifth->url }}" class="uk-inline-block uk-background-cover" style="background-image: url({{ $fifth->dir() }}{{ $fifth->image_large }});">
                             <div class="uk-position-bottom-center uk-padding">
-                                <h3 class="uk-h5 uk-margin-top uk-margin-remove-bottom">{{ $fifth->name }}</h3>
+                                <div class="uk-h5 uk-margin-top uk-margin-remove-bottom home-group-title">{{ $fifth->name }}</div>
                             </div>
                         </a>
                     </div>
@@ -161,7 +165,7 @@
 
     @if (count($newItems) > 0)
 
-        <h2 class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Новинки</h2>
+        <div class="uk-h1 uk-margin-small uk-text-center uk-margin-xlarge uk-margin-bottom">Новинки</div>
 
         <div class="uk-child-width-1-3@s uk-child-width-1-5@m uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="" itemscope itemtype="https://schema.org/OfferCatalog">
 
@@ -176,7 +180,7 @@
 
         <div class="uk-section-small uk-padding-remove-bottom">
             <div class="uk-flex uk-flex-middle uk-flex-between">
-                <h1 class="uk-margin-remove">Отзывы</h1>
+                <div class="uk-h1 uk-margin-remove">Отзывы</div>
                 <div class="uk-text-right"><a href="{{ route("comments") }}">Все отзывы</a></div>
             </div>
 
@@ -193,12 +197,20 @@
         </div>
     @endif
 
-    @if (!empty($bottom_text))
-        {!! $bottom_text !!}
-    @endif
+    <div id="seo-text-bottom"></div>
 
 @endsection
 
+@section("js")
+    <script>
+        $(function(){
+            if ($("#seo-text").length) {
+                $("#seo-text-bottom").html($("#seo-text").html());
+            }
+        });
+    </script>
+
+@endsection
 
 @section("css")
 
@@ -209,6 +221,7 @@ App\Services\Helpers\File::css('/css/colors.css');
 
 <style>
     .padding-left-small {padding-left: 15px;}
+    .home-group-title {color: #fff}
 </style>
 
 @endsection

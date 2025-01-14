@@ -12,7 +12,16 @@
 
 @section('robots')
 
-    @if (isset($filterProperties) && count($filterProperties) > 0)
+    @if ($shopFilter)
+        @switch ($shopFilter->indexing)
+            @case(0) 
+                {{ \App\Http\Controllers\SeoController::robots(['follow', 'index']) }}
+            @break
+            @case(1) 
+                {{ \App\Http\Controllers\SeoController::robots(['nofollow', 'noindex']) }}
+            @break
+        @endswitch
+    @elseif (isset($filterProperties) && count($filterProperties) > 0)
         {{ \App\Http\Controllers\SeoController::robots(['nofollow', 'noindex']) }}
     @elseif (request()->sorting)
         {{ \App\Http\Controllers\SeoController::robots(['follow', 'noindex']) }}
@@ -24,7 +33,7 @@
 
 @section('content')
 
-    <div class="uk-section-xsmall tm-tovar">
+    <div class="uk-section-xsmall tm-tovar uk-padding-remove-top">
         <div uk-grid="" class="uk-grid">
         
             @php
@@ -41,30 +50,52 @@
             <!--сам каталог-->
             <div class="uk-width-expand@m" itemscope itemtype="https://schema.org/OfferCatalog">
 
-                <div>
-                    {!! $group->description !!}
-                </div>
-                <div class="group-text-top uk-hidden" itemprop="description">
-                    @if ($shopFilter)
-                        {!! $shopFilter->text !!}
-                    @else 
-                        {!! $group->text !!}
+                <div class=" uk-margin-remove-top">
+
+                    <div class="uk-flex uk-flex-middle gap-30 uk-flex-between">
+
+                        @if (!$shopFilter)
+                            <div class="uk-h3 uk-text-bolder uk-margin-remove-bottom">{{ $group->name }}</div>
+                        @elseif ($shopFilter)
+                            <div class="uk-h3 uk-text-bolder uk-margin-remove-bottom">{{ $shopFilter->h1 }}</div>
+                        @endif
+
+                        @if (count($properties) > 0)
+                            <button class="uk-button uk-button-default filter-btn uk-h3 uk-text-bolder" type="button" uk-toggle="target: #filter">
+                                Фильтрация@if (isset($filterProperties) && $countProperties > 0):
+                                    @php
+                                        $title = \App\Services\Helpers\Str::plural($countProperties, "Применен", "Применено", "Применено");
+                                        $title2 = \App\Services\Helpers\Str::plural($countProperties, "Фильтр", "Фильтра", "Фильтров");
+                                    @endphp 
+                                    {{ $title }} {{ $countProperties }} {{ $title2 }}  
+                                @endif
+                            </button>
+                        @endif
+                    </div>
+
+                    @if (!$shopFilter && !empty($group->description))
+                        <div class="group-text-top uk-margin">
+                            {!! $group->description !!}
+                        </div>
+                    @elseif($shopFilter)
+                        <div class="group-text-top uk-margin">
+                            {!! $shopFilter->text !!}
+                        </div>
                     @endif
-                </div>
-            
-                <div class="uk-h3 uk-text-bold">
-                    <h1 class="uk-inline-block uk-h3 uk-text-bolder uk-margin-remove" itemprop="name">{{ !empty($group->h1) ? $group->h1 : $group->name }}</h1>
-                    @if (count($properties) > 0)
-                        <button class="uk-button uk-button-default filter-btn" type="button" uk-toggle="target: #filter">
-                            Фильтрация@if (isset($filterProperties) && $countProperties > 0):
-                                @php
-                                    $title = \App\Services\Helpers\Str::plural($countProperties, "Применен", "Применено", "Применено");
-                                    $title2 = \App\Services\Helpers\Str::plural($countProperties, "Фильтр", "Фильтра", "Фильтров");
-                                @endphp 
-                                {{ $title }} {{ $countProperties }} {{ $title2 }}  
-                            @endif
-                        </button>
-                    @endif
+
+                    <div class="group-text-bottom" itemprop="description">
+
+                        @if (!$shopFilter && !empty($group->h1))
+                            <h1 class="uk-inline-block uk-margin-remove" itemprop="name">{{ $group->h1 }}</h1>
+
+                            {!! $group->text !!}
+
+                        @elseif ($shopFilter)
+                            <h1 class="uk-inline-block uk-margin-remove" itemprop="name">{{ $shopFilter->seo_h1 }}</h1>
+
+                            {!! $shopFilter->seo_text !!}
+                        @endif
+                    </div>
 
                     @if (count($SubGroups) > 0) 
                         <div>
@@ -96,32 +127,38 @@
 
                                             @case(4)
 
-                                                <li class="uk-open">
-                                                    <a class="uk-accordion-title" href="#" id="uk-accordion-50-title-0" role="button" aria-controls="uk-accordion-50-content-0" aria-expanded="true" aria-disabled="false">{{ $property->name }}</a>
-                                                    <div class="uk-accordion-content" id="uk-accordion-50-content-0" role="region" aria-labelledby="uk-accordion-50-title-0">
-                                                        <ul @class([
-                                                            "uk-nav", "uk-nav-default", "tm-color" => $property->destination == 1
-                                                        ]) data-id="{{ $property->id }}">   
+                                                @php
+                                                    $shopItemList = $property->shopItemList;
+                                                @endphp
 
-                                                            @foreach ($property->shopItemList->listItems as $ListItem)
-                                                                @php
-                                                                    $checked = '';
-                                                                    if (isset($filterProperties[$property->id]) && in_array($ListItem->id, $filterProperties[$property->id])) {
-                                                                        $checked = ' checked="checked"';
-                                                                    }
-                                                                    $background = $property->destination == 1 && !empty($ListItem->color) ? ' background-color:'. $ListItem->color : '';
-                                                                @endphp
-                                                     
-                                                                <li>
-                                                                    <label class="uk-margin-small-bottom uk-display-block">
-                                                                        <input data-id="{{ $ListItem->id }}" {{ $checked }} onclick="Filter.init($(this))" {{ $checked }} style="{{ $background }}" name="property_{{ $property->id }}_{{ $ListItem->id }}" value="1" class="uk-checkbox uk-margin-small-right" type="checkbox"><span>{{ $ListItem->value }}</span>
-                                                                    </label>
-                                                                </li>
-                                                            @endforeach
+                                                @if (!is_null($shopItemList))
+                                                    <li class="uk-open">
+                                                        <a class="uk-accordion-title" href="#" id="uk-accordion-50-title-0" role="button" aria-controls="uk-accordion-50-content-0" aria-expanded="true" aria-disabled="false">{{ $property->name }}</a>
+                                                        <div class="uk-accordion-content" id="uk-accordion-50-content-0" role="region" aria-labelledby="uk-accordion-50-title-0">
+                                                            <ul @class([
+                                                                "uk-nav", "uk-nav-default", "tm-color" => $property->destination == 1
+                                                            ]) data-id="{{ $property->id }}">   
 
-                                                        </ul>
-                                                    </div>
-                                                </li>
+                                                                @foreach ($shopItemList->listItems()->where("active", 1)->orderBy("sorting", "ASC")->get() as $ListItem)
+                                                                    @php
+                                                                        $checked = '';
+                                                                        if (isset($filterProperties[$property->id]) && in_array($ListItem->id, $filterProperties[$property->id])) {
+                                                                            $checked = ' checked="checked"';
+                                                                        }
+                                                                        $background = $property->destination == 1 && !empty($ListItem->color) ? ' background-color:'. $ListItem->color : '';
+                                                                    @endphp
+                                                        
+                                                                    <li>
+                                                                        <label class="uk-margin-small-bottom uk-display-block">
+                                                                            <input data-id="{{ $ListItem->id }}" {{ $checked }} onclick="Filter.init($(this))" {{ $checked }} style="{{ $background }}" name="property_{{ $property->id }}_{{ $ListItem->id }}" value="1" class="uk-checkbox uk-margin-small-right" type="checkbox"><span>{{ $ListItem->value }}</span>
+                                                                        </label>
+                                                                    </li>
+                                                                @endforeach
+
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                @endif
                                         
                                             @break
 
@@ -133,7 +170,7 @@
                             
                             </div>
                             
-                            <div class="uk-grid uk-child-width-1-1 uk-grid-small uk-grid-stack" uk-grid="">
+                            <div class="uk-grid uk-child-width-1-1 uk-grid-small uk-grid-stack filter-footer" uk-grid="">
                                 <div><button class="uk-button uk-button-primary uk-width-1-1" id="filter-items-found" type="submit">Показать {{ $items->total() }}</button></div>
                                 <div><button onclick="Filter.clear()" class="uk-button uk-button-default uk-width-1-1" type="button">Очистить все</button></div>
                             </div>
@@ -148,7 +185,7 @@
                 <!--фильтр-->
                 
                 <!--сортировка-->
-                <div class="uk-child-width-1-2 uk-grid-small uk-grid" uk-grid="">
+                <div class="uk-child-width-1-2 uk-grid-small uk-grid uk-margin-top" uk-grid="">
                     <div class="uk-text-small uk-first-column">
                         {{ $total }} {{ \App\Services\Helpers\Str::plural($total, "Товар", "Товара", "Товаров"); }}
                     </div>
@@ -203,6 +240,15 @@
     </div>
 
     
+
+@endsection
+
+@section("css")
+
+    <style>
+        .group-text-bottom {display:none;}
+        .gap-30 {gap:30px;}
+    </style>
 
 @endsection
 

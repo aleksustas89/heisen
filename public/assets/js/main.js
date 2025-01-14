@@ -60,16 +60,24 @@ $(document).ready(function () {
     }
 
 
-	$("body").on("click", ".admin-table .check-all", function(){
+	$("body").on("click", ".admin-table .check-all", function() {
 		let checker = $(this);
 
-		$(".admin-table").find("tbody").find(".check-item").each(function(){
+		$(".admin-table").find("tbody").find(".check-item").each(function() {
 			if (checker.prop("checked")) {
 				$(this).prop("checked", true);
 			} else {
 				$(this).prop("checked", false);
 			}	
 		});
+	});
+
+	$("body").on("click", ".admin-table .check-item, .admin-table .check-all", function() {
+		if ($(".admin-table").find("tbody").find(".check-item:checked").length) {
+			$(".card-footer-inner").removeClass("v-hidden");
+		} else {
+			$(".card-footer-inner").addClass("v-hidden");
+		}
 	});
 
 	

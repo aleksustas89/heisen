@@ -43,7 +43,9 @@ class CartController extends Controller
             "Payments" => ShopPaymentSystem::where("deleted", 0)->orderBy("sorting", "ASC")->get(),
             'shopDeliveries' => ShopDelivery::where("deleted", 0)->orderBy("sorting", "ASC")->get(),
             "client" => $client,
-            "Boxberry" => Boxberry::find(1)
+            "Boxberry" => Boxberry::find(1),
+            "CdekOffices" => CdekOffice::get(),
+            'littleCart' => false
         ]);
     }
 
@@ -58,7 +60,7 @@ class CartController extends Controller
             }
         }
 
-        return self::getCartItemsTemplate(request()->littleCart ?? 0);
+        return self::getCartItemsTemplate();
     }
 
     public function add(ShopItem $shopItem, $count)
@@ -106,18 +108,18 @@ class CartController extends Controller
             }
         }
 
-        return self::getCartItemsTemplate(request()->littleCart ?? 0);
+        return self::getCartItemsTemplate();
     }
 
     public static function getLittleCart()
     {
 
-        return self::getCartItemsTemplate(request()->littleCart ?? 0);
+        return self::getCartItemsTemplate();
     }
 
-    public static function getCartItemsTemplate($littleCart = 0)
+    public static function getCartItemsTemplate()
     {
-        return response()->view('shop.cart-items', ["littleCart" => $littleCart]);
+        return response()->view('shop.cart-items', ['littleCart' => true]);
     }
 
     public static function getCart()
@@ -227,8 +229,7 @@ class CartController extends Controller
 
             if ($request->shop_delivery_id == 7) {
                 /*cdek*/
-                $Fields['delivery_7_city_id'] = 'required';
-    
+
                 if ($request->delivery_7_delivery_type == 11) {
                     $Fields['delivery_7_office_id'] = 'required';
                 } else if ($request->delivery_7_delivery_type == 15) {
@@ -241,8 +242,7 @@ class CartController extends Controller
             }
     
             if ($request->shop_delivery_id == 1) {
-                $Fields['delivery_1_city'] = 'required';
-                $Fields['delivery_1_office'] = 'required';
+                $Fields['delivery_1_address'] = 'required';
             }
     
             if (!empty($request->email)) {

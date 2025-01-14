@@ -3,7 +3,7 @@
         <div class="uk-grid-medium uk-flex-middle" uk-grid>
 
             <div class="uk-width-expand">
-                <h4 class="uk-comment-title uk-margin-remove"><span class="uk-link-reset">{{ $Comment->author }}, {{$Comment->subject}}</span></h4>
+                <div class="uk-h4 uk-comment-title uk-margin-remove"><span class="uk-link-reset">{{ $Comment->author }}, {{$Comment->subject}}</span></div>
                 @if (!empty($Comment->created_at))
                     <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
                         <li><span>{{ date("d.m.Y H:i", strtotime($Comment->created_at)) }}</span></li>

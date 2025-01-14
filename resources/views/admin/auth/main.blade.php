@@ -18,7 +18,7 @@
      <link href="{{ asset('/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
      <link href="/assets/css/admin.css" rel="stylesheet" type="text/css" />
 
-
+     <meta name="robots" content="nofollow, noindex" />
      <link href="{{ asset('/assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
 
 

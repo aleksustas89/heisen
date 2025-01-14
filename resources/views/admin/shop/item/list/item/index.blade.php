@@ -43,15 +43,19 @@
                             <tr>
                                 <th style="width: 1%">#ID</th>
                                 <th>Значение</th>
-                                <th width="40px">
-                                    <i data-feather="eye" title="Активность"></i>
-                                </th>
+                                <th width="40px"></th>
+                                <th class="d-mob-none" width="60px"><i class="fas fa-sort-amount-down" title="—"></i></th>
                                 <th class="controll-td"></th>
                             </tr>
                         </thead>
                         <tbody>
 
                             @foreach ($items as $item)
+
+                                @php
+                                    $isActive = $item->active == 1 ? false : true;
+                                @endphp
+
                                 <tr>
                                     <td>
                                         {{ $item->id }}
@@ -62,12 +66,17 @@
                                     </td>
 
                                     <td width="40px">
-                                        @php
-                                            $active = $item->active == 1 ? 'eye' : 'eye-off'
-                                        @endphp
 
-                                        <i data-feather="{{ $active }}" title="Активность"></i>
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="активен/не активен" onclick="toggle.init($(this))" onclick="toggle.init($(this))" @class([
+                                            'pointer',
+                                            'ico-inactive' => $isActive,
+                                        ]) id="toggle_ShopItemListItem_active_{{ $item->id }}">
+                                
+                                            <i class="lar la-lightbulb font-20"></i>
+                                        </span>
                                     </td>
+
+                                    <td class="d-mob-none" width="60px" class="td_editable"><span id="apply_check_ShopItemListItem_sorting_{{ $item->id }}" class="editable">{{ $item->sorting }}</span></td>
 
                                     <td class="td-actions">
                                         <a href="{{ route('shop.shop-item-list-item.edit', ['shop' => $shop->id, 'shop_item_list_item' => $item->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>

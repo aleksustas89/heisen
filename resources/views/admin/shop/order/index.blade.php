@@ -40,9 +40,11 @@
                             <tr>
                                 <th style="width: 1%">№</th>
                                 <th style="width: 170px">Дата</th>
-                                <th style="width: 40px" class="d-mob-none">Источник</th>
+                                {{-- <th style="width: 40px" class="d-mob-none">Источник</th> --}}
                                 <th class="d-mob-none">Фио</th>
                                 <th style="width: 50px" class="d-mob-none"><i data-feather="list"></i></th>
+                                <th class="d-mob-none" style="width: 120px">Доставка</th>
+                                <th class="d-mob-none" style="width: 40px">-</th>
                                 <th style="width: 100px">Сумма</th>
                                 <th style="width: 100px" class="d-mob-none">Оплачено</th>
                                 <th class="controll-td"></th>
@@ -75,9 +77,9 @@
                                     <td style="width: 170px" >
                                         {{ date("d.m.Y H:i", strtotime($order->created_at)) }}
                                     </td>
-                                    <td style="width: 40px" class="d-mob-none">
+                                    {{-- <td style="width: 40px" class="d-mob-none">
                                         {!! $source !!}
-                                    </td>
+                                    </td> --}}
                                     <td class="d-mob-none">
                                         {{ $fio }}
                                     </td>
@@ -179,10 +181,43 @@
                                         </a>
                                         
                                     </td>
+                                    <td class="d-mob-none" style="width: 120px">
+
+                                        @if ($order->shop_delivery_id > 0)
+                                            <span class="btn-outline-{{ $order->ShopDelivery->color }}" style="font-size:12px;">{{ $order->ShopDelivery->name }}</span>
+                                        @endif
+                
+                                    </td>
+                                    <td class="d-mob-none" style="width: 40px">
+                                        @if ($order->shop_delivery_id > 0)
+                                            @php
+                                                switch ($order->shop_delivery_id) {
+                                                    case 1:
+                                                        $Code = $order->PrOrder;
+                                                    break;
+                                                    case 7:
+                                                        $Code = $order->CdekOrder;
+                                                    break;
+                                                    case 8:
+                                                        $Code = $order->BoxberryOrder;
+                                                    break;
+                                                }
+
+                                            @endphp
+                                            <a @if(!is_null($Code)) href="javascript:void(0)" onclick="Copy.init($(this), '{{ $Code->track }}')" @endif @class([
+                                                "order-not-created" => empty($Code->track) ? true : false,
+                                                "order-created" => !empty($Code->track) ? true : false,
+                                                "position-relative"
+                                            ])>
+                                                
+                                                <i class="las la-truck"></i>
+                                            </a>
+                                        @endif
+                                    </td>
                                     <td style="width: 100px">
                                         {{ App\Models\Str::price($sOrderSum) }} {{ $sOrderCurrency }}
                                     </td>
-                                    <td class="d-mob-none" style="width: 100px" class="text-center">
+                                    <td class="d-mob-none text-center" style="width: 100px">
                                         @if ($order->paid == 1)
                                             <i style="color: green; font-size: 22px;" class="las la-check-double"></i>
                                         @endif
@@ -218,6 +253,18 @@
         .paid {
             background: #22b783!important
         }
+        .order-created {
+            color: green;
+        }
+        .order-not-created {
+            color: #cfcfcf;
+        }
+        .copied {
+            position: absolute;
+            margin: -15px 0 0 -13px;
+            font-size: 12px;
+            left: 0;
+        }
     </style>
 @endsection
 
@@ -229,5 +276,27 @@
             html: true,
             trigger: "hover"
         });
+
+        var Copy = {
+            init: function(obj, text) {
+
+                $("body").append("<div style='position:absolute; top:-1000px; '><input type='text' id='copyText' value='" + text + "'></div>");
+
+                var copyText = document.getElementById("copyText");
+
+                copyText.select();
+
+                document.execCommand("copy");
+
+                $("#copyText").parent().remove();
+
+                obj.append('<span class="copied">Copied</span>');
+
+                delay(function() {
+                    $(".copied").remove();
+                }, 1000);
+            }
+        }
+
     </script>
 @endsection

@@ -150,21 +150,15 @@ class ShopItem extends Model
     public function path()
     {
         $object = $this->parentItemIfModification();
-        if ($object->shop_group_id > 0) {
-            return Shop::$store_path . 'group_' . $object->shop_group_id . '/item_' . $object->id . '/';
-        }
 
-        return false;
+        return Shop::$store_path . 'group_' . ($object->shop_group_id > 0 ? $object->shop_group_id : 0) . '/item_' . $object->id . '/';
     }
 
     public function shortPath()
     {
         $object = $this->parentItemIfModification();
-        if ($object->shop_group_id > 0) {
-            return 'group_' . $object->shop_group_id . '/item_' . $object->id . '/';
-        }
 
-        return false;
+        return 'group_' . ($object->shop_group_id > 0 ? $object->shop_group_id : 0) . '/item_' . $object->id . '/';
     }
 
     public function createDir()

@@ -1,6 +1,6 @@
 @extends("admin.main")
 
-@section('title', 'Редактирование сотрудника')
+@section('title', 'Настройки Cdek отправителя')
 
 @section('breadcrumbs')
 

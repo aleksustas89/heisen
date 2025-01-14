@@ -56,12 +56,18 @@
         <div class="file-box">
             <div class="text-center">
                 <a target="_blank" href="{{ route('getYml') }}"><i class="lar la-file-pdf text-black ico"></i></a>
-                <h6 class="text-truncate">Yml</h6>
+                <h6 class="text-truncate">
+                    Yml
+                    @if ($ymlInfo["edit"])
+                        <a href="{{ route("sitemap.edit", 3) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                    @endif
+                </h6>
                 @if (!empty($ymlInfo["date"]))
                     <small class="text-muted">
                         {{ $ymlInfo["date"] }} / {{ $ymlInfo["filesize"] }}
                     </small>
                 @endif
+                
             </div>                                                        
         </div>                                             
     </div> 

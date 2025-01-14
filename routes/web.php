@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\Facades\DB;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,8 +44,10 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
             'language' => 'LanguageController',
             'shop.shop-payment-system' => 'ShopPaymentSystemController',
             'cdek-sender' => 'CdekSenderController',
+            'boxberry-sender' => 'BoxberrySenderController',
             'shop.shop-filter' => 'ShopFilterController',
             'trash' => 'TrashController',
+            'sitemap' => 'SitemapController'
         ]);
 
         Route::resource('shop.shop-price', App\Http\Controllers\Admin\ShopPriceController::class)->only(['index', 'update']);
@@ -61,6 +63,8 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
                 Route::get('/delete/{field}', 'ShopGroupController@deleteImage')->name('deleteShopGroup');
             });
 
+            Route::get('{shopItemProperty}/delete', 'ShopItemController@deletePropertyValue')->name('deleteShopItemPropertyValue');
+
             Route::prefix("shop-item")->controller('ShopItemController')->group(function() {
                 Route::prefix("{shopItem}")->group(function() {
                     Route::get('/copy', 'copy')->name("copyShopItem"); 
@@ -68,8 +72,8 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
                         Route::get('/{shopItemImage}/delete', 'deleteImage')->name("deleteShopItemImage");
                         Route::get('/sorting', 'sortShopItemImages')->name("sortingShopItemImages");
                     });
-                    Route::get('/shop-item-property/{shopItemProperty}/value/{id}', 'deletePropertyValue')->name('deleteShopItemPropertyValue');
-                    Route::post('image-upload', 'uploadShopItemImage')->name("uploadShopItemImage");
+                    
+                    Route::post('image-upload', 'App\Http\Controllers\Admin\ShopItemController@uploadShopItemImage')->name("uploadShopItemImage");
                     Route::get('gallery', 'getShopItemGallery')->name("getShopItemGallery");
     
                     Route::prefix("associated")->group(function() {
@@ -93,6 +97,9 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
                 });
             });
 
+            Route::get('/add/shortcut-from-group', 'ShopGroupController@addShortcutFromGroup')->name("addShortcutFromGroup");
+            Route::post('/save/shortcut-from-group', 'ShopGroupController@saveShortcutFromGroup')->name("saveShortcutFromGroup");
+
             Route::get('/modification/{shopItem}/default', 'ModificationController@defaultModification')->name('defaultModification');
 
             Route::prefix('discount')->controller('ShopDiscountController')->group(function() {
@@ -104,9 +111,18 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
                 Route::get('/get-clients', 'getClients')->name("getClients");
                 Route::get('/get-orders', 'getOrders')->name("getOrders");
 
-                Route::prefix('cdek/create')->controller('App\Http\Controllers\CdekController')->group(function() {
+                Route::prefix('cdek')->controller('App\Http\Controllers\CdekController')->group(function() {
                     Route::post('order', [App\Http\Controllers\CdekController::class, 'cdekCreateOrder'])->name("createCdekOrder");
                     Route::get('print/{CdekOrder}', [App\Http\Controllers\CdekController::class, 'print'])->name("printCdekOrder");
+                    Route::get('delete/{CdekOrder}', [App\Http\Controllers\CdekController::class, 'deleteOrder'])->name("deleteOrder");
+                });
+
+                Route::prefix('boxberry/create')->controller('App\Http\Controllers\Admin\BoxberryController')->group(function() {
+                    Route::post('order', 'createOrder')->name("createBoxberryOrder");
+                });
+
+                Route::prefix('pr/create')->controller('App\Http\Controllers\Admin\PochtaRossiiController')->group(function() {
+                    Route::post('order', 'createOrder')->name("createPrOrder");
                 });
             });
 
@@ -115,9 +131,9 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
             });
         });
 
-        Route::prefix("sitemap")->controller('SitemapController')->group(function() {
-            Route::get('/', 'index')->name("adminSitemap");
-        });
+        // Route::prefix("sitemap")->controller('SitemapController')->group(function() {
+        //     Route::get('/', 'index')->name("adminSitemap");
+        // });
         
    
         //editable-fields
@@ -176,6 +192,8 @@ if (Schema::hasTable('shops')) {
         Route::get('/', [App\Http\Controllers\ShopItemDiscountController::class, 'showItemWithDiscounts'])->name("showItemWithDiscounts");
         Route::get('/ajax', [App\Http\Controllers\ShopItemDiscountController::class, 'showItemWithDiscountsAjax'])->name("showItemWithDiscountsAjax");
     });
+
+    Route::get('/cdek/office/choose', [App\Http\Controllers\CdekController::class, 'chooseOffice'])->name("chooseOffice");
     
 }
 

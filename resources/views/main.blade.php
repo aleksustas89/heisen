@@ -208,11 +208,9 @@
                                                 <span class="uk-margin-small-right" uk-icon="icon: clock"></span>
                                             </div> 
                                             <div>
-                                                <div>
-                                                    <b>пн-пт:</b> 9-20,<br>
-                                                </div>
-                                                <div><b>сб:</b> 10-16,<br></div>
-                                                <div><b>вс:</b> выходной</div>
+                                                <div><b>понедельник-пятница: </b>{{ env('SCHEDULE1') }}</div>
+                                                <div><b>суббота: </b>{{ env('SCHEDULE2') }}</div>
+                                                <div><b>воскресенье: </b>{{ env('SCHEDULE3') }}</div>
                                             </div>
                                         </li>
                                     </ul>
@@ -307,7 +305,9 @@
                         <div class="uk-width-1-2@s uk-width-1-4@m uk-first-column">  
                             <div class="uk-h4 uk-margin">Время работы</div>
                             <div class="uk-panel uk-margin">
-                                <b>пн-пт:</b> 9-20,<br><b>сб:</b> 10-16,<br><b>вс:</b> выходной
+                                <div><b>понедельник-пятница: </b>{{ env('SCHEDULE1') }}</div>
+                                <div><b>суббота: </b>{{ env('SCHEDULE2') }}</div>
+                                <div><b>воскресенье: </b>{{ env('SCHEDULE3') }}</div>
                             </div>
                   
                         </div>
@@ -364,30 +364,41 @@
         </div>
     </div>
 
-    <!--
-    <a href="javascript:void(0)" uk-toggle="target: #request-call" class="request-call-btn">
-        <span>Сделать заявку</span>
-    </a>-->
+    <div style="position:fixed;bottom:20px;right:20px;z-index: 999;">
+        <div class="uk-inline uk-flex uk-flex-center tm-dropmess">
+            <button class="messbtn uk-flex uk-flex-center uk-flex-middle"> <span class="uk-icon iconmess" style="background-image: url(/images/message-solid.svg);"></span></button>
+            
+            <div uk-dropdown="pos: bottom-center;">
+                <ul class="uk-nav uk-dropdown-nav tm-icon-nav">
+                    <li><a target="_blank" href="https://t.me/heisen_spb"><span class="uk-icon uk-icon-image" style="background-image: url(/images/telegram-brands-solid.svg);"></span></a></li>
+                    <li><a target="_blank" href="https://wa.me/89111564465"><span class="uk-icon uk-icon-image" style="background-image: url(/images/square-whatsapp-brands-solid.svg);"></span></a></li>
+                    <li><a target="_blank" href="https://vk.com/heisenru"><span class="uk-icon uk-icon-image" style="background-image: url(/images/vk-brands-solid.svg);"></span></a></li>
+                    <li><a href="javascript:void(0)" uk-toggle="target: #request-call"><span class="uk-icon uk-icon-image" style="background-image: url(/images/message-regular.svg);"></span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>    
+
 
     <div id="request-call" uk-modal="" class="uk-modal" tabindex="-1">
         <div class="uk-modal-dialog uk-modal-body" role="dialog" aria-modal="true">
-            <h2 class="uk-modal-title">Заявка на обратный звонок</h2>
+            <div class="uk-h2 uk-modal-title">Заявка на обратный звонок</div>
             
             <form id="request-call-form" type="POST">
                 @csrf
                 <p>Заполните форму и наши менеджеры свяжутся с Вами в ближайшее время</p>
 
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-stacked-text">Фио</label>
+                    <label class="uk-form-label" for="form-stacked-text">Ваше имя</label>
                     <div class="uk-form-controls">
-                        <input required="" class="uk-input" name="name" type="text" placeholder="Ваше Фио">
+                        <input required="" class="uk-input" name="name" type="text" placeholder="Ваше имя">
                     </div>
                 </div>
 
                 <div class="uk-margin">
-                    <label class="uk-form-label" for="form-stacked-text">Телефон</label>
+                    <label class="uk-form-label" for="form-stacked-text">Ваш телефон</label>
                     <div class="uk-form-controls">
-                        <input required="" class="uk-input" name="phone" type="text" placeholder="Телефон">
+                        <input required="" class="uk-input" name="phone" type="text" placeholder="Ваш телефон">
                     </div>
                 </div>
 

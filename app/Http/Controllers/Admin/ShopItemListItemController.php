@@ -23,7 +23,7 @@ class ShopItemListItemController extends Controller
         if ($list_id > 0) {
             return view('admin.shop.item.list.item.index', [
                 'breadcrumbs' => self::breadcrumbs(false, $list_id),
-                'items' => ShopItemListItem::where("shop_item_list_id", $list_id)->where("deleted", 0)->get(),
+                'items' => ShopItemListItem::where("shop_item_list_id", $list_id)->where("deleted", 0)->orderBy("sorting", "ASC")->get(),
                 'list_id' => $list_id,
                 'shop' => $shop,
             ]);
@@ -98,7 +98,9 @@ class ShopItemListItemController extends Controller
         }
 
         $shopItemListItem->value = $request->value;
+        $shopItemListItem->declension = $request->declension;
         $shopItemListItem->description = $request->description ?? '';
+        $shopItemListItem->static_filter_path = $request->static_filter_path ?? '';
         $shopItemListItem->sorting = $request->sorting ?? 0;
         $shopItemListItem->color = $request->color;
         $shopItemListItem->shop_item_list_id = $request->shop_item_list_id;

@@ -41,17 +41,12 @@
                 <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Адрес:</b> {{ $value->value ?? '' }}</p> 
             @endif
 
-        @elseif($ShopOrder->shop_delivery_id == 1)
-            @php
-            $value = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 12)->first();
-            @endphp
-            <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Город:</b> {{ $value->value ?? '' }}</p>  
-            @php
-            $value = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 1)->first();
-            @endphp
-            <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Отделение:</b> {{ $value->value ?? '' }}</p>  
-
-        @endif
+            @elseif($ShopOrder->shop_delivery_id == 1)
+                @php
+                $value = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 25)->first();
+                @endphp
+                <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Адрес:</b> {{ $value->value ?? '' }}</p>  
+            @endif
         
         <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Способ оплаты:</b> {{ $ShopOrder->ShopPaymentSystem->name }}</p>
         @if (!empty($ShopOrder->description))

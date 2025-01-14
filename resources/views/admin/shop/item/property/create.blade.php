@@ -93,7 +93,7 @@
                                                 <select name="shop_item_list_id">
                                                     <option value="">...</option>
                                                     @foreach ($lists as $k => $list)
-                                                        <option value="{{ $k }}">{{ $list->name }}</option>
+                                                        <option value="{{ $list->id }}">{{ $list->name }}</option>
                                                     @endforeach
                                                 </select> 
                                                 <script>new Selectr('[name="shop_item_list_id"]');</script>

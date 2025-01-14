@@ -15,6 +15,8 @@ class CdekController extends Controller
 
     public $Cdek = NULL;
 
+    protected static $tariff_code = 136;
+
     public function __construct()
     {
         $this->Cdek = Cdek::find(1);
@@ -62,6 +64,22 @@ class CdekController extends Controller
         }
     }
 
+    public function chooseOffice(Request $request)
+    {
+
+        if ($request->code && !is_null($CdekOffice = CdekOffice::whereCode($request->code)->first())) {
+
+            return response()->json([
+                "id" => $CdekOffice->id,
+                "name" => $CdekOffice->name,
+                "code" => $CdekOffice->code,
+                "city" => $CdekOffice->CdekCity->name ?? '',
+                "address_comment" => $CdekOffice->address_comment,
+                "work_time" => $CdekOffice->work_time,
+            ]);
+        }
+    }
+
     public function getRegions()
     {
 
@@ -90,13 +108,14 @@ class CdekController extends Controller
         return !isset($response->requests->errors) ? $response : false;
     }
 
-    public function getCities()
+
+    public function getCities($page = 0)
     {
         
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.cdek.ru/v2/location/cities?country_codes=RU',
+            CURLOPT_URL => 'https://api.cdek.ru/v2/location/cities?country_codes=RU&size=1000&page=' . $page,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -138,35 +157,10 @@ class CdekController extends Controller
         
         $response = curl_exec($curl);
         $response = json_decode($response);
-
-        //dd($response);
         
         curl_close($curl);
 
         return !isset($response->requests->errors) ? $response : false;
-    }
-
-    public function getTariffCode(ShopOrder $ShopOrder, CdekSender $CdekSender)
-    {
-        $aSenderTypes = CdekSender::$Types[$CdekSender->type];
-        /*тип*/
-        $ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 14)->where("shop_order_id", $ShopOrder->id)->first();
-
-        $aReceive = [];
-        switch ($ShopDeliveryFieldValue->value) {
-            case 11:
-                $aReceive = [136, 138];
-            break;
-            case 15:
-                $aReceive = [137, 139];
-            break;
-        }
-
-        foreach ($aSenderTypes["cdek_tariff_codes"] as $aSenderType) {
-            if (in_array($aSenderType, $aReceive)) {
-                return $aSenderType;
-            }
-        }
     }
 
     /**
@@ -182,46 +176,16 @@ class CdekController extends Controller
             $aData["number"] = "Заказ № " . $ShopOrder->id;
             $aData["comment"] = "Заказ № " . $ShopOrder->id;
 
-            $TariffCode = $this->getTariffCode($ShopOrder, $CdekSender);
-
             //со склада
-            if (in_array($TariffCode, [136, 137])) {
-                $aData["shipment_point"] = $CdekSender->CdekOffice->code;
-            }
-    
+            $aData["shipment_point"] = $CdekSender->CdekOffice->code;
+            
             //на склад
-            if (in_array($TariffCode, [136, 138])) {
-                if (!is_null($ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 17)->where("shop_order_id", $ShopOrder->id)->first())) {
-                    if (!is_null($CdekOffice = CdekOffice::find($ShopDeliveryFieldValue->value))) {
-                        $aData["delivery_point"] = $CdekOffice->code;
-                    }
-                }                
-            }
-    
-            //с двери
-            if (in_array($TariffCode, [138, 139])) {
-                $aData["from_location"] = [];
-                $aData["from_location"]["code"] = $CdekSender->cdek_city_id;
-                $aData["from_location"]["city"] = $CdekSender->CdekCity->name;
-                $aData["from_location"]["address"] = $CdekSender->address;
-            }
-    
-            //до двери
-            if (in_array($TariffCode, [137, 139])) {
-                $aData["to_location"] = [];
+            if (!is_null($ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 17)->where("shop_order_id", $ShopOrder->id)->first())) {
+                $aData["delivery_point"] = $ShopDeliveryFieldValue->value;
+            }                
+            
+            $aData["tariff_code"] = self::$tariff_code;
 
-                if (!is_null($ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 16)->where("shop_order_id", $ShopOrder->id)->first())) {
-                    if (!is_null($CdekCity = CdekCity::find($ShopDeliveryFieldValue->value))) {
-                        $aData["to_location"]["code"] = $CdekCity->id;
-                        $aData["to_location"]["city"] = $CdekCity->name;
-                    }
-                }
-
-                if (!is_null($ShopDeliveryFieldValue = ShopDeliveryFieldValue::where("shop_delivery_field_id", 15)->where("shop_order_id", $ShopOrder->id)->first())) {
-                    $aData["to_location"]["address"] = $ShopDeliveryFieldValue->value;
-                }
-                
-            }
     
             $aData["recipient"]["name"] = implode(" ", [$ShopOrder->surname, $ShopOrder->name]);
     
@@ -230,7 +194,6 @@ class CdekController extends Controller
             $aData["recipient"]["phones"][] = $number;
             
             $aData["sender"]["name"] = $CdekSender->name;
-            $aData["tariff_code"] = $TariffCode;
     
             $package = [];
             $package["number"] = "order-" . $ShopOrder->id;
@@ -245,16 +208,12 @@ class CdekController extends Controller
            } else if ($ShopOrder->weight > 0 && $ShopOrder->width > 0 && $ShopOrder->height > 0 && $ShopOrder->length > 0) {
 
                 $package["weight"] = (int) $ShopOrder->weight;
-                $package["width"] = (int) $ShopOrder->width / 10;
-                $package["height"] = (int) $ShopOrder->height / 10;
-                $package["length"] = (int) $ShopOrder->length / 10;
+                $package["width"] = (int) $ShopOrder->width;
+                $package["height"] = (int) $ShopOrder->height;
+                $package["length"] = (int) $ShopOrder->length;
            }
 
-       
-
-
-    
-            foreach ($ShopOrder->ShopOrderItems as $ShopOrderItem) {
+            foreach ($ShopOrder->ShopOrderItems()->where("shop_order_items.deleted", 0)->get() as $ShopOrderItem) {
                 
                 $ShopItem = $ShopOrderItem->ShopItem->parentItemIfModification();
     
@@ -276,8 +235,6 @@ class CdekController extends Controller
             }
     
             $aData["packages"][] = $package;
-
-           // dd($aData);
 
             $curl = curl_init();
     
@@ -308,7 +265,11 @@ class CdekController extends Controller
                 $CdekOrder->shop_order_id = $ShopOrder->id;
                 $CdekOrder->save();
 
+                $this->setTrack($CdekOrder);
+
                 return $this->createReceipt($CdekOrder);
+            } else {
+                return $response;
             }
         } else {
 
@@ -321,6 +282,8 @@ class CdekController extends Controller
             if (strtotime('+1 hour', strtotime($CdekOrder->updated_at)) > strtotime(date("Y-m-d H:i:s")) && !empty($CdekOrder->url)) {
                 return $CdekOrder;
             } 
+
+            $this->setTrack($CdekOrder);
 
             //получаем ссылку
             return $this->createReceipt($CdekOrder);
@@ -407,6 +370,35 @@ class CdekController extends Controller
         return '';
     }
 
+    public function deleteOrder(CdekOrder $CdekOrder)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://api.cdek.ru/v2/orders/' . $CdekOrder->uuid,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'DELETE',
+          CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer ' . $this->Cdek->token
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        $result = json_decode($response);
+
+        curl_close($curl);
+
+        $CdekOrder->delete();
+
+        return response()->json($result);
+    }
+
     public function cdekCreateOrder(Request $request)
     {
 
@@ -414,11 +406,20 @@ class CdekController extends Controller
 
         if (!is_null($ShopOrder = ShopOrder::find($request->shop_order_id))) { 
 
+            // if (!is_null($CdekOrder = CdekOrder::where("shop_order_id", $ShopOrder->id)->first())) {
+
+            //     $this->deleteOrder($CdekOrder);
+            // }
+
+
             $aError["error"] = [];
-            if ($request->cdek_dimension_id == 0 && (!$request->width > 0 && !$request->height > 0 && !$request->length > 0)) {
-                $aError["error"][] = "Заполните поле упаковка либо заполните габариты! - " . $request->width;
+            if ((empty($request->cdek_dimension_id) || $request->cdek_dimension_id == 0) && ($request->width == 0 || $request->height == 0 || $request->length == 0)) {
+                $aError["error"][] = "Заполните поле коробка либо заполните габариты!";
             } else {
                 $ShopOrder->cdek_dimension_id = $request->cdek_dimension_id;
+                $ShopOrder->width = $request->width;
+                $ShopOrder->height = $request->height;
+                $ShopOrder->length = $request->length;
             }
 
             if (empty($request->surname)) {
@@ -441,29 +442,8 @@ class CdekController extends Controller
 
             $ShopOrder->save();
 
-            if (empty($request->delivery_7_city_id)) {
-                $aError["error"][] = "Заполните поле Город";
-            } else {
 
-                self::SaveShopDeliveryFieldValue($ShopOrder->id, 16, $request->delivery_7_city_id);
-                self::SaveShopDeliveryFieldValue($ShopOrder->id, 10, $request->delivery_7_city);
-            }
-
-            if (empty($request->delivery_7_city_id) && empty($request->delivery_7_courier)) {
-                $aError["error"][] = "Заполните поле Отделение или Курьер";
-            } else {
-
-                if ($request->delivery_7_delivery_type == 11) {
-                    self::SaveShopDeliveryFieldValue($ShopOrder->id, 11, $request->delivery_7_office);
-                    self::SaveShopDeliveryFieldValue($ShopOrder->id, 17, $request->delivery_7_office_id);
-                }
-
-                if ($request->delivery_7_delivery_type == 15) {
-                    self::SaveShopDeliveryFieldValue($ShopOrder->id, 15, $request->delivery_7_courier);
-                }  
-            }
-
-            if ($ShopOrder->ShopOrderItems->count() == 0) {
+            if ($ShopOrder->ShopOrderItems()->where("deleted", 0)->count() == 0) {
                 $aError["error"][] = "Нет товаров у заказа";
             }
     
@@ -475,6 +455,7 @@ class CdekController extends Controller
             
             $result["id"] = isset($CdekOrder->id) ? $CdekOrder->id : '';
             $result["printUrl"] = isset($CdekOrder->id) ? route("printCdekOrder", $CdekOrder->id) : '';
+            $result["deleteOrder"] = isset($CdekOrder->id) ? route("deleteOrder", $CdekOrder->id) : '';
 
         }
 
@@ -528,6 +509,36 @@ class CdekController extends Controller
             return false;
         }
 
+    }
+
+    public function setTrack (CdekOrder $CdekOrder)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://api.cdek.ru/v2/orders/' . $CdekOrder->uuid,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'GET',
+          CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer ' . $this->Cdek->token
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        $result = json_decode($response);
+
+        curl_close($curl);
+
+        if (isset($result->entity->cdek_number)) {
+
+            $CdekOrder->track = $result->entity->cdek_number;
+            $CdekOrder->save();
+        }
     }
 
 }

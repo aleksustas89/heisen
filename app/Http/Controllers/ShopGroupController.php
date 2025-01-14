@@ -19,14 +19,22 @@ class ShopGroupController extends Controller
     {
 
         $aGroups = ShopGroupController::ArrayMerge(ShopGroupController::getChildGroups($shopGroup->id));
-        if (!$aGroups) {
-            $aGroups = [$shopGroup->id];
-        }
+      
+        array_push($aGroups, $shopGroup->id);
 
         $aProperties = self::getProperties();
 
-        $shopItems = ShopItem::select("shop_items.id")->where("shop_items.active", 1)->where("shop_items.deleted", 0)->where("shop_items.hidden", 0)->whereIn("shop_items.shop_group_id", $aGroups);
-        $ShopItemShortcuts = ShopItemShortcut::select("shop_item_shortcuts.shop_item_id")->join("shop_items", "shop_items.id", "=", "shop_item_shortcuts.shop_item_id")->where("shop_items.active", 1)->where("shop_items.hidden", 0)->whereIn("shop_item_shortcuts.shop_group_id", $aGroups);
+        $shopItems = ShopItem::select("shop_items.id")
+                        ->where("shop_items.active", 1)
+                        ->where("shop_items.deleted", 0)
+                        ->where("shop_items.hidden", 0)
+                        ->whereIn("shop_items.shop_group_id", $aGroups);
+
+        $ShopItemShortcuts = ShopItemShortcut::select("shop_item_shortcuts.shop_item_id")
+                                ->join("shop_items", "shop_items.id", "=", "shop_item_shortcuts.shop_item_id")
+                                ->where("shop_items.active", 1)
+                                ->where("shop_items.hidden", 0)
+                                ->whereIn("shop_item_shortcuts.shop_group_id", $aGroups);
 
         $Modifications = ShopItem::select("shop_items.modification_id")->distinct()->where(function($query) use ($shopItems, $ShopItemShortcuts) {
                 $query->whereIn("shop_items.modification_id", $shopItems)
@@ -34,6 +42,7 @@ class ShopGroupController extends Controller
         });
 
         if (count($aProperties) > 0) {
+
             $Modifications
                 ->join('property_value_ints', 'property_value_ints.entity_id', '=', 'shop_items.id')
                 ->where(function($query) use ($aProperties) {
@@ -44,14 +53,59 @@ class ShopGroupController extends Controller
                                   ->whereIn("property_value_ints.value", $aProperty);
                         });
                     }
-                })
-                ->havingRaw('COUNT(property_value_ints.property_id) = ' . count($aProperties));
+                });
 
-            $Modifications->groupBy('shop_items.id');
+                if (count($aProperties) > 1) {
+                    $Modifications
+                        ->havingRaw('COUNT(property_value_ints.property_id) = ' . count($aProperties))
+                        ->groupBy('shop_items.id');
+                }
+                
+
+            $shopItems
+                ->join('property_value_ints', 'property_value_ints.entity_id', '=', 'shop_items.id')
+                ->where(function($query) use ($aProperties) {
+
+                    foreach ($aProperties as $k => $aProperty) {
+                        $query->orWhere(function($query) use ($k, $aProperty) {
+                            $query->where("property_value_ints.property_id", $k)
+                                ->whereIn("property_value_ints.value", $aProperty);
+                        });
+                    }
+                });
+
+            if (count($aProperties) > 1) {
+                $shopItems
+                    ->havingRaw('COUNT(property_value_ints.property_id) = ' . count($aProperties))
+                    ->groupBy('shop_items.id');
+            }
+
+
+            $ShopItemShortcuts
+                ->join('property_value_ints', 'property_value_ints.entity_id', '=', 'shop_items.id')
+                ->where(function($query) use ($aProperties) {
+
+                    foreach ($aProperties as $k => $aProperty) {
+                        $query->orWhere(function($query) use ($k, $aProperty) {
+                            $query->where("property_value_ints.property_id", $k)
+                                ->whereIn("property_value_ints.value", $aProperty);
+                        });
+                    }
+                });
+
+            if (count($aProperties) > 1) {
+                $ShopItemShortcuts
+                    ->havingRaw('COUNT(property_value_ints.property_id) = ' . count($aProperties))
+                    ->groupBy('shop_items.id');
+            }
 
         }
 
-        $aShopItems = ShopItem::select('shop_items.*')->whereIn("shop_items.id", $Modifications)->distinct();
+        $aShopItems = ShopItem::select('shop_items.*')
+                        ->whereIn("shop_items.id", $Modifications)
+                        ->orWhereIn("shop_items.id", $shopItems)
+                        ->orWhereIn("shop_items.id", $ShopItemShortcuts)
+                        ->distinct();
 
         $sorting = Arr::get($_REQUEST, 'sorting', 0);
 
@@ -106,7 +160,7 @@ class ShopGroupController extends Controller
         return view('shop/group', [
             'shop' => $oShop,
             'group' => $shopGroup,
-            'SubGroups' => ShopGroup::where("parent_id", $shopGroup->id)->where("active", 1)->where("deleted", 0)->get(),
+            'SubGroups' => ShopGroup::where("parent_id", $shopGroup->id)->where("active", 1)->where("hidden", 0)->where("deleted", 0)->get(),
             'items' => $oShopItems->paginate($oShop->items_on_page),
             'properties' => ShopItemController::getProperties($shopGroup->id, 4, true),
             'path' => $shopGroup->url,
@@ -146,7 +200,7 @@ class ShopGroupController extends Controller
     {
 
         $result = [];
-        $select = ShopGroup::where("parent_id", $group_id)->where('active', 1)->where('deleted', 0)->get();
+        $select = ShopGroup::where("parent_id", $group_id)->where('active', 1)->where('hidden', 0)->where('deleted', 0)->get();
         if (count($select) > 0) {
             foreach ($select as $oShopGroup) {
                 $count = count($result);

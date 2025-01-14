@@ -113,7 +113,7 @@ class ShopItemController extends Controller
             'property_value_floats' => $aProperty_Value_Float,
             'lists' => self::getListItems($properties),
             'shop' => $shop,
-            "mShopItems" => ShopItem::where("modification_id", $shopItem->id)->get(),
+            "mShopItems" => ShopItem::where("modification_id", $shopItem->id)->where("deleted", 0)->get(),
             "canonicalName" => !is_null($canonicalShopItem) ? $canonicalShopItem->name ." [". $canonicalShopItem->id ."] / ". $canonicalShopItem->ShopGroup->name : '',
             "BadgeClasses" => \App\Models\ShopItemShortcut::$BadgeClasses
         ]);
@@ -204,9 +204,10 @@ class ShopItemController extends Controller
             // 'path' => ['required', 'string', 'max:255'],
         //]);
 
+        $path = trim($request->path);
 
 
-        $shopItem->name = $request->name;
+        $shopItem->name = trim($request->name);
         $shopItem->description = $request->description ?? '';
         $shopItem->text = $request->text ?? '';
         $shopItem->active = $request->active ?? 0;
@@ -218,7 +219,7 @@ class ShopItemController extends Controller
         $shopItem->width = $request->width;
         $shopItem->height = $request->height;
         $shopItem->length = $request->length;
-        $shopItem->path = !empty(trim($request->path)) ? $request->path : Str::transliteration($request->name) . (!empty($request->marking) ? "-" . mb_strtolower(str_replace("_", "-", $request->marking)) : '');
+        $shopItem->path = !empty($path) ? $path : Str::transliteration($request->name . (!empty($request->marking) ? "-" . mb_strtolower(str_replace("_", "-", $request->marking)) : ''));
         $shopItem->seo_title = $request->seo_title ?? '';
         $shopItem->seo_description = $request->seo_description ?? '';
         $shopItem->seo_keywords = $request->seo_keywords ?? '';
@@ -233,61 +234,7 @@ class ShopItemController extends Controller
             return redirect()->to(route("shop.shop-item.edit", ["shop" => $shop->id, "shop_item" => $shopItem]))->withError("Товар с таким url уже существует - измените название или артикул");
         } 
 
-
         $shopItem->save();
-
-        if (isset($request->image)) {
-
-            for ($i = 0; $i < count($request->image); $i++) {
-
-                $oShopItemImage = new ShopItemImage();
-                $oShopItemImage->shop_item_id   = $shopItem->id;
-                $oShopItemImage->save();
-
-                $shopItem->createDir();
-
-                //сохраняем оригинал
-                $request->image[$i]->storeAs($shopItem->path(), $request->image[$i]->getClientOriginalName());
-
-                //переводим в webp либо возвращаем исходный
-                $original = File::webpConvert(Storage::path($shopItem->path()), $request->image[$i]->getClientOriginalName());
-
-                $fileInfo = File::fileInfoFromStr($original);
-
-                //большое изображение
-                $image_large = Image::make($original);
-                if ($shop->preserve_aspect_ratio == 1) {
-                    $image_large->resize($shop->image_large_max_width, $shop->image_large_max_height, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    });
-                } else {
-                    $image_large->fit($shop->image_large_max_width, $shop->image_large_max_height);
-                }
-                $sImageLargeName = 'image_large'. $oShopItemImage->id .'.' . $fileInfo["extension"];
-                $image_large->save(Storage::path($shopItem->path()) . $sImageLargeName);
-                $oShopItemImage->image_large = $sImageLargeName;
-
-                //превью
-                $image_small = Image::make($original);
-                if ($shop->preserve_aspect_ratio_small == 1) {
-                    $image_small->resize($shop->image_small_max_width, $shop->image_small_max_height, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    });
-                } else {
-                    $image_small->fit($shop->image_small_max_width, $shop->image_small_max_height);
-                }
-                $sImageSmallName = 'image_small'. $oShopItemImage->id .'.' . $fileInfo["extension"];
-                $image_small->save(Storage::path($shopItem->path()) . $sImageSmallName);
-                $oShopItemImage->image_small = $sImageSmallName;
-
-                unlink($original);
-
-                $oShopItemImage->save();
-
-            }
-        }
 
         if ($transfer_images_from) {
             $shopItem->changeImagesDirFrom($transfer_images_from);
@@ -303,14 +250,10 @@ class ShopItemController extends Controller
                 $mShopItem->price = $shopItem->price;
             }
 
-            $mShopItem->url = $shopItem->url . "/" . $mShopItem->path;
-            $mShopItem->updated_at = date("Y-m-d H:i:s");
-
             $ModificationController->saveStaticModificaitonFields($mShopItem, $shopItem);
 
         }
         
-
         //скидка
         $ShopItemDiscountController = new ShopItemDiscountController();
         foreach ($shopItem->ShopItemDiscounts as $ShopItemDiscount) {
@@ -446,13 +389,13 @@ class ShopItemController extends Controller
         return response()->json($response);
     }
 
-    public function deletePropertyValue(ShopItem $shopItem, ShopItemProperty $shopItemProperty, $value_id)
+    public function deletePropertyValue(Request $request, ShopItemProperty $shopItemProperty)
     {
         $response = false;
 
-        if (!is_null($shopItemProperty)) {
+        if ($request->id) {
             $oProperty_Value = ShopItemProperty::getObjectByType($shopItemProperty->type); 
-            $oValue = $oProperty_Value->find($value_id);
+            $oValue = $oProperty_Value->find($request->id);
             $oValue->delete();
             $response = true;
         }
@@ -462,7 +405,6 @@ class ShopItemController extends Controller
 
     public function sortShopItemImages(Request $request)
     {
-
         foreach (json_decode($request->images) as $key => $item_image_id) {
             if (!is_null($ShopItemImage = ShopItemImage::find($item_image_id))) {
                 $ShopItemImage->sorting = $key;
@@ -471,6 +413,69 @@ class ShopItemController extends Controller
         }
 
         return response()->json(true);
+    }
+
+    public function getShopItemGallery(ShopItem $shopItem)
+    {
+        return response()->view('admin.shop.item.gallery', [
+            'images' => $shopItem->getImages(),
+            'shopItem' => $shopItem,
+        ]);
+    }
+
+    public function uploadShopItemImage(ShopItem $shopItem, Request $request)
+    {
+
+        $shopItem->createDir();
+
+        $oShop = Shop::get();
+
+        //сохраняем оригинал
+        if ($request->file->storeAs($shopItem->path(), $request->file->getClientOriginalName())) {
+            $fileInfo = File::fileInfoFromStr($request->file->getClientOriginalName());
+
+            $path = $shopItem->path() . $request->file->getClientOriginalName();
+    
+            $oShopItemImage = new ShopItemImage();
+            $oShopItemImage->shop_item_id = $shopItem->id;
+            $oShopItemImage->save();
+    
+            foreach (["large", "small"] as $format) {
+    
+                $Image = Image::make(Storage::path($path));
+    
+                $image_x_max_width  = 'image_' . $format . '_max_width';
+                $image_x_max_height = 'image_' . $format . '_max_height';
+    
+                if ($format == 'large' ? $oShop->preserve_aspect_ratio == 1 : $oShop->preserve_aspect_ratio_small == 1) {
+                    $Image->resize($oShop->$image_x_max_width, $oShop->$image_x_max_height, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+                } else {
+                    $Image->fit($oShop->$image_x_max_width, $oShop->$image_x_max_height);
+                }
+    
+                $sName = 'image_' . $format . $oShopItemImage->id .'.' . $fileInfo["extension"];
+    
+                $Image->save(Storage::path($shopItem->path()) . $sName);
+    
+                if ($oShop->convert_webp == 1) {
+                    
+                    File::webpConvert(Storage::path($shopItem->path()), $sName);
+    
+                    $sName = 'image_' . $format . $oShopItemImage->id .'.webp';
+                }
+    
+                $format == 'large' ? $oShopItemImage->image_large = $sName : $oShopItemImage->image_small = $sName;
+    
+            }
+    
+            $oShopItemImage->save();
+    
+            //удаление оригинального изображения
+            Storage::delete($path);
+        }
     }
 
     
@@ -583,7 +588,7 @@ class ShopItemController extends Controller
         if (!empty($term = $request->input('term'))) {
 
             foreach (ShopGroup::where("name", "LIKE", "%" . $term . "%")->get() as $ShopGroup) {
-                if ($ShopGroup->shop_group_id != $request->shop_group_id) {
+                if (!isset($request->shop_group_id) || ($ShopGroup->shop_group_id != $request->shop_group_id)) {
 
                     $value = $ShopGroup->name . " [" . $ShopGroup->id . "]";
 

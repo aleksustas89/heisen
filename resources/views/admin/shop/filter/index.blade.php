@@ -49,7 +49,7 @@
                             @foreach ($shopFilters as $shopFilter)
                                 <tr>
                                     <td>{{ $shopFilter->id }}</td>
-                                    <td>{{ $shopFilter->ShopGroup->name }}</td>
+                                    <td>{{ !is_null($shopFilter->ShopGroup) ? $shopFilter->ShopGroup->name : '' }}</td>
                                     <td><a target="_blank" href="https://{{ request()->getHost() }}{{ $shopFilter->url }}">{{ $shopFilter->url }}</a></td>
                                     <td class="td-actions">
                                         <a href="{{ route('shop.shop-filter.edit', ['shop' => $shop->id, 'shop_filter' => $shopFilter->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop_filter_property_values', function (Blueprint $table) {
-            $table->id();
-            $table->integer('property_id')->index();
-            $table->integer('shop_group_id')->index();
-            $table->integer('value')->index();
-        });
+        if (!Schema::hasTable('shop_filter_property_values')) {
+            Schema::create('shop_filter_property_values', function (Blueprint $table) {
+                $table->id();
+                $table->integer('property_id')->index();
+                $table->integer('shop_group_id')->index();
+                $table->integer('value')->index();
+            });
+        }
     }
 
     /**

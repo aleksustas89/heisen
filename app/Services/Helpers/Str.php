@@ -109,7 +109,9 @@ class Str
 
 	public static function clean($str)
 	{
-		return preg_replace('/[^ A-Za-zА-Яа-я\\n\d.]/ui', '', $str);
+		$str = str_replace(array("\r", "\n"), '', $str);
+
+		return trim(preg_replace('/[^ A-Za-zА-Яа-я\\n\d.]/ui', '', $str));
 	}
 
 	public static function lastWithDelimiter($str, $delimiter)

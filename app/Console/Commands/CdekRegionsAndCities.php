@@ -44,18 +44,24 @@ class CdekRegionsAndCities extends Command
             }
         }
 
-        if ($aCities = $CdekController->getCities()) {
-        
+        $page = 0;
+
+        do  {
+            $aCities = $CdekController->getCities($page);
+
+            $page++;
+
             foreach ($aCities as $aCity) {
 
-                if (is_null(CdekCity::whereId($aCity->code)->first())) {
+                if (is_null(CdekCity::find($aCity->code))) {
                     $CdekCity = new CdekCity();
+                    $CdekCity->id = $aCity->code;
                     $CdekCity->name = $aCity->city;
                     $CdekCity->cdek_region_id = $aCity->region_code;
-                    $CdekCity->id = $aCity->code;
                     $CdekCity->save();
                 }
             }
-        }
+
+        } while (count($aCities) > 0);
     }
 }

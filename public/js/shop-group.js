@@ -2,8 +2,8 @@ $(function () {
     $(".uk-active").parents("li").addClass("uk-open");
     $(".uk-active").parents("ul").removeAttr("hidden");
 
-    if ($(".group-text-top").length) {
-        $(".group-text").html($(".group-text-top").html());
+    if ($(".group-text-bottom").length) {
+        $(".group-text").html($(".group-text-bottom").html());
     }
 });
 

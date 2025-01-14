@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop_filters', function (Blueprint $table) {
-            $table->id();
-            $table->string("seo_title");
-            $table->text("seo_description");
-            $table->string("seo_keywords");
-            $table->text("text");
-            $table->integer("sorting");
-            $table->string("url");
-        });
+        if (!Schema::hasTable('shop_filters')) {
+            Schema::create('shop_filters', function (Blueprint $table) {
+                $table->id();
+                $table->string("seo_title");
+                $table->text("seo_description");
+                $table->string("seo_keywords");
+                $table->text("text");
+                $table->integer("sorting");
+                $table->string("url");
+            });
+        }
+
     }
 
     /**

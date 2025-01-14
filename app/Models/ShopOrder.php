@@ -55,6 +55,21 @@ class ShopOrder extends Model
         return $this->belongsTo(CdekDimension::class);
     }
 
+    public function CdekOrder()
+    {
+        return $this->hasOne(CdekOrder::class);
+    }
+
+    public function BoxberryOrder()
+    {
+        return $this->hasOne(BoxberryOrder::class);
+    }
+
+    public function PrOrder()
+    {
+        return $this->hasOne(PrOrder::class);
+    }
+
     public function getSum()
     {
         $sum = 0;

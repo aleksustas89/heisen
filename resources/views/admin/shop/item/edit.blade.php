@@ -188,15 +188,15 @@
                                                     <input type="text" value="{{ $shopItem->weight }}" name="weight" class="form-control" placeholder="Вес" >
                                                 </div>
                                                 <div class="col-6 col-sm-3 mb-2">
-                                                    <label class="mb-1">Ширина, мм.</label>
+                                                    <label class="mb-1">Ширина, см.</label>
                                                     <input type="text" value="{{ $shopItem->width }}" name="width" class="form-control" placeholder="Ширина" >
                                                 </div>
                                                 <div class="col-6 col-sm-3 mb-2">
-                                                    <label class="mb-1">Высота, мм.</label>
+                                                    <label class="mb-1">Высота, см.</label>
                                                     <input type="text" value="{{ $shopItem->height }}" name="height" class="form-control" placeholder="Высота" >
                                                 </div>
                                                 <div class="col-6 col-sm-3 mb-2">
-                                                    <label class="mb-1">Длина, мм.</label>
+                                                    <label class="mb-1">Длина, см.</label>
                                                     <input type="text" value="{{ $shopItem->length }}" name="length" class="form-control" placeholder="Длина" >
                                                 </div>
                                             </div>
@@ -231,12 +231,19 @@
 
                         <div class="tab-pane" id="images">
 
-                            <div class="file-box-content mb-3 d-flex flex-wrap" id="sortContainer">
+                            <div class=" mb-3">
+                                <div action="{{ route('uploadShopItemImage', $shopItem->id) }}" class="dropzone" id="myDropzone">
+                                    
+                                </div>
+                                <div class="max-size-label">Максимальный размер файла - {{ ini_get('upload_max_filesize') }}</div>
+                            </div>
+
+                            <div class="file-box-content mb-3 d-flex flex-wrap gallery" id="sortContainer">
 
                                 @foreach ($images as $k => $image)
-                                    <div class="file-box d-flex align-items-center justify-content-center sortable" id="admin_image_{{ $k }}">
+                                    <div class="file-box d-flex align-items-center justify-content-center sortable" id="{{ $k }}">
 
-                                        <a href="javascript:void(0)" onclick="if(confirm('Вы действительно хотите удалить изображение?')) {adminImage.remove('{{ route('deleteShopItemImage', ['shopItem' => $shopItem->id, 'shopItemImage'=> $k]) }}', {{ $k }})}">
+                                        <a href="javascript:void(0)" onclick="if(confirm('Вы действительно хотите удалить изображение?')) {adminImage.remove('{{ route('deleteShopItemImage', [$shopItem->id, $k]) }}', $(this).parent())}">
                                             <i class="las la-times file-close-icon"></i>
                                         </a>
 
@@ -251,23 +258,7 @@
                                     </div>
                                 @endforeach
                                              
-                            </div>
-
-                            <div class="new-images">
-                                <div class="card image-box">
-                                    <div class="card-body">
-                                        <div class="preview-box" id="input-file-preview-box"></div>
-                                        
-                                        <label class="btn-upload btn btn-primary mt-1">Выбрать файл
-                                            <input type="file" id="input-file" name="image[]" accept="image/*" onchange="{handleChange($(this).attr('id'))}" hidden="">    
-                                        </label> 
-                                        <button type="button" class="btn-upload btn btn-warning mt-1" onclick="adminImage.copy($(this))"><i class="la la-plus"></i></button>        
-                                        <button type="button" class="btn-upload btn btn-danger mt-1 delete-image" onclick="adminImage.delete($(this))"><i class="la la-minus"></i></button>                    
-                                    </div>
-                                </div>
-                            </div>
-
-
+                            </div> 
 
                         </div>
 
@@ -545,7 +536,7 @@
                                                                 <div class="col-2 d-flex align-items-end">
                                                                     <div>
                                                                         <button type="button" class="btn-upload btn btn-warning mt-1" onclick="adminProperty.copy($(this))"><i class="la la-plus"></i></button>
-                                                                        <button type="button" class="btn-upload btn btn-danger mt-1 delete-property" onclick="adminProperty.delete($(this))"><i class="la la-minus"></i></button>
+                                                                        <button type="button" class="btn-upload btn btn-danger mt-1 delete-property" onclick="adminProperty.delete($(this), '{{ route("deleteShopItemPropertyValue", ['shopItemProperty' => $property->id]) }}?id={{ $propertyK }}'); "><i class="la la-minus"></i></button>
                                                                     </div>
                                                                 </div>
                                                             @endif
@@ -571,7 +562,7 @@
                                                                 <div class="col-2 d-flex align-items-end">
                                                                     <div>
                                                                         <button type="button" class="btn-upload btn btn-warning mt-1" onclick="adminProperty.copy($(this))"><i class="la la-plus"></i></button>
-                                                                        <button type="button" class="btn-upload btn btn-danger mt-1 delete-property"  onclick="adminProperty.delete($(this))"><i class="la la-minus"></i></button>
+                                                                        <button type="button" class="btn-upload btn btn-danger mt-1 delete-property"  onclick="adminProperty.delete($(this));"><i class="la la-minus"></i></button>
                                                                     </div>
                                                                 </div>
                                                             @endif
@@ -668,11 +659,12 @@
 
 @section("css")
     <link href="/assets/plugins/tobii/tobii.min.css" rel="stylesheet" type="text/css" />
-
+    
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
     <style type="text/css">
         div.sortable {float: left;}
+       .max-size-label {text-align: right; font-size: 12px;}
     </style>
 
 @endsection
@@ -686,19 +678,25 @@
 
     </script>
 
-    <script src="/assets/image.js"></script>
-    <script src="/assets/pages/file-upload.init.js"></script>
     <script src="/assets/plugins/tobii/tobii.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
     @php
-    App\Services\Helpers\File::js('/assets/js/pages/shopItem.js');
+        App\Services\Helpers\File::js('/assets/image.js');
+        App\Services\Helpers\File::js('/assets/js/pages/shopItem.js');
     @endphp
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.0/dropzone.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.0/dropzone.min.js"></script>
+
     <script>
         const tobii = new Tobii();
 
         var routeSearchCanonical = '{{ route("SearchCanonical", $shopItem->id) }}',
             routeGroupShortcut = '{{ route("getShortcutGroup") }}' + '?shop_group_id=' + {{ $shopItem->shop_group_id }},
-            BadgeClasses = [@foreach($BadgeClasses as $k => $BadgeClasse)'{{$BadgeClasse}}'@if($k < count($BadgeClasses)-1),@endif @endforeach];
+            BadgeClasses = [@foreach($BadgeClasses as $k => $BadgeClasse)'{{$BadgeClasse}}'@if($k < count($BadgeClasses)-1),@endif @endforeach],
+            routesortShopItemImages = '{{ route("sortingShopItemImages", $shopItem->id) }}',
+            routeGetShopItemGallery = '{{ route("getShopItemGallery", $shopItem->id) }}';
 
         
         $(function() {
@@ -713,7 +711,7 @@
                     });
 
                     $.ajax({
-                        url: "/admin/sortShopItemImages",
+                        url: routesortShopItemImages,
                         type: "GET",
                         data: {
                             "images": JSON.stringify(aResult) 
@@ -726,6 +724,54 @@
                 }
             });  
         });
+
+        Dropzone.options.myDropzone = {
+            init: function() {
+
+                this.on("success", function(file, responseText) {
+
+                    this.removeFile(file);
+
+                    delay(() => {
+                        Gallery.update();
+                    }, 1000);
+                   
+                });
+                this.on("complete", function(file, responseText) {
+                    this.removeFile(file);
+
+                    delay(() => {
+                        Gallery.update();
+                    }, 1000);
+                });
+            }
+        }
+
+
+        var Gallery = {
+            update: function() {
+
+                $.ajax({
+                    url: routeGetShopItemGallery,
+                    type: "get",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: "html",
+                    success: function (data) {
+
+                        $('.gallery').html(data);
+
+                        const tobii = new Tobii()
+                    },
+
+                    error: function () {
+            
+                    },
+                });
+                
+            }
+        }
     </script>
 
     @php

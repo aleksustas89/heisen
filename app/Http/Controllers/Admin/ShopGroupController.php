@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Filesystem\Filesystem;
 use Intervention\Image\Facades\Image;
 use App\Models\Page;
+use App\Models\ShopItemShortcut;
 
 class ShopGroupController extends Controller
 {
@@ -267,5 +268,32 @@ class ShopGroupController extends Controller
         }
 
         return $aResult;
+    }
+
+    public function addShortcutFromGroup(Request $request)
+    {
+
+        return response()->view("admin.shop.add-shortcut-from-group", [
+            "shop_items" => $request->shop_items
+        ]);
+    }
+
+    public function saveShortcutFromGroup(Request $request)
+    {
+
+        if (!is_null($request->shortcut_groups) && !is_null($request->shop_items)) {
+            foreach ($request->shortcut_groups as $k => $group_id) {
+                foreach ($request->shop_items as $k2 => $item_id) {
+                    $ShopItemShortcut = new ShopItemShortcut();
+                    $ShopItemShortcut->shop_group_id = $group_id;
+                    $ShopItemShortcut->shop_item_id = $item_id;
+                    $ShopItemShortcut->save();
+                }
+            }
+
+            return response()->json(true);
+        } else {
+            return response()->json("Не выбраны группы");
+        }
     }
 }

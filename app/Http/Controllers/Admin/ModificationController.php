@@ -7,8 +7,6 @@ use App\Models\ShopItem;
 use App\Models\Shop;
 use App\Models\PropertyValueInt;
 use Illuminate\Http\Request;
-use App\Models\ShopItemProperty;
-use App\Models\ShopItemListItem;
 use App\Models\ShopModificationImage;
 use App\Http\Controllers\ShopItemDiscountController;
 use App\Models\Page;
@@ -22,13 +20,73 @@ class ModificationController extends Controller
      */
     public function index(Request $request)
     {
-        if (!is_null($ShopItem = ShopItem::find($request->shop_item_id))) {
 
-            return view('admin.shop.modification.index', [
-                'shopItems' => ShopItem::where("modification_id", $request->shop_item_id)->get(),
-                'oShopItem' => $ShopItem,
-            ]);
-        }
+ 
+        // if (!is_null($ShopItem = ShopItem::find($request->shop_item_id))) {
+
+        //     return view('admin.shop.modification.index', [
+        //         'shopItems' => ShopItem::where("modification_id", $request->shop_item_id)->where("deleted", 0)->get(),
+        //         'oShopItem' => $ShopItem,
+        //     ]);
+        // }
+
+        // if (!is_null($oShopItem = ShopItem::find($request->shop_item_id))) {
+        //     foreach ($request->all() as $k => $input) {
+        //         $eKey = explode("_", $k);
+        //         if (count($eKey) && $eKey[0] == 'item') {
+        //             switch ($eKey[2]) {
+        //                 case 'price':
+        //                     $aItems[$eKey[1]]["price"] = $input;
+        //                 break;
+        //                 case 'name':
+        //                     $aItems[$eKey[1]]["name"] = $input;
+        //                 break;
+        //                 case 'property':
+        //                     $aItems[$eKey[1]]["properties"][$eKey[3]] = $input;
+        //                 break;
+        //                 case 'image':
+        //                     $aItems[$eKey[1]]["image"] = $input;
+        //                 break;
+        //             }
+        //         }
+        //     }
+
+        //     foreach ($aItems as $aItem) {
+        //         $ShopItem = new ShopItem();
+        //         $ShopItem->modification_id = $oShopItem->id;
+        //         $ShopItem->price = $aItem["price"];
+        //         $ShopItem->shop_currency_id = $oShopItem->shop_currency_id;
+        //         $ShopItem->guid = \App\Services\Helpers\Guid::get();
+        //         $ShopItem->save();
+    
+        //         $Page = new Page();
+        //         $Page->entity_id = $ShopItem->id;
+        //         $Page->type = 2;
+        //         $Page->save();
+    
+    
+        //         if (!empty($aItem["image"])) {
+        //             $ShopModificationImage = new ShopModificationImage();
+        //             $ShopModificationImage->shop_item_id = $ShopItem->id;
+        //             $ShopModificationImage->shop_item_image_id = $aItem["image"];
+        //             $ShopModificationImage->save();
+        //         }
+    
+        //         foreach ($aItem["properties"] as $property_id => $value) {
+        //             $PropertyValueInt = new PropertyValueInt();
+        //             $PropertyValueInt->entity_id = $ShopItem->id;
+        //             $PropertyValueInt->property_id = $property_id;
+        //             $PropertyValueInt->value = $value;
+        //             $PropertyValueInt->save();
+        //         }
+    
+        //         //$this->saveStaticModificaitonFields($ShopItem, $oShopItem);
+        //     }
+        // }
+
+
+
+
     }
 
     /**
@@ -157,7 +215,8 @@ class ModificationController extends Controller
                     }
                 }
             }
-    
+
+
             foreach ($aItems as $aItem) {
                 $ShopItem = new ShopItem();
                 $ShopItem->modification_id = $oShopItem->id;
@@ -191,7 +250,7 @@ class ModificationController extends Controller
             }
 
             return response()->view('admin.shop.modification.index', [
-                'shopItems' => ShopItem::where("modification_id", $request->shop_item_id)->get(),
+                'shopItems' => ShopItem::where("modification_id", $request->shop_item_id)->where("deleted", 0)->get(),
                 'oShopItem' => $oShopItem,
             ]);
         } 
@@ -214,6 +273,7 @@ class ModificationController extends Controller
         $Modification->path = \App\Services\Helpers\Str::transliteration(implode("-", $aPath));
         $Modification->url = $ShopItem->url . "-" . $Modification->path;
         $Modification->name = $ShopItem->name . ", " . implode(",", $aName);
+        $Modification->updated_at = date("Y-m-d H:i:s");
         $Modification->save();
     }
 

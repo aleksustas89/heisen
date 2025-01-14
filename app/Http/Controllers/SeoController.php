@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PropertyValueInt;
+
 
 class SeoController extends Controller
 {
@@ -52,7 +54,7 @@ class SeoController extends Controller
         echo $result;
     }
 
-    public static function showItemTitle($shop, $ShopItem)
+    public static function showItemTitle($shop, $ShopItem, $Modification = false)
     {
 
         $result = '';
@@ -69,6 +71,20 @@ class SeoController extends Controller
                 $Replace[] = $ShopGroup->name;
             }
 
+            $Search[] = "{Property60.ShopItemList.ShopItemListItem.declension}";
+
+            if ($Modification) {
+                if (!is_null($PropertyValueInt = PropertyValueInt::where("property_id", 60)->where("entity_id", $Modification->id)->first())
+                    && !is_null($PropertyValueInt->ShopItemListItem)) {
+
+                    $Replace[] = " " . $PropertyValueInt->ShopItemListItem->declension;
+                } else {
+                    $Replace[] = '';
+                }
+            } else {
+                $Replace[] = '';
+            }
+
             $Search[] = "{item.name}";
             $Replace[] = $ShopItem->name;
 
@@ -80,7 +96,7 @@ class SeoController extends Controller
         echo $result;
     }
 
-    public static function showItemDescription($shop, $ShopItem)
+    public static function showItemDescription($shop, $ShopItem, $Modification = false)
     {
 
         $result = '';
@@ -97,10 +113,26 @@ class SeoController extends Controller
                 $Replace[] = $ShopGroup->name;
             }
 
+            $Search[] = "{Property60.ShopItemList.ShopItemListItem.declension}";
+
+            if ($Modification) {
+                
+                if (!is_null($PropertyValueInt = PropertyValueInt::where("property_id", 60)->where("entity_id", $Modification->id)->first())
+                    && !is_null($PropertyValueInt->ShopItemListItem)) {
+
+                    $Replace[] = " " . $PropertyValueInt->ShopItemListItem->declension;
+                } else {
+                    $Replace[] = '';
+                }
+            } else {
+                $Replace[] = '';
+            }
+
             $Search[] = "{item.name}";
             $Replace[] = $ShopItem->name;
 
             $result = self::replace($shop->seo_item_description_template, $Search, $Replace);
+
         } 
 
         echo $result;

@@ -168,15 +168,15 @@
                                                     <input type="text" name="weight" class="form-control" placeholder="Вес" >
                                                 </div>
                                                 <div class="col-6 col-sm-3">
-                                                    <label class="mb-1">Ширина, мм.</label>
+                                                    <label class="mb-1">Ширина, см.</label>
                                                     <input type="text" name="width" class="form-control" placeholder="Ширина" >
                                                 </div>
                                                 <div class="col-6 col-sm-3">
-                                                    <label class="mb-1">Высота, мм.</label>
+                                                    <label class="mb-1">Высота, см.</label>
                                                     <input type="text" name="height" class="form-control" placeholder="Высота" >
                                                 </div>
                                                 <div class="col-6 col-sm-3">
-                                                    <label class="mb-1">Длина, мм.</label>
+                                                    <label class="mb-1">Длина, см.</label>
                                                     <input type="text" name="length" class="form-control" placeholder="Длина" >
                                                 </div>
                                             </div>
@@ -191,17 +191,9 @@
 
                         <div class="tab-pane" id="images">
 
-                            <div class="new-images">
-                                <div class="card image-box">
-                                    <div class="card-body">
-                                        <div class="preview-box" id="input-file-preview-box"></div>
-                                        
-                                        <label class="btn-upload btn btn-primary mt-1">Выбрать файл
-                                            <input type="file" id="input-file" name="image[]" accept="image/*" onchange="{handleChange($(this).attr('id'))}" hidden="">    
-                                        </label> 
-                                        <button type="button" class="btn-upload btn btn-warning mt-1" onclick="adminImage.copy($(this))"><i class="la la-plus"></i></button>        
-                                        <button type="button" class="btn-upload btn btn-danger mt-1 delete-image" onclick="adminImage.delete($(this))"><i class="la la-minus"></i></button>                    
-                                    </div>
+                            <div class="upload-call">
+                                <div class="wrap">
+                                    Сохраните товар, чтобы добавлять изображения!
                                 </div>
                             </div>
                             
@@ -402,7 +394,21 @@
 
 @endsection
 
+@section("css")
+    <link href="/assets/plugins/tobii/tobii.min.css" rel="stylesheet" type="text/css" />
+    
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+    <style type="text/css">
+        div.sortable {float: left;}
+       .max-size-label {text-align: right; font-size: 12px;}
+    </style>
+
+@endsection
+
 @section ("js")
+
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
     <script>
         var routeGroupShortcut = '{{ route("getShortcutGroup") }}' + '?shop_group_id=' + {{ $parent_id }},

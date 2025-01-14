@@ -53,10 +53,10 @@
 
                                 <tr>
                                     <td style="width: 1%">{{ $delivery->id }}</td>
-                                    <td><span id="apply_check_delivery_name_{{ $delivery->id }}" class="editable">{{ $delivery->name }}</span></td>
-                                    <td class="d-mob-none"><span id="apply_check_delivery_description_{{ $delivery->id }}" class="editable">{{ $delivery->description }}</span></td>
-                                    <td class="d-mob-none" style="width: 40px"><span id="apply_check_delivery_color_{{ $delivery->id }}" class="editable">{{ $delivery->color }}</span></td>
-                                    <td class="d-mob-none" style="width: 100px"><span id="apply_check_delivery_sorting_{{ $delivery->id }}" class="editable">{{ $delivery->sorting }}</span></td>
+                                    <td><span id="apply_check_ShopDelivery_name_{{ $delivery->id }}" class="editable">{{ $delivery->name }}</span></td>
+                                    <td class="d-mob-none"><span id="apply_check_ShopDelivery_description_{{ $delivery->id }}" class="editable">{{ $delivery->description }}</span></td>
+                                    <td class="d-mob-none" style="width: 40px"><span id="apply_check_ShopDelivery_color_{{ $delivery->id }}" class="editable">{{ $delivery->color }}</span></td>
+                                    <td class="d-mob-none" style="width: 100px"><span id="apply_check_ShopDelivery_sorting_{{ $delivery->id }}" class="editable">{{ $delivery->sorting }}</span></td>
                                     <td class="text-center">
                                         <a href="{{ route('shop.shop-delivery-field.index', ['shop' => $shop->id]) }}?shop_delivery_id={{ $delivery->id }}"><i data-feather="list"></i></a>
                                     </td>

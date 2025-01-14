@@ -19,10 +19,10 @@ class PageController extends Controller
 
         $url = "/" . $path;
 
-        $ShopItem = ShopItem::select("id")->where("url", $url)->where("active", 1)->limit(1);
-        $ShopGroup = ShopGroup::select("id")->where("url", $url)->where("active", 1)->limit(1);
-        $Structure = Structure::select("id")->where("url", $url)->where("active", 1)->limit(1);
-        $ShopFilter = ShopFilter::select("id")->where("url", $url)->limit(1);
+        $ShopItem = ShopItem::select("id")->where("url", $url)->where("active", 1)->where("deleted", 0)->limit(1);
+        $ShopGroup = ShopGroup::select("id")->where("url", $url)->where("active", 1)->where("deleted", 0)->limit(1);
+        $Structure = Structure::select("id")->where("url", $url)->where("active", 1)->where("deleted", 0)->limit(1);
+        $ShopFilter = ShopFilter::select("id")->where("url", $url)->where("deleted", 0)->limit(1);
 
         $Page = Page::where(function($query) use ($ShopItem) {
                         $query->where('entity_id', $ShopItem)
@@ -46,11 +46,27 @@ class PageController extends Controller
 
                     ->first();
 
+        // if (!is_null($Page) && $Page->type == 0 && is_null($Page->Structure)) {
+        //     return StructureController::show($Page->Structure);
+        // }
+
+        // if (!is_null($Page) && $Page->type == 1 && is_null($Page->ShopGroup)) {
+        //     return ShopGroupController::show($Page->ShopGroup);
+        // }
+
+        // if (!is_null($Page) && $Page->type == 2 && is_null($Page->ShopItem)) {
+        //     return ShopItemController::show($Page->ShopItem);
+        // }
+
+        // if (!is_null($Page) && $Page->type == 6 && is_null($Page->ShopFilter) && !is_null($ShopGroup = $Page->ShopFilter->ShopGroup)) {
+        //     return ShopGroupController::show($ShopGroup, $Page->ShopFilter);
+        // }
+
+        // return abort(404);
+
         if (!is_null($Page) && (
             !is_null($Page->Structure) || !is_null($Page->ShopGroup) || !is_null($Page->ShopItem) || !is_null($Page->ShopFilter))
         ) {
-
-            
 
             switch ($Page->type) {
                 case 0: 

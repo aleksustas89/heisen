@@ -1,12 +1,14 @@
 @extends('main')
 
-@section('seo_title'){{ \App\Http\Controllers\SeoController::showItemTitle($shop, $item) }}@endsection
-@section('seo_description'){{ \App\Http\Controllers\SeoController::showItemDescription($shop, $item) }}@endsection
+@section('seo_title'){{ \App\Http\Controllers\SeoController::showItemTitle($shop, $item, $Modification) }}@endsection
+@section('seo_description'){{ \App\Http\Controllers\SeoController::showItemDescription($shop, $item, $Modification) }}@endsection
 @section('seo_keywords', $item->seo_keywords)
 
 @section('canonical')
 
-    @if ($item->canonical > 0 && !is_null($Canonical = \App\Models\ShopItem::find($item->canonical)))
+    @if (!is_null($defaultModification))
+        <link rel="canonical" href="https://{{ request()->getHost() }}{{ $defaultModification->url }}" />
+    @elseif ($item->canonical > 0 && !is_null($Canonical = \App\Models\ShopItem::find($item->canonical)))
         <link rel="canonical" href="https://{{ request()->getHost() }}{{ $Canonical->url }}" />
     @else
         <link rel="canonical" href="https://{{ request()->getHost() }}{{ $item->url }}" />
@@ -43,8 +45,8 @@
                                 @endforeach
                             </ul>
         
-                            <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
-                            <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+                            <a class="uk-position-center-left uk-position-small uk-hidden-hover" uk-slidenav-previous uk-slideshow-item="previous"></a>
+                            <a class="uk-position-center-right uk-position-small uk-hidden-hover" uk-slidenav-next uk-slideshow-item="next"></a>
                         </div>
                         <div class="uk-margin" uk-slider>
                             <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
@@ -73,7 +75,7 @@
                 </div>
             @endif
 
-            <div class="uk-width-expand@m">
+            <div class="uk-width-expand@m" id="item-information">
 
                 @if (session('success'))
                     <div class="uk-alert-success" uk-alert>
@@ -152,9 +154,20 @@
                                                 if (isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)) {
                                                     $defaultValue = $Shop_Item_List_Item->id;
                                                 }
+
+                                                $aModification = \App\Models\ShopItem::where("modification_id", $item->id)
+                                                                                ->join("property_value_ints", "property_value_ints.entity_id", "=", "shop_items.id")
+                                                                                ->where("property_value_ints.property_id", $property->id)
+                                                                                ->where("property_value_ints.value", $Shop_Item_List_Item->id)
+                                                                                ->where("shop_items.deleted", 0)
+                                                                                ->where("shop_items.active", 1)
+                                                                                ->first();
                                             @endphp
                                         
-                                            <li @class(["active" => isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)])><a onclick="Modification.choose($(this))" data-id="{{ $Shop_Item_List_Item->id }}" uk-tooltip="{{ $Shop_Item_List_Item->value }}" class="uk-border-circle" data-src="{{ $Shop_Item_List_Item->description }}" uk-img=""></a></li>
+                                            @if (!is_null($aModification))
+                                                <li @class(["active" => isset($aDefaultValues) && in_array($Shop_Item_List_Item->id, $aDefaultValues)])><a @if(!is_null($aModification)) href="{{ $aModification->url }}" @endif onclick="Modification.choose($(this)); return false;" data-id="{{ $Shop_Item_List_Item->id }}" uk-tooltip="{{ $Shop_Item_List_Item->value }}" class="uk-border-circle" data-src="{{ $Shop_Item_List_Item->description }}" uk-img=""></a></li>
+                                            @endif
+                                            
                                         @endforeach
                                     @endif
 
@@ -250,18 +263,7 @@
 
                 </div>
 
-                @if (!is_null($shopItemShortcuts) && count($shopItemShortcuts))
-                    <hr />
 
-                    <p><span uk-icon="icon: tag" class="uk-margin-small-right"></span>Теги:</p>
-
-                    @foreach ($shopItemShortcuts as $shopItemShortcut)
-                        <a class="btn-shortcut" href="{{ $shopItemShortcut->ShopGroup->url }}">#{{ $shopItemShortcut->ShopGroup->name }}</a>
-                    @endforeach
-
-                @endif
-
-                <hr />
                 <ul uk-accordion="collapsible: false" class="uk-list uk-list-divider">
                     @if (!empty($item->description))
                         <li>
@@ -293,7 +295,7 @@
                                             @foreach ($Dimensions as $Dimension)
                                                 <li>
                                                     <b>{{ $Dimension["name"] }}:</b>
-                                                    {{ $Dimension["value"] }}{{ $Dimension["measure"] }}
+                                                    {{ $Dimension["value"] }} {{ $Dimension["measure"] }}
                                                 </li>
                                             @endforeach
                                         @endif
@@ -422,10 +424,28 @@
 
                         </div>
                     </li>
+                    <li>
+                        <a class="uk-accordion-title">Бесплатная доставка!</a>
+                        <div class="uk-accordion-content">
+                            Мы производим бесплатную доставку товара по всей России, на отделение почты (ПВЗ - пунк выдачи товара)!
+                        </div>
+                    </li>
 
                 </ul>
 
+                @if (!is_null($shopItemShortcuts) && count($shopItemShortcuts))
+                    <hr />
 
+                    <p><span uk-icon="icon: tag" class="uk-margin-small-right"></span>Теги:</p>
+                    <div class="shortcuts">
+                        @foreach ($shopItemShortcuts as $shopItemShortcut)
+                            <a class="btn-shortcut" href="{{ $shopItemShortcut->ShopGroup->url }}">#{{ $shopItemShortcut->ShopGroup->name }}</a>
+                        @endforeach
+                    </div>
+
+                @endif
+
+                <hr />
 
             </div>
         </div>
@@ -472,6 +492,11 @@
                 width: 30px;
             }
         }
+        .shortcuts {
+            gap: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
         .btn-shortcut {
             font-size: 20px;
             border-radius: 0 !important;
@@ -483,12 +508,11 @@
 @section("js")
    
     @php
-        App\Services\Helpers\File::js('/js/modification.js');
-        App\Services\Helpers\File::js('/js/cart.js');
+        App\Services\Helpers\File::js('/js/modification.js');   
     @endphp   
     <script>
 
-        $(function(){
+        $(function() {
 
             $("#shop-quich-order").on("submit", function() {
 
