@@ -37,22 +37,45 @@
             <div class="card-body p-0">
 
                 <form id="filter" method="get" class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-                    <div class="dataTable-top">
+                    <div class="dataTable-top row">
 
-                        @if (count($colors) > 0)
-                            <div class="dataTable-dropdown">
-                                <label>
-                                    <select onchange="Filter.init()" name="color" class="dataTable-selector">
-                                        
-                                        <option value="0">Все цвета</option>
+                    
+                        <div class="col-2 dataTable-dropdown">
 
-                                        @foreach ($colors as $color)
-                                            <option @if($color->id == $current_color_id) selected @endif value="{{ $color->id }}">{{ $color->value }}</option>
-                                        @endforeach
-                                    </select>
-                                </label>
+                            <div>
+                                <b>Цвет</b>
                             </div>
-                        @endif
+
+                            <div>
+                                <select onchange="Filter.init()" name="color" class="form-control">
+                                    
+                                    <option value="0">Все цвета</option>
+
+                                    @foreach ($colors as $color)
+                                        <option @if($color->id == $current_color_id) selected @endif value="{{ $color->id }}">{{ $color->value }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            
+                        </div>
+                     
+
+                        <div class="col-3">
+
+                            <div>
+                                <b>Время/Дата</b>
+                            </div>
+
+                            <div class="d-flex gap-3 align-items-center">
+                                <input type="datetime-local" name="datetime_from" value="{{ request()->datetime_from ?? '' }}" class="form-control" placeholder="Дата от">
+
+                                <input type="datetime-local" name="datetime_to" value="{{ request()->datetime_to ?? '' }}" class="form-control" placeholder="Дата до">
+    
+                                <a href="javascript:void(0)" onclick="Filter.init()"><i class="ti ti-check"></i></a>
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </form>
@@ -69,19 +92,29 @@
                         </thead>
                         <tbody>
 
-                            @foreach ($shopOrderItems as $shopOrderItem)
+                            @if (count($shopOrderItems) > 0)
+
+                                @foreach ($shopOrderItems as $shopOrderItem)
+                                    <tr>
+                                        <td>
+                                            {{ $shopOrderItem->shop_item_id }}
+                                        </td>
+                                        <td>
+                                            {{ $shopOrderItem->ShopItem->name }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ (int)$shopOrderItem->total_quantity }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+
+                            @else
                                 <tr>
-                                    <td>
-                                        {{ $shopOrderItem->shop_item_id }}
-                                    </td>
-                                    <td>
-                                        {{ $shopOrderItem->ShopItem->name }}
-                                    </td>
-                                    <td class="text-center">
-                                        {{ (int)$shopOrderItem->total_quantity }}
+                                    <td colspan="3">
+                                        <p class="text-center">Нет результатов :(</p>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @endif
 
 
 

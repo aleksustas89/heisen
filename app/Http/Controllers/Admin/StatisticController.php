@@ -21,6 +21,20 @@ class StatisticController extends Controller
         $ShopOrderItems = ShopOrderItem::selectRaw('shop_item_id, SUM(quantity) AS total_quantity')
                                 ->groupBy("shop_item_id")
                                 ->orderBy("total_quantity", "DESC");
+
+        if (!empty($request->datetime_from) || !empty($request->datetime_to)) {
+            $ShopOrderItems
+                ->join("shop_orders", "shop_orders.id", "=", "shop_order_items.shop_order_id");
+
+            if (!empty($request->datetime_from)) {
+                $ShopOrderItems->where("shop_orders.created_at", ">=", date("Y-m-d H:i:s", strtotime($request->datetime_from)));
+            }
+
+            if (!empty($request->datetime_to)) {
+                $ShopOrderItems->where("shop_orders.created_at", "<=", date("Y-m-d H:i:s", strtotime($request->datetime_to)));
+            }
+
+        }
                             
         if ($request->color) {
             $PropertyValueInt = PropertyValueInt::select("entity_id")
