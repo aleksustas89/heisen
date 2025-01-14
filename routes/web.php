@@ -47,7 +47,8 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
             'boxberry-sender' => 'BoxberrySenderController',
             'shop.shop-filter' => 'ShopFilterController',
             'trash' => 'TrashController',
-            'sitemap' => 'SitemapController'
+            'sitemap' => 'SitemapController',
+            'statistic' => 'StatisticController'
         ]);
 
         Route::resource('shop.shop-price', App\Http\Controllers\Admin\ShopPriceController::class)->only(['index', 'update']);

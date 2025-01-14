@@ -101,6 +101,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('statistic.index') }}" class="nav-link">
+                                    <i class="ti ti-brand-google-analytics menu-icon"></i>
+                                    <span>Статистика</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('adminSearch') }}" class="nav-link">
                                     <i class="ti ti-search menu-icon"></i>
                                     <span>Поиск</span>

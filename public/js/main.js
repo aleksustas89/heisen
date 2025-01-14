@@ -53,8 +53,6 @@ $(function(){
 
         $("#request-call-form").on("submit", function() {
 
-            console.log($("#request-call-form").serialize())
-
             $.ajax({
                 url: "/request-call",
                 type: "POST",
