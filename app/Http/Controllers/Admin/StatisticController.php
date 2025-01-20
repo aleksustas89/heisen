@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\ShopOrderItem;
 use App\Models\ShopItemListItem;
 use App\Models\PropertyValueInt;
+use App\Models\ShopItem;
+use PhpParser\Node\Expr\List_;
 
 class StatisticController extends Controller
 {
@@ -18,9 +20,9 @@ class StatisticController extends Controller
     public function index(Request $request)
     {
 
-        $ShopOrderItems = ShopOrderItem::selectRaw('shop_item_id, SUM(quantity) AS total_quantity')
+        $ShopOrderItems = ShopOrderItem::selectRaw('shop_item_id, SUM(quantity) AS quantity')
                                 ->groupBy("shop_item_id")
-                                ->orderBy("total_quantity", "DESC");
+                                ->orderBy("quantity", "DESC");
 
         if (!empty($request->datetime_from) || !empty($request->datetime_to)) {
             $ShopOrderItems
@@ -46,12 +48,56 @@ class StatisticController extends Controller
 
         }
 
+        $aShopItemMarkings = [];
+        $aShopItems = [];
 
+        foreach ($ShopOrderItems->get() as $key => $ShopOrderItem) {
+
+            if (!is_null($shopItem = $ShopOrderItem->shopItem)) {
+
+                list($marking) = explode("_", $shopItem->marking);
+
+                if (!empty($marking)) {
+
+                    $Color = PropertyValueInt::where("property_id", $this->color_property_id)
+                        ->where("entity_id", $shopItem->id)
+                        ->first();
+
+                    if (isset($aShopItems[$marking]['quantity'])) {
+                        $aShopItems[$marking]['quantity'] += (int)$ShopOrderItem->quantity;
+                    } else {
+
+                        $aShopItems[$marking]['name'] = $shopItem->parentItemIfModification()->name;
+                        $aShopItems[$marking]['quantity'] = (int)$ShopOrderItem->quantity;
+
+                        $aShopItemMarkings[] = $marking;
+                    }
+                    
+                    if (!is_null($Color) && $Color->value > 0) {
+
+                        if (isset($aShopItems[$marking]["colors"][$Color->value])) {
+                            $aShopItems[$marking]["colors"][$Color->value] += (int)$ShopOrderItem->quantity;
+                        } else {
+                            $aShopItems[$marking]["colors"][$Color->value] = (int)$ShopOrderItem->quantity;
+                        }
+                    }
+
+                } else {
+                    //echo $shopItem->id . " не имеют артикула! нужно исправить!<br>";
+                }
+            }
+        }
+
+        $aColors = [];
+
+        foreach (ShopItemListItem::where("shop_item_list_id", $this->color_shop_item_list_id)->where("deleted", 0)->get() as $Color) {
+            $aColors[$Color->id] = $Color;
+        }
 
         return view("admin.shop.statistic.index", [
             "breadcrumbs" => $this->breadcrumbs(),
-            "shopOrderItems" => $ShopOrderItems->paginate(),
-            "colors" => ShopItemListItem::where("shop_item_list_id", $this->color_shop_item_list_id)->where("deleted", 0)->get(),
+            "shopItems" => $aShopItems,
+            "Colors" => $aColors,
             "current_color_id" => $request->color
         ]);
     }

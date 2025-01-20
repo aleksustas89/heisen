@@ -51,7 +51,7 @@
                                     
                                     <option value="0">Все цвета</option>
 
-                                    @foreach ($colors as $color)
+                                    @foreach ($Colors as $color)
                                         <option @if($color->id == $current_color_id) selected @endif value="{{ $color->id }}">{{ $color->value }}</option>
                                     @endforeach
                                 </select>
@@ -85,25 +85,32 @@
                     <table class="table table-bordered">
                         <thead class="thead-light">
                             <tr>
-                                <th style="width: 1%">#ID</th>
-                                <th>Название</th>
-                                <th class="text-center" width="200px">Всего куплено</th>
+                                <th style="width: 100px">#ID</th>
+                                <th style="width: 300px">Название</th>
+                                <th class="">Всего куплено</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            @if (count($shopOrderItems) > 0)
+                            @if (count($shopItems) > 0)
 
-                                @foreach ($shopOrderItems as $shopOrderItem)
+                                @foreach ($shopItems as $marking => $shopItem)
                                     <tr>
                                         <td>
-                                            {{ $shopOrderItem->shop_item_id }}
+                                            {{ $marking }}
                                         </td>
                                         <td>
-                                            {{ $shopOrderItem->ShopItem->name }}
+                                            {{ $shopItem['name'] }}
                                         </td>
-                                        <td class="text-center">
-                                            {{ (int)$shopOrderItem->total_quantity }}
+                                        <td class="">
+                                        
+                                            @if (isset($shopItem["colors"]) && count($shopItem["colors"]) > 0)
+                                                @foreach ($shopItem["colors"] as $color => $count)
+                                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $Colors[$color]->value }}: {{ $count }}" class="color" style="background-image: url({{ $Colors[$color]->description }})">
+                                                        {{ $count }}
+                                                    </span>
+                                                @endforeach
+                                            @endif 
                                         </td>
                                     </tr>
                                 @endforeach
@@ -122,7 +129,7 @@
                     </table>
                 </div>
 
-                {{ $shopOrderItems->links() }}
+                {{-- {{ $shopItems->links() }} --}}
 
             </div>
 
@@ -151,5 +158,21 @@
 @section("css")
 
     <link href="/assets/plugins/datatables/datatable.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        .color {
+            background-size: cover;
+            background-position: center center;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+    </style>
+
 
 @endsection
