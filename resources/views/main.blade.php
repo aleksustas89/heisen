@@ -371,7 +371,7 @@
             <div uk-dropdown="pos: bottom-center;">
                 <ul class="uk-nav uk-dropdown-nav tm-icon-nav">
                     <li><a target="_blank" href="https://t.me/heisen_spb"><span class="uk-icon uk-icon-image" style="background-image: url(/images/telegram-brands-solid.svg);"></span></a></li>
-                    <li><a target="_blank" href="https://wa.me/89111564465"><span class="uk-icon uk-icon-image" style="background-image: url(/images/square-whatsapp-brands-solid.svg);"></span></a></li>
+                    <li><a target="_blank" href="https://wa.me/+79111564465"><span class="uk-icon uk-icon-image" style="background-image: url(/images/square-whatsapp-brands-solid.svg);"></span></a></li>
                     <li><a target="_blank" href="https://vk.com/heisenru"><span class="uk-icon uk-icon-image" style="background-image: url(/images/vk-brands-solid.svg);"></span></a></li>
                     <li><a href="javascript:void(0)" uk-toggle="target: #request-call"><span class="uk-icon uk-icon-image" style="background-image: url(/images/message-regular.svg);"></span></a></li>
                 </ul>
