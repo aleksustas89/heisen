@@ -51,6 +51,10 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
             'statistic' => 'StatisticController'
         ]);
 
+        Route::prefix("/statistic")->group(function() {
+            Route::get('/get/group-items', 'StatisticController@getGroupItems')->name("statisticGetGroupItems");
+        });
+        
         Route::resource('shop.shop-price', App\Http\Controllers\Admin\ShopPriceController::class)->only(['index', 'update']);
 
         Route::prefix("search")->controller('SearchController')->group(function() {
