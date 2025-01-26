@@ -4,358 +4,351 @@
 
 @section('content')
 
-  <!-- Page-Title -->
-  <div class="row">
-      <div class="col-sm-12">
-          <div class="page-title-box">
-              <div class="float-end">
-                  <ol class="breadcrumb">
-                      <li class="breadcrumb-item"><a href="#">Unikit</a>
-                      </li><!--end nav-item-->
-                      <li class="breadcrumb-item"><a href="#">Dashboard</a>
-                      </li><!--end nav-item-->
-                      <li class="breadcrumb-item active">Analytics</li>
-                  </ol>
-              </div>
-              <h4 class="page-title">Analytics</h4>
-          </div><!--end page-title-box-->
-      </div><!--end col-->
-  </div>
-  <!-- end page title end breadcrumb -->
-  
-  <div class="row">
-      <div class="col-md-12 col-lg-3 order-lg-1 order-md-2 order-sm-2">
-          <div class="card overflow-hidden">
-              <div class="card-body">
-                  <div class="pt-3">
-                      <h3 class="text-dark text-center font-24 fw-bold line-height-lg">Unikit
-                      <br>Multi Application</h3>
-                      <div class="text-center text-muted font-16 fw-bold pt-3 pb-1">We Design and Develop Clean and High Quality Web Applications</div>
-                     
-                      <div class="text-center py-3 mb-3">
-                          <a href="#" class="btn btn-primary">Buy Now</a>
-                      </div>
-                      <img src="assets/images/small/business.png" alt="" class="img-fluid px-3 mb-2">
-                  </div>
-              </div><!--end card-body--> 
-          </div><!--end card-->                            
-      </div> <!--end col-->
-      <div class="col-lg-9 order-lg-2 order-md-1 order-sm-1">
-          <div class="row justify-content-center"> 
-              <div class="col-lg-3 col-md-6">
-                  <div class="card overflow-hidden">
-                      <div class="card-body">
-                          <div class="row d-flex">
-                              <div class="col-3">
-                                  <i class="ti ti-users font-36 align-self-center text-dark"></i>
-                              </div><!--end col-->
-                              <div class="col-12 ms-auto align-self-center">
-                                  <div id="dash_spark_1" class="mb-3"></div>
-                              </div><!--end col-->
-                              <div class="col-12 ms-auto align-self-center">
-                                  <h3 class="text-dark my-0 font-22 fw-bold">24000</h3>
-                                  <p class="text-muted mb-0 fw-semibold">Sessions</p>
-                              </div><!--end col-->
-                          </div><!--end row-->
-                      </div><!--end card-body--> 
-                  </div><!--end card-->                                     
-              </div> <!--end col--> 
-              <div class="col-lg-3 col-md-6">
-                  <div class="card overflow-hidden">
-                      <div class="card-body">
-                          <div class="row d-flex">
-                              <div class="col-3">
-                                  <i class="ti ti-clock font-36 align-self-center text-dark"></i>
-                              </div><!--end col-->
-                              <div class="col-auto ms-auto align-self-center">
-                                  <span class="badge badge-soft-success px-2 py-1 font-11">Active</span>
-                              </div><!--end col-->
-                              <div class="col-12 ms-auto align-self-center">
-                                  <div id="dash_spark_2" class="mb-3"></div>
-                              </div><!--end col-->
-                              <div class="col-12 ms-auto align-self-center">
-                                  <h3 class="text-dark my-0 font-22 fw-bold">00:18</h3>
-                                  <p class="text-muted mb-0 fw-semibold">Avg.Sessions</p>
-                              </div><!--end col-->
-                          </div><!--end row-->
-                      </div><!--end card-body--> 
-                  </div><!--end card-->                                     
-              </div> <!--end col--> 
-              <div class="col-lg-3 col-md-6">
-                  <div class="card overflow-hidden">
-                      <div class="card-body">
-                          <div class="row d-flex">
-                              <div class="col-3">
-                                  <i class="ti ti-activity font-36 align-self-center text-dark"></i>
-                              </div><!--end col-->
-                              <div class="col-12 ms-auto align-self-center">
-                                  <div id="dash_spark_3" class="mb-3"></div>
-                              </div><!--end col-->
-                              <div class="col-12 ms-auto align-self-center">
-                                  <h3 class="text-dark my-0 font-22 fw-bold">$2400</h3>
-                                  <p class="text-muted mb-0 fw-semibold">Bounce Rate</p>
-                              </div><!--end col-->
-                          </div><!--end row-->
-                      </div><!--end card-body--> 
-                  </div><!--end card-->                                     
-              </div> <!--end col--> 
-              
-              <div class="col-lg-3 col-md-6">
-                  <div class="card overflow-hidden">
-                      <div class="card-body">
-                          <div class="row d-flex">
-                              <div class="col-3">
-                                  <i class="ti ti-confetti font-36 align-self-center text-dark"></i>
-                              </div><!--end col-->
-                              <div class="col-auto ms-auto align-self-center">
-                                  <span class="badge badge-soft-danger px-2 py-1 font-11">-2%</span>
-                              </div><!--end col-->
-                              <div class="col-12 ms-auto align-self-center">
-                                  <div id="dash_spark_4" class="mb-3"></div>
-                              </div><!--end col-->
-                              <div class="col-12 ms-auto align-self-center">
-                                  <h3 class="text-dark my-0 font-22 fw-bold">85000</h3>
-                                  <p class="text-muted mb-0 fw-semibold">Goal Completions</p>
-                              </div><!--end col-->
-                          </div><!--end row-->
-                      </div><!--end card-body--> 
-                  </div><!--end card-->                                     
-              </div> <!--end col-->                                                                   
-          </div><!--end row-->
-          <div class="row">
-              <div class="col-12">
-                  <div class="card">
-                      <div class="card-header">
-                          <div class="row align-items-center">
-                              <div class="col">                      
-                                  <h4 class="card-title">Audience Overview</h4>                      
-                              </div><!--end col-->
-                              <div class="col-auto"> 
-                                  <div class="dropdown">
-                                      <a href="#" class="btn btn-sm btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                         This Year<i class="las la-angle-down ms-1"></i>
-                                      </a>
-                                      <div class="dropdown-menu dropdown-menu-end">
-                                          <a class="dropdown-item" href="#">Today</a>
-                                          <a class="dropdown-item" href="#">Last Week</a>
-                                          <a class="dropdown-item" href="#">Last Month</a>
-                                          <a class="dropdown-item" href="#">This Year</a>
-                                      </div>
-                                  </div>               
-                              </div><!--end col-->
-                          </div>  <!--end row-->                                  
-                      </div><!--end card-header-->
-                      <div class="card-body">
-                          <div class="">
-                              <div id="ana_dash_1" class="apex-charts"></div>
-                          </div> 
-                      </div><!--end card-body--> 
-                  </div><!--end card-->
-              </div>
-          </div> 
-      </div><!--end col-->                        
-  </div><!--end row-->
-
-  <div class="row">
-      <div class="col-lg-8">
-          <div class="card">
-              <div class="card-header">
-                  <div class="row align-items-center">
-                      <div class="col">                      
-                          <h4 class="card-title">Browser Used & Traffic Reports</h4>                      
-                      </div><!--end col-->                                        
-                  </div>  <!--end row-->                                  
-              </div><!--end card-header-->
-              <div class="card-body">
-                  <div class="table-responsive browser_users">
-                      <table class="table table-hover mb-0">
-                          <thead class="thead-light">
-                              <tr>
-                                  <th class="border-top-0">Browser</th>
-                                  <th class="border-top-0">Sessions</th>
-                                  <th class="border-top-0">Bounce Rate</th>
-                                  <th class="border-top-0">Transactions</th>
-                              </tr><!--end tr-->
-                          </thead>
-                          <tbody>
-                              <tr>  
-                                  <td><img src="assets/images/logos/chrome.png" alt="" height="20" class="me-2">Chrome</td> 
-                                  <td>10853<small class="text-muted">(52%)</small></td>                                   
-                                  <td> 52.80%</td>
-                                  <td>566<small class="text-muted">(92%)</small></td>
-                              </tr><!--end tr-->     
-                              <tr>                                                        
-                                  <td><img src="assets/images/logos/micro-edge.png" alt="" height="20" class="me-2">Microsoft Edge</td>
-                                  <td>2545<small class="text-muted">(47%)</small></td>                                   
-                                  <td> 47.54%</td>
-                                  <td>498<small class="text-muted">(81%)</small></td>
-                              </tr><!--end tr-->    
-                              <tr>                                                        
-                                  <td><img src="assets/images/logos/in-explorer.png" alt="" height="20" class="me-2">Internet-Explorer</td>
-                                  <td>1836<small class="text-muted">(38%)</small></td>                                   
-                                  <td> 41.12%</td>
-                                  <td>455<small class="text-muted">(74%)</small></td>
-                              </tr><!--end tr-->    
-                              <tr>                                                        
-                                  <td><img src="assets/images/logos/opera.png" alt="" height="20" class="me-2">Opera</td>
-                                  <td>1958<small class="text-muted">(31%)</small></td>                                   
-                                  <td> 36.82%</td>
-                                  <td>361<small class="text-muted">(61%)</small></td>
-                              </tr><!--end tr-->    
-                              <tr>                                                        
-                                  <td><img src="assets/images/logos/chrome.png" alt="" height="20" class="me-2">Chrome</td>
-                                  <td>10853<small class="text-muted">(52%)</small></td>                                   
-                                  <td> 52.80%</td>
-                                  <td>566<small class="text-muted">(92%)</small></td>
-                              </tr><!--end tr-->                             
-                          </tbody>
-                      </table> <!--end table-->                                               
-                  </div><!--end /div--> 
-              </div><!--end card-body--> 
-          </div><!--end card--> 
-          <div class="card">
-              <div class="card-header">
-                  <div class="row align-items-center">
-                      <div class="col">                      
-                          <h4 class="card-title">Browser Used & Traffic Reports</h4>                      
-                      </div><!--end col-->                                        
-                  </div>  <!--end row-->                                  
-              </div><!--end card-header-->
-              <div class="card-body">
-                  <div class="table-responsive browser_users">
-                      <table class="table mb-0">
-                          <thead class="thead-light">
-                              <tr>
-                                  <th class="border-top-0">Channel</th>
-                                  <th class="border-top-0">Sessions</th>
-                                  <th class="border-top-0">Prev.Period</th>
-                                  <th class="border-top-0">% Change</th>
-                              </tr><!--end tr-->
-                          </thead>
-                          <tbody>
-                              <tr>                                                        
-                                  <td><a href="" class="text-primary">Organic search</a></td>
-                                  <td>10853<small class="text-muted">(52%)</small></td>
-                                  <td>566<small class="text-muted">(92%)</small></td>
-                                  <td> 52.80% <i class="fas fa-caret-up text-success font-16"></i></td>
-                              </tr><!--end tr-->     
-                              <tr>                                                        
-                                  <td><a href="" class="text-primary">Direct</a></td>
-                                  <td>2545<small class="text-muted">(47%)</small></td>
-                                  <td>498<small class="text-muted">(81%)</small></td>
-                                  <td> -17.20% <i class="fas fa-caret-down text-danger font-16"></i></td>
-                                  
-                              </tr><!--end tr-->    
-                              <tr>                                                        
-                                  <td><a href="" class="text-primary">Referal</a></td>
-                                  <td>1836<small class="text-muted">(38%)</small></td> 
-                                  <td>455<small class="text-muted">(74%)</small></td>
-                                  <td> 41.12% <i class="fas fa-caret-up text-success font-16"></i></td>
-                                  
-                              </tr><!--end tr-->    
-                              <tr>                                                        
-                                  <td><a href="" class="text-primary">Email</a></td>
-                                  <td>1958<small class="text-muted">(31%)</small></td> 
-                                  <td>361<small class="text-muted">(61%)</small></td>
-                                  <td> -8.24% <i class="fas fa-caret-down text-danger font-16"></i></td>
-                              </tr><!--end tr-->    
-                              <tr>                                                        
-                                  <td><a href="" class="text-primary">Social</a></td>
-                                  <td>1566<small class="text-muted">(26%)</small></td> 
-                                  <td>299<small class="text-muted">(49%)</small></td>
-                                  <td> 29.33% <i class="fas fa-caret-up text-success"></i></td>
-                              </tr><!--end tr-->                            
-                          </tbody>
-                      </table> <!--end table-->                                               
-                  </div><!--end /div-->
-              </div><!--end card-body--> 
-          </div><!--end card--> 
-      </div> <!--end col--> 
-      <div class="col-lg-4">
-          <div class="card">
-              <div class="card-header">
-                  <div class="row align-items-center">
-                      <div class="col">                      
-                          <h4 class="card-title">Sessions Device</h4>                      
-                      </div><!--end col-->
-                      <div class="col-auto"> 
-                          <div class="dropdown">
-                              <a href="#" class="btn btn-sm btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                 All<i class="las la-angle-down ms-1"></i>
-                              </a>
-                              <div class="dropdown-menu dropdown-menu-end">
-                                  <a class="dropdown-item" href="#">Purchases</a>
-                                  <a class="dropdown-item" href="#">Emails</a>
-                              </div>
-                          </div>         
-                      </div><!--end col-->
-                  </div>  <!--end row-->                                  
-              </div><!--end card-header-->
-              <div class="card-body">
-                  <div class="text-center">
-                      <div id="ana_device" class="apex-charts"></div>
-                      <h6 class="bg-light-alt py-3 px-2 mb-0">
-                          <i data-feather="calendar" class="align-self-center icon-xs me-1"></i>
-                          01 January 2020 to 31 December 2020
-                      </h6>
-                  </div>  
-                  <div class="table-responsive mt-2">
-                      <table class="table border-dashed mb-0">
-                          <thead>
-                          <tr>
-                              <th>Device</th>
-                              <th class="text-end">Sassions</th>
-                              <th class="text-end">Day</th>
-                              <th class="text-end">Week</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr>
-                              <td>Dasktops</td>
-                              <td class="text-end">1843</td>
-                              <td class="text-end">-3</td>
-                              <td class="text-end">-12</td>
-                          </tr>
-                          <tr>
-                              <td>Tablets</td>
-                              <td class="text-end">2543</td>
-                              <td class="text-end">-5</td>
-                              <td class="text-end">-2</td>                                                 
-                          </tr>
-                          <tr>
-                              <td>Mobiles</td>
-                              <td class="text-end">3654</td>
-                              <td class="text-end">-5</td>
-                              <td class="text-end">-6</td>
-                          </tr>
-                          
-                          </tbody>
-                      </table><!--end /table-->
-                  </div><!--end /div-->                                 
-              </div><!--end card-body--> 
-          </div><!--end card--> 
-          <div class="card">
-              <div class="card-body">
-                  <div class="d-flex">
-                      <h3 class="m-0 align-self-center fw-bold font-22">80</h3>
-                      <div class="d-block ms-3 align-self-center">
-                          <span class="badge bg-soft-primary px-2 py-1 font-11">Right now</span>
-                          <h5 class="my-2">Traffic Sources</h5>
-                          <p class="mb-2 text-muted">It is a long established fact that a reader will 
-                              be of a page when looking at its layout.                                                
-                          </p>
-                          <a href="" class="btn btn-primary">Read More <i class="las la-arrow-right"></i></a>
-                      </div>
-                  </div>
-              </div><!--end card-body-->
-          </div><!--end card-->
-      </div> <!--end col-->
-      
-  </div><!--end row-->
 
 
-  <script src="/assets/plugins/apexcharts/apexcharts.min.js"></script>
-  <script src="/assets/pages/analytics-index.init.js"></script>
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+
+                <h4 class="card-title">Последние заказы</h4>
+
+                <a href="{{ route("shop-order.index") }}" class="btn btn-de-primary btn-sm">Все</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 1%">№</th>
+                            <th style="width: 170px">Дата</th>
+                            {{-- <th style="width: 40px" class="d-mob-none">Источник</th> --}}
+                            <th class="d-mob-none">Фио</th>
+                            <th style="width: 50px" class="d-mob-none"><i data-feather="list"></i></th>
+                            <th class="d-mob-none" style="width: 120px">Доставка</th>
+                            <th class="d-mob-none" style="width: 40px">-</th>
+                            <th style="width: 100px">Сумма</th>
+                            <th style="width: 100px" class="d-mob-none">Оплачено</th>
+                            <th class="controll-td"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $order)
+
+                            @php
+                                $fio = implode(" ", [$order->surname, $order->name]);
+                                $source = '';
+                                if ($order->source_id > 0) {
+                                    
+                                    switch ($order->Source->service) {
+                                        case 'google':
+                                            $source = '<span title="google" class="badge badge-ico badge-blue white"><i class="fab fa-google"></i></span>';
+                                        break;
+                                    }
+                                }
+
+                                $sOrderSum = $order->getSum();
+                                $sOrderCurrency = $order->ShopCurrency->name;
+
+                            @endphp
+
+                            <tr @class(["tr-paid" => $order->paid == 1 ? true : false])>
+                                <td>
+                                    {{ $order->id }}
+                                </td>
+                                <td style="width: 170px" >
+                                    {{ date("d.m.Y H:i", strtotime($order->created_at)) }}
+                                </td>
+                                {{-- <td style="width: 40px" class="d-mob-none">
+                                    {!! $source !!}
+                                </td> --}}
+                                <td class="d-mob-none">
+                                    {{ $fio }}
+                                </td>
+                                <td class="d-mob-none">
+
+                                    @php
+                                        
+                                        $popover = "<div class='card'>";
+
+                                        $popover .= "<div class='card-header'><h4 class='card-title'>Заказ № ". $order->id ." </h4>";
+
+                                        if (!empty($fio)) {
+                                            $popover .= "<p class='text-muted mb-0'>
+                                                        <b>Контактное лицо:</b>  ". $fio ."
+                                                    </p>";
+                                        }
+
+                                        if (!empty($order->phone)) {
+                                            $popover .= "<p class='text-muted mb-0'>
+                                                            <b>Телефон:</b>  ". $order->phone ."
+                                                        </p>";
+                                        }
+
+                                        if (!empty($order->email)) {
+                                            $popover .= "<p class='text-muted mb-0'>
+                                                            <b>E-mail:</b>  ". $order->email ."
+                                                        </p>";
+                                        }
+
+                                        if ($order->shop_delivery_id > 0 && $order->ShopDelivery) {
+                                            $popover .= "<p class='text-muted mb-0'>
+                                                            <b>Способ доставки:</b>  ". $order->ShopDelivery->name ."
+                                                        </p>";
+                                        }
+
+                                        
+                                        if ($order->shop_payment_system_id > 0 && $order->ShopPaymentSystem) {
+                                            $popover .= "<p class='text-muted mb-0'>
+                                                            <b>Способ оплаты:</b>  ". $order->ShopPaymentSystem->name ."
+                                                        </p>";
+                                        }
+
+                                        if (!empty($order->description)) {
+                                            $popover .= "<p class='text-muted mb-0'>
+                                                            <b>Описание заказа:</b>  ". $order->description ."
+                                                        </p>";
+                                        }
+
+                                        if (!empty($order->delivery_information)) {
+                                            $popover .= "<p class='text-muted mb-0'>
+                                                            <b>Описание доставки:</b>  ". $order->delivery_information ."
+                                                        </p>";
+                                        }
+
+                                        $popover .= "</div>";
+
+                                        $popover .= "<div class='card-body'><div class='table-responsive'>
+                                                         <table class='table table-striped table-sm' style='min-width:700px'>
+                                                            <thead class='bordered-palegreen'>
+                                                                <tr>
+                                                                    <th>№</th>
+                                                                    <th>Наименование</th>
+                                                                    <th>Цена, ". $sOrderCurrency ."</th>
+                                                                    <th>Кол-во</th>
+                                                                    <th>Сумма, ". $sOrderCurrency ."</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>";
+                                            foreach ($order->ShopOrderItems()->where("deleted", 0)->get()  as $orderItem) {
+                                                $popover .= "
+                                                                <tr>
+                                                                    <td>" . $orderItem->id . "</td>
+                                                                    <td>" . (str_replace('"', "", $orderItem->name)) . "</td>
+                                                                    <td>" . $orderItem->price . "</td>
+                                                                    <td>" . $orderItem->quantity . "</td>
+                                                                    <td>" . App\Models\Str::price($orderItem->price * $orderItem->quantity) . "</td>
+                                                                </tr>";
+                                            }
+
+                                            $popover .= "
+                                                                <tr class='bg-black text-white'> 
+                                                                    <td>&nbsp;</td>
+                                                                    <td>&nbsp;</td>
+                                                                    <td>&nbsp;</td>
+                                                                    <td>Всего к оплате:</td>
+                                                                    <td><b>" . App\Models\Str::price($sOrderSum) ."  ". $sOrderCurrency . "</b></td>
+                                                                </tr>";
 
 
+                                                $popover .= "</tbody>
+                                                        <table>
+                                                    </div></div>";
+
+                                        $popover .= "</div></div>";
+                                    @endphp
+
+                                    <a class="pointer" data-container="body" data-toggle="popover" data-placement="left" data-content="{!! $popover !!}" data-original-title="" title="">
+                                        <i data-feather="list"></i>
+                                    </a>
+                                    
+                                </td>
+                                <td class="d-mob-none" style="width: 120px">
+
+                                    @if ($order->shop_delivery_id > 0)
+                                        <span class="btn-outline-{{ $order->ShopDelivery->color }}" style="font-size:12px;">{{ $order->ShopDelivery->name }}</span>
+                                    @endif
+            
+                                </td>
+                                <td class="d-mob-none" style="width: 40px">
+                                    @if ($order->shop_delivery_id > 0)
+                                        @php
+                                            switch ($order->shop_delivery_id) {
+                                                case 1:
+                                                    $Code = $order->PrOrder;
+                                                break;
+                                                case 7:
+                                                    $Code = $order->CdekOrder;
+                                                break;
+                                                case 8:
+                                                    $Code = $order->BoxberryOrder;
+                                                break;
+                                            }
+
+                                        @endphp
+                                        <a @if(!is_null($Code)) href="javascript:void(0)" onclick="Copy.init($(this), '{{ $Code->track }}')" @endif @class([
+                                            "order-not-created" => empty($Code->track) ? true : false,
+                                            "order-created" => !empty($Code->track) ? true : false,
+                                            "position-relative"
+                                        ])>
+                                            
+                                            <i class="las la-truck"></i>
+                                        </a>
+                                    @endif
+                                </td>
+                                <td style="width: 100px">
+                                    {{ App\Models\Str::price($sOrderSum) }} {{ $sOrderCurrency }}
+                                </td>
+                                <td class="d-mob-none text-center" style="width: 100px">
+                                    @if ($order->paid == 1)
+                                        <i style="color: green; font-size: 22px;" class="las la-check-double"></i>
+                                    @endif
+                                </td>
+                                <td class="td-actions">
+                                    <a href="{{ route('shop-order.edit', $order->id) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                    <form action="{{ route('shop-order.destroy', $order->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">
+                                            <i class="las la-trash-alt text-secondary font-16"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h4 class="card-title">Последние быстрые заказы</h4>
+
+                <a href="{{ route("shop.shop-quick-order.index", ['shop' => $shop->id]) }}" class="btn btn-de-primary btn-sm">Все</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 1%">№</th>
+                            <th style="width: 170px">Дата</th>
+                            <th>Фио</th>
+                            <th style="width: 200px" class="d-mob-none">Телефон</th>
+                            <th class="d-mob-none">Товар</th>
+                            <th class="controll-td"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($quick_orders as $quick_order)
+
+                        @if (!is_null($ShopItem = $quick_order->ShopItem))
+
+                            @php
+                            $ShopItem = $ShopItem->parentItemIfModification();
+
+                            @endphp
+
+                            <tr>
+                                <td>
+                                    {{ $quick_order->id }}
+                                </td>
+                                <td style="width: 170px" >
+                                    {{ date("d.m.Y H:i", strtotime($quick_order->created_at)) }}
+                                </td>
+                                <td>
+                                    {{ $quick_order->name }}
+                                </td>
+                                <td class="d-mob-none" style="width: 200px">
+                                    {{ $quick_order->phone }}
+                                </td>
+                                <td class="d-mob-none">
+                                    @if (!is_null($quick_order->ShopItem))
+                                        {{ implode(", ", $quick_order->ShopItem->modificationName()) }}
+                                        <a href="{{ $ShopItem->url }}" target="_blank">
+                                            <i class="las la-external-link-alt"></i>
+                                        </a>
+                                    @endif
+                                </td>
+                                <td class="td-actions">
+                                    <a href="{{ route('shop.shop-quick-order.edit', ['shop' => $shop->id, 'shop_quick_order' => $quick_order->id]) }}" class="mr-2"><i class="las la-pen text-secondary font-16"></i></a>
+                                    <form action="{{ route('shop.shop-quick-order.destroy', ['shop' => $shop->id, 'shop_quick_order' => $quick_order->id]) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" onclick="confirmDelete($(this).parents('form'))" class="td-list-delete-btn">
+                                            <i class="las la-trash-alt text-secondary font-16"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                        @endif
+
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@endsection
+
+@section('css')
+    <link rel="stylesheet" href="/assets/css/popover.css">
+    <style>
+        .paid {
+            background: #22b783!important
+        }
+        .order-created {
+            color: green;
+        }
+        .order-not-created {
+            color: #cfcfcf;
+        }
+        .copied {
+            position: absolute;
+            margin: -15px 0 0 -13px;
+            font-size: 12px;
+            left: 0;
+        }
+    </style>
+@endsection
+
+@section('js')
+
+    <script src="/assets/js/bootstrap.min.js"></script>
+    <script>
+        $('[data-toggle="popover"]').popover({
+            html: true,
+            trigger: "hover"
+        });
+
+        var Copy = {
+            init: function(obj, text) {
+
+                $("body").append("<div style='position:absolute; top:-1000px; '><input type='text' id='copyText' value='" + text + "'></div>");
+
+                var copyText = document.getElementById("copyText");
+
+                copyText.select();
+
+                document.execCommand("copy");
+
+                $("#copyText").parent().remove();
+
+                obj.append('<span class="copied">Copied</span>');
+
+                delay(function() {
+                    $(".copied").remove();
+                }, 1000);
+            }
+        }
+
+    </script>
 @endsection
