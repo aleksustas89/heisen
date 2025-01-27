@@ -4,7 +4,84 @@
 
 @section('content')
 
+<div class="row mt-3">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Процентное соотношение заказов по цветам</h4>
+            </div>
+            <div class="card-body">
+                <div class="">
+                    <div id="apex_pie1" class="apex-charts"></div>
+                </div>                                        
+            </div>
+        </div>
+    </div>    
+    <div class="col-lg-8">
+        <div class="row"> 
 
+            <div class="col-lg-4 col-md-6">
+                <div class="card overflow-hidden">
+                    <div class="card-body">
+                        <div class="row d-flex">
+                            <div class="col-3">
+                                <i class="ti ti-users font-36 align-self-center text-dark"></i>
+                            </div>
+                            <div class="col-12 ms-auto align-self-center" style="min-height: 50px;">
+                                <div id="dash_spark_1" class="mb-3" style="min-height: 50px;"></div>
+                            </div>
+                            <div class="col-12 ms-auto align-self-center">
+                                <h3 class="text-dark my-0 font-22 fw-bold">{{ $clients_count }}</h3>
+                                <p class="text-muted mb-0 fw-semibold">Пользователей</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>                                   
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card overflow-hidden">
+                    <div class="card-body">
+                        <div class="row d-flex">
+                            <div class="col-3">
+                                <i class="ti ti-activity font-36 align-self-center text-dark"></i>
+                            </div>
+                            <div class="col-12 ms-auto align-self-center">
+                                <div id="dash_spark_3" class="mb-3" style="min-height: 50px;"></div>
+                            </div>
+                            <div class="col-12 ms-auto align-self-center">
+                                <h3 class="text-dark my-0 font-22 fw-bold">{{ \App\Services\Helpers\Str::price($orders_sum) }} ₽</h3>
+                                <p class="text-muted mb-0 fw-semibold">Общий доход</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>                               
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="card overflow-hidden">
+                    <div class="card-body">
+                        <div class="row d-flex">
+                            <div class="col-3">
+                                <i class="ti ti-confetti font-36 align-self-center text-dark"></i>
+                            </div><!--end col-->
+                            <div class="col-auto ms-auto align-self-center">
+
+                            </div><!--end col-->
+                            <div class="col-12 ms-auto align-self-center">
+                                <div id="dash_spark_4" class="mb-3" style="min-height: 50px;"></div>
+                            </div><!--end col-->
+                            <div class="col-12 ms-auto align-self-center">
+                                <h3 class="text-dark my-0 font-22 fw-bold">{{ $orders_count }}</h3>
+                                <p class="text-muted mb-0 fw-semibold">Количество заказов</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>                                 
+            </div>                                                                
+        </div>
+    </div>
+</div>
 
 <div class="row mt-3">
     <div class="col-12">
@@ -351,4 +428,101 @@
         }
 
     </script>
+
+
+    <script src="/assets/plugins/apexcharts/apexcharts.min.js"></script>
+
+    <script>
+
+        var aLabels = [@foreach($colors as $color) "{{ $color['name'] }}", @endforeach],
+            aColors = [@foreach($colors as $color) "{{ $color['color'] }}", @endforeach],
+            aSeries = [@foreach($colors as $color) {{ $color['count'] }}, @endforeach];
+
+        var options = {
+            chart: {
+                height: 500,
+                type: 'pie',
+            }, 
+            stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+            },
+            series: aSeries,
+            labels: aLabels,
+            colors: aColors,
+            legend: {
+                show: true,
+                position: 'bottom',
+                horizontalAlign: 'center',
+                verticalAlign: 'middle',
+                floating: false,
+                fontSize: '14px',
+                offsetX: 0,
+                offsetY: 6
+            },
+            responsive: [{
+                breakpoint: 600,
+                options: {
+                    chart: {
+                        height: 240
+                    },
+                    legend: {
+                        show: false
+                    },
+                }
+            }]
+        }
+        
+        var chart = new ApexCharts(
+            document.querySelector("#apex_pie1"),
+            options
+        );
+        
+        chart.render();
+
+
+
+
+        // var dash_spark_1 = {
+    
+        //     chart: {
+        //         type: 'area',
+        //         height: 50,
+        //         sparkline: {
+        //             enabled: true
+        //         },
+        //     },
+        //     stroke: {
+        //         curve: 'smooth',
+        //         width: 2
+        //     },
+        //     fill: {
+        //         opacity: 1,
+        //         gradient: {
+        //         shade: '#2c77f4',
+        //         type: "horizontal",
+        //         shadeIntensity: 0.5,
+        //         inverseColors: true,
+        //         opacityFrom: 0.1,
+        //         opacityTo: 0.1,
+        //         stops: [0, 80, 100],
+        //         colorStops: []
+        //     },
+        //     },
+        //     series: [{
+        //         data: [4, 8, 5, 10, 4, 16, 5, 11, 6, 11, 30, 10]
+        //     }],
+        //     yaxis: {
+        //         min: 0
+        //     },
+        //     colors: ['rgba(252, 122, 49, .1)'],
+        //     tooltip: {
+        //     show: false,
+        //     }
+        // }
+        // new ApexCharts(document.querySelector("#dash_spark_1"), dash_spark_1).render();
+
+    </script>
+
 @endsection

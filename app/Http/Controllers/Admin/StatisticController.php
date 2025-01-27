@@ -8,7 +8,7 @@ use App\Models\ShopOrderItem;
 use App\Models\ShopItemListItem;
 use App\Models\PropertyValueInt;
 use App\Models\ShopItem;
-use PhpParser\Node\Expr\List_;
+
 
 class StatisticController extends Controller
 {
@@ -20,15 +20,14 @@ class StatisticController extends Controller
     public function index(Request $request)
     {
 
-        //dd($request->shop_items);
-
         $ShopOrderItems = ShopOrderItem::selectRaw('shop_item_id, SUM(quantity) AS quantity')
-                                ->groupBy("shop_item_id")
-                                ->orderBy("quantity", "DESC");
+                                ->join("shop_orders", "shop_orders.id", "=", "shop_order_items.shop_order_id")
+                                ->where("shop_order_items.deleted", 0)
+                                ->where("shop_orders.deleted", 0)
+                                ->groupBy("shop_item_id");
 
         if (!empty($request->datetime_from) || !empty($request->datetime_to)) {
-            $ShopOrderItems
-                ->join("shop_orders", "shop_orders.id", "=", "shop_order_items.shop_order_id");
+
 
             if (!empty($request->datetime_from)) {
                 $ShopOrderItems->where("shop_orders.created_at", ">=", date("Y-m-d H:i:s", strtotime($request->datetime_from)));
@@ -120,6 +119,9 @@ class StatisticController extends Controller
         foreach (ShopItemListItem::where("shop_item_list_id", $this->color_shop_item_list_id)->where("deleted", 0)->get() as $Color) {
             $aColors[$Color->id] = $Color;
         }
+
+        $aQuantity = array_column($aShopItems, 'quantity');
+        array_multisort($aQuantity, SORT_DESC, $aShopItems);
 
         return view("admin.statistic.index", [
             "breadcrumbs" => $this->breadcrumbs(),
