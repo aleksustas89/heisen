@@ -410,31 +410,31 @@ var Spiner = {
     }
 }
 
-$.datepicker.setDefaults({
-	dateFormat: 'dd.mm.yy', 
-	showAnim: "fold",
-	showTodayButton: true, 
-	showButtonPanel: true,
-	showClear: true,
-	monthNames: [ "Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сен", "Окт", "Ноя", "Дек" ],
-	dayNamesMin: [ "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб" ],
-	firstDay: 1,
-	changeYear: true,
-	onSelect: function(datetext) {
+// $.datepicker.setDefaults({
+// 	dateFormat: 'dd.mm.yy', 
+// 	showAnim: "fold",
+// 	showTodayButton: true, 
+// 	showButtonPanel: true,
+// 	showClear: true,
+// 	monthNames: [ "Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сен", "Окт", "Ноя", "Дек" ],
+// 	dayNamesMin: [ "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб" ],
+// 	firstDay: 1,
+// 	changeYear: true,
+// 	onSelect: function(datetext) {
 		
-		var now = new Date();
+// 		var now = new Date();
 
-		var h = now.getHours();
-		h = (h < 10) ? ("0" + h) : h;
+// 		var h = now.getHours();
+// 		h = (h < 10) ? ("0" + h) : h;
 
-		var m = now.getMinutes();
-		m = (m < 10) ? ("0" + m) : m;
+// 		var m = now.getMinutes();
+// 		m = (m < 10) ? ("0" + m) : m;
 
-		var s = now.getSeconds();
-		s = (s < 10) ? ("0" + s) : s;
+// 		var s = now.getSeconds();
+// 		s = (s < 10) ? ("0" + s) : s;
 
-		datetext = datetext + " " + h + ":" + m + ":" + s;
+// 		datetext = datetext + " " + h + ":" + m + ":" + s;
 
-		$(this).val(datetext);
-	}
-});
+// 		$(this).val(datetext);
+// 	}
+// });

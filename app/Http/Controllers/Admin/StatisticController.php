@@ -26,15 +26,18 @@ class StatisticController extends Controller
                                 ->where("shop_orders.deleted", 0)
                                 ->groupBy("shop_item_id");
 
-        if (!empty($request->datetime_from) || !empty($request->datetime_to)) {
+        if (!empty($request->datetime)) {
 
+            $aDatetime = explode(" - ", $request->datetime);
 
-            if (!empty($request->datetime_from)) {
-                $ShopOrderItems->where("shop_orders.created_at", ">=", date("Y-m-d H:i:s", strtotime($request->datetime_from)));
+            list($datetime_from, $datetime_to) = $aDatetime;
+
+            if (!empty($datetime_from)) {
+                $ShopOrderItems->where("shop_orders.created_at", ">=", date("Y-m-d H:i:s", strtotime(trim($datetime_from))));
             }
 
-            if (!empty($request->datetime_to)) {
-                $ShopOrderItems->where("shop_orders.created_at", "<=", date("Y-m-d H:i:s", strtotime($request->datetime_to)));
+            if (!empty($datetime_to)) {
+                $ShopOrderItems->where("shop_orders.created_at", "<=", date("Y-m-d H:i:s", strtotime(trim($datetime_to))));
             }
 
         }

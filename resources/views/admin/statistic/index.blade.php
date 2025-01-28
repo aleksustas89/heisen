@@ -59,32 +59,32 @@
                                 
                             </div>
     
-                            <div class="mt-3">
-    
-                                <div>
-                                    <b>Время/Дата</b>
+                            <div class="row mt-3">
+
+                                <div class="col-6">
+                                    <div>
+                                        <b>Цена</b>
+                                    </div>
+
+                                    <div class="d-flex gap-1 align-items-center">
+                                        <input type="text" name="price_from" value="{{ request()->price_from ?? '' }}" class="form-control" placeholder="от">
+        
+                                        <input type="text" name="price_to" value="{{ request()->price_to ?? '' }}" class="form-control" placeholder="до">
+                                    </div>
                                 </div>
-    
-                                <div class="d-flex gap-1 align-items-center">
-                                    <input type="datetime-local" name="datetime_from" value="{{ request()->datetime_from ?? '' }}" class="form-control" placeholder="Дата от">
-    
-                                    <input type="datetime-local" name="datetime_to" value="{{ request()->datetime_to ?? '' }}" class="form-control" placeholder="Дата до">
+
+                                <div class="col-6">
+                                    <div>
+                                        <b>Время/Дата</b>
+                                    </div>
+        
+                                    <div class="d-flex gap-1 align-items-center">
+                                        <input id="date_range" readonly name="datetime" value="{{ request()->datetime ?? '' }}" class="form-control" placeholder="Дата">
+                                    </div>
                                 </div>
     
                             </div>
-    
-                            <div class="mt-3">
-    
-                                <div>
-                                    <b>Цена</b>
-                                </div>
-    
-                                <div class="d-flex gap-1 align-items-center">
-                                    <input type="text" name="price_from" value="{{ request()->price_from ?? '' }}" class="form-control" placeholder="Цена от">
-    
-                                    <input type="text" name="price_to" value="{{ request()->price_to ?? '' }}" class="form-control" placeholder="Цена до">
-                                </div>
-                            </div>
+
                         </div>
 
                         <div class="col-6">
@@ -193,7 +193,54 @@
 
 @section("js")
 
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js" crossorigin="anonymous"></script>
+
+    <script src="/assets/js/jquery.datepicker.extension.range.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+
     <script>
+
+        $(function() {
+            $('#date_range').datepicker({
+                range: 'period', 
+                numberOfMonths: 2,
+                dateFormat: 'dd.mm.yy', 
+                onSelect: function(dateText, inst, extensionRange) {
+                    $('#date_range').val(extensionRange.startDateText + ' - ' + extensionRange.endDateText);
+                    addClearButton(inst.input[0], inst); 
+                },
+                monthNames: [ "Янв", "Фев", "Мар", "Апр", "Май", "Июнь", "Июль", "Авг", "Сен", "Окт", "Ноя", "Дек" ],
+                dayNamesMin: [ "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб" ],
+                firstDay: 1,
+                showAnim: "fold",
+                showTodayButton: true, 
+                showButtonPanel: true,
+        
+                beforeShow: function (input, inst) {
+                    addClearButton(input, inst);
+                },
+                onChangeMonthYear: function (year, month, inst) {
+                    addClearButton(inst.input[0], inst); 
+                }
+            });
+
+            function addClearButton(input, inst) {
+                setTimeout(function () {
+                    var buttonPane = $(inst.dpDiv).find(".ui-datepicker-buttonpane");
+                    if (buttonPane.find(".ui-datepicker-clear").length === 0) {
+                        $("<button>", {
+                            text: "Очистить",
+                            class: "ui-datepicker-clear ui-state-default ui-priority-primary ui-corner-all",
+                            click: function () {
+                                $(input).val('');
+                                $(input).datepicker("hide"); 
+                            }
+                        }).appendTo(buttonPane);
+                    }
+                }, 1);
+            }
+
+        });
 
         var SwitchAll = {
             init: function(elem) {
