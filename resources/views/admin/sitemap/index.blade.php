@@ -69,7 +69,20 @@
                 @endif
                 
             </div>                                                        
-        </div>                                             
+        </div> 
+        
+        <div class="file-box">
+            <div class="text-center">
+                <a target="_blank" href="{{ route('getCsvCatalog') }}"><i class="lar la-file-excel text-danger ico"></i></a>
+                <h6 class="text-truncate">Csv Catalog</h6>
+                @if (!empty($csvInfo["date"]))
+                    <small class="text-muted">
+                        {{ $csvInfo["date"] }} / {{ $csvInfo["filesize"] }}
+                    </small>
+                @endif
+            </div>                                                        
+        </div>
+        
     </div> 
 
 @endsection
@@ -78,7 +91,7 @@
 
     <style>
         .file-box-content .file-box i.ico {font-size: 100px}
-        .file-box-content .file-box {width: 200px}
+        .file-box-content .file-box {width: 225px}
     </style>
 
 @endsection

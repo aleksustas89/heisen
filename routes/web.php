@@ -154,6 +154,7 @@ Route::post('/admin/login', [App\Http\Controllers\Admin\LoginController::class, 
 Route::get('sitemap', [App\Http\Controllers\Admin\SitemapController::class, 'getSitemap'])->name("getSitemap");
 Route::get('imagemap', [App\Http\Controllers\Admin\SitemapController::class, 'getImagemap'])->name("getImagemap");
 Route::get('yml', [App\Http\Controllers\Admin\SitemapController::class, 'getYml'])->name("getYml");
+Route::get('csv-catalog', [App\Http\Controllers\Admin\SitemapController::class, 'getCsvCatalog'])->name("getCsvCatalog");
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

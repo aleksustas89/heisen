@@ -29,6 +29,10 @@ class SitemapController extends Controller
 
     protected $ymlFilename = 'yml.xml';
 
+    protected $csvCatalogFilename = 'catalog.csv';
+
+    protected $csvCatalog = NULL;
+
     protected $host = NULL;
 
     public function __construct()
@@ -36,6 +40,7 @@ class SitemapController extends Controller
         $this->sitemap  = public_path() . '/' . $this->sitemapFilename;
         $this->imagemap = public_path() . '/' . $this->imagemapFilename;
         $this->yml = public_path() . '/' . $this->ymlFilename;
+        $this->csvCatalog = public_path() . '/' . $this->csvCatalogFilename;
 
         $this->host = 'https://' . env('APP_NAME');
     }
@@ -59,7 +64,12 @@ class SitemapController extends Controller
                 "date" => file_exists($this->yml) && !is_null($Sitemap = Sitemap::whereTag("Yml")->first()) ? date("d.m.Y H:i", strtotime($Sitemap->updated_at)) : '',
                 "filesize" => file_exists($this->yml) ? File::convertBytes(filesize($this->yml)) : '',
                 "edit" => true
-            ]
+            ],
+            "csvInfo" => [
+                "date" => file_exists($this->csvCatalog) && !is_null($Sitemap = Sitemap::whereTag("csvCatalog")->first()) ? date("d.m.Y H:i", strtotime($Sitemap->updated_at)) : '',
+                "filesize" => file_exists($this->csvCatalog) ? File::convertBytes(filesize($this->csvCatalog)) : '',
+                "edit" => false
+            ],
         ]);
     }
 
@@ -195,7 +205,7 @@ class SitemapController extends Controller
 
             $categories = $domDocument->createElement('categories');
 
-            foreach (ShopGroup::where("active", 1)->get() as $ShopGroup) {
+            foreach (ShopGroup::where("active", 1)->where("deleted", 0)->get() as $ShopGroup) {
                 $category = $domDocument->createElement('category', $ShopGroup->name);
                 $categoryId = $domDocument->createAttribute('id');
                 $categoryId->value = $ShopGroup->id;
@@ -215,7 +225,7 @@ class SitemapController extends Controller
 
             $offers = $domDocument->createElement('offers');
 
-            foreach (ShopItem::where("active", 1)->get() as $ShopItem) {
+            foreach (ShopItem::where("active", 1)->where("deleted", 0)->get() as $ShopItem) {
                 $offer = $domDocument->createElement('offer');
                 $offerId = $domDocument->createAttribute('id');
                 $offerId->value = $ShopItem->id;
@@ -375,7 +385,7 @@ class SitemapController extends Controller
                 $urlset->appendChild($url);
             }
     
-            foreach (ShopGroup::where("active", 1)->get() as $ShopGroup) {
+            foreach (ShopGroup::where("active", 1)->where("deleted", 0)->get() as $ShopGroup) {
                 $url = $domDocument->createElement('url');
     
                 $loc = $domDocument->createElement('loc', $this->host . $ShopGroup->url);
@@ -389,7 +399,7 @@ class SitemapController extends Controller
                 $urlset->appendChild($url);
             }
     
-            foreach (ShopItem::where("active", 1)->get() as $ShopItem) {
+            foreach (ShopItem::where("active", 1)->where("deleted", 0)->get() as $ShopItem) {
                 $url = $domDocument->createElement('url');
     
                 $loc = $domDocument->createElement('loc', $this->host . $ShopItem->url);
@@ -521,6 +531,70 @@ class SitemapController extends Controller
 
         } else {
             return response()->to(route("adminSitemap"))->withError("Объект не найден");
+        }
+    }
+
+    public function getCsvCatalog()
+    {
+        if (!is_null($csvCatalog = Sitemap::whereTag("csvCatalog")->first())) {
+            if (file_exists($this->csvCatalog)) {
+
+                $LastChangedShopItem  = ShopItem::where("active", 1)->where("deleted", 0)->where("updated_at", ">", $csvCatalog->updated_at)->orderBy("updated_at", "DESC")->first();
+  
+                if (!is_null($LastChangedShopItem)) {
+                    $this->setCsvCatalog();
+                }
+
+            } else {
+                $this->setCsvCatalog();
+            }
+    
+            return response()->redirectTo("/" . $this->csvCatalogFilename);
+        } else {
+            return response()->to(route("adminSitemap"))->withError("Объект не найден");
+        }
+    }
+
+    public function setCsvCatalog()
+    {
+        if (!is_null($csvCatalog = Sitemap::whereTag("csvCatalog")->first())) {
+
+            $aList = [
+                ['Url', 'Title', 'Offer minimal price', 'Currency', 'Image url 1', 'Image url 2', 'Image url 3', 'Image url 4', 'Image url 5']
+            ];
+
+            foreach (ShopItem::where("active", 1)->where("deleted", 0)->where("modification_id", 0)->get() as $ShopItem) {
+
+                $List = [];
+
+                $List[] = $this->host . $ShopItem->url;
+                $List[] = $ShopItem->name;
+                $List[] = $ShopItem->price();
+                $List[] = 'RUB';
+
+                $k = 0;
+                foreach ($ShopItem->getImages() as $image) {
+
+                    if ($k < 5) {
+                        $List[] = $this->host . $image['image_large'];
+                    }
+                    $k++;
+                }
+
+                $aList[] = $List;
+            }
+            
+            $fp = fopen($this->csvCatalogFilename, 'w');
+
+            // Преобразуем в Windows-1251
+            foreach ($aList as $fields) {
+                fputcsv($fp, array_map(fn($v) => iconv('UTF-8', 'Windows-1251//TRANSLIT', $v), $fields), ',');
+            }
+            
+            fclose($fp);
+
+            $csvCatalog->updated_at = date("Y-m-d H:i:s");
+            $csvCatalog->save();
         }
     }
 }
