@@ -20,6 +20,8 @@
         <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>E-mail:</b> {{ $ShopOrder->email }}</p>
         <p style="font-size: 16px; line-height: 18px; font-family: 'Open Sans', sans-serif;"><b>Способ доставки:</b> {{ $ShopOrder->ShopDelivery->name }}</p>
 
+
+        
         @if ($ShopOrder->shop_delivery_id == 7)
             @php
             $value = \App\Models\ShopDeliveryFieldValue::where("shop_order_id", $ShopOrder->id)->where("shop_delivery_field_id", 10)->first();

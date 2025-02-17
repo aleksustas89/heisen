@@ -169,7 +169,6 @@
                                             @endif
 
                                         </div>
-
                                     </li>
 
                                     <li>
@@ -203,6 +202,7 @@
                                                 <button class="uk-modal-close-outside" type="button" uk-close></button>
                                             </div>
                                         </div>
+
                                     </li>
                                  
                                     <li>     
@@ -353,7 +353,7 @@
                 let boxResult = '';
 
                 boxResult += '<p>Адрес доставки: ' + result.address + '</p>';
-                boxResult += '<p>Ориентировочная цена: ' + result.price + ' ₽</p>';
+                //boxResult += '<p>Ориентировочная цена: ' + result.price + ' ₽</p>';
 
                 $("[name='delivery_8_id']").val(result.id);
                 $("[name='delivery_8_city']").val(result.name);

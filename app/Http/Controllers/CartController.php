@@ -270,6 +270,10 @@ class CartController extends Controller
             $ShopOrder->not_call = $request->not_call ?? 0;
             $ShopOrder->guid = Guid::get();
 
+            if ($request->cash_on_delivery) {
+                $ShopOrder->cash_on_delivery = 1;
+            }
+
             $ShopOrder->save();
 
             $weight = $length = $height = $width = 0;
