@@ -114,11 +114,6 @@ class ShopFilterController extends Controller
             if (!$shopFilter) {
                 $shopFilter = new ShopFilter();
                 $shopFilter->save();
-    
-                $Page = new Page();
-                $Page->type = 6;
-                $Page->entity_id = $shopFilter->id;
-                $Page->save();
             }
     
             $shopFilter->seo_title = $request->seo_title;

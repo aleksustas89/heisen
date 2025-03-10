@@ -185,11 +185,6 @@ class ShopItemController extends Controller
             $shopItem = new ShopItem();
             $shopItem->save();
 
-            $Page = new Page();
-            $Page->type = 2;
-            $Page->entity_id = $shopItem->id;
-            $Page->save();
-
         } else {
 
             if ($request->shop_group_id != $shopItem->shop_group_id) {

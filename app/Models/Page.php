@@ -27,6 +27,16 @@ class Page extends Model
      * 6: shop_filters
     */
 
+    public static $aObjectsTypes = [
+        'Structure' => 1,
+        'ShopGroup' => 2,
+        'ShopItem'  => 3,
+        'Informationsystem' => 4,
+        'InformationsystemGroup' => 5,
+        'InformationsystemItem'  => 6,
+        'ShopFilter'  => 7,
+    ];
+
     public function ShopItem()
     {
         return $this->belongsTo(ShopItem::class, 'entity_id');
@@ -37,15 +47,15 @@ class Page extends Model
         return $this->belongsTo(ShopGroup::class, 'entity_id');
     }
 
-    // public function Informationsystem()
-    // {
-    //     return $this->belongsTo(Informationsystem::class, 'entity_id');
-    // }
+    public function Informationsystem()
+    {
+        return $this->belongsTo(Informationsystem::class, 'entity_id');
+    }
 
-    // public function InformationsystemItem()
-    // {
-    //     return $this->belongsTo(InformationsystemItem::class, 'entity_id');
-    // }
+    public function InformationsystemItem()
+    {
+        return $this->belongsTo(InformationsystemItem::class, 'entity_id');
+    }
 
     public function Structure()
     {
@@ -55,6 +65,16 @@ class Page extends Model
     public function ShopFilter()
     {
         return $this->belongsTo(ShopFilter::class, 'entity_id');
+    }
+
+    public static function getType($Object)
+    {
+
+        $aObjects = explode('\\', $Object);
+
+        $ClassName = end($aObjects);
+        
+        return isset(self::$aObjectsTypes[$ClassName]) ? self::$aObjectsTypes[$ClassName] : false;
     }
 
 }
