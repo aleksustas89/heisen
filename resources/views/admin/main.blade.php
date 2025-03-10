@@ -100,6 +100,35 @@
                                     <span>Интернет-магазин</span>
                                 </a>
                             </li>
+
+                            @php
+                                $Informationsystems = \App\Models\Informationsystem::get();
+                            @endphp
+
+                            @if (count($Informationsystems) > 0)
+
+                                <li class="nav-item">
+                                    <a class="nav-link collapsed" href="#sidebarInformationsystems" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarIcons">
+                                        <i class="ti ti-file-diff menu-icon"></i>
+                                        <span>Инфо. системы</span>
+                                    </a>
+                                    <div class="collapse" id="sidebarInformationsystems" style="">
+                                        <ul class="nav flex-column">
+                                            @foreach ($Informationsystems as $Informationsystem)
+                                                @php
+                                                $informationsystemName = $Informationsystem->name;
+                                                $name = !empty($informationsystemName) ? $informationsystemName : $Informationsystem->path;
+                                                @endphp
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="{{ route('informationsystem.show', ['informationsystem' => $Informationsystem->id]) }}">{{ $name }}</a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </li>
+
+                            @endif
+
                             <li class="nav-item">
                                 <a href="{{ route('statistic.index') }}" class="nav-link">
                                     <i class="ti ti-brand-google-analytics menu-icon"></i>

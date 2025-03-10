@@ -160,11 +160,6 @@ class StructureController extends Controller
         if (!$structure) {
             $structure = new Structure();
             $structure->save();
-
-            $Page = new Page();
-            $Page->type = 0;
-            $Page->entity_id = $structure->id;
-            $Page->save();
         }
 
         if (!empty($request->path)) {

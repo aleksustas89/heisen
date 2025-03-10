@@ -50,6 +50,14 @@ return [
             'throw' => false,
         ],
 
+        'informationsystem_3' => [
+            'driver' => 'local',
+            'root' => storage_path('app/informationsystem_3'),
+            'url' => env('APP_URL').'/informationsystem_3',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -78,6 +86,7 @@ return [
     'links' => [
         public_path('storage') => storage_path('app/public'),
         public_path('shop') => storage_path('app/shop'),
+        public_path('informationsystem_3') => storage_path('app/informationsystem_3'),
     ],
 
 ];

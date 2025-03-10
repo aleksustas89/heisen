@@ -48,7 +48,9 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
             'shop.shop-filter' => 'ShopFilterController',
             'trash' => 'TrashController',
             'sitemap' => 'SitemapController',
-            'statistic' => 'StatisticController'
+            'statistic' => 'StatisticController',
+            'informationsystem' => 'InformationsystemController',
+            'informationsystem.informationsystem-item' => 'InformationsystemItemController',
         ]);
 
         Route::prefix("/statistic")->group(function() {
@@ -60,6 +62,20 @@ Route::group(['middleware' => ['auth', 'authForceLogoutUnActive',], 'namespace' 
         Route::prefix("search")->controller('SearchController')->group(function() {
             Route::get('/', 'index')->name("adminSearch");
             Route::get('/indexing', 'indexing')->name("adminSearchIndexing");
+        });
+
+        Route::prefix("informationsystem")->group(function() {
+            Route::prefix("informationsystem-item")->controller('InformationsystemItemController')->group(function() {
+                Route::prefix("{informationsystemItem}")->group(function() {
+                    Route::get('/copy', 'copy')->name("copyInformationsystemItem"); 
+                    Route::prefix("image")->group(function() {
+                        Route::get('/{informationsystemItemImage}/delete', 'deleteImage')->name("deleteInformationsystemItemImage");
+                        Route::get('/sorting', 'sortInformationsystemItemImages')->name("sortingInformationsystemItemImages");
+                    });
+                    Route::post('image-upload', 'uploadInformationsystemItemImage')->name("uploadInformationsystemItemImage");
+                    Route::get('gallery', 'getInformationsystemItemGallery')->name("getInformationsystemItemGallery");
+                });
+            });
         });
 
         Route::prefix("shop")->group(function() {
@@ -251,6 +267,5 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
 
 //главная страница
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name("home");
-
 
 Route::get('/{any}', 'App\Http\Controllers\PageController@index')->where('any', '.*');

@@ -5,8 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
-use App\Models\ShopCurrency;
 use App\Http\Controllers\ShopCurrencyController;
+use Illuminate\Support\Facades\App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        App::setLocale('ru');
 
         Paginator::defaultView('vendor.pagination.bootstrap-5');
 

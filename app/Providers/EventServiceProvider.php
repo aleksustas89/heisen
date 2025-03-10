@@ -6,6 +6,14 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use App\Models\InformationsystemItem;
+use App\Models\Structure;
+use App\Models\ShopGroup;
+use App\Models\ShopItem;
+use App\Observers\StructureObserver;
+use App\Observers\ShopGroupObserver;
+use App\Observers\ShopItemObserver;
+use App\Observers\InformationsystemItemObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -25,7 +33,10 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Structure::observe(new StructureObserver);
+        ShopGroup::observe(new ShopGroupObserver);
+        ShopItem::observe(new ShopItemObserver);
+        InformationsystemItem::observe(new InformationsystemItemObserver);
     }
 
     /**

@@ -90,11 +90,6 @@ class ShopGroupController extends Controller
         if (!$shopGroup) {
             $shopGroup = new ShopGroup();
             $shopGroup->save();
-
-            $Page = new Page();
-            $Page->type = 1;
-            $Page->entity_id = $shopGroup->id;
-            $Page->save();
         }
 
         $oShop = Shop::get();
