@@ -19,16 +19,28 @@ use App\Models\CdekOffice;
 class ShopOrderController extends Controller
 {
 
-    public static $item_on_page = 50;
+    public static $item_on_page = 100;
 
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+
+        $ShopOrder = ShopOrder::orderBy("id", "Desc")->where("deleted", 0);
+
+        if ($request->global_search) {
+            $ShopOrder
+                ->where("id", $request->global_search)
+                ->orWhere("name", "LIKE", "%" . $request->global_search . "%")
+                ->orWhere("surname", "LIKE", "%" . $request->global_search . "%")
+                ->orWhere("email", $request->global_search)
+                ->orWhere("phone", $request->global_search);
+        }
+
         return view('admin.shop.order.index', [
             'breadcrumbs' => ShopController::breadcrumbs() + self::breadcrumbs(),
-            'orders' => ShopOrder::orderBy("created_at", "Desc")->where("deleted", 0)->paginate(self::$item_on_page),
+            'orders' => $ShopOrder->paginate(self::$item_on_page),
         ]);
     }
 

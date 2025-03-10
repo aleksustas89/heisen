@@ -265,7 +265,7 @@
                                                                 <div class="row">
                                                                     <div class="col-12">
                                                                         <div class="form-check form-switch form-switch-success">
-                                                                            <input value="1" @if ($order->shop_payment_system_id == 5) checked @endif class="form-check-input" name="cash_on_delivery" type="checkbox" id="cash_on_delivery">
+                                                                            <input value="1" @if ($order->shop_payment_system_id == 7) checked @endif class="form-check-input" name="cash_on_delivery" type="checkbox" id="cash_on_delivery">
                                                                             <label for="cash_on_delivery">
                                                                                 Оплата при получении
                                                                             </label>
@@ -342,7 +342,7 @@
                                                                     <div class="row my-1">
                                                                         <div class="col-12">
                                                                             <div class="form-check form-switch form-switch-success">
-                                                                                <input value="1" @if ($order->shop_payment_system_id == 5) checked @endif class="form-check-input" name="pod" type="checkbox" id="pod">
+                                                                                <input value="1" @if ($order->shop_payment_system_id == 7) checked @endif class="form-check-input" name="pod" type="checkbox" id="pod">
                                                                                 <label for="pod">
                                                                                     Оплата при получении
                                                                                 </label>
@@ -375,7 +375,7 @@
                                                                 <input type="hidden" name="delivery_1_area" value="{{ $aDeliveryValues[28] ?? '' }}" />
                                                                 <input type="hidden" name="delivery_1_city" value="{{ $aDeliveryValues[29] ?? '' }}" />
                                                                 
-                                                                @if ($order->shop_payment_system_id == 5)
+                                                                @if ($order->shop_payment_system_id == 7)
                                                                     <b>Оплата при получении</a>
                                                                 @endif
                                                                 

@@ -33,6 +33,16 @@
             <div class="card">
                 <div class="card-header">
                     <a href="{{ route("shop-order.create") }}" class="btn btn-success"><i class="fas fa-plus icon-separator"></i>Добавить</a>
+
+                    <div>
+                        <form>
+                            <div class="mb-1 mt-1 position-relative">
+                                <input type="text" value="{{ request()->global_search }}" name="global_search" class="form-control" placeholder="Поиск" >
+                                @if (!empty(request()->global_search))<a class="clean-input" href="javascript:void(0)" onclick="$('[name=\'global_search\']').val(''); $(this).parents('form').submit()"><i class="las la-times-circle"></i></a>@endif
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-bordered">
