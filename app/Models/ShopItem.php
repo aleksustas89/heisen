@@ -126,7 +126,13 @@ class ShopItem extends Model
 
         $path = $this->shortPath();
         
-        foreach ($this->ShopItemImages()->where("image_small", "!=", '')->orderBy("sorting", "asc")->get() as $k => $ShopItemImage) {
+        foreach ($this->ShopItemImages()
+                    //->where("image_small", "!=", '')
+                    ->where(function($query) {
+                        $query->where('image_small', "!=", '')
+                              ->orWhere('file', "!=", '');
+                    })
+                    ->orderBy("sorting", "asc")->get() as $k => $ShopItemImage) {
 
             if (!empty($ShopItemImage->image_large) && Storage::disk(Shop::$storage)->exists($path . $ShopItemImage->image_large)) {
                 
@@ -139,8 +145,10 @@ class ShopItem extends Model
                 if (!empty($ShopItemImage->image_small) && Storage::disk(Shop::$storage)->exists($path . $ShopItemImage->image_small)) {
                     $aReturn[$ShopItemImage->id]["image_small"] = Shop::$store_path . $path . $ShopItemImage->image_small;
                 }
-            } else {
-                $ShopItemImage->delete();
+            } 
+            
+            if (!empty($ShopItemImage->file) && Storage::disk(Shop::$storage)->exists($path . $ShopItemImage->file)) {
+                $aReturn[$ShopItemImage->id]["file"] = Shop::$store_path . $path . $ShopItemImage->file;
             }
         }
 

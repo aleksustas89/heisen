@@ -67,143 +67,166 @@
 
                         <div class="tab-pane active" id="main">
 
-                            <div  class="mb-3">
+                            <div class="mb-3">
                                 <label class="mb-1">Название товара</label>
                                 <input id="name" value="{{ $shopItem->name }}" type="text" name="name" class="form-control form-control-lg" placeholder="Название товара" data-min="1"  data-max="255" data-required="1">
                                 <div id="name_error" class="fieldcheck-error"></div>
                             </div>
 
-                            <div  class="mb-3">
-                                <label class="mb-1">Группа</label>
-                                <select name="shop_group_id" class="form-control">
-                                    <option value="0">...</option>
-                                    @php
-                                        \App\Http\Controllers\ShopGroupController::showTreeGroupsAsOptions($shopItem->shop_group_id);
-                                    @endphp
-                                </select>
-                            </div>
+                            <div class="mb-3">
+                                <div class="mb-1">Тип товара</div>
 
-                            <div class="mb-5">
-                                <label class="mb-1">Дополнительные группы</label>
-                                <input type="text" name="shortcut_group_id" class="form-control" placeholder="Пожалуйста, введите еще хотя бы 2 символа">
-                                <div class="shortcut_groups position-absolute">
-
-                                    @include("admin.shop.shortcuts", ["shopItem" => $shopItem])
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-4">
-                                    <label class="mb-1">Сортировка</label>
-                                    <input type="text" value="{{ $shopItem->sorting }}" name="sorting" class="form-control" placeholder="Сортировка">
-                                </div>
-                                <div class="col-4">
-                                    <label class="mb-1">Артикул</label>
-                                    <input id="marking" value="{{ $shopItem->marking }}" type="text" name="marking" class="form-control" placeholder="Артикул" data-min="1"  data-max="255" data-required="1">
-                                    <div id="marking_error" class="fieldcheck-error"></div>
-                                </div>
-                                <div class="col-4">
-                                    <label class="mb-1">Путь</label>
-                                    <input type="text" name="path" value="{{ $shopItem->path }}" class="form-control" placeholder="Путь">
-                                </div>
+                                <input value="{{ $shopItem->type }}" type="hidden" name="type">
                                 
+                                <ul class="nav" role="tablist">
+                                    <li class="nav-item">
+                                        <a onclick="$('[name=\'type\']').val(0)" @class(["btn btn-primary mx-1", "active" => $shopItem->type == 0]) data-bs-toggle="tab" href="#type-1" role="tab" aria-selected="false">Обычный</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a onclick="$('[name=\'type\']').val(1)" @class(["btn btn-warning mx-1", "active" => $shopItem->type == 1]) data-bs-toggle="tab" href="#type-2" role="tab" aria-selected="false">Ссылка</a>
+                                    </li>                                                
+                                </ul>
+                            </div>
+
+                            <div class="tab-content">
+                                <div @class(["tab-pane", "active" => $shopItem->type == 0]) id="type-1">
+                                    <div class="mb-3">
+                                        <label class="mb-1">Группа</label>
+                                        <select name="shop_group_id" class="form-control">
+                                            <option value="0">...</option>
+                                            @php
+                                                \App\Http\Controllers\ShopGroupController::showTreeGroupsAsOptions($shopItem->shop_group_id);
+                                            @endphp
+                                        </select>
+                                    </div>
+        
+                                    <div class="mb-5">
+                                        <label class="mb-1">Дополнительные группы</label>
+                                        <input type="text" name="shortcut_group_id" class="form-control" placeholder="Пожалуйста, введите еще хотя бы 2 символа">
+                                        <div class="shortcut_groups position-absolute">
+        
+                                            @include("admin.shop.shortcuts", ["shopItem" => $shopItem])
+                                        </div>
+                                    </div>
+        
+                                    <div class="row mb-3">
+                                        <div class="col-4">
+                                            <label class="mb-1">Сортировка</label>
+                                            <input type="text" value="{{ $shopItem->sorting }}" name="sorting" class="form-control" placeholder="Сортировка">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="mb-1">Артикул</label>
+                                            <input id="marking" value="{{ $shopItem->marking }}" type="text" name="marking" class="form-control" placeholder="Артикул">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="mb-1">Путь</label>
+                                            <input type="text" name="path" value="{{ $shopItem->path }}" class="form-control" placeholder="Путь">
+                                        </div>
+                                        
+                                    
+                                    </div>
+        
+                                    <div class="row mb-3">
+                                        <div class="col-3 d-flex align-items-end">
+        
+                                            <div class="d-flex">
+        
+                                                <div class="form-check form-switch form-switch-success"> 
+                                                    <input value="1" @if ($shopItem->active == 1) checked="" @endif class="form-check-input" name="active" type="checkbox" id="active">
+                                                    <label for="active">
+                                                        Активность
+                                                    </label>
+                                                </div>
+                                              
+        
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+        
+                                            <div class="card card-warning">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Цена</h3>
+                                                </div>
+                                                <div class="card-body" style="display: block;">
+                                                    
+                                                    <div class="row form-group">
                             
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-3 d-flex align-items-end">
-
-                                    <div class="d-flex">
-
-                                        <div class="form-check form-switch form-switch-success"> 
-                                            <input value="1" @if ($shopItem->active == 1) checked="" @endif class="form-check-input" name="active" type="checkbox" id="active">
-                                            <label for="active">
-                                                Активность
-                                            </label>
-                                        </div>
-                                      
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-12">
-
-                                    <div class="card card-warning">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Цена</h3>
-                                        </div>
-                                        <div class="card-body" style="display: block;">
-                                            
-                                            <div class="row form-group">
-                    
-                                                <div class="col-2 mb-2">
-                                                    <input type="text" value="{{ $shopItem->price }}" name="price" class="form-control" placeholder="Цена" >
-                                                </div>
-                                                <div class="col-2 mb-2">
-                                                    @if ($currencies)
-                                                        <select name="shop_currency_id" class="form-select">
-                                                            @foreach ($currencies as $currency)
-                                                                @if ($currency->id == $shopItem->shop_currency_id)
-                                                                    <option selected="selected" value="{{ $currency->id }}">{{ $currency->name }}</option>
-                                                                @else
-                                                                    <option value="{{ $currency->id }}">{{ $currency->name }}</option> 
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    @endif
-                                                </div>
-                                                <div class="col-3 mb-2 d-flex align-items-end">
-                                                    <div class="d-flex">
-                                                        <div class="form-check form-switch form-switch-purple mx-3">
-                                                            <input value="1" @if($shop->apply_items_price_to_modifications == 1) checked @endif class="form-check-input" name="apply_price_to_modifications" type="checkbox" id="apply_price_to_modifications">
-                                                            <label for="apply_price_to_modifications">
-                                                                Применить цену к модификациям
-                                                            </label>
-                                                        </div>  
+                                                        <div class="col-2 mb-2">
+                                                            <input type="text" value="{{ $shopItem->price }}" name="price" class="form-control" placeholder="Цена" >
+                                                        </div>
+                                                        <div class="col-2 mb-2">
+                                                            @if ($currencies)
+                                                                <select name="shop_currency_id" class="form-select">
+                                                                    @foreach ($currencies as $currency)
+                                                                        @if ($currency->id == $shopItem->shop_currency_id)
+                                                                            <option selected="selected" value="{{ $currency->id }}">{{ $currency->name }}</option>
+                                                                        @else
+                                                                            <option value="{{ $currency->id }}">{{ $currency->name }}</option> 
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
+                                                            @endif
+                                                        </div>
+                                                        <div class="col-3 mb-2 d-flex align-items-end">
+                                                            <div class="d-flex">
+                                                                <div class="form-check form-switch form-switch-purple mx-3">
+                                                                    <input value="1" @if($shop->apply_items_price_to_modifications == 1) checked @endif class="form-check-input" name="apply_price_to_modifications" type="checkbox" id="apply_price_to_modifications">
+                                                                    <label for="apply_price_to_modifications">
+                                                                        Применить цену к модификациям
+                                                                    </label>
+                                                                </div>  
+                                                            </div>
+                                                        </div>
                                                     </div>
+        
                                                 </div>
                                             </div>
-
+        
                                         </div>
                                     </div>
-
+        
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+        
+                                            <div class="card card-warning">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Габариты</h3>
+                                                </div>
+                                                <div class="card-body" style="display: block;">
+                                                    
+                                                    <div class="row form-group">
+                                                        <div class="col-6 col-sm-3 mb-2">
+                                                            <label class="mb-1">Вес, гр.</label>
+                                                            <input type="text" value="{{ $shopItem->weight }}" name="weight" class="form-control" placeholder="Вес" >
+                                                        </div>
+                                                        <div class="col-6 col-sm-3 mb-2">
+                                                            <label class="mb-1">Ширина, см.</label>
+                                                            <input type="text" value="{{ $shopItem->width }}" name="width" class="form-control" placeholder="Ширина" >
+                                                        </div>
+                                                        <div class="col-6 col-sm-3 mb-2">
+                                                            <label class="mb-1">Высота, см.</label>
+                                                            <input type="text" value="{{ $shopItem->height }}" name="height" class="form-control" placeholder="Высота" >
+                                                        </div>
+                                                        <div class="col-6 col-sm-3 mb-2">
+                                                            <label class="mb-1">Длина, см.</label>
+                                                            <input type="text" value="{{ $shopItem->length }}" name="length" class="form-control" placeholder="Длина" >
+                                                        </div>
+                                                    </div>
+        
+                                                </div>
+                                            </div>
+        
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-
-
-                            <div class="row mb-3">
-                                <div class="col-12">
-
-                                    <div class="card card-warning">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Габариты</h3>
-                                        </div>
-                                        <div class="card-body" style="display: block;">
-                                            
-                                            <div class="row form-group">
-                                                <div class="col-6 col-sm-3 mb-2">
-                                                    <label class="mb-1">Вес, гр.</label>
-                                                    <input type="text" value="{{ $shopItem->weight }}" name="weight" class="form-control" placeholder="Вес" >
-                                                </div>
-                                                <div class="col-6 col-sm-3 mb-2">
-                                                    <label class="mb-1">Ширина, см.</label>
-                                                    <input type="text" value="{{ $shopItem->width }}" name="width" class="form-control" placeholder="Ширина" >
-                                                </div>
-                                                <div class="col-6 col-sm-3 mb-2">
-                                                    <label class="mb-1">Высота, см.</label>
-                                                    <input type="text" value="{{ $shopItem->height }}" name="height" class="form-control" placeholder="Высота" >
-                                                </div>
-                                                <div class="col-6 col-sm-3 mb-2">
-                                                    <label class="mb-1">Длина, см.</label>
-                                                    <input type="text" value="{{ $shopItem->length }}" name="length" class="form-control" placeholder="Длина" >
-                                                </div>
-                                            </div>
-
-                                        </div>
+                                <div @class(["tab-pane", "active" => $shopItem->type == 1]) id="type-2">
+                                    <div class="mb-3">
+                                        <label class="mb-1">Ссылка</label>
+                                        <input value="{{ $shopItem->link }}" type="text" name="link" class="form-control form-control-lg" placeholder="Ссылка">
                                     </div>
-
                                 </div>
                             </div>
 
@@ -243,10 +266,28 @@
                                 @foreach ($images as $k => $image)
                                     <div class="file-box d-flex align-items-center justify-content-center sortable" id="{{ $k }}">
 
-                                        <a href="javascript:void(0)" onclick="if(confirm('Вы действительно хотите удалить изображение?')) {adminImage.remove('{{ route('deleteShopItemImage', [$shopItem->id, $k]) }}', $(this).parent())}">
+                                        <a href="javascript:void(0)" onclick="if(confirm('Вы действительно хотите удалить файл?')) {adminImage.remove('{{ route('deleteShopItemImage', [$shopItem->id, $k]) }}', $(this).parent())}">
                                             <i class="las la-times file-close-icon"></i>
                                         </a>
 
+                                        <div class="text-center">
+                                            <div class="file-box-image">
+                                       
+                              
+                                                @if (!empty($image['image_small']))
+                                                    <a @if (!empty($image['image_large'])) href="{{ $image['image_large'] }}" @endif class="lightbox"><img src="{{ $image['image_small'] }}"></a>
+                                                @endif
+
+                                                @if (!empty($image['file']))
+
+                                                    <video width="100%" height="100px" preload="true" loop="loop" muted="muted" volume="0"> 
+                                                        <source src="{{ $image['file'] }}"> 
+                                                    </video>
+                                                @endif
+
+                                            </div>
+                                        </div>  
+{{-- 
                                         <div class="text-center">
                                             <div class="file-box-image">
                               
@@ -254,7 +295,7 @@
                                                     <a @if (!empty($image['image_large'])) href="{{ $image['image_large'] }}" @endif class="lightbox"><img src="{{ $image['image_small'] }}"></a>
                                                 @endif
                                             </div>
-                                        </div>                                                        
+                                        </div>                                                         --}}
                                     </div>
                                 @endforeach
                                              
@@ -348,9 +389,6 @@
                                 </div>
 
                             </div>
-
-
-
                         </div>
 
                         @if (count($properties) > 0)
@@ -726,6 +764,14 @@
         });
 
         Dropzone.options.myDropzone = {
+
+            acceptedFiles: "image/*,video/mp4,video/webm,video/ogg", // Уточненные типы
+            maxFilesize: 100, // 100 МБ
+
+            success: function (file, response) {
+                console.log("Файл загружен:", response);
+            },
+
             init: function() {
 
                 this.on("success", function(file, responseText) {

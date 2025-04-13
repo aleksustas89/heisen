@@ -444,5 +444,9 @@
         }
         .tooltip-inner {text-align: start}
         .tooltip-inner {max-width: none;}
+        .activity-info-text .selectr-options-container {
+            top: 0px;
+            right: calc(-100% + -5px);
+        } 
     </style>    
 @endsection

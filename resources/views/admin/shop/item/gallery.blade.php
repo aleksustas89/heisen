@@ -11,6 +11,14 @@
                 @if (!empty($image['image_small']))
                     <a @if (!empty($image['image_large'])) href="{{ $image['image_large'] }}" @endif class="lightbox"><img src="{{ $image['image_small'] }}"></a>
                 @endif
+
+                @if (!empty($image['file']))
+
+                    <video width="100%" height="100px" preload="true" loop="loop" muted="muted" volume="0"> 
+                        <source src="{{ $image['file'] }}"> 
+                    </video>
+                @endif
+
             </div>
         </div>                                                        
     </div>

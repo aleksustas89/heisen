@@ -105,6 +105,7 @@ class ShopGroupController extends Controller
                         ->whereIn("shop_items.id", $Modifications)
                         ->orWhereIn("shop_items.id", $shopItems)
                         ->orWhereIn("shop_items.id", $ShopItemShortcuts)
+                        ->orderBy("sorting", "ASC")
                         ->distinct();
 
         $sorting = Arr::get($_REQUEST, 'sorting', 0);

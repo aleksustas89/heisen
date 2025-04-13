@@ -7,7 +7,6 @@ use App\Models\CdekSender;
 use App\Models\ShopDeliveryFieldValue;
 use App\Models\CdekOrder;
 use App\Models\CdekOffice;
-use App\Models\CdekCity;
 use Illuminate\Http\Request;
 
 class CdekController extends Controller

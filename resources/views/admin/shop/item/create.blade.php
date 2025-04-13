@@ -71,119 +71,143 @@
                                 <div id="name_error" class="fieldcheck-error"></div>
                             </div>
 
-                            <div  class="mb-3">
-                                <label class="mb-1">Группа</label>
-                                <select name="shop_group_id" class="form-control">
-                                    <option value="0">...</option>
-                                    @php
-                                        \App\Http\Controllers\ShopGroupController::showTreeGroupsAsOptions($parent_id);
-                                    @endphp
-                                </select>
+                            <div class="mb-3">
+                                <div class="mb-1">Тип товара</div>
+
+                                <input value="0" type="hidden" name="type">
+                                
+                                <ul class="nav" role="tablist">
+                                    <li class="nav-item">
+                                        <a onclick="$('[name=\'type\']').val(0)" @class(["btn btn-primary mx-1", "active"]) data-bs-toggle="tab" href="#type-1" role="tab" aria-selected="false">Обычный</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a onclick="$('[name=\'type\']').val(1)" @class(["btn btn-warning mx-1"]) data-bs-toggle="tab" href="#type-2" role="tab" aria-selected="false">Ссылка</a>
+                                    </li>                                                
+                                </ul>
                             </div>
 
-                            <div class="mb-5">
-                                <label class="mb-1">Дополнительные группы</label>
-                                <input type="text" name="shortcut_group_id" class="form-control" placeholder="Пожалуйста, введите еще хотя бы 2 символа">
-                                <div class="shortcut_groups position-absolute"></div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-4">
-                                    <label class="mb-1">Сортировка</label>
-                                    <input type="text" name="sorting" class="form-control" placeholder="Сортировка">
-                                </div>
-                                <div class="col-4">
-                                    <label class="mb-1">Артикул</label>
-                                    <input id="marking" type="text" name="marking" class="form-control" placeholder="Артикул" data-min="1"  data-max="255" data-required="1">
-                                    <div id="marking_error" class="fieldcheck-error"></div>
-                                </div>
-                                <div class="col-4">
-                                    <label class="mb-1">Путь</label>
-                                    <input type="text" name="path" class="form-control" placeholder="Путь" >
-                                </div>
+                            <div class="tab-content">
+                                <div @class(["tab-pane", "active"]) id="type-1">
+                                    <div class="mb-3">
+                                        <label class="mb-1">Группа</label>
+                                        <select name="shop_group_id" class="form-control">
+                                            <option value="0">...</option>
+                                            @php
+                                                \App\Http\Controllers\ShopGroupController::showTreeGroupsAsOptions($parent_id);
+                                            @endphp
+                                        </select>
+                                    </div>
+        
+                                    <div class="mb-5">
+                                        <label class="mb-1">Дополнительные группы</label>
+                                        <input type="text" name="shortcut_group_id" class="form-control" placeholder="Пожалуйста, введите еще хотя бы 2 символа">
+                                        <div class="shortcut_groups position-absolute"></div>
+                                    </div>
+        
+                                    <div class="row mb-3">
+                                        <div class="col-4">
+                                            <label class="mb-1">Сортировка</label>
+                                            <input type="text" name="sorting" class="form-control" placeholder="Сортировка">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="mb-1">Артикул</label>
+                                            <input id="marking" type="text" name="marking" class="form-control" placeholder="Артикул">
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="mb-1">Путь</label>
+                                            <input type="text" name="path" class="form-control" placeholder="Путь" >
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12 d-flex align-items-end">
+        
+                                            <div class="d-flex">
+        
+                                                <div class="form-check form-switch form-switch-success">
+                                                    <input value="1" class="form-check-input" name="active" type="checkbox" id="active" checked="">
+                                                    <label for="active">
+                                                        Активность
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+        
+                                            <div class="card card-warning">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Цена</h3>
+                                                </div>
+                                                <div class="card-body" style="display: block;">
+                                                    
+                                                    <div class="row form-group">
                             
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12 d-flex align-items-end">
-
-                                    <div class="d-flex">
-
-                                        <div class="form-check form-switch form-switch-success">
-                                            <input value="1" class="form-check-input" name="active" type="checkbox" id="active" checked="">
-                                            <label for="active">
-                                                Активность
-                                            </label>
+                                                        <div class="col-lg-2">
+                                                            <input type="text" name="price" class="form-control" placeholder="Цена" >
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            @if ($currencies)
+                                                                <select name="shop_currency_id" class="form-select">
+                                                                    @foreach ($currencies as $currency)
+                                                                        @if ($currency->default == 1)
+                                                                            <option selected="selected" value="{{ $currency->id }}">{{ $currency->name }}</option>
+                                                                        @else
+                                                                            <option value="{{ $currency->id }}">{{ $currency->name }}</option> 
+                                                                        @endif
+                                                                    @endforeach
+                                                                </select>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+        
+                                                </div>
+                                            </div>
+        
+                                        </div>
+                                    </div>
+        
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+        
+                                            <div class="card card-warning">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Габариты</h3>
+                                                </div>
+                                                <div class="card-body" style="display: block;">
+                                                    
+                                                    <div class="row form-group">
+                                                        <div class="col-6 col-sm-3">
+                                                            <label class="mb-1">Вес, гр.</label>
+                                                            <input type="text" name="weight" class="form-control" placeholder="Вес" >
+                                                        </div>
+                                                        <div class="col-6 col-sm-3">
+                                                            <label class="mb-1">Ширина, см.</label>
+                                                            <input type="text" name="width" class="form-control" placeholder="Ширина" >
+                                                        </div>
+                                                        <div class="col-6 col-sm-3">
+                                                            <label class="mb-1">Высота, см.</label>
+                                                            <input type="text" name="height" class="form-control" placeholder="Высота" >
+                                                        </div>
+                                                        <div class="col-6 col-sm-3">
+                                                            <label class="mb-1">Длина, см.</label>
+                                                            <input type="text" name="length" class="form-control" placeholder="Длина" >
+                                                        </div>
+                                                    </div>
+        
+                                                </div>
+                                            </div>
+        
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-12">
-
-                                    <div class="card card-warning">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Цена</h3>
-                                        </div>
-                                        <div class="card-body" style="display: block;">
-                                            
-                                            <div class="row form-group">
-                    
-                                                <div class="col-lg-2">
-                                                    <input type="text" name="price" class="form-control" placeholder="Цена" >
-                                                </div>
-                                                <div class="col-lg-2">
-                                                    @if ($currencies)
-                                                        <select name="shop_currency_id" class="form-select">
-                                                            @foreach ($currencies as $currency)
-                                                                @if ($currency->default == 1)
-                                                                    <option selected="selected" value="{{ $currency->id }}">{{ $currency->name }}</option>
-                                                                @else
-                                                                    <option value="{{ $currency->id }}">{{ $currency->name }}</option> 
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    @endif
-                                                </div>
-                                            </div>
-
-                                        </div>
+                                <div @class(["tab-pane"]) id="type-2">
+                                    <div class="mb-3">
+                                        <label class="mb-1">Ссылка</label>
+                                        <input value="" type="text" name="link" class="form-control form-control-lg" placeholder="Ссылка">
                                     </div>
-
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-12">
-
-                                    <div class="card card-warning">
-                                        <div class="card-header">
-                                            <h3 class="card-title">Габариты</h3>
-                                        </div>
-                                        <div class="card-body" style="display: block;">
-                                            
-                                            <div class="row form-group">
-                                                <div class="col-6 col-sm-3">
-                                                    <label class="mb-1">Вес, гр.</label>
-                                                    <input type="text" name="weight" class="form-control" placeholder="Вес" >
-                                                </div>
-                                                <div class="col-6 col-sm-3">
-                                                    <label class="mb-1">Ширина, см.</label>
-                                                    <input type="text" name="width" class="form-control" placeholder="Ширина" >
-                                                </div>
-                                                <div class="col-6 col-sm-3">
-                                                    <label class="mb-1">Высота, см.</label>
-                                                    <input type="text" name="height" class="form-control" placeholder="Высота" >
-                                                </div>
-                                                <div class="col-6 col-sm-3">
-                                                    <label class="mb-1">Длина, см.</label>
-                                                    <input type="text" name="length" class="form-control" placeholder="Длина" >
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
 

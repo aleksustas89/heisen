@@ -903,5 +903,11 @@
                 max-width: 1460px;
             }
         }
+
+        .activity-info-text .selectr-options-container {
+            top: 0px;
+            right: calc(-100% + -5px);
+            left: auto;
+        } 
     </style>    
 @endsection

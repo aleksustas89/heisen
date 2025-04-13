@@ -24,6 +24,7 @@ class ShopItemImage extends Model
         Storage::delete([
             $path . $this->image_large,
             $path . $this->image_small,
+            $path . $this->file,
         ]);
 
         parent::delete();
