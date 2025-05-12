@@ -193,6 +193,13 @@ class CdekController extends Controller
             $aData["recipient"]["phones"][] = $number;
             
             $aData["sender"]["name"] = $CdekSender->name;
+            
+            $sendePhone = [];
+            $sendePhone["number"] = $CdekSender->phone;
+            $sendePhone["additional"] = '';
+
+            $aData["sender"]["phones"][] = $sendePhone;
+            
     
             $package = [];
             $package["number"] = "order-" . $ShopOrder->id;

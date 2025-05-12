@@ -211,11 +211,6 @@
                                                             </div>
 
                                                             @if (is_null($CdekOrder))
-                                                                {{-- <div class="row my-1">
-                                                                    <div class="col-12">
-                                                                        <a class="btn btn-outline-cdek active btn-sm" onclick="window.widget.open()" href="javascript:void(0)">Выбрать</a>
-                                                                    </div>
-                                                                </div> --}}
 
                                                                 <div class="row my-1">
                                                                     <div class="col-12">
@@ -361,7 +356,7 @@
                                                         </div>
 
                                                         <div @class(["tab-pane", "py-3", "active" => $order->shop_delivery_id == 1 ? true : false]) id="tab-delivery-1" role="tabpanel">
-                                                            <div class="">      
+                                                            <div>      
                                                                 
                                                                 <div class="row my-1">
                                                                     <div class="col-12">
@@ -376,7 +371,7 @@
                                                                 <input type="hidden" name="delivery_1_city" value="{{ $aDeliveryValues[29] ?? '' }}" />
                                                                 
                                                                 @if ($order->shop_payment_system_id == 7)
-                                                                    <b>Оплата при получении</a>
+                                                                    <b>Оплата при получении</b>
                                                                 @endif
                                                                 
                                                                 <div id="prResult" class="mt-2">
@@ -478,11 +473,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                @php
+                                {{-- @php
                                 $source = $order->Source;
-                                @endphp
+                                @endphp --}}
 
-                                @if (!is_null($source))
+                                {{-- @if (!is_null($source))
                                     <div class="activity-info mt-3">
                                         <div class="icon-info-activity">
                                             <i class="las la-tags bg-soft-primary"></i>
@@ -524,7 +519,7 @@
 
                                         </div>
                                     </div>
-                                @endif
+                                @endif --}}
 
                             </div>
                         </div>

@@ -34,13 +34,28 @@
                     <div id="uk-slideshow-items" uk-slideshow="animation: push;ratio: 1:1; minHeight: 300;">
                         <div class="uk-position-relative uk-visible-toggle" tabindex="-1">
                             <ul class="uk-slideshow-items" uk-lightbox="animation: scale">
-                                @foreach ($images as $k => $image)
+                                @php
+                                    $k = 0;
+                                @endphp
+                                @foreach ($images as $image)
                                     @if (isset($image['image_large']))
                                         <li id="uk-slide-{{$k}}">
                                             <a href="{{ $image['image_large'] }}">
                                                 <img itemprop="image" alt="{{ $imageMask }}" title="{{ $imageMask }}" uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" alt="" uk-cover>
                                             </a>
                                         </li>
+                                        @php
+                                            $k++;
+                                        @endphp
+                                    @elseif(!empty($image['file']))
+                                        <li id="uk-slide-{{$k}}" class="uk-flex uk-flex-middle" style="text-align:center">
+                                            <a href="{{ $image['file'] }}">
+                                                <video src="{{ $image['file'] }}" loop muted playsinline autoplay uk-video="autoplay: inview" preload="none" uk-cover></video>
+                                            </a>
+                                        </li>
+                                        @php
+                                            $k++;
+                                        @endphp
                                     @endif
                                 @endforeach
                             </ul>
@@ -51,7 +66,6 @@
                         <div class="uk-margin" uk-slider>
                             <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
                                 <ul class="uk-slider-items uk-child-width-1-2 uk-child-width-1-3@s uk-child-width-1-4@m uk-grid uk-grid-small">        
-                   
                                     @php
                                         $k = 0;
                                     @endphp
@@ -59,6 +73,16 @@
                                         @if (isset($image['image_large']))
                                             <li uk-slideshow-item="{{ $k }}">
                                                 <a style="background-position: center;" uk-img="loading: lazy" data-src="{{ $image['image_large'] }}" uk-img=""></a>
+                                            </li>
+                                            @php
+                                                $k++;
+                                            @endphp
+                                        @elseif(!empty($image['file']))
+                                            <li uk-slideshow-item="{{$k}}">
+                                                <a class="position-relative">
+                                                    <video src="{{ $image['file'] }}" loop muted playsinline uk-video="autoplay: inview" style="height: 100%; width: 100%; object-fit: cover;"></video>
+                                                    <span uk-icon="icon: play-circle; ratio: 2" class="play"></span>
+                                                </a>
                                             </li>
                                             @php
                                                 $k++;
@@ -502,6 +526,25 @@
             border-radius: 0 !important;
             text-transform: uppercase;
         }
+
+        .uk-slider-items li {
+            height: 100px; 
+            overflow: hidden;
+        }
+
+        .position-relative {
+            position: relative;
+        }
+
+        .play {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: calc(50% - 20px);
+            top: calc(50% - 20px);
+            cursor: pointer;
+            display: block;
+        }
     </style>
 @endsection
 
@@ -561,5 +604,23 @@
 
         });
         
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('shown', (e) => {
+                if (e.target && e.target.classList.contains('uk-lightbox')) {
+                setTimeout(() => {
+                    const video = e.target.querySelector('video');
+                    if (video) {
+                    video.setAttribute('autoplay', '');
+                    video.setAttribute('muted', '');
+                    video.setAttribute('playsinline', '');
+                    video.play().catch(() => {});
+                    }
+                }, 100);
+                }
+            });
+        });
     </script>
 @endsection

@@ -169,10 +169,11 @@ class StructureController extends Controller
                 $structure->seo_description = $request->seo_description;
                 $structure->seo_keywords = $request->seo_keywords;
                 $structure->path = $request->path;
+                $structure->redirect = $request->redirect;
                 $structure->structure_menu_id = $request->structure_menu_id;
                 $structure->sorting = $request->sorting;
-                $structure->active = $request->active == 'on' ? 1 : 0;
-                $structure->indexing = $request->indexing == 'on' ? 1 : 0;
+                $structure->active = $request->active ?? 0;
+                $structure->indexing = $request->indexing ?? 0;
                 $structure->text = $request->text;
                 $structure->parent_id = $request->parent_id ?? 0;
                 $structure->updated_at = date("Y-m-d H:i:s");

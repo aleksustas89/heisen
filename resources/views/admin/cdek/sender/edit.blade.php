@@ -89,6 +89,11 @@
                         </div>
 
                         <div class="mb-3">
+                            <label class="mb-1">Телефон отправителя</label>
+                            <input name="phone" type="text" class="form-control" value="{{ $CdekSender->phone }}" />
+                        </div>
+
+                        <div class="mb-3">
                             <label class="mb-1">Тип отправки</label>
                             <select name="type">
                                 @foreach ($Types as $key => $Type)

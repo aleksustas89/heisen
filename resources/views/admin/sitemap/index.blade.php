@@ -82,6 +82,18 @@
                 @endif
             </div>                                                        
         </div>
+
+        <div class="file-box">
+            <div class="text-center">
+                <a target="_blank" href="{{ route('getXlsxCatalog') }}"><i class="lar la-file-excel text-danger ico"></i></a>
+                <h6 class="text-truncate">Xlsx Catalog</h6>
+                @if (!empty($xlsxInfo["date"]))
+                    <small class="text-muted">
+                        {{ $xlsxInfo["date"] }} / {{ $xlsxInfo["filesize"] }}
+                    </small>
+                @endif
+            </div>                                                        
+        </div>
         
     </div> 
 

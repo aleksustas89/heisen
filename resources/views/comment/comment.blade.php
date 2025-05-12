@@ -45,7 +45,9 @@
                 <div class="uk-grid-medium uk-flex-middle" uk-grid>
                     <div class="uk-width-auto">
                         @foreach ($CommentShopItem->ShopItem->getImages(false) as $image)
-                            <img class="uk-comment-avatar" src="{{ $image['image_small'] }}" width="80" height="80" alt="">
+                            @if (isset($image['image_small']))
+                                <img class="uk-comment-avatar" src="{{ $image['image_small'] }}" width="80" height="80" alt="">
+                            @endif
                         @endforeach  
                     </div>
                     <div class="uk-width-expand">

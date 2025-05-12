@@ -34,6 +34,7 @@ class CdekSenderController extends Controller
         $cdekSender->cdek_office_id = $request->cdek_office_id;
         $cdekSender->address = $request->address;
         $cdekSender->name = $request->name;
+        $cdekSender->phone = $request->phone;
         $cdekSender->type = $request->type;
         $cdekSender->save();
 

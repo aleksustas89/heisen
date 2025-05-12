@@ -3,16 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PropertyValueString;
+use App\Models\ShopItemListItem;
+use App\Models\PropertyValueInt;
 use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\ShopGroup;
 use App\Models\ShopItem;
+use App\Models\ShopItemShortcut;
+use App\Models\ShopItemProperty;
 use App\Models\Structure;
 use App\Models\ShopFilter;
 use App\Models\ShopItemImage;
 use App\Services\Helpers\File;
 use App\Models\Sitemap;
 use App\Models\SitemapField;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class SitemapController extends Controller
 {
@@ -33,6 +40,10 @@ class SitemapController extends Controller
 
     protected $csvCatalog = NULL;
 
+    protected $xlsxCatalogFilename = 'catalog.xlsx';
+
+    protected $xlsxCatalog = NULL;
+
     protected $host = NULL;
 
     public function __construct()
@@ -41,6 +52,7 @@ class SitemapController extends Controller
         $this->imagemap = public_path() . '/' . $this->imagemapFilename;
         $this->yml = public_path() . '/' . $this->ymlFilename;
         $this->csvCatalog = public_path() . '/' . $this->csvCatalogFilename;
+        $this->xlsxCatalog = public_path() . '/' . $this->xlsxCatalogFilename;
 
         $this->host = 'https://' . env('APP_NAME');
     }
@@ -68,6 +80,11 @@ class SitemapController extends Controller
             "csvInfo" => [
                 "date" => file_exists($this->csvCatalog) && !is_null($Sitemap = Sitemap::whereTag("csvCatalog")->first()) ? date("d.m.Y H:i", strtotime($Sitemap->updated_at)) : '',
                 "filesize" => file_exists($this->csvCatalog) ? File::convertBytes(filesize($this->csvCatalog)) : '',
+                "edit" => false
+            ],
+            "xlsxInfo" => [
+                "date" => file_exists($this->xlsxCatalog) && !is_null($Sitemap = Sitemap::whereTag("xlsxCatalog")->first()) ? date("d.m.Y H:i", strtotime($Sitemap->updated_at)) : '',
+                "filesize" => file_exists($this->xlsxCatalog) ? File::convertBytes(filesize($this->xlsxCatalog)) : '',
                 "edit" => false
             ],
         ]);
@@ -262,9 +279,10 @@ class SitemapController extends Controller
                 $offer->appendChild($offerCategoryId);
 
                 foreach ($ShopItem->getImages() as $image) {
-
-                    $offerImage = $domDocument->createElement('picture', $this->host . $image["image_large"]);
-                    $offer->appendChild($offerImage);
+                    if (isset($image["image_large"])) {
+                        $offerImage = $domDocument->createElement('picture', $this->host . $image["image_large"]);
+                        $offer->appendChild($offerImage);
+                    }
                 }
 
                 if (!empty($ShopItem->description)) {
@@ -595,6 +613,302 @@ class SitemapController extends Controller
 
             $csvCatalog->updated_at = date("Y-m-d H:i:s");
             $csvCatalog->save();
+        }
+    }
+
+    public function getXlsxCatalog()
+    {
+        if (!is_null($xlsxCatalog = Sitemap::whereTag("xlsxCatalog")->first())) {
+
+            if (file_exists($this->xlsxCatalog)) {
+
+                $LastChangedShopGroup = ShopGroup::where("active", 1)->where("deleted", 0)->where("updated_at", ">", $xlsxCatalog->updated_at)->orderBy("updated_at", "DESC")->first();
+                $LastChangedShopItem  = ShopItem::where("active", 1)->where("deleted", 0)->where("updated_at", ">", $xlsxCatalog->updated_at)->orderBy("updated_at", "DESC")->first();
+
+                if (!is_null($LastChangedShopGroup) || !is_null($LastChangedShopItem)) {
+                    $this->setXlsxCatalog();
+                }
+            } else {
+                $this->setXlsxCatalog();
+            }
+
+            //$this->setXlsxCatalog();
+
+            return response()->redirectTo("/" . $this->xlsxCatalogFilename);
+        } else {
+            return response()->to(route("adminSitemap"))->withError("Объект не найден");
+        }
+    }
+
+    public function setXlsxCatalog() 
+    {
+
+        if (!is_null($xlsxCatalog = Sitemap::whereTag("xlsxCatalog")->first())) {
+
+            $spreadsheet = new Spreadsheet();
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $worksheet->getCell('A1')->setValue('Группа');
+            $worksheet->getCell('B1')->setValue('Подгруппа');
+            $worksheet->getCell('C1')->setValue('Id товара');
+            $worksheet->getCell('D1')->setValue('Артикул');
+            $worksheet->getCell('E1')->setValue('Название товара');
+            $worksheet->getCell('F1')->setValue('Цена');
+            $worksheet->getCell('G1')->setValue('Цвет');
+            $worksheet->getCell('H1')->setValue('Пол');
+            $worksheet->getCell('I1')->setValue("Вес");
+            $worksheet->getCell('J1')->setValue("Длина");
+            $worksheet->getCell('K1')->setValue("Ширина");
+            $worksheet->getCell('L1')->setValue("Высота");
+            $worksheet->getCell('M1')->setValue("Изображение");
+
+            $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(30);
+            $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(30);
+            $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(65);
+
+            $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('L')->setWidth(10);
+            $spreadsheet->getActiveSheet()->getColumnDimension('M')->setWidth(50);
+
+            $worksheet->getStyle("A1:M1")->getFont()->setBold(true);
+
+            $worksheet->getStyle('E:M')->getAlignment()->setHorizontal('left');
+            $worksheet->getStyle('E:M')->getAlignment()->setVertical('center');
+
+            $i = 2;
+
+            foreach (ShopGroup::where("active", 1)->where("deleted", 0)->where("parent_id", 0)->orderBy("sorting", "ASC")->get() as $ShopGroup) {
+
+                $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+
+                $i++;
+
+                foreach (ShopGroup::where("active", 1)->where("deleted", 0)->where("parent_id", $ShopGroup->id)->orderBy("sorting", "ASC")->get() as $ShopGroup2) {
+                    $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                    $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+
+                    $i++;
+
+                    foreach (ShopItem::where("active", 1)
+                                ->where("deleted", 0)
+                                ->where("shop_group_id", $ShopGroup2->id)
+                                ->where("modification_id", 0)
+                                ->orderBy("sorting", "ASC")->get() as $ShopItem1) {
+
+                        $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                        $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+                        $worksheet->getCell('C' . $i)->setValue($ShopItem1->id);
+                        $worksheet->getCell('D' . $i)->setValue($ShopItem1->marking);
+
+                        $name = $ShopItem1->name . ".";
+                        
+                        $worksheet->getCell('F' . $i)->setValue($ShopItem1->price);
+
+                        $MainMod = ShopItem::where("active", 1)->where("deleted", 0)->where("modification_id", $ShopItem1->id)->where("default_modification", 1)->first();
+
+                        if (!is_null($MainMod)) {
+                            if (!is_null($Value = PropertyValueInt::where("entity_id", $MainMod->id)->where("property_id", 60)->first())) {
+
+                                $ShopItemListItem = ShopItemListItem::find($Value->value);
+                                
+                                $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                                $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+                                $worksheet->getCell('G' . $i)->setValue($ShopItemListItem->value ?? '');
+
+                                if (!empty($ShopItemListItem->value)) {
+                                    $name .= " Натуральная кожа, цвет " . $ShopItemListItem->value;
+                                }
+                            }
+                        }
+
+                        $worksheet->getCell('E' . $i)->setValue($name);
+
+                        if (!is_null($Value = PropertyValueInt::where("entity_id", $ShopItem1->id)->where("property_id", 63)->first())) {
+                            $val = '';
+                            switch ($Value->value)
+                            {
+                                case 860:
+                                    $val = "Женский";
+                                    break;
+                                case 861:
+                                    $val = "Мужской";
+                                    break;
+                                case 862:
+                                    $val = "Унисекс";
+                                    break;
+                            }
+                            $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                            $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+                            $worksheet->getCell('H' . $i)->setValue($val);
+                        }
+
+                        $worksheet->getCell('I' . $i)->setValue($ShopItem1->weight);
+                        $worksheet->getCell('J' . $i)->setValue($ShopItem1->length);
+                        $worksheet->getCell('K' . $i)->setValue($ShopItem1->width);
+                        $worksheet->getCell('L' . $i)->setValue($ShopItem1->height);
+
+                        foreach ($ShopItem1->getImages(false) as $image) {
+                            if (!empty($image["image_large"])) {
+                                $worksheet->getCell('M' . $i)->setValue($this->host . $image["image_large"]);
+                            }
+                        }
+
+                        $i++;
+                    }
+
+                    foreach (ShopItemShortcut::join("shop_items", "shop_items.id", "=", "shop_item_shortcuts.shop_item_id")
+                                ->where("shop_items.deleted", 0)
+                                ->where("shop_items.active", 1)
+                                ->where("shop_items.modification_id", 0)
+                                ->where("shop_item_shortcuts.shop_group_id", $ShopGroup2->id)->get() as $shopItem3) {
+
+                        if (!is_null($ShopItem1 = ShopItem::find($shopItem3->shop_item_id))) {
+                            
+                            $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                            $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+                            $worksheet->getCell('C' . $i)->setValue($ShopItem1->id);
+                            $worksheet->getCell('D' . $i)->setValue($ShopItem1->marking);
+
+                            $name = $ShopItem1->name . ".";
+                            
+                            $worksheet->getCell('F' . $i)->setValue($ShopItem1->price);
+
+                            $MainMod = ShopItem::where("active", 1)->where("deleted", 0)->where("modification_id", $ShopItem1->id)->where("default_modification", 1)->first();
+
+                            if (!is_null($MainMod)) {
+                                if (!is_null($Value = PropertyValueInt::where("entity_id", $MainMod->id)->where("property_id", 60)->first())) {
+
+                                    $ShopItemListItem = ShopItemListItem::find($Value->value);
+                                    
+                                    $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                                    $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+                                    $worksheet->getCell('G' . $i)->setValue($ShopItemListItem->value ?? '');
+
+                                    if (!empty($ShopItemListItem->value)) {
+                                        $name .= " Натуральная кожа, цвет " . $ShopItemListItem->value;
+                                    }
+                                }
+                            }
+
+                            $worksheet->getCell('E' . $i)->setValue($name);
+
+                            if (!is_null($Value = PropertyValueInt::where("entity_id", $ShopItem1->id)->where("property_id", 63)->first())) {
+                                $val = '';
+                                switch ($Value->value)
+                                {
+                                    case 860:
+                                        $val = "Женский";
+                                        break;
+                                    case 861:
+                                        $val = "Мужской";
+                                        break;
+                                    case 862:
+                                        $val = "Унисекс";
+                                        break;
+                                }
+                                $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                                $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+                                $worksheet->getCell('H' . $i)->setValue($val);
+                            }
+
+                            $worksheet->getCell('I' . $i)->setValue($ShopItem1->weight);
+                            $worksheet->getCell('J' . $i)->setValue($ShopItem1->length);
+                            $worksheet->getCell('K' . $i)->setValue($ShopItem1->width);
+                            $worksheet->getCell('L' . $i)->setValue($ShopItem1->height);
+
+                            foreach ($ShopItem1->getImages(false) as $image) {
+                                if (!empty($image["image_large"])) {
+                                    $worksheet->getCell('M' . $i)->setValue($this->host . $image["image_large"]);
+                                }
+                            }
+                        }
+
+                        $i++;
+                    }
+                }
+
+                foreach (ShopItem::where("active", 1)
+                    ->where("deleted", 0)
+                    ->where("shop_group_id", $ShopGroup->id)
+                    ->where("modification_id", 0)
+                    ->orderBy("sorting", "ASC")->get() as $ShopItem1) {
+
+                        $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                        $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+                        $worksheet->getCell('C' . $i)->setValue($ShopItem1->id);
+                        $worksheet->getCell('D' . $i)->setValue($ShopItem1->marking);
+
+                        $name = $ShopItem1->name . ".";
+                        
+                        $worksheet->getCell('F' . $i)->setValue($ShopItem1->price);
+
+                        $MainMod = ShopItem::where("active", 1)->where("deleted", 0)->where("modification_id", $ShopItem1->id)->where("default_modification", 1)->first();
+
+                        if (!is_null($MainMod)) {
+                            if (!is_null($Value = PropertyValueInt::where("entity_id", $MainMod->id)->where("property_id", 60)->first())) {
+
+                                $ShopItemListItem = ShopItemListItem::find($Value->value);
+                                
+                                $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                                $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+                                $worksheet->getCell('G' . $i)->setValue($ShopItemListItem->value ?? '');
+
+                                if (!empty($ShopItemListItem->value)) {
+                                    $name .= " Натуральная кожа, цвет " . $ShopItemListItem->value;
+                                }
+                            }
+                        }
+
+                        $worksheet->getCell('E' . $i)->setValue($name);
+
+                        if (!is_null($Value = PropertyValueInt::where("entity_id", $ShopItem1->id)->where("property_id", 63)->first())) {
+                            $val = '';
+                            switch ($Value->value)
+                            {
+                                case 860:
+                                    $val = "Женский";
+                                    break;
+                                case 861:
+                                    $val = "Мужской";
+                                    break;
+                                case 862:
+                                    $val = "Унисекс";
+                                    break;
+                            }
+                            $worksheet->getCell('A' . $i)->setValue($ShopGroup->name);
+                            $worksheet->getCell('B' . $i)->setValue($ShopGroup2->name);
+                            $worksheet->getCell('H' . $i)->setValue($val);
+                        }
+
+                        $worksheet->getCell('I' . $i)->setValue($ShopItem1->weight);
+                        $worksheet->getCell('J' . $i)->setValue($ShopItem1->length);
+                        $worksheet->getCell('K' . $i)->setValue($ShopItem1->width);
+                        $worksheet->getCell('L' . $i)->setValue($ShopItem1->height);
+
+                        foreach ($ShopItem1->getImages(false) as $image) {
+                            if (!empty($image["image_large"])) {
+                                $worksheet->getCell('M' . $i)->setValue($this->host . $image["image_large"]);
+                            }
+                        }
+
+                    $i++;
+                }
+            }
+
+            $writer = new Xlsx($spreadsheet);
+            $writer->save($this->xlsxCatalogFilename);
+
+            $xlsxCatalog->updated_at = date("Y-m-d H:i:s");
+            $xlsxCatalog->save();
+
+            return response()->redirectTo("/" . $this->xlsxCatalogFilename);
         }
     }
 }

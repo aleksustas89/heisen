@@ -29,7 +29,7 @@
                                         <li class="uk-flex">
 
                                             @if (count($aStructure["sub"]) > 0)
-                                                <a href="{{ $aStructure["url"] }}" class="uk-button uk-button-link uk-padding-remove-left uk-padding-remove-right" type="button">
+                                                <a href="{{ !empty($aStructure["redirect"]) ? $aStructure["redirect"] : $aStructure["url"] }}" class="uk-button uk-button-link uk-padding-remove-left uk-padding-remove-right" type="button">
                                                     {{ $aStructure["name"] }} 
                                                     <span uk-drop-parent-icon></span>
                                                 </a>
@@ -37,7 +37,7 @@
                                                     <div class="uk-flex uk-flex-center">
                                                         <ul class="uk-nav uk-dropdown-nav uk-text-small">
                                                             @foreach ($aStructure["sub"] as $sStructure)
-                                                                <li><a href="{{ $sStructure["url"] }}">{{ $sStructure["name"] }}</a></li>
+                                                                <li><a href="{{ !empty($sStructure["redirect"]) ? $sStructure["redirect"] : $sStructure["url"] }}">{{ $sStructure["name"] }}</a></li>
                                                             @endforeach
                                                         </ul>
                                                     </div>
@@ -45,7 +45,7 @@
 
                                             @else
 
-                                                <a href="{{ $aStructure["url"] }}">{{ $aStructure["name"] }}</a>
+                                                <a href="{{ !empty($aStructure["redirect"]) ? $aStructure["redirect"] : $aStructure["url"] }}">{{ $aStructure["name"] }}</a>
 
                                             @endif
                                         </li>
@@ -186,12 +186,12 @@
                                     <ul class="uk-nav uk-nav-default"> 
                                         @foreach ($TopMenuStructures as $aStructure) 
                                             <li>
-                                                <a href="{{ $aStructure["url"] }}">{{ $aStructure["name"] }}</a>
+                                                <a href="{{ !empty($aStructure["redirect"]) ? $aStructure["redirect"] : $aStructure["url"] }}">{{ $aStructure["name"] }}</a>
 
                                                 @if (count($aStructure["sub"]) > 0)
                                                     <ul class="uk-nav uk-dropdown-nav uk-text-small">
                                                         @foreach ($aStructure["sub"] as $sStructure)
-                                                            <li><a href="{{ $sStructure["url"] }}">{{ $sStructure["name"] }}</a></li>
+                                                            <li><a href="{{ !empty($sStructure["redirect"]) ? $sStructure["redirect"] : $sStructure["url"] }}">{{ $sStructure["name"] }}</a></li>
                                                         @endforeach
                                                     </ul>
                                                 @endif

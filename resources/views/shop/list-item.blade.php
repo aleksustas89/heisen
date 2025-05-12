@@ -12,9 +12,7 @@ $url = $defaultModification ? $defaultModification->url : $item->url;
         <div style="height: 320px;overflow: hidden;">
             <a @if(!empty($item->link)) href="{{ $item->link }}" @endif>
                 @foreach ($item->getImages(false) as $image)
-                    <video height="100%" preload="true" loop="loop" muted="muted" volume="0" autoplay> 
-                        <source src="{{ $image['file'] }}"> 
-                    </video>
+                    <video src="{{ $image['file'] }}" loop muted playsinline uk-video="autoplay: inview"></video>
                 @endforeach
             </a> 
         </div>
@@ -58,10 +56,11 @@ $url = $defaultModification ? $defaultModification->url : $item->url;
                     <a href="{{ $url }}">
                         <ul class="uk-slideshow-items list-item-image">
                             @foreach ($item->getImages() as $image)
-                                
-                                <li>
-                                    <div data-src="{{ $image['image_small'] }}" uk-img="loading: lazy" class="uk-height-1-1 uk-background-cover" alt=""></div>
-                                </li>
+                                @if (isset($image['image_small']))
+                                    <li>
+                                        <div data-src="{{ $image['image_small'] }}" uk-img="loading: lazy" class="uk-height-1-1 uk-background-cover" alt=""></div>
+                                    </li>
+                                @endif
 
                             @endforeach 
                         </ul>

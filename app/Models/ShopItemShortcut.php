@@ -16,5 +16,10 @@ class ShopItemShortcut extends Model
         return $this->belongsTo(ShopGroup::class);
     }
 
+        public function ShopItem()
+    {
+        return $this->belongsTo(ShopItem::class);
+    }
+
     public static $BadgeClasses = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'purple', 'dark'];
 }

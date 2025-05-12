@@ -92,12 +92,14 @@ class StructureController extends Controller
             $aResult[$Structure->id]["id"] = $Structure->id;
             $aResult[$Structure->id]["name"] = $Structure->name;
             $aResult[$Structure->id]["url"] = $Structure->url;
+            $aResult[$Structure->id]["redirect"] = $Structure->redirect;
             $aResult[$Structure->id]["sub"] = [];
             foreach (Structure::where("parent_id", $Structure->id)->where("active", 1)->where('deleted', 0)->orderBy("sorting", "ASC")->get() as $sStructure) {
 
                 $aResult[$Structure->id]["sub"][$sStructure->id]["id"] = $sStructure->id;
                 $aResult[$Structure->id]["sub"][$sStructure->id]["name"] = $sStructure->name;
                 $aResult[$Structure->id]["sub"][$sStructure->id]["url"] = $sStructure->url;
+                $aResult[$Structure->id]["sub"][$sStructure->id]["redirect"] = $sStructure->redirect;
             }
             
         }

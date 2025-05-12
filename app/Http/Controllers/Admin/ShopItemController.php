@@ -423,21 +423,16 @@ class ShopItemController extends Controller
     public function uploadShopItemImage(ShopItem $shopItem, Request $request)
     {
         $shopItem->createDir();
-    
+
         $oShop = Shop::get();
     
         $allowedImageExt = ['jpg', 'png', 'jpeg', 'webp']; // Добавлены видеоформаты
     
-        $extension = $request->file->getClientOriginalExtension();
+        $extension = strtolower($request->file->getClientOriginalExtension());
         $getClientOriginalName = $request->file->getClientOriginalName();
     
         // Сохраняем оригинал
         if ($request->file->storeAs($shopItem->path(), $getClientOriginalName)) {
-    
-            logger()->info('Сохранение файла', [
-                'path' => $shopItem->path(),
-                'filename' => $getClientOriginalName
-            ]);
     
             $fileInfo = File::fileInfoFromStr($getClientOriginalName);
             $path = $shopItem->path() . $getClientOriginalName;
@@ -447,36 +442,37 @@ class ShopItemController extends Controller
             $oShopItemImage->save();
     
             if (in_array($extension, $allowedImageExt)) { 
-                // Обработка изображений
-                if (in_array($extension, ['jpg', 'png', 'jpeg', 'webp'])) { // Только для изображений
-                    foreach (["large", "small"] as $format) {
-                        $Image = Image::make(Storage::path($path));
-    
-                        $image_x_max_width = 'image_' . $format . '_max_width';
-                        $image_x_max_height = 'image_' . $format . '_max_height';
-    
-                        if ($format == 'large' ? $oShop->preserve_aspect_ratio == 1 : $oShop->preserve_aspect_ratio_small == 1) {
-                            $Image->resize($oShop->$image_x_max_width, $oShop->$image_x_max_height, function ($constraint) {
-                                $constraint->aspectRatio();
-                                $constraint->upsize();
-                            });
-                        } else {
-                            $Image->fit($oShop->$image_x_max_width, $oShop->$image_x_max_height);
-                        }
-    
-                        $sName = 'image_' . $format . $oShopItemImage->id . '.' . $fileInfo["extension"];
-    
-                        $Image->save(Storage::path($shopItem->path()) . $sName);
-    
-                        if ($oShop->convert_webp == 1) {
-                            File::webpConvert(Storage::path($shopItem->path()), $sName);
-    
-                            $sName = 'image_' . $format . $oShopItemImage->id . '.webp';
-                        }
-    
-                        $format == 'large' ? $oShopItemImage->image_large = $sName : $oShopItemImage->image_small = $sName;
+
+                foreach (["large", "small"] as $format) {
+                    $Image = Image::make(Storage::path($path));
+
+                    $image_x_max_width = 'image_' . $format . '_max_width';
+                    $image_x_max_height = 'image_' . $format . '_max_height';
+
+                    if ($format == 'large' ? $oShop->preserve_aspect_ratio == 1 : $oShop->preserve_aspect_ratio_small == 1) {
+                        $Image->resize($oShop->$image_x_max_width, $oShop->$image_x_max_height, function ($constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        });
+                    } else {
+                        $Image->fit($oShop->$image_x_max_width, $oShop->$image_x_max_height);
                     }
+
+                    $sName = 'image_' . $format . $oShopItemImage->id . '.' . $fileInfo["extension"];
+
+                    $Image->save(Storage::path($shopItem->path()) . $sName);
+
+                    if ($oShop->convert_webp == 1) {
+                        File::webpConvert(Storage::path($shopItem->path()), $sName);
+
+                        $sName = 'image_' . $format . $oShopItemImage->id . '.webp';
+                    }
+
+                    $format == 'large' ? $oShopItemImage->image_large = $sName : $oShopItemImage->image_small = $sName;
                 }
+                    // Удаление оригинала
+                Storage::delete($path);
+                
             } else {
                 // Обработка видео или других файлов
                 $oShopItemImage->file = $getClientOriginalName;
@@ -484,86 +480,11 @@ class ShopItemController extends Controller
     
             $oShopItemImage->save();
     
-            // Удаление оригинала (только если это не видео)
-            if (!in_array($extension, ['mp4', 'webm', 'avi'])) {
-                Storage::delete($path);
-            }
-    
             return response()->json(['message' => 'Файл успешно загружен', 'file' => $getClientOriginalName]);
         }
     
         return response()->json(['error' => 'Не удалось загрузить файл'], 400);
     }
-
-    // public function uploadShopItemImage(ShopItem $shopItem, Request $request)
-    // {
-        
-    //     $allowedImageExt = ['jpg', 'png', 'jpeg', 'webp'];
-
-    //     $extension = $request->file->getClientOriginalExtension();
-
-    //     if (!is_null($Informationsystem = $informationsystemItem->Informationsystem)) {
-
-    //         $informationsystemItem->createDir();
-
-    //         $storePath = "/" . $informationsystemItem->Informationsystem->path() .  $informationsystemItem->path();
-
-    //         $getClientOriginalName = $request->file->getClientOriginalName();
-            
-    //         if ($request->file->storeAs($storePath, $getClientOriginalName)) {
-    //             $fileInfo = File::fileInfoFromStr($getClientOriginalName);
-
-    //             $path = $storePath . $getClientOriginalName;
-
-    //             $oInformationsystemItemFile = new InformationsystemItemFile();
-    //             $oInformationsystemItemFile->informationsystem_item_id = $informationsystemItem->id;
-    //             $oInformationsystemItemFile->save();
-                
-    //             if (in_array($extension, $allowedImageExt)) {
-
-    //                 foreach (["large", "small"] as $format) {
-            
-    //                     $Image = Image::make(Storage::path($path));
-            
-    //                     $image_x_max_width  = 'image_' . $format . '_max_width';
-    //                     $image_x_max_height = 'image_' . $format . '_max_height';
-            
-    //                     if ($format == 'large' ? $Informationsystem->preserve_aspect_ratio == 1 : $Informationsystem->preserve_aspect_ratio_small == 1) {
-    //                         $Image->resize($Informationsystem->$image_x_max_width, $Informationsystem->$image_x_max_height, function ($constraint) {
-    //                             $constraint->aspectRatio();
-    //                             $constraint->upsize();
-    //                         });
-    //                     } else {
-    //                         $Image->fit($Informationsystem->$image_x_max_width, $Informationsystem->$image_x_max_height);
-    //                     }
-            
-    //                     $sName = 'image_' . $format . $oInformationsystemItemFile->id .'.' . $fileInfo["extension"];
-            
-    //                     $Image->save(Storage::path($storePath) . $sName);
-            
-    //                     if ($Informationsystem->convert_webp == 1) {
-                            
-    //                         File::webpConvert(Storage::path($storePath), $sName);
-            
-    //                         $sName = 'image_' . $format . $oInformationsystemItemFile->id .'.webp';
-    //                     }
-            
-    //                     $format == 'large' ? $oInformationsystemItemFile->image_large = $sName : $oInformationsystemItemFile->image_small = $sName;
-            
-    //                 }
-
-    //                 Storage::delete($path);
-
-    //             } else {
-
-    //                 $oInformationsystemItemFile->file = $getClientOriginalName;
-    //             }
-
-    //             $oInformationsystemItemFile->save();
-    //         }
-    //     }
-    // }
-
     
     public function addAssociated(Request $request, shopItem $shopItem)
     {
