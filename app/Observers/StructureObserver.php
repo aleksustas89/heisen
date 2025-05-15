@@ -26,7 +26,9 @@ class StructureObserver
     {
 
         foreach (Structure::where("parent_id", $structure->id)->get() as $Structure) {
-            $Structure->setUrl();
+
+            $Structure->url = $Structure->url();
+            $Structure->save();
         }
     }
 
