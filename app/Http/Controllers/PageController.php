@@ -42,7 +42,7 @@ class PageController extends Controller
 
                     ->orWhere(function($query) use ($ShopFilter) {
                         $query->where('entity_id', $ShopFilter)
-                              ->where('type', '=', 6);
+                              ->where('type', '=', Page::getType(ShopFilter::class));
                     })
 
                     ->orWhere(function($query) use ($Informationsystem) {

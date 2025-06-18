@@ -27,26 +27,26 @@ var Modification = {
                 url: "/get-modification",
                 type: "POST",
                 data: $("#add_to_cart").serialize(),
-                dataType: "json",
+                dataType: "html",
                 success: function (data) {
 
-                    if (typeof data.item != 'undefined') {
+                    $("#item").replaceWith(data);
 
-                        $("#cart_add").attr("onclick", "Cart.add('"+ $("#cart_add").data("route") +"', "+ data.item.id +", " + $("[name='quantity']").val()  + ")");
-                        /*вставим и в быстрый заказ*/
-                        $("#shop-quich-order").find("[name='shop_item_id']").val(data.item.id);
-                        $("#item-name").text(data.item.name);
-                        $("#item-price").text(data.item.price);
-                        $("#item-old-price").text(data.item.oldPrice);
+                    Spiner.hide();
 
-                        history.pushState(null, null, data.item.url);
+                    // if (typeof data.item != 'undefined') {
 
-                        //if ($("#uk-slide-" + data.item.image.shop_item_image_id).length) {
-                        //    var slideshow = UIkit.slideshow("#uk-slideshow-items");
-                        //    slideshow.show($("#uk-slide-" + data.item.image.shop_item_image_id).index());
-                        //}
-                        Spiner.hide();
-                    }
+                    //     $("#cart_add").attr("onclick", "Cart.add('"+ $("#cart_add").data("route") +"', "+ data.item.id +", " + $("[name='quantity']").val()  + ")");
+                    //     /*вставим и в быстрый заказ*/
+                    //     $("#shop-quich-order").find("[name='shop_item_id']").val(data.item.id);
+                    //     $("#item-name").text(data.item.name);
+                    //     $("#item-price").text(data.item.price);
+                    //     $("#item-old-price").text(data.item.oldPrice);
+
+                    //     history.pushState(null, null, data.item.url);
+
+                    //     Spiner.hide();
+                    // }
                 },
             });
         }

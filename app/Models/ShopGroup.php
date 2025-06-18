@@ -20,6 +20,11 @@ class ShopGroup extends Model
         return $this->hasMany(ShopItemPropertyForGroup::class);
     }
 
+    public function ShopGroupWeight()
+    {
+        return $this->hasOne(ShopGroupWeight::class);
+    }
+
     public function path($aResult = array(), $activeAll = true)
     {
         

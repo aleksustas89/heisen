@@ -59,7 +59,7 @@ class File
                 imagewebp($img, $return, 80);
                 imagedestroy($img);
 
-                unlink($fullPath);
+                //unlink($fullPath);
             break;
 
             case IMAGETYPE_PNG:
@@ -71,7 +71,7 @@ class File
                 $return = $dir . $nameWithoutExt . '.webp';
                 imagewebp($img, $return, 80);
 
-                unlink($fullPath);
+                //unlink($fullPath);
 
             break;
         }

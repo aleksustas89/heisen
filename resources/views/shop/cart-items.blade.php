@@ -34,9 +34,11 @@ $Cart =  App\Http\Controllers\CartController::getCart();
                         <div class="uk-grid-small uk-flex-middle" uk-grid>
                             <div class="uk-width-auto">
                                 @foreach ($ShopItem->getImages(false) as $image)
-                                    <a href="{{ $ShopItem->url }}">
-                                        <img class="uk-tovar-avatar" data-src="{{ $image['image_small'] }}" uk-img="loading: lazy" width="80" height="80" alt="">
-                                    </a>
+                                    @if (isset($image['image_small']))
+                                        <a href="{{ $ShopItem->url }}">
+                                            <img class="uk-tovar-avatar" data-src="{{ $image['image_small'] }}" uk-img="loading: lazy" width="80" height="80" alt="">
+                                        </a>
+                                    @endif
                                 @endforeach 
                             </div>
                             <div class="uk-width-expand">

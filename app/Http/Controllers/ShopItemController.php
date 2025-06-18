@@ -29,9 +29,8 @@ class ShopItemController extends Controller
         }
     }
 
-    static public function show($shopItem)
+    public static function getItem($shopItem)
     {
-
         $ParentItem = $shopItem->parentItemIfModification();
 
         $ShopItemProperties = ShopItemProperty::select("shop_item_properties.*")
@@ -67,12 +66,7 @@ class ShopItemController extends Controller
         //габариты
         $aDimensions = [];
         $k = 0;
-        // if ($shopItem->weight > 0) {
-        //     $aDimensions[$k]["name"] = "Вес";
-        //     $aDimensions[$k]["value"] = $shopItem->weight;
-        //     $aDimensions[$k]["measure"] = "гр";
-        //     $k++;
-        // }
+
         if ($ParentItem->width > 0) {
             $aDimensions[$k]["name"] = "Ширина";
             $aDimensions[$k]["value"] = (int)$ParentItem->width;
@@ -139,8 +133,13 @@ class ShopItemController extends Controller
 
         $Return['aDefaultValues'] = $ListValues;
 
+        return $Return;
+    }
 
-        return view('shop/item', $Return);
+    static public function show($shopItem, $default_modification_id = false)
+    {
+
+        return view('shop/item', self::getItem($shopItem, $default_modification_id));
     }
 
     static public function shopItemValues($shopItem) : array
@@ -169,9 +168,11 @@ class ShopItemController extends Controller
     public function getModification(Request $request)
     {
 
-        $response = [];
-
         if ($request->shop_item_id) {
+
+            $shopItem = ShopItem::find($request->shop_item_id);
+
+            list($marking) = explode("_", $shopItem->marking);
 
             $aProperties = [];
             foreach ($request->all() as $k => $input) {
@@ -181,6 +182,29 @@ class ShopItemController extends Controller
                 }
             }
 
+            //сначала проверяем, есть ли такой товар по цвету и артикулу
+            $ShopItem = ShopItem::select("shop_items.*");
+            $ShopItem
+                ->join("property_value_ints", "property_value_ints.entity_id", "=", "shop_items.id")
+                ->where("shop_items.marking", "LIKE", $marking . "%")
+                ->where("shop_items.default_modification", 1)
+                ->where("shop_items.deleted", 0)
+                ->where(function($query) use ($aProperties) {
+                    foreach ($aProperties as $k => $aProperty) {
+                        $query->orWhere(function($query) use ($k, $aProperty) {
+                            $query->where("property_value_ints.property_id", $k)
+                                ->where("property_value_ints.value", $aProperty);
+                        });
+                    }
+                })
+                ->havingRaw('COUNT(property_value_ints.property_id) = ' . count($aProperties))->groupBy("shop_items.id");
+
+            
+            if (!is_null($aShopItem = $ShopItem->first())) {
+                return response()->view('shop/item-content', self::getItem($aShopItem));
+            }
+   
+            //ищем модификацию у основного товара
             $ShopItem = ShopItem::select("shop_items.*");
             $ShopItem
                 ->join("property_value_ints", "property_value_ints.entity_id", "=", "shop_items.id")
@@ -196,19 +220,10 @@ class ShopItemController extends Controller
                 })
                 ->havingRaw('COUNT(property_value_ints.property_id) = ' . count($aProperties))->groupBy("shop_items.id");
 
-            $aShopItem = $ShopItem->first();
-
-            $response["item"]["id"] = $aShopItem->id;
-            $response["item"]["name"] = $aShopItem->name;
-            $response["item"]["price"] = \App\Services\Helpers\Str::price($aShopItem->price());
-            $response["item"]["oldPrice"] = \App\Services\Helpers\Str::price($aShopItem->oldPrice());
-            $response["item"]["image"] = $aShopItem->ShopModificationImage;
-            $response["item"]["url"] = "https://" . request()->getHost() .  $aShopItem->url;
-
+            if (!is_null($aShopItem = $ShopItem->first())) {
+                return response()->view('shop/item-content', self::getItem($aShopItem));
+            }
         }
-        
-
-        return response()->json($response);
     }
 
     public function saveComment(Request $request)

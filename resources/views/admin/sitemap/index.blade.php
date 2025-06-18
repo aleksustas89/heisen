@@ -94,6 +94,18 @@
                 @endif
             </div>                                                        
         </div>
+
+        <div class="file-box">
+            <div class="text-center">
+                <a target="_blank" href="{{ route('getImageCatalog') }}"><i class="lar la-file-excel text-danger ico"></i></a>
+                <h6 class="text-truncate">Image Catalog</h6>
+                @if (!empty($imageCatalogInfo["date"]))
+                    <small class="text-muted">
+                        {{ $imageCatalogInfo["date"] }} / {{ $imageCatalogInfo["filesize"] }}
+                    </small>
+                @endif
+            </div>                                                        
+        </div>
         
     </div> 
 
