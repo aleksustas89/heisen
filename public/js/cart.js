@@ -52,18 +52,30 @@ var Cart = {
         
         Spiner.show();
 
+        let description = $("#personalization_desc").val(), 
+            logo_select = $("#personalization_logo").val(); 
+
+            console.log(shop_item_id)
+            console.log(description)
+            console.log(logo_select)
+
         $.ajax({
             url: route,
             type: "POST",
             data: {
                 "shop_item_id": shop_item_id, 
-                "count": count
+                "count": count,
+                "description": description,
+                "logo_select": logo_select
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             dataType: "html",
             success: function (data) {
+
+                $("#personalization_logo").val(1);
+                $("#personalization_desc").val("");
 
                 Cart.updateCart();
 

@@ -135,8 +135,38 @@
                 });
             });
 
+
+
+            $("body").on("click", ".personalization_logo", function() {
+                let index = $(this).index();
+                $(".personalization_logo").each(function() {
+                    if ($(this).index() == index) {
+                        $(this).addClass("uk-button-primary");
+                    } else {
+                        $(this).removeClass("uk-button-primary");
+                    }
+                });
+
+                $("#personalization_logo").val($(this).attr("data-value"));
+            });
+
+            $("body").on("click", ".personalization", function() {
+                let index = $(this).index();
+                $(".personalization").each(function() {
+                    if ($(this).index() == index) {
+                        $(this).addClass("uk-button-primary");
+                    } else {
+                        $(this).removeClass("uk-button-primary");
+                    }
+                });
+
+                if ($(this).attr("data-value") == '2') {
+                    $("#personalization").removeClass("uk-hidden");
+                } else {
+                    $("#personalization").addClass("uk-hidden");
+                }
+            });
         });
-        
     </script>
 
     <script>

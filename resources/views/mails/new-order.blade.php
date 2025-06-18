@@ -72,7 +72,22 @@
 
                 @foreach ($ShopOrder->ShopOrderItems as $orderItem)
                     <tr>
-                        <td style="padding: 30px; background-color: #f8f8f8; font-size:18px">{{ $orderItem->name }}</td>
+                        <td style="padding: 30px; background-color: #f8f8f8; font-size:18px">
+                            {{ $orderItem->name }}
+
+                            @if (!empty($orderItem->logo))
+                                @if ($orderItem->logo == 1)
+                                    <div style="font-size:12px">Без логотипа</div>
+                                @endif
+                                @if ($orderItem->logo == 2)
+                                    <div style="font-size:12px">С логотипом мастера</div>
+                                @endif
+                            @endif
+                            @if (!empty($orderItem->description))
+                                <div style="font-size:12px">Персонализация: {{ $orderItem->description }}</div>
+                            @endif
+
+                        </td>
                         <td style="text-align:center; padding: 30px; background-color: #f8f8f8; font-size:18px" width="100px">{{ App\Models\Str::price($orderItem->price) }}</td>
                         <td style="text-align:center; padding: 30px; background-color: #f8f8f8; font-size:18px" width="100px">{{ $orderItem->quantity }}</td>
                         <td style="text-align:center; padding: 30px; background-color: #f8f8f8; font-size:18px" width="100px">{{ App\Models\Str::price($orderItem->price * $orderItem->quantity) }}</td>

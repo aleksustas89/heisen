@@ -200,7 +200,39 @@
 
                     @endforeach
 
+                    <div>
+                        <div class="uk-h3 uk-margin uk-margin-top">Вы можете добавить</div>
+                        <div>
+                            <div>
+                                <button type="button" data-value="2" class="personalization_logo uk-button uk-buttom-small uk-button-primary">С логотипом мастера </button>
+                                <button type="button" data-value="1" class="personalization_logo uk-button uk-buttom-small ">Без логотипа</button>
+                                
+                                <input type="hidden" id="personalization_logo" value="2" />
+             
+                            </div>
+
+                            <div class="uk-margin-top">
+                                <button type="button" data-value="1" class="personalization uk-button uk-buttom-small uk-button-primary">Без персонализации</button>
+                                <button type="button" data-value="2" class="personalization uk-button uk-buttom-small ">С персонализации</button>
+                            </div>
+
+                            <div class="uk-margin-top uk-hidden" id="personalization">
+                                <p>Пожалуйста, укажите:</p>
+
+                                <ul>
+                                    <li>Инициалы, имя или короткую фразу (до 20 символов)</li>
+                                    <li>Расположение тиснения (например, внутри, на ручке и т.д.)</li>
+                                    <li>Ваши дополнительные пожелания</li>
+                                </ul>
+                                <div>
+                                    <textarea name="personalization_desc" id="personalization_desc" class="uk-textarea" placeholder="Персонализация"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
+
+
                     
                 <div class="uk-margin-medium" uk-margin>
                     <div uk-form-custom="target: true" class="uk-visible@s">

@@ -159,10 +159,25 @@
                                                                 </thead>
                                                                 <tbody>";
                                                 foreach ($order->ShopOrderItems()->where("deleted", 0)->get()  as $orderItem) {
+
+                                                    $personalization = "";
+                                                    if (!empty($orderItem->logo)) {
+                                                        if ($orderItem->logo == 1) {
+                                                            $personalization .= "<div style='font-size:12px'>Без логотипа</div>";
+                                                        }
+                                                        if ($orderItem->logo == 2) {
+                                                            $personalization .= "<div style='font-size:12px'>С логотипом мастера</div>";
+                                                        }
+                                                    }
+
+                                                    if (!empty($orderItem->description)) {
+                                                        $personalization .= "<div style='font-size:12px'>Персонализация: " . $orderItem->description . "</div>";
+                                                    }
+
                                                     $popover .= "
                                                                     <tr>
                                                                         <td>" . $orderItem->id . "</td>
-                                                                        <td>" . (str_replace('"', "", $orderItem->name)) . "</td>
+                                                                        <td>" . (str_replace('"', "", $orderItem->name)) . $personalization . "</td>
                                                                         <td>" . $orderItem->price . "</td>
                                                                         <td>" . $orderItem->quantity . "</td>
                                                                         <td>" . App\Models\Str::price($orderItem->price * $orderItem->quantity) . "</td>

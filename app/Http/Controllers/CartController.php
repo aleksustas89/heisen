@@ -63,15 +63,16 @@ class CartController extends Controller
         return self::getCartItemsTemplate();
     }
 
-    public function add(ShopItem $shopItem, $count)
+    public function add(ShopItem $shopItem, $count, Request $request)
     {
         if (!$cart_id = self::isSetCart()) {
             
             $cart_id = $this->setCart();
         }
-
         if (!is_null($ShopCartItem = ShopCartItem::where("cart_id", $cart_id)->where("shop_item_id", $shopItem->id)->first())) {
             $ShopCartItem->count = $ShopCartItem->count + $count;
+            $ShopCartItem->description = $request->description;
+            $ShopCartItem->logo = $request->logo_select ?? 0;
         } else {
             $ShopCartItem = new ShopCartItem();
             $ShopCartItem->price = $shopItem->price();
@@ -79,6 +80,8 @@ class CartController extends Controller
             $ShopCartItem->cart_id = $cart_id;
             $ShopCartItem->count = $count;
             $ShopCartItem->shop_item_id = $shopItem->id;
+            $ShopCartItem->description = $request->description;
+            $ShopCartItem->logo = $request->logo_select ?? 0;
         }
 
         $ShopCartItem->save();
@@ -91,7 +94,7 @@ class CartController extends Controller
     {
         if (!is_null($ShopItem = ShopItem::find($request->shop_item_id))) {
 
-            $this->add($ShopItem, $request->count);
+            $this->add($ShopItem, $request->count, $request);
     
             return response()->view("shop.add-cart-window", ["ShopItem" => $ShopItem]);
         }
@@ -269,6 +272,7 @@ class CartController extends Controller
             $ShopOrder->description = \App\Services\Helpers\Str::clean($request->description);
             $ShopOrder->not_call = $request->not_call ?? 0;
             $ShopOrder->guid = Guid::get();
+            
 
             if ($request->cash_on_delivery) {
                 $ShopOrder->cash_on_delivery = 1;
@@ -298,6 +302,8 @@ class CartController extends Controller
                 $ShopOrderItem->quantity = $ShopCartItem->count;
                 $ShopOrderItem->price = $ShopCartItem->price;
                 $ShopOrderItem->old_price = $ShopCartItem->old_price > 0 ? $ShopCartItem->old_price : 0;
+                $ShopOrderItem->description = $ShopCartItem->description;
+                $ShopOrderItem->logo = $ShopCartItem->logo ?? 0;
                 $ShopOrderItem->save();
 
 

@@ -31,7 +31,7 @@ $Cart =  App\Http\Controllers\CartController::getCart();
 
                         <a onclick="Cart.delete({{ $CartItem->id }})" class="uk-margin-small-right uk-icon uk-position-top-right cart-close" uk-icon="icon:close; ratio:0.7"></a>
 
-                        <div class="uk-grid-small uk-flex-middle" uk-grid>
+                        <div class="uk-grid-small uk-flex-" uk-grid>
                             <div class="uk-width-auto">
                                 @foreach ($ShopItem->getImages(false) as $image)
                                     @if (isset($image['image_small']))
@@ -65,6 +65,20 @@ $Cart =  App\Http\Controllers\CartController::getCart();
                                         {{$Currency->name}}
                                     </li>
                                 </ul>
+
+                                @if ($CartItem->logo > 0 || !empty($CartItem->description))
+                                    <div class="uk-alert-danger uk-alert" uk-alert="">
+                                        @if ($CartItem->logo == 1)
+                                            <div>Без логотипа</div>
+                                        @endif
+                                        @if ($CartItem->logo == 2)
+                                            <div>С логотипом мастера</div>
+                                        @endif
+                                        @if (!empty($CartItem->description))
+                                            <div>Персонализация: {{ $CartItem->description }}</div>
+                                        @endif
+                                    </div>
+                                @endif
                                 {{-- @if (isset($row->attributes["priceChanged"]))
                                     <div class="uk-alert-danger uk-alert" uk-alert="">
                                         <p>С момента добавления в корзину, цена или скидка были изменены!</p>

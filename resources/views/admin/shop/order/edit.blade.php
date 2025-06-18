@@ -563,7 +563,20 @@
 
                                 @foreach ($order->ShopOrderItems()->where("deleted", 0)->get() as $orderItem) 
                                     <tr>
-                                        <td class="td_editable">{{ $orderItem->name }}</td>
+                                        <td class="td_editable" width="40%">
+                                            {{ $orderItem->name }}
+                                            @if (!empty($orderItem->logo))
+                                                @if ($orderItem->logo == 1)
+                                                    <div style="font-size:12px">Без логотипа</div>
+                                                @endif
+                                                @if ($orderItem->logo == 2)
+                                                    <div style="font-size:12px">С логотипом мастера</div>
+                                                @endif
+                                            @endif
+                                            @if (!empty($orderItem->description))
+                                                <div style="font-size:12px">Персонализация: {{ $orderItem->description }}</div>
+                                            @endif
+                                        </td>
                                         <td class="td_editable">{{ $orderItem->quantity }}</td>
                                         <td class="td_editable">{{ $orderItem->price }}</td>
                                         <td class="d-mob-none">{{ $orderItem->price * $orderItem->quantity }}</td>
