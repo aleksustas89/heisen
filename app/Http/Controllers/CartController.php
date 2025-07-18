@@ -37,8 +37,21 @@ class CartController extends Controller
 
         $client = Auth::guard('client')->user();
 
+        $cart = self::getCart();
+
+        $personalization = false;
+
+        foreach ($cart['items'] as $item) {
+            if (!empty($item->description)) {
+
+                $personalization  = true;
+                break;
+            }
+        }
+
         return view('shop.cart', [
-            "Cart" => self::getCart(),
+            "Cart" => $cart,
+            "personalization" => $personalization,
             "Cities" => ShopCountryLocationCity::get(),
             "Payments" => ShopPaymentSystem::where("deleted", 0)->orderBy("sorting", "ASC")->get(),
             'shopDeliveries' => ShopDelivery::where("deleted", 0)->orderBy("sorting", "ASC")->get(),

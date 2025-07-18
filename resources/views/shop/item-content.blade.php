@@ -238,7 +238,12 @@
                     <div uk-form-custom="target: true" class="uk-visible@s">
                         <input type="number" class="uk-input uk-form-width-xsmall" name="quantity" value="1" title="Qty" size="4" min="1" max="" step="1" placeholder="" inputmode="numeric" autocomplete="off">
                     </div>
-                    <button type="button" id="cart_add" data-route="{{ route('cartAdd') }}" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" @if($Modification) onclick="Cart.add('{{ route('cartAdd') }}', {{ $Modification->id }}, $('[name=\'quantity\']').val())" @else disabled @endif  class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ <span uk-icon="icon: cart"></span></button>
+                    <button 
+                            type="button" id="cart_add" data-route="{{ route('cartAdd') }}" 
+                            data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" @if($Modification) 
+                            onclick="Cart.add('{{ route('cartAdd') }}', {{ $Modification->id }}, $('[name=\'quantity\']').val()); ym({{ env('YM_ID') }}, 'reachGoal', 'AddToCart', {order_price: '{{ $item->price }}', currency: 'RUB'}); return true;" @else disabled @endif  
+                            class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ <span uk-icon="icon: cart"></span>
+                    </button>
                     <button uk-toggle="target: #quick-order" type="button" id="fast_order" data-uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" uk-tooltip="Выберите {{ implode('и', $choose_properties_tooltip) }}" @if(!$Modification) disabled @endif class="uk-button uk-buttom-small uk-button-primary buy-btn">КУПИТЬ В ОДИН КЛИК</button>
                     <div id="quick-order" uk-modal>
                         <div class="uk-modal-dialog uk-modal-body">
@@ -283,14 +288,14 @@
                             @php
                             $active = in_array($item->id, $clientFavorites) ? true : false;
                             @endphp
-                            <a onclick="Favorite.add($(this), {{ $item->id }}, '{{ route('addFavorite') }}')" @class(["add-to-favorite-link", "uk-icon", "uk-icon-button", "tm-icon", "active" => $active]) uk-icon="heart"></a>
+                            <a onclick="Favorite.add($(this), {{ $item->id }}, '{{ route('addFavorite') }}'); ym({{ env('YM_ID') }}, 'reachGoal', 'AddToFavorite'); return true;" @class(["add-to-favorite-link", "uk-icon", "uk-icon-button", "tm-icon", "active" => $active]) uk-icon="heart"></a>
                         @endif
                     @elseif (\App\Models\ClientFavorite::$Type == 1)
                         @php
                         $clientFavorites = \App\Http\Controllers\Auth\ClientController::getCookieFavorites();
                         $active = in_array($item->id, $clientFavorites) ? true : false;
                         @endphp
-                        <a onclick="Favorite.add($(this), {{ $item->id }}, '{{ route('addFavorite') }}')" @class(["add-to-favorite-link", "uk-icon", "uk-icon-button", "tm-icon", "active" => $active]) uk-icon="heart"></a>
+                        <a onclick="Favorite.add($(this), {{ $item->id }}, '{{ route('addFavorite') }}'); ym({{ env('YM_ID') }}, 'reachGoal', 'AddToFavorite'); return true;" @class(["add-to-favorite-link", "uk-icon", "uk-icon-button", "tm-icon", "active" => $active]) uk-icon="heart"></a>
                     @endif
         
 

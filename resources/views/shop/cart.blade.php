@@ -108,7 +108,7 @@
 
             <div class="uk-grid" uk-grid class="cart-block">
                 <div class="uk-width-2-3@s cart-block-user-data">
-                    <form method="POST" id="cart-order">
+                    <form method="POST" id="cart-order" onsubmit="ym({{ env('YM_ID') }}, 'reachGoal', 'Order'); return true;">
                         @csrf
                         
                         <div class="uk-card uk-card-default uk-card-body uk-card-small uk-form-stacked">
@@ -239,7 +239,21 @@
                                 <div class="uk-form-controls">
                                     <ul class="uk-list">
                                         @foreach ($Payments as $k => $Payment)
-                                            <li><label><input {{ $k == 0 || old('shop_payment_system_id') == $Payment->id ? 'checked' : '' }} class="uk-radio" type="radio" value="{{ $Payment->id }}" name="shop_payment_system_id"> {{ $Payment->name }}</label></li>
+                                            @php
+                                                $is_personalization = $personalization && $Payment->description =='hand' ? true : false;
+                                            @endphp
+                                            <li>
+                                                <label>
+                                                    <input {{ $k == 0 || old('shop_payment_system_id') == $Payment->id ? 'checked' : '' }} 
+                                                        @if ($is_personalization) disabled="disabled" @endif
+                                                        class="uk-radio" 
+                                                        type="radio" 
+                                                        value="{{ $Payment->id }}" 
+                                                        name="shop_payment_system_id"> {{ $Payment->name }}
+
+                                                        @if ($is_personalization) (Этод метод оплаты недоступен при выборе персонализации) @endif
+                                                </label>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>

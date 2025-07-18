@@ -611,6 +611,30 @@
 
                                             @endif
                                         @break
+
+                                        @case(5)
+                                            @if (isset($property_value_texts[$property->id]))
+                                                <div class="list-group-item">
+                                                    @foreach ($property_value_texts[$property->id] as $k => $property_value_text) 
+                                                        <div class="row mb-3 admin-item-property" data-property="{{ $property->id }}" data-id="{{ $k }}" id="admin-item-property-{{ $property->id }}-{{ $k }}">
+                                                            <div class="col-10">
+                                                                <label class="mb-1">{{ $property->name }}</label>
+                                                                <textarea data-name="property_{{ $property->id }}[]" name="property_{{ $property->id }}_{{ $k }}" class="form-control editor" placeholder="{{ $property->name }}">{{ $property_value_text }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                <div class="list-group-item">
+                                                    <div class="row mb-3 admin-item-property">
+                                                        <div class="col-10">
+                                                            <label class="mb-1">{{ $property->name }}</label>
+                                                            <textarea data-name="property_{{ $property->id }}[]" name="property_{{ $property->id }}[]" class="form-control editor" placeholder="{{ $property->name }}"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @break
                                         @default
                                             
                                     @endswitch

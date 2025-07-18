@@ -108,7 +108,7 @@ $Cart =  App\Http\Controllers\CartController::getCart();
             <hr />
             @if ($showLittleCart)
                 <div class="uk-text-center">
-                    <a href="{{ route("cartIndex") }}" class="uk-button uk-button-primary">Оформить заказ</a>
+                    <a href="{{ route("cartIndex") }}" class="uk-button uk-button-primary" onclick="ym({{ env('YM_ID') }}, 'reachGoal', 'GoToCart'); return true;">Оформить заказ</a>
                 </div>
             @endif
             <!--Small card-->

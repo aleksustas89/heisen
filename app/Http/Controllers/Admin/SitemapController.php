@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PropertyValueString;
 use App\Models\ShopItemListItem;
 use App\Models\PropertyValueInt;
+use App\Models\PropertyValueText;
 use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\ShopGroup;
@@ -745,14 +746,14 @@ class SitemapController extends Controller
                 'E' => 'Название товара', 'F' => 'Цена', 'G' => 'Цвет', 'H' => 'Пол',
                 'I' => 'Вес в упаковке', 'J' => 'Длина', 'K' => 'Ширина', 'L' => 'Высота',
                 'M' => 'Ширина упаковки, мм', 'N' => 'Высота упаковки, мм', 'O' => 'Длина упаковки, мм',
-                'P' => 'Изображение'
+                'P' => 'Изображение', 'Q' => 'Аннотация'
             ];
 
             // Ширина столбцов
             $columnWidths = [
                 'A' => 30, 'B' => 30, 'C' => 10, 'D' => 10, 'E' => 65, 'F' => 10, 'G' => 10,
                 'H' => 10, 'I' => 13, 'J' => 10, 'K' => 10, 'L' => 10, 'M' => 21, 'N' => 21,
-                'O' => 21, 'P' => 50
+                'O' => 21, 'P' => 50, 'Q' => 30
             ];
 
             // Установка заголовков
@@ -762,8 +763,8 @@ class SitemapController extends Controller
             }
 
             // Стили для заголовков и выравнивание
-            $worksheet->getStyle("A1:P1")->getFont()->setBold(true);
-            $worksheet->getStyle('E:P')->getAlignment()->setHorizontal('left')->setVertical('center');
+            $worksheet->getStyle("A1:Q1")->getFont()->setBold(true);
+            $worksheet->getStyle('E:Q')->getAlignment()->setHorizontal('left')->setVertical('center');
 
             $i = 2;
 
@@ -838,6 +839,15 @@ class SitemapController extends Controller
                         $worksheet->getCell('P' . $i)->setValue('');
                     }
                 }
+
+                
+                //Аннотация
+                if (!is_null($Value = PropertyValueText::where("entity_id", $ShopItem->id)->where("property_id", 203)->first())) {
+                    $allowed_tags = '<br><ul><li>';
+                    $cleaned = strip_tags($Value->value, $allowed_tags);
+                    $worksheet->getCell('Q' . $i)->setValue($cleaned);
+                }
+
             };
 
             // Обработка групп и подгрупп

@@ -33,7 +33,7 @@ $url = $defaultModification ? $defaultModification->url : $item->url;
                 $clientFavorites = \App\Http\Controllers\Auth\ClientController::getCookieFavorites();
                 $active = in_array($item->id, $clientFavorites) ? true : false;
                 @endphp
-                <a onclick="Favorite.add($(this), {{ $item->id }}, '{{ route('addFavorite') }}')" @class(["add-to-favorite-link", "uk-icon", "uk-icon-button", "tm-icon", "active" => $active]) uk-icon="heart"></a>
+                <a onclick="Favorite.add($(this), {{ $item->id }}, '{{ route('addFavorite') }}'); ym({{ env('YM_ID') }}, 'reachGoal', 'AddToFavorite'); return true;" @class(["add-to-favorite-link", "uk-icon", "uk-icon-button", "tm-icon", "active" => $active]) uk-icon="heart"></a>
             @endif
 
         </div>

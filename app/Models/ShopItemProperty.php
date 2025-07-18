@@ -33,6 +33,7 @@ class ShopItemProperty extends Model
             2 => 'Число с плавающей запятой',
             3 => 'Флажок',
             4 => 'Список',
+            5 => 'Текст',
         ];
     }
 
@@ -67,6 +68,9 @@ class ShopItemProperty extends Model
             case 4:
                 $object = new PropertyValueInt();
             break;
+            case 5:
+                $object = new \App\Models\PropertyValueText();
+            break;
         }
 
         return $object;
@@ -83,6 +87,9 @@ class ShopItemProperty extends Model
             break;
             case "App\Models\PropertyValueFloat":
                 $result = 0;
+            break;
+            case "App\Models\PropertyValueText":
+                $result = '';
             break;
         }
         

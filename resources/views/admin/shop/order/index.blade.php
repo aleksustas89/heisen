@@ -171,7 +171,8 @@
                                                     }
 
                                                     if (!empty($orderItem->description)) {
-                                                        $personalization .= "<div style='font-size:12px'>Персонализация: " . $orderItem->description . "</div>";
+                                                        $descriptionSafe = htmlspecialchars($orderItem->description, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                                        $personalization .= "<div style='font-size:12px'>Персонализация: " . $descriptionSafe . "</div>";
                                                     }
 
                                                     $popover .= "

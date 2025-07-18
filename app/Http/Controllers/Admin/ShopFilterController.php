@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\ShopFilter;
-use App\Models\Page;
 use App\Models\ShopItemProperty;
 use App\Models\ShopItemListItem;
 use App\Models\ShopGroup;
@@ -124,7 +123,6 @@ class ShopFilterController extends Controller
             $shopFilter->seo_h1 = $request->seo_h1;
             $shopFilter->seo_text = $request->seo_text;
             
-            //$shopFilter->url = $url;
             $shopFilter->indexing = $request->indexing;
             $shopFilter->sorting = $request->sorting;
             $shopFilter->shop_group_id = $request->shop_group_id ?? 0;

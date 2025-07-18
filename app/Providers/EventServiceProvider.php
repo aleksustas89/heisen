@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Admin\ShopFilterController;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Models\InformationsystemItem;
+use App\Models\ShopFilter;
 use App\Models\Structure;
 use App\Models\ShopGroup;
 use App\Models\ShopItem;
@@ -14,6 +16,7 @@ use App\Observers\StructureObserver;
 use App\Observers\ShopGroupObserver;
 use App\Observers\ShopItemObserver;
 use App\Observers\InformationsystemItemObserver;
+use App\Observers\ShopFilterObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -37,6 +40,7 @@ class EventServiceProvider extends ServiceProvider
         ShopGroup::observe(new ShopGroupObserver);
         ShopItem::observe(new ShopItemObserver);
         InformationsystemItem::observe(new InformationsystemItemObserver);
+        ShopFilter::observe(new ShopFilterObserver);
     }
 
     /**

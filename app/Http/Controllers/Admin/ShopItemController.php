@@ -17,6 +17,7 @@ use App\Models\ShopItemProperty;
 use App\Models\ShopItemListItem;
 use App\Models\PropertyValueInt;
 use App\Models\PropertyValueString;
+use App\Models\PropertyValueText;
 use App\Models\PropertyValueFloat;
 use Illuminate\Filesystem\Filesystem;
 use App\Http\Controllers\Admin\SearchController;
@@ -99,6 +100,11 @@ class ShopItemController extends Controller
             $aProperty_Value_Float[$oProperty_Value_Float->property_id][$oProperty_Value_Float->id] = $oProperty_Value_Float->value;
         }
 
+        $aProperty_Value_Text = [];
+        foreach(PropertyValueText::where("entity_id", $shopItem->id)->get() as  $oPropertyValueText) {
+            $aProperty_Value_Text[$oPropertyValueText->property_id][$oPropertyValueText->id] = $oPropertyValueText->value;
+        }
+
         $canonicalShopItem = ShopItem::find($shopItem->canonical);
         
         return view('admin.shop.item.edit', [
@@ -111,6 +117,7 @@ class ShopItemController extends Controller
             'property_value_ints' => $aProperty_Value_Int,
             'property_value_strings' => $aProperty_Value_String,
             'property_value_floats' => $aProperty_Value_Float,
+            'property_value_texts' => $aProperty_Value_Text,
             'lists' => self::getListItems($properties),
             'shop' => $shop,
             "mShopItems" => ShopItem::where("modification_id", $shopItem->id)->where("deleted", 0)->get(),
@@ -319,34 +326,8 @@ class ShopItemController extends Controller
         foreach (self::getProperties($shop_group_id) as $property) {
         
             $property_id = 'property_' . $property->id;
-
-            if (isset($request->$property_id)) {
-
-                if (is_array($request->$property_id)) {
-                    foreach ($request->$property_id as $Value) {
-
-                        //if (!empty(trim($Value))) {
-
-                            $oProperty_Value = ShopItemProperty::getObjectByType($property->type);        
-                            $oProperty_Value->property_id = $property->id;
-                            $oProperty_Value->entity_id = $shopItem->id;
-                            $oProperty_Value->value = !empty($Value) ? $Value : ShopItemProperty::getDafaultValueByObject($oProperty_Value);
-                            $oProperty_Value->save();
-                        //}
-                    }
-                } else {
-                    
-                    //checkbox
-                    $oProperty_Value = new PropertyValueInt();
-                    
-                    $oProperty_Value->property_id = $property->id;
-                    $oProperty_Value->entity_id = $shopItem->id;
-                    $oProperty_Value->value = 1;
-                    $oProperty_Value->save();
-                }
-            }
-
-            /* старые свойства */
+        
+            /* старые свойства */  
             $oCreatedProperty_Value = ShopItemProperty::getObjectByType($property->type); 
 
             foreach ($oCreatedProperty_Value::where("property_id", $property->id)->where("entity_id", $shopItem->id)->get() as $Value) {
@@ -365,6 +346,29 @@ class ShopItemController extends Controller
                         $Value->value = ShopItemProperty::getDafaultValueByObject($oCreatedProperty_Value);
                         $Value->save();
                     }
+                }
+            }
+
+            if (isset($request->$property_id)) {
+
+                if (is_array($request->$property_id)) {
+                    foreach ($request->$property_id as $Value) {
+
+                        $oProperty_Value = ShopItemProperty::getObjectByType($property->type);
+                        $oProperty_Value->property_id = $property->id;
+                        $oProperty_Value->entity_id = $shopItem->id;
+                        $oProperty_Value->value = !empty($Value) ? $Value : ShopItemProperty::getDafaultValueByObject($oProperty_Value);
+                        $oProperty_Value->save();
+                    }
+                } else {
+                    
+                    //checkbox
+                    $oProperty_Value = new PropertyValueInt();
+                    
+                    $oProperty_Value->property_id = $property->id;
+                    $oProperty_Value->entity_id = $shopItem->id;
+                    $oProperty_Value->value = 1;
+                    $oProperty_Value->save();
                 }
             }
         }
