@@ -2,9 +2,14 @@
 
     $client = Auth::guard('client')->user();
     $clientFavorites = !is_null($client) ? $client->getClientFavorites() : [];
+    $ecommerceData = $Modification ? $Modification->getEcommerceData() : $item->getEcommerceData();
     @endphp
 
-	<div id="item" class="uk-section-xsmall uk-padding-remove-top" itemscope itemtype="http://schema.org/Product">
+    <script>
+        Ecommerce.detail(@json($ecommerceData));
+    </script>
+
+	<div id="item" data-ecommerce='@json($ecommerceData)' class="uk-section-xsmall uk-padding-remove-top" itemscope itemtype="http://schema.org/Product">
         <div uk-grid>
             @if (count($images) > 0)
                 <div class="uk-width-1-2@m">
@@ -423,7 +428,7 @@
                                     <div class="uk-margin">
                                         <label class="uk-form-label" for="form-stacked-text">Тема</label>
                                         <div class="uk-form-controls">
-                                            <input value="" class="uk-input " name="subject" required="" id="form-stacked-text" type="text" placeholder="Тема">
+                                            <input value="" class="uk-input " name="subject" required=""  type="text" placeholder="Тема">
                                         </div>
                                     </div>
                                                  
@@ -435,19 +440,19 @@
                                     <div class="uk-margin">
                                         <label class="uk-form-label" for="form-stacked-text">Имя, Фамилия</label>
                                         <div class="uk-form-controls">
-                                            <input required="" value="{{ !is_null($client) ? implode(" ", [$client->name, $client->surname]) : '' }}" class="uk-input" name="author" id="form-stacked-text" type="text" placeholder="Имя, Фамилия">
+                                            <input required="" value="{{ !is_null($client) ? implode(" ", [$client->name, $client->surname]) : '' }}" class="uk-input" name="author" type="text" placeholder="Имя, Фамилия">
                                         </div>
                                     </div>
                                     <div class="uk-margin">
                                         <label class="uk-form-label" for="form-stacked-text">Телефон</label>
                                         <div class="uk-form-controls">
-                                            <input value="{{ $client->phone ?? '' }}" class="uk-input " name="phone" id="form-stacked-text" type="text" placeholder="Введите телефон...">
+                                            <input value="{{ $client->phone ?? '' }}" class="uk-input " name="phone"  type="text" placeholder="Введите телефон...">
                                         </div>
                                     </div>
                                     <div class="uk-margin">
                                         <label class="uk-form-label" for="form-stacked-text">E-mail</label>
                                         <div class="uk-form-controls">
-                                            <input value="{{ $client->email ?? '' }}" class="uk-input " name="email" id="form-stacked-text" type="text" placeholder="Введите e-mail...">
+                                            <input value="{{ $client->email ?? '' }}" class="uk-input " name="email"  type="text" placeholder="Введите e-mail...">
                                         </div>
                                     </div>
                                 

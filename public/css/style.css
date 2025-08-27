@@ -471,3 +471,57 @@ input[disabled="disabled"], input[disabled="disabled"] + span {
     background: #fff;
     border-radius: 25px;
 }
+
+.delivery_line_wrapper {
+    position: relative;
+    background-color: #b3aa9f; /* серая линия */
+    border-radius: 10px;
+    height: 8px;
+    margin-top: 8px;
+}
+
+.delivery_line_fill {
+    background-color: #9d8661; 
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.delivery_line_thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 25px;
+    height: 25px;
+    background: #9d8661;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s ease;
+    margin-left: -11px !important;
+}
+
+.delivery_line_thumb svg {
+    max-width: 70%;
+}
+
+.delivery_line_thumb svg path {
+    fill: #fff;
+}
+
+
+.toggle-block {
+    display: none;
+    margin-top: 10px;
+}
+
+.toggle-block .cont {
+    padding: 10px;
+    background: #f3ece1;
+    border-radius: 5px;
+}
+
+#shop_payment_system_7:checked ~ #shop_payment_system_7_desc {
+    display: block;
+}

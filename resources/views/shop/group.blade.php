@@ -133,8 +133,8 @@
 
                                                 @if (!is_null($shopItemList))
                                                     <li class="uk-open">
-                                                        <a class="uk-accordion-title" href="#" id="uk-accordion-50-title-0" role="button" aria-controls="uk-accordion-50-content-0" aria-expanded="true" aria-disabled="false">{{ $property->name }}</a>
-                                                        <div class="uk-accordion-content" id="uk-accordion-50-content-0" role="region" aria-labelledby="uk-accordion-50-title-0">
+                                                        <a class="uk-accordion-title" href="#" role="button" aria-controls="uk-accordion-50-content-0" aria-expanded="true" aria-disabled="false">{{ $property->name }}</a>
+                                                        <div class="uk-accordion-content" role="region" aria-labelledby="uk-accordion-50-title-0">
                                                             <ul @class([
                                                                 "uk-nav", "uk-nav-default", "tm-color" => $property->destination == 1
                                                             ]) data-id="{{ $property->id }}">   
@@ -291,9 +291,20 @@
                     dataType: "json",
                     success: function (data) {
 
-                    $("#filter-items-found").text(data.button);
-                    
-                    Spiner.hide();
+                        $("#filter-items-found").text(data.button);
+                        
+                        Spiner.hide();
+
+                        // Отправляем impressions для товаров после фильтрации
+                        var items = [];
+                        $(data.html).find('.tm-tovar').each(function(index) {
+                            var ecommerceData = $(this).attr('data-ecommerce');
+                            if (ecommerceData) {
+                                var item = JSON.parse(ecommerceData);
+                                items.push(item);
+                            }
+                        });
+                        Ecommerce.impressions(items);
                     },
                 });
 

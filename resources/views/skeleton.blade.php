@@ -13,6 +13,7 @@
         <meta property="og:image" content="{{ request()->getScheme() }}://{{ request()->getHttpHost() }}/images/heisen.jpg" />
         <meta property="og:url" content="{{ url()->current() }}" />
         <link rel="shortcut icon" href="{{ request()->getScheme() }}://{{ request()->getHttpHost() }}/images/favicon.ico">
+        <meta name="MobileOptimized" content="360">
 		
 		<!-- UIkit CSS -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.6/dist/css/uikit.min.css" />
@@ -50,6 +51,10 @@
 
     </head>
     <body>
+
+        @php
+            App\Services\Helpers\File::js('/js/ecommerce.js');
+        @endphp
     
         <div class="tm-content" uk-height-viewport="offset-top: true;offset-bottom: true">
             @yield('skeleton_content')

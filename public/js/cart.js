@@ -55,9 +55,8 @@ var Cart = {
         let description = $("#personalization_desc").val(), 
             logo_select = $("#personalization_logo").val(); 
 
-            console.log(shop_item_id)
-            console.log(description)
-            console.log(logo_select)
+        let $item = $(`#item`);
+        let ecommerceData = $item.length ? JSON.parse($item.attr('data-ecommerce')) : null;
 
         $.ajax({
             url: route,
@@ -94,6 +93,11 @@ var Cart = {
                 $("body").append(data);
 
                 UIkit.modal("#modal-full").show();
+
+                if (ecommerceData) {
+                    ecommerceData.quantity = count; // Обновляем количество
+                    Ecommerce.add(ecommerceData);
+                }
                 
 
                 Spiner.hide();
@@ -104,8 +108,11 @@ var Cart = {
     }, 
 
     updateCarts(data) {
+        let $html = $(data);
+        let $cardBody = $html.filter(".uk-card-body");
+        
         if ($("#cart").length) {
-            $("#cart").find(".uk-card-body").html($(data).find(".cart-items").html());
+            $("#cart").find(".uk-card-body").html($cardBody.html());
         }
 
         if ($(".little-cart").length) {
@@ -116,6 +123,9 @@ var Cart = {
     delete: function(id, littleCart = 0) {
 
         UIkit.modal.confirm('Вы действительно хотите удалить товар из корзины? :(').then(function() {
+
+            let $item = $(`#cart_item_` + id);
+            let ecommerceData = $item.length ? JSON.parse($item.attr('data-ecommerce')) : null;
        
             Spiner.show();
 
@@ -131,10 +141,14 @@ var Cart = {
                 },
                 dataType: "html",
                 success: function (data) {
-                    if (data.length) {
 
+                    if ($(data).find(".cart-items").length) {
                         Cart.updateCarts(data);
-                        
+
+                        if (ecommerceData) {
+                            Ecommerce.remove(ecommerceData);
+                        }
+
                         Spiner.hide();
                     } else {
                         location.reload();

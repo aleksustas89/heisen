@@ -41,13 +41,16 @@ class CartController extends Controller
 
         $personalization = false;
 
-        foreach ($cart['items'] as $item) {
-            if (!empty($item->description)) {
+        if (isset($cart['items'])) {
+            foreach ($cart['items'] as $item) {
+                if (!empty($item->description)) {
 
-                $personalization  = true;
-                break;
+                    $personalization  = true;
+                    break;
+                }
             }
         }
+
 
         return view('shop.cart', [
             "Cart" => $cart,
@@ -58,8 +61,27 @@ class CartController extends Controller
             "client" => $client,
             "Boxberry" => Boxberry::find(1),
             "CdekOffices" => CdekOffice::get(),
-            'littleCart' => false
+            'littleCart' => 0,
+            'mainCart' => 1,
         ]);
+    }
+
+    public function prepareEcommerceData(ShopOrder $ShopOrder)
+    {
+        $ecommercePurchase = [
+            'actionField' => [
+                'id' => 'TRX' . $ShopOrder->id,
+            ],
+            'products' => []
+        ];
+
+        foreach ($ShopOrder->ShopOrderItems as $ShopOrderItem) {
+            $ShopItem = $ShopOrderItem->ShopItem;
+            $ecommerceData = $ShopItem->getEcommerceData();
+            $ecommercePurchase['products'][] = $ecommerceData;
+        }
+
+        return $ecommercePurchase;
     }
 
     public function updateItemInCart(Request $request)

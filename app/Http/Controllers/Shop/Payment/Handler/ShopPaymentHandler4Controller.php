@@ -16,6 +16,7 @@ class ShopPaymentHandler4Controller extends Controller
         return view('shop.cart', [
             "success" => 1,
             "paymentUrl" => $CartController->preparePayment($ShopOrder),
+            'ecommerceData' => $CartController->prepareEcommerceData($ShopOrder),
         ]);
 
     }

@@ -279,4 +279,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function() {
 //главная страница
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name("home");
 
+Route::get("/test", [App\Http\Controllers\HomeController::class, 'test']);
+
 Route::get('/{any}', 'App\Http\Controllers\PageController@index')->where('any', '.*');

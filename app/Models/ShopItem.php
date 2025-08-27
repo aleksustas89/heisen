@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Filesystem\Filesystem;
 use App\Models\ShopItemDiscount;
 use App\Models\ShopModificationImage;
+use App\Http\Controllers\ShopCurrencyController;
 
 class ShopItem extends Model
 {
@@ -538,5 +539,39 @@ class ShopItem extends Model
             $ShopItem->copy($nShopItem->id, $imagesHistory);
         }
 
+    }
+
+    public function getEcommerceData() {
+
+        $parentItemIfModification = $this->parentItemIfModification();
+
+        $defaultModification = $parentItemIfModification->defaultModification();
+
+        $category = '';
+        $ShopGroupController = new \App\Http\Controllers\ShopGroupController();
+        foreach ($ShopGroupController->breadcrumbs($parentItemIfModification->ShopGroup) as $key => $group) {
+            if (!empty($category)) {
+                $category .= " / ";
+            }
+            $category .= $group['name'];
+        }
+
+        $variant = '';
+        if ($defaultModification) {
+            if (!is_null($PropertyValueColor = \App\Models\PropertyValueInt::where("entity_id", $defaultModification->id)->where("property_id", 60)->first()) && $PropertyValueColor->value > 0) {
+                $variant = mb_strtolower($PropertyValueColor->ShopItemListItem->value);
+            }
+        }
+
+        $Currency = ShopCurrencyController::getCurrent();
+
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'price' => $defaultModification ? $defaultModification->getPriceApplyCurrency($Currency) : $this->getPriceApplyCurrency($Currency),
+            'brand' => 'Heisen',
+            'category' => $category, 
+            'variant' => $variant,
+        ];
     }
 }

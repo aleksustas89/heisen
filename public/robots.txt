@@ -6,3 +6,4 @@ Disallow: *?sorting=old*
 Disallow: /search*
 Disallow: /admin*
 
+Sitemap: https://heisen.ru/sitemap.xml

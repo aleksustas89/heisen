@@ -29,7 +29,19 @@ $(window).on("scroll", function(){
                     pagination.response = $("<div>" + data + "</div>");
 
                     if (pagination.response.find(".tm-tovar").length) {
-                        $(".items").append(pagination.items = pagination.response.find(".tm-tovar"))
+                        $(".items").append(pagination.items = pagination.response.find(".tm-tovar"));
+
+                        // Отправляем impressions для подгруженных товаров
+                        var items = [];
+                        pagination.response.find('.tm-tovar').each(function(index) {
+                            var ecommerceData = $(this).attr('data-ecommerce');
+                            if (ecommerceData) {
+                                var item = JSON.parse(ecommerceData);
+                                item.position = currentItemCount + index + 1; // Продолжаем нумерацию
+                                items.push(item);
+                            }
+                        });
+                        Ecommerce.impressions(items);
                     }
 
                     if (pagination.response.find("a.js-pagination-more").length) {

@@ -31,13 +31,16 @@
                     <h3>Сейчас Вы будете перенаправлены на платежную систему</h3>
 
                     <script>
+                        Ecommerce.purchase(@json($ecommerceData));
                         setTimeout(function() {
                             window.location.href = "{{ $paymentUrl }}";
                         }, 3000);
                     </script>
 
                 @else
-
+                    <script>
+                        Ecommerce.purchase(@json($ecommerceData));
+                    </script>
                     <h3>Наши менеджеры скоро свяжутся с Вами!</h3>
 
                 @endif
@@ -246,17 +249,37 @@
                                                 <label>
                                                     <input {{ $k == 0 || old('shop_payment_system_id') == $Payment->id ? 'checked' : '' }} 
                                                         @if ($is_personalization) disabled="disabled" @endif
+                                                        id="shop_payment_system_{{ $Payment->id }}"
                                                         class="uk-radio" 
                                                         type="radio" 
                                                         value="{{ $Payment->id }}" 
                                                         name="shop_payment_system_id"> {{ $Payment->name }}
 
                                                         @if ($is_personalization) (Этод метод оплаты недоступен при выборе персонализации) @endif
+
+
+                                                    @if ($Payment->id == 7)
+                                                        <div id="shop_payment_system_{{ $Payment->id }}_desc" class="toggle-block">
+                                                            
+                                                            <div class="cont">
+
+                                                                <div style="margin-bottom:2px; font-size:12px;"><b>Оплата наличными или картой банка при доставке заказа</b></div>
+                                                                
+                                                                <div style="margin-bottom:5px; color:#9d8661"><b>Обращаем ваше внимание!</b></div>
+                                                                <div>При данном способе оплаты взимается комиссия - 5%</div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+
+
                                                 </label>
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
+
+                                
+
                             </div>
                         @endif
                         <div class="uk-card uk-card-default uk-card-body uk-card-small uk-margin">

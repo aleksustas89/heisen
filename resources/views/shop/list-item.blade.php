@@ -3,10 +3,11 @@ $discountPercent = 0;
 $Discount = App\Http\Controllers\ShopDiscountController::getMaxDiscount($item);
 $defaultModification = $item->defaultModification();
 $url = $defaultModification ? $defaultModification->url : $item->url;
+$ecommerce = $item->getEcommerceData();
 @endphp
 
 
-<div class="uk-card tm-tovar" data-d="{{ $item->id }}" itemprop="itemListElement" itemscope itemtype="https://schema.org/Offer">
+<div class="uk-card tm-tovar" data-ecommerce='@json($ecommerce)'  data-d="{{ $item->id }}" itemprop="itemListElement" itemscope itemtype="https://schema.org/Offer">
 
     @if ($item->type == 1)
         <div style="height: 320px;overflow: hidden;">
@@ -74,7 +75,11 @@ $url = $defaultModification ? $defaultModification->url : $item->url;
         </div>
         <div class="uk-card-body uk-padding-remove-left uk-padding-remove-right">
             <div class="uk-h3 uk-card-title uk-margin-small-bottom">
-                <a href="{{ $url }}" itemprop="name">{{ $item->name }}</a>
+                <a 
+                    data-ecommerce='@json($ecommerce)' 
+                    onclick="Ecommerce.click(JSON.parse(this.getAttribute('data-ecommerce')))"
+                    href="{{ $url }}" 
+                    itemprop="name">{{ $item->name }}</a>
                 <link itemprop="url" href="{{ $url }}">
             </div>
             <p class="uk-margin-remove-top tm-price">
@@ -85,7 +90,7 @@ $url = $defaultModification ? $defaultModification->url : $item->url;
                     $oldPrice = $Object->getOldPriceApplyCurrency($Currency);
                 @endphp
 
-                <span id="item-price" class="item-price">
+                <span class="item-price">
                     {{ $Currency->name ?? '' }}
                     {{ App\Services\Helpers\Str::price($price) }}
                     <meta itemprop="price" content="{{ $price }}">
@@ -94,7 +99,7 @@ $url = $defaultModification ? $defaultModification->url : $item->url;
                 </span> 
 
                 @if ($oldPrice > 0)
-                    <span class="item-old-price" id="item-old-price">
+                    <span class="item-old-price">
                         <span>{{ $Currency->name ?? '' }}</span>
                         {{ App\Services\Helpers\Str::price($oldPrice) }}
                     </span>

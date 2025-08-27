@@ -434,6 +434,11 @@
 
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
+    @php
+        App\Services\Helpers\File::js('/assets/image.js');
+        App\Services\Helpers\File::js('/assets/js/pages/shopItem.js');
+    @endphp
+
     <script>
         var routeGroupShortcut = '{{ route("getShortcutGroup") }}' + '?shop_group_id=' + {{ $parent_id }},
             BadgeClasses = [@foreach($BadgeClasses as $k => $BadgeClasse)'{{$BadgeClasse}}'@if($k < count($BadgeClasses)-1),@endif @endforeach];

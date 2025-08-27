@@ -322,53 +322,77 @@ class ShopItemController extends Controller
 
     public function saveItemProperties(Request $request, ShopItem $shopItem)
     {
-        $shop_group_id = $shopItem->modification_id == 0 ? $shopItem->shop_group_id : ShopItem::find($shopItem->modification_id)->shop_group_id;
-        foreach (self::getProperties($shop_group_id) as $property) {
-        
-            $property_id = 'property_' . $property->id;
-        
-            /* старые свойства */  
-            $oCreatedProperty_Value = ShopItemProperty::getObjectByType($property->type); 
 
-            foreach ($oCreatedProperty_Value::where("property_id", $property->id)->where("entity_id", $shopItem->id)->get() as $Value) {
-                $property_id = 'property_' . $property->id . '_' . $Value->id;
-                $property_id_checkbox = 'property_' . $property->id;
-                //если чексбокс
-                if ($property->type == 3) {
-                    if (!isset($request->$property_id_checkbox)) {
-                        $Value->delete();
-                    }
-                } else {
-                    if (isset($request->$property_id)) {
-                        $Value->value = $request->$property_id;
-                        $Value->save();
-                    } else {
-                        $Value->value = ShopItemProperty::getDafaultValueByObject($oCreatedProperty_Value);
-                        $Value->save();
-                    }
+        $properties = collect($request->all())
+            ->filter(fn($value, $key) => str_starts_with($key, 'property_'))
+            ->mapWithKeys(function ($value, $key) {
+                // Регулярка: property_(id)(_(valueId))?
+                if (preg_match('/^property_(\d+)(?:_(\d+))?$/', $key, $matches)) {
+                    $propertyId = (int) $matches[1];
+                    $valueId    = isset($matches[2]) ? (int) $matches[2] : null;
+
+                    return [$key => [
+                        'property_id' => $propertyId,
+                        'value_id'    => $valueId,
+                        'value'       => $value,
+                    ]];
                 }
-            }
 
-            if (isset($request->$property_id)) {
+                return [];
+            });
 
-                if (is_array($request->$property_id)) {
-                    foreach ($request->$property_id as $Value) {
+        foreach ($properties as $key => $data) {
 
-                        $oProperty_Value = ShopItemProperty::getObjectByType($property->type);
-                        $oProperty_Value->property_id = $property->id;
-                        $oProperty_Value->entity_id = $shopItem->id;
-                        $oProperty_Value->value = !empty($Value) ? $Value : ShopItemProperty::getDafaultValueByObject($oProperty_Value);
-                        $oProperty_Value->save();
+            $propertyId = $data['property_id'];
+            $valueId    = $data['value_id'];
+            $value      = $data['value'];
+
+            if (!is_null($property = ShopItemProperty::find($propertyId))) {
+
+                $oCreatedProperty_Value = ShopItemProperty::getObjectByType($property->type);
+
+                $Value = $oCreatedProperty_Value::find($valueId);
+
+                if (!is_null($valueId)) {
+                    $property_id = 'property_' . $propertyId;
+
+                    if (is_null($value)) {
+                        $Value->delete();
+                        continue;
                     }
+
+                    if (!is_null($Value)) {
+                        //старые свойства
+                        $property_id = 'property_' . $propertyId . '_' . $valueId;
+                        $property_id_checkbox = 'property_' . $propertyId;
+                        //если чексбокс
+                        if ($property->type == 3) {
+                            if (!isset($request->$property_id_checkbox)) {
+                                $Value->delete();
+                            }
+                        } else {
+
+                            if (isset($request->$property_id)) {
+                                $Value->value = $value;
+                            } else {
+                                $Value->value = ShopItemProperty::getDafaultValueByObject($oCreatedProperty_Value);
+                            }
+
+                            $Value->save();
+                        }
+                    } 
                 } else {
-                    
-                    //checkbox
-                    $oProperty_Value = new PropertyValueInt();
-                    
-                    $oProperty_Value->property_id = $property->id;
-                    $oProperty_Value->entity_id = $shopItem->id;
-                    $oProperty_Value->value = 1;
-                    $oProperty_Value->save();
+                    if (is_array($value)) {
+                        foreach ($value as $k => $aValue) {
+                            if (!is_null($aValue)) {
+                                $oCreatedProperty_Value = ShopItemProperty::getObjectByType($property->type);
+                                $oCreatedProperty_Value->property_id = $propertyId;
+                                $oCreatedProperty_Value->entity_id = $shopItem->id;
+                                $oCreatedProperty_Value->value = $aValue;
+                                $oCreatedProperty_Value->save();
+                            }
+                        }
+                    }
                 }
             }
         }

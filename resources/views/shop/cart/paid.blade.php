@@ -46,6 +46,9 @@
 
 @section("js")
     <script>
+
+        Ecommerce.purchase(@json($ecommerceData));
+
         var OrderStatus = {
             update: function(guid, step = 0) {
                 if (step < 5) {
